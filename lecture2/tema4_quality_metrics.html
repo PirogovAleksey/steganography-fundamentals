@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Метрики оцінки якості - Лекція 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 95%;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: none;
+            overflow-y: auto;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            color: #764ba2;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin: 25px 0 15px 0;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: #764ba2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .slide-indicators {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            text-align: center;
+            border: 2px dashed #667eea;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .metric-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .quality-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .quality-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quality-label {
+            min-width: 100px;
+            font-weight: bold;
+        }
+
+        .quality-range {
+            flex: 1;
+            height: 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .excellent {
+            background: linear-gradient(90deg, #56ab2f, #a8e063);
+        }
+
+        .good {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .fair {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+
+        .poor {
+            background: linear-gradient(90deg, #ee0979, #ff6a00);
+        }
+
+        .interactive-demo {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .demo-button {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .image-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .image-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">10</span>
+    </div>
+
+    <!-- Slide Indicators -->
+    <div class="slide-indicators" id="indicators"></div>
+
+    <!-- Slides -->
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>📏 Метрики оцінки якості</h1>
+            <div class="info-card" style="margin-top: 50px;">
+                <h2>🎯 Ключові теми</h2>
+                <ul style="list-style: none; padding: 20px;">
+                    <li style="margin: 15px 0;">📊 <strong>Об'єктивні метрики</strong> - PSNR, MSE, SNR</li>
+                    <li style="margin: 15px 0;">👁️ <strong>Перцептуальні метрики</strong> - SSIM, VIF</li>
+                    <li style="margin: 15px 0;">🎵 <strong>Метрики для аудіо/відео</strong> - спеціалізовані оцінки</li>
+                    <li style="margin: 15px 0;">💪 <strong>Метрики стійкості</strong> - BER, NC, Survival Rate</li>
+                </ul>
+            </div>
+            <div class="formula-box">
+                <strong>Основний принцип:</strong> Жодна метрика не дає повної картини якості
+            </div>
+        </div>
+
+        <!-- Slide 2: PSNR and MSE -->
+        <div class="slide">
+            <h1>📊 PSNR та MSE</h1>
+            <div class="formula-box">
+                PSNR = 10 × log₁₀(MAX²/MSE)
+            </div>
+            <div class="formula-box">
+                MSE = (1/(M×N)) × Σ [I(i,j) - K(i,j)]²
+            </div>
+            
+            <h3>Інтерпретація PSNR</h3>
+            <div class="quality-scale">
+                <div class="quality-bar">
+                    <span class="quality-label">> 50 dB</span>
+                    <div class="quality-range excellent">Зміни практично непомітні</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">40-50 dB</span>
+                    <div class="quality-range excellent">Відмінна якість</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">35-40 dB</span>
+                    <div class="quality-range good">Хороша якість</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">30-35 dB</span>
+                    <div class="quality-range fair">Задовільна якість</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">< 30 dB</span>
+                    <div class="quality-range poor">Погана якість</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: SSIM -->
+        <div class="slide">
+            <h1>👁️ Структурна подібність (SSIM)</h1>
+            <div class="formula-box">
+                SSIM(x,y) = [l(x,y)]^α × [c(x,y)]^β × [s(x,y)]^γ
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4>💡 Яскравість</h4>
+                    <p>l(x,y) = (2μₓμᵧ + C₁)/(μₓ² + μᵧ² + C₁)</p>
+                </div>
+                <div class="comparison-card">
+                    <h4>🎨 Контраст</h4>
+                    <p>c(x,y) = (2σₓσᵧ + C₂)/(σₓ² + σᵧ² + C₂)</p>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>🏗️ Структура</h3>
+                <p>s(x,y) = (σₓᵧ + C₃)/(σₓσᵧ + C₃)</p>
+            </div>
+            
+            <div class="metric-display">
+                <div class="metric-item">
+                    <div class="metric-value">1.0</div>
+                    <div class="metric-label">Ідентичні</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">0.95</div>
+                    <div class="metric-label">Відмінна якість</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">0.85</div>
+                    <div class="metric-label">Хороша якість</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">0.70</div>
+                    <div class="metric-label">Порогове значення</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: PSNR vs SSIM -->
+        <div class="slide">
+            <h1>⚖️ PSNR vs SSIM</h1>
+            <div class="interactive-demo">
+                <h3>Порівняння метрик</h3>
+                <div class="image-comparison">
+                    <div class="image-box">
+                        <div class="image-placeholder">Оригінал</div>
+                        <p>Еталонне зображення</p>
+                    </div>
+                    <div class="image-box">
+                        <div class="image-placeholder">Модифіковане</div>
+                        <div class="metric-display" style="padding: 10px;">
+                            <div class="metric-item">
+                                <div class="metric-value" id="psnr-value">42.5</div>
+                                <div class="metric-label">PSNR (dB)</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value" id="ssim-value">0.92</div>
+                                <div class="metric-label">SSIM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slider-container">
+                    <label>Рівень спотворення: <span id="distortion-level">10%</span></label>
+                    <input type="range" min="0" max="100" value="10" class="slider" id="distortion-slider" oninput="updateMetrics()">
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>📌 Ключові відмінності</h3>
+                <ul>
+                    <li><strong>PSNR:</strong> Проста математична метрика, не завжди корелює зі сприйняттям</li>
+                    <li><strong>SSIM:</strong> Враховує структурну інформацію, краще відповідає людському сприйняттю</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: Perceptual Metrics -->
+        <div class="slide">
+            <h1>🧠 Перцептуальні метрики</h1>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h4>VIF</h4>
+                    <p style="font-size: 0.9em;">Visual Information Fidelity</p>
+                    <div style="font-size: 1.5em; margin-top: 10px;">0-1</div>
+                </div>
+                <div class="metric-card">
+                    <h4>WSNR</h4>
+                    <p style="font-size: 0.9em;">Weighted SNR</p>
+                    <div style="font-size: 1.5em; margin-top: 10px;">dB</div>
+                </div>
+                <div class="metric-card">
+                    <h4>UQI</h4>
+                    <p style="font-size: 0.9em;">Universal Quality Index</p>
+                    <div style="font-size: 1.5em; margin-top: 10px;">-1 to 1</div>
+                </div>
+                <div class="metric-card">
+                    <h4>FSIM</h4>
+                    <p style="font-size: 0.9em;">Feature Similarity</p>
+                    <div style="font-size: 1.5em; margin-top: 10px;">0-1</div>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>HVS моделі (Human Visual System)</h3>
+                <ul>
+                    <li>🔍 Частотна чутливість (3-5 циклів/градус)</li>
+                    <li>💡 Маскування яскравості</li>
+                    <li>🎨 Контрастне маскування</li>
+                    <li>⏱️ Часове маскування</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: Audio Metrics -->
+        <div class="slide">
+            <h1>🎵 Метрики для аудіо</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>PEAQ</h3>
+                    <p>Perceptual Evaluation of Audio Quality</p>
+                    <div class="formula-box">ODG: 0 до -4</div>
+                    <ul>
+                        <li>0: непомітні зміни</li>
+                        <li>-1: помітні, не дратівливі</li>
+                        <li>-2: злегка дратівливі</li>
+                        <li>-3: дратівливі</li>
+                        <li>-4: дуже дратівливі</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h3>Segmental SNR</h3>
+                    <div class="formula-box">
+                        SSNR = (1/M) × Σ 10log₁₀(SNR_segment)
+                    </div>
+                    <p>Переваги:</p>
+                    <ul>
+                        <li>Краще для мови</li>
+                        <li>Менша чутливість до пауз</li>
+                        <li>Локальна оцінка якості</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>📊 Log-Spectral Distance (LSD)</h3>
+                <div class="formula-box">
+                    LSD = √((1/N) × Σ [10log₁₀(Pₓ/Pᵧ)]²)
+                </div>
+                <p>Вимірює відстань між спектрами оригіналу та модифікованого сигналу</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Statistical Metrics -->
+        <div class="slide">
+            <h1>📈 Статистичні метрики для стегоаналізу</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>KL-дивергенція</h3>
+                    <div class="formula-box">
+                        D_KL(P||Q) = Σ P(i)log(P(i)/Q(i))
+                    </div>
+                    <ul>
+                        <li>D_KL ≥ 0</li>
+                        <li>D_KL = 0 тільки якщо P = Q</li>
+                        <li>Несиметрична</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h3>Відстань Бгаттачарія</h3>
+                    <div class="formula-box">
+                        D_B = -ln(Σ √(P(i)×Q(i)))
+                    </div>
+                    <ul>
+                        <li>D_B ∈ [0, ∞)</li>
+                        <li>D_B = 0 для ідентичних</li>
+                        <li>Симетрична</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>🚚 Earth Mover's Distance (EMD)</h3>
+                <p>Мінімальна "робота" для перетворення одного розподілу в інший</p>
+                <ul>
+                    <li>Враховує відстань між бінами</li>
+                    <li>Стійкість до малих зсувів</li>
+                    <li>Інтуїтивна інтерпретація</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Robustness Metrics -->
+        <div class="slide">
+            <h1>💪 Метрики стійкості</h1>
+            <div class="metric-display">
+                <div class="metric-item">
+                    <div class="metric-value">BER</div>
+                    <div class="metric-label">Bit Error Rate</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">NC</div>
+                    <div class="metric-label">Normalized Correlation</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">SR</div>
+                    <div class="metric-label">Survival Rate</div>
+                </div>
+            </div>
+            
+            <h3>Bit Error Rate (BER)</h3>
+            <div class="formula-box">
+                BER = N_errors / N_total
+            </div>
+            <div class="quality-scale">
+                <div class="quality-bar">
+                    <span class="quality-label">< 0.001</span>
+                    <div class="quality-range excellent">Відмінна стійкість</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">0.001-0.01</span>
+                    <div class="quality-range good">Хороша стійкість</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">0.01-0.1</span>
+                    <div class="quality-range fair">Задовільна стійкість</div>
+                </div>
+                <div class="quality-bar">
+                    <span class="quality-label">> 0.1</span>
+                    <div class="quality-range poor">Погана стійкість</div>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>Normalized Correlation після атак</h3>
+                <ul>
+                    <li>NC > 0.7: успішне виявлення</li>
+                    <li>NC = 0.5-0.7: можливе виявлення</li>
+                    <li>NC < 0.5: невдале виявлення</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Capacity Metrics -->
+        <div class="slide">
+            <h1>📦 Метрики ємності та ефективності</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Коефіцієнт вбудовування</h3>
+                    <div class="formula-box">ER = |M| / |C|</div>
+                    <p>Типові значення:</p>
+                    <ul>
+                        <li>LSB: 1-15%</li>
+                        <li>Адаптивні: 0.1-5%</li>
+                        <li>Робастні: 0.01-1%</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h3>Bits Per Pixel (bpp)</h3>
+                    <div class="formula-box">bpp = |M| / (W × H)</div>
+                    <p>Класифікація:</p>
+                    <ul>
+                        <li>Низька: < 0.1 bpp</li>
+                        <li>Середня: 0.1-0.5 bpp</li>
+                        <li>Висока: > 0.5 bpp</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="interactive-demo">
+                <h3>Калькулятор ємності</h3>
+                <div class="demo-controls">
+                    <label>Розмір зображення: 1920×1080</label>
+                </div>
+                <div class="slider-container">
+                    <label>bpp: <span id="bpp-value">0.1</span></label>
+                    <input type="range" min="1" max="100" value="10" class="slider" oninput="updateCapacity(this.value)">
+                </div>
+                <div class="metric-display">
+                    <div class="metric-item">
+                        <div class="metric-value" id="capacity-bits">207K</div>
+                        <div class="metric-label">Біт даних</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="capacity-kb">25.9</div>
+                        <div class="metric-label">Кілобайт</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary -->
+        <div class="slide">
+            <h1>📋 Підсумки та вибір метрик</h1>
+            <div class="info-card">
+                <h2>🎯 Вибір метрик для застосувань</h2>
+                <div class="comparison-grid">
+                    <div>
+                        <h4>🕵️ Непомітна стеганографія</h4>
+                        <ul>
+                            <li>SSIM > 0.95</li>
+                            <li>PSNR > 40 dB</li>
+                            <li>KL < 0.1</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>💪 Робастна стеганографія</h4>
+                        <ul>
+                            <li>BER < 0.01</li>
+                            <li>NC > 0.7</li>
+                            <li>SR > 80%</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📦 Велика ємність</h4>
+                        <ul>
+                            <li>Максимізація ER</li>
+                            <li>PSNR > 35 dB</li>
+                            <li>Оптимізація bpp</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>🔍 Стегоаналіз</h4>
+                        <ul>
+                            <li>KL-дивергенція</li>
+                            <li>χ² статистика</li>
+                            <li>EMD</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="formula-box" style="margin-top: 30px;">
+                <strong>Ключовий принцип:</strong> Комбінуйте об'єктивні та перцептуальні метрики
+            </div>
+            
+            <div class="info-card" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); margin-top: 20px;">
+                <h3>💡 Практичні рекомендації</h3>
+                <ul>
+                    <li>SSIM краще корелює з людським сприйняттям ніж PSNR</li>
+                    <li>Для кожного застосування потрібен свій набір метрик</li>
+                    <li>Баланс між метриками визначається цілями системи</li>
+                    <li>Регулярне тестування на реальних даних</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-button" id="prev-btn" onclick="previousSlide()">← Назад</button>
+        <button class="nav-button" onclick="goToMenu()">🏠 Головне меню</button>
+        <button class="nav-button" id="next-btn" onclick="nextSlide()">Вперед →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        // Initialize
+        document.getElementById('total-slides').textContent = totalSlides;
+        createIndicators();
+
+        function createIndicators() {
+            const container = document.getElementById('indicators');
+            for (let i = 1; i <= totalSlides; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator' + (i === 1 ? ' active' : '');
+                indicator.onclick = () => goToSlide(i);
+                container.appendChild(indicator);
+            }
+        }
+
+        function updateSlide() {
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide - 1);
+            });
+
+            document.getElementById('current-slide').textContent = currentSlide;
+
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide - 1);
+            });
+
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlide();
+        }
+
+        function goToMenu() {
+            window.location.href = 'index.html';
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+            if (e.key === 'Escape') goToMenu();
+        });
+
+        // Interactive demos
+        function updateMetrics() {
+            const distortion = document.getElementById('distortion-slider').value;
+            document.getElementById('distortion-level').textContent = distortion + '%';
+            
+            // Calculate PSNR (decreases with distortion)
+            const psnr = 50 - (distortion * 0.3);
+            document.getElementById('psnr-value').textContent = psnr.toFixed(1);
+            
+            // Calculate SSIM (decreases with distortion)
+            const ssim = 1 - (distortion * 0.008);
+            document.getElementById('ssim-value').textContent = ssim.toFixed(2);
+        }
+
+        function updateCapacity(value) {
+            const bpp = value / 100;
+            document.getElementById('bpp-value').textContent = bpp.toFixed(2);
+            
+            // Calculate for 1920x1080 image
+            const totalPixels = 1920 * 1080;
+            const totalBits = totalPixels * bpp;
+            const totalKB = totalBits / 8 / 1024;
+            
+            // Format the display
+            if (totalBits > 1000000) {
+                document.getElementById('capacity-bits').textContent = (totalBits / 1000000).toFixed(1) + 'M';
+            } else if (totalBits > 1000) {
+                document.getElementById('capacity-bits').textContent = (totalBits / 1000).toFixed(0) + 'K';
+            } else {
+                document.getElementById('capacity-bits').textContent = totalBits.toFixed(0);
+            }
+            
+            document.getElementById('capacity-kb').textContent = totalKB.toFixed(1);
+        }
+    </script>
+</body>
+</html>

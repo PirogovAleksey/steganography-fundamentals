@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лекція 2: Математичні основи стеганографії</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h1 {
+            color: #764ba2;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            color: #777;
+            font-size: 1.1em;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .topic-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .topic-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .topic-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .topic-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .topic-title {
+            color: #333;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .topic-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .topic-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .topic-points li {
+            padding: 8px 0;
+            color: #555;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .topic-points li:before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .launch-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .launch-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Лекція 2: Математичні основи стеганографії</h1>
+            <div class="subtitle">Фундаментальні концепції та теоретичний базис</div>
+            <div class="info">
+                <div class="info-item">
+                    <span class="emoji">👨‍🏫</span>
+                    <span>Курс: Основи стеганографії</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">⏱️</span>
+                    <span>Тривалість: 2 години</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">📚</span>
+                    <span>4 теми</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="topics-grid">
+            <a href="tema1_information_theory.html" class="topic-card">
+                <div class="topic-content">
+                    <div class="topic-number">1</div>
+                    <h2 class="topic-title">Теорія інформації в стеганографії</h2>
+                    <p class="topic-description">
+                        Математичні основи вимірювання та приховування інформації
+                    </p>
+                    <ul class="topic-points">
+                        <li>Ентропія та інформація за Шенноном</li>
+                        <li>Надлишковість даних</li>
+                        <li>Пропускна здатність стеганоканалу</li>
+                        <li>Розподіл біт у контейнері</li>
+                    </ul>
+                    <span class="launch-button">Відкрити презентацію →</span>
+                </div>
+            </a>
+
+            <a href="tema2_statistical_foundations.html" class="topic-card">
+                <div class="topic-content">
+                    <div class="topic-number">2</div>
+                    <h2 class="topic-title">Статистичні основи непомітності</h2>
+                    <p class="topic-description">
+                        Статистичний аналіз та забезпечення непомітності вбудованих даних
+                    </p>
+                    <ul class="topic-points">
+                        <li>Статистичні характеристики контейнерів</li>
+                        <li>Гістограми та χ² тест</li>
+                        <li>Статистичні атаки на стеганосистеми</li>
+                        <li>Адаптивне вбудовування</li>
+                    </ul>
+                    <span class="launch-button">Відкрити презентацію →</span>
+                </div>
+            </a>
+
+            <a href="tema3_mathematical_models.html" class="topic-card">
+                <div class="topic-content">
+                    <div class="topic-number">3</div>
+                    <h2 class="topic-title">Математичні моделі стеганосистем</h2>
+                    <p class="topic-description">
+                        Формальні моделі та теоретичні основи стеганографічних систем
+                    </p>
+                    <ul class="topic-points">
+                        <li>Формальна модель стеганосистеми</li>
+                        <li>Функції вбудовування та вилучення</li>
+                        <li>Трикутник компромісів</li>
+                        <li>Моделі атак на стеганосистеми</li>
+                    </ul>
+                    <span class="launch-button">Відкрити презентацію →</span>
+                </div>
+            </a>
+
+            <a href="tema4_quality_metrics.html" class="topic-card">
+                <div class="topic-content">
+                    <div class="topic-number">4</div>
+                    <h2 class="topic-title">Метрики оцінки якості</h2>
+                    <p class="topic-description">
+                        Об'єктивні та суб'єктивні методи оцінювання якості стеганографії
+                    </p>
+                    <ul class="topic-points">
+                        <li>PSNR, MSE та SNR</li>
+                        <li>Структурна подібність (SSIM)</li>
+                        <li>Перцептуальні метрики</li>
+                        <li>Метрики стійкості та ємності</li>
+                    </ul>
+                    <span class="launch-button">Відкрити презентацію →</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Слайдів на тему</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">40</div>
+                <div class="stat-label">Загальна кількість слайдів</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Інтерактивних демо</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Формул та метрик</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Анімація при завантаженні
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.topic-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Додаємо ефект при наведенні
+        const cards = document.querySelectorAll('.topic-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

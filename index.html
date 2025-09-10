@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основи стеганографії - Курс лекцій</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #764ba2;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.4em;
+            margin-bottom: 30px;
+        }
+
+        .course-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        .info-item .emoji {
+            font-size: 1.5em;
+        }
+
+        .lectures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .lecture-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .lecture-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .lecture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .lecture-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .lecture-card.in-progress {
+            border: 2px solid #667eea;
+        }
+
+        .lecture-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .lecture-card.locked:hover {
+            transform: none;
+        }
+
+        .lecture-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .lecture-title {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .lecture-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .lecture-topics {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        .lecture-topics li {
+            padding: 5px 0;
+            color: #777;
+            font-size: 0.9em;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .lecture-topics li:before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .lecture-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .status-ready {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: white;
+        }
+
+        .status-in-progress {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .status-planned {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .stats-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .section-title {
+            color: #764ba2;
+            font-size: 2em;
+            margin: 30px 0 20px 0;
+            text-align: center;
+        }
+
+        .module-indicator {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .module-1 {
+            background: #667eea;
+            color: white;
+        }
+
+        .module-2 {
+            background: #764ba2;
+            color: white;
+        }
+
+        .module-3 {
+            background: #ee0979;
+            color: white;
+        }
+
+        .module-4 {
+            background: #56ab2f;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .lectures-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .course-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔐 Основи стеганографії</h1>
+            <div class="subtitle">Повний курс лекцій з теорії та практики приховування інформації</div>
+            <div class="course-info">
+                <div class="info-item">
+                    <span class="emoji">🎓</span>
+                    <span>16 лекцій</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">⏱️</span>
+                    <span>32 години лекцій</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">🔬</span>
+                    <span>68 годин практики</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">📚</span>
+                    <span>4 модулі</span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Module 1: Fundamentals -->
+        <h2 class="section-title">Модуль 1: Основи</h2>
+        <div class="lectures-grid">
+            <a href="lecture1/index.html" class="lecture-card completed">
+                <div class="lecture-number">1</div>
+                <h3 class="lecture-title">Вступ до стеганографії</h3>
+                <p class="lecture-description">Історія, основні концепції та сучасні застосування</p>
+                <ul class="lecture-topics">
+                    <li>Історія стеганографії</li>
+                    <li>Відмінність від криптографії</li>
+                    <li>Класифікація методів</li>
+                    <li>Сучасні виклики</li>
+                </ul>
+                <span class="lecture-status status-ready">✓ Готово</span>
+            </a>
+
+            <a href="lecture2/index.html" class="lecture-card completed">
+                <div class="lecture-number">2</div>
+                <h3 class="lecture-title">Математичні основи</h3>
+                <p class="lecture-description">Теорія інформації та статистичні основи</p>
+                <ul class="lecture-topics">
+                    <li>Теорія інформації</li>
+                    <li>Статистичні основи</li>
+                    <li>Математичні моделі</li>
+                    <li>Метрики якості</li>
+                </ul>
+                <span class="lecture-status status-ready">✓ Готово</span>
+            </a>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">3</div>
+                <h3 class="lecture-title">Стеганографія в просторовій області</h3>
+                <p class="lecture-description">LSB та інші методи просторової області</p>
+                <ul class="lecture-topics">
+                    <li>LSB заміна та зіставлення</li>
+                    <li>Методи палітри</li>
+                    <li>PVD методи</li>
+                    <li>Адаптивні LSB методи</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">4</div>
+                <h3 class="lecture-title">Стеганографія в частотній області</h3>
+                <p class="lecture-description">DCT, DWT та інші перетворення</p>
+                <ul class="lecture-topics">
+                    <li>DCT-базовані методи</li>
+                    <li>Вейвлет перетворення</li>
+                    <li>Фур'є перетворення</li>
+                    <li>Методи розширення спектру</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+        </div>
+
+        <!-- Module 2: Advanced Techniques -->
+        <h2 class="section-title">Модуль 2: Просунуті техніки</h2>
+        <div class="lectures-grid">
+            <div class="lecture-card locked">
+                <div class="lecture-number">5</div>
+                <h3 class="lecture-title">Адаптивні методи</h3>
+                <p class="lecture-description">HUGO, WOW, S-UNIWARD та інші</p>
+                <ul class="lecture-topics">
+                    <li>Моделі спотворень</li>
+                    <li>Синдромне кодування</li>
+                    <li>Адаптивне вбудовування</li>
+                    <li>Мінімізація детектованості</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">6</div>
+                <h3 class="lecture-title">Стеганографія в аудіо</h3>
+                <p class="lecture-description">Методи приховування в звукових файлах</p>
+                <ul class="lecture-topics">
+                    <li>LSB для аудіо</li>
+                    <li>Фазове кодування</li>
+                    <li>Ехо-приховування</li>
+                    <li>Розширення спектру</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">7</div>
+                <h3 class="lecture-title">Стеганографія у відео</h3>
+                <p class="lecture-description">Методи для відео потоків</p>
+                <ul class="lecture-topics">
+                    <li>Внутрішньокадрові методи</li>
+                    <li>Міжкадрові методи</li>
+                    <li>Вбудовування в рух</li>
+                    <li>Стеганографія в H.264/H.265</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">8</div>
+                <h3 class="lecture-title">Мережева стеганографія</h3>
+                <p class="lecture-description">Приховування в мережевих протоколах</p>
+                <ul class="lecture-topics">
+                    <li>Стеганографія в TCP/IP</li>
+                    <li>Часові канали</li>
+                    <li>DNS тунелювання</li>
+                    <li>Приховані канали в HTTPS</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+        </div>
+
+        <!-- Module 3: Detection and Security -->
+        <h2 class="section-title">Модуль 3: Виявлення та безпека</h2>
+        <div class="lectures-grid">
+            <div class="lecture-card locked">
+                <div class="lecture-number">9</div>
+                <h3 class="lecture-title">Цифрові водяні знаки</h3>
+                <p class="lecture-description">Робастні та крихкі водяні знаки</p>
+                <ul class="lecture-topics">
+                    <li>Видимі та невидимі водяні знаки</li>
+                    <li>Робастні методи</li>
+                    <li>Крихкі водяні знаки</li>
+                    <li>Застосування для захисту</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">10</div>
+                <h3 class="lecture-title">Стегоаналіз</h3>
+                <p class="lecture-description">Методи виявлення прихованої інформації</p>
+                <ul class="lecture-topics">
+                    <li>Візуальні атаки</li>
+                    <li>Статистичні методи</li>
+                    <li>Структурні методи</li>
+                    <li>Універсальний стегоаналіз</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">11</div>
+                <h3 class="lecture-title">Машинне навчання в стегоаналізі</h3>
+                <p class="lecture-description">AI/ML методи виявлення</p>
+                <ul class="lecture-topics">
+                    <li>Feature extraction</li>
+                    <li>SVM та Random Forest</li>
+                    <li>Deep Learning підходи</li>
+                    <li>CNN для стегоаналізу</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">12</div>
+                <h3 class="lecture-title">Криптографія та стеганографія</h3>
+                <p class="lecture-description">Комбінування методів захисту</p>
+                <ul class="lecture-topics">
+                    <li>Шифрування перед вбудовуванням</li>
+                    <li>Стеганографічні протоколи</li>
+                    <li>Розподіл ключів</li>
+                    <li>Гібридні системи</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+        </div>
+
+        <!-- Module 4: Applications -->
+        <h2 class="section-title">Модуль 4: Застосування</h2>
+        <div class="lectures-grid">
+            <div class="lecture-card locked">
+                <div class="lecture-number">13</div>
+                <h3 class="lecture-title">Стеганографічні файлові системи</h3>
+                <p class="lecture-description">Приховане зберігання даних</p>
+                <ul class="lecture-topics">
+                    <li>TrueCrypt/VeraCrypt</li>
+                    <li>Deniable encryption</li>
+                    <li>Steganographic file systems</li>
+                    <li>Cloud стеганографія</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">14</div>
+                <h3 class="lecture-title">Правові та етичні аспекти</h3>
+                <p class="lecture-description">Законодавство та етика використання</p>
+                <ul class="lecture-topics">
+                    <li>Міжнародне законодавство</li>
+                    <li>Етичні питання</li>
+                    <li>Легальне використання</li>
+                    <li>Форензика та розслідування</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">15</div>
+                <h3 class="lecture-title">Практичні застосування</h3>
+                <p class="lecture-description">Реальні сценарії використання</p>
+                <ul class="lecture-topics">
+                    <li>Захист авторських прав</li>
+                    <li>Приватність комунікацій</li>
+                    <li>Медичні застосування</li>
+                    <li>Військові системи</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+
+            <div class="lecture-card locked">
+                <div class="lecture-number">16</div>
+                <h3 class="lecture-title">Майбутнє стеганографії</h3>
+                <p class="lecture-description">Тренди та перспективи розвитку</p>
+                <ul class="lecture-topics">
+                    <li>Квантова стеганографія</li>
+                    <li>AI-генеровані контейнери</li>
+                    <li>Blockchain стеганографія</li>
+                    <li>Нові напрямки досліджень</li>
+                </ul>
+                <span class="lecture-status status-planned">Заплановано</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.lecture-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        });
+
+        // Add hover effects
+        const cards = document.querySelectorAll('.lecture-card:not(.locked)');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('locked')) {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('locked')) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        });
+
+        // Locked cards message
+        const lockedCards = document.querySelectorAll('.lecture-card.locked');
+        lockedCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const title = this.querySelector('.lecture-title').textContent;
+                alert(`Лекція "${title}" ще в розробці. Буде доступна незабаром!`);
+            });
+        });
+    </script>
+</body>
+</html>
