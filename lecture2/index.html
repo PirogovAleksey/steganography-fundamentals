@@ -29,6 +29,29 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 40px;
             animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
+
+        .back-to-main {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-to-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
         @keyframes fadeIn {
@@ -244,6 +267,10 @@
 </head>
 <body>
     <div class="container">
+        <a href="../index.html" class="back-to-main">
+            <span style="font-size: 1.2em;">←</span>
+            <span>На головну</span>
+        </a>
         <div class="header">
             <h1>📊 Лекція 2: Математичні основи стеганографії</h1>
             <div class="subtitle">Фундаментальні концепції та теоретичний базис</div>
