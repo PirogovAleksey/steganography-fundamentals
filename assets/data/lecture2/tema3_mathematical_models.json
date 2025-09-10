@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "title": "Математичні моделі стеганографії",
+    "lecture": 2,
+    "tema": 3,
+    "author": "Викладач курсу",
+    "version": "2.0.0",
+    "updated": "2024-01-20",
+    "duration": 120,
+    "tags": []
+  },
+  "slides": [
+    {
+      "id": 1,
+      "title": "",
+      "content": "<div class=\"slide-content\"><span id=\"current-slide\">1</span> / <span id=\"total-slides\">10</span></div>",
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "title": "",
+      "content": "<div class=\"slide-content\"></div>",
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "title": "🔬 Математичні моделі стеганосистем",
+      "content": "<div class=\"slide-content\"><div class=\"info-card\" style=\"margin-top: 50px;\">\n                <h2>🎯 Ключові теми</h2>\n                <ul style=\"list-style: none; padding: 20px;\">\n                    <li style=\"margin: 15px 0;\">📐 <strong>Формальна модель</strong> - математичне визначення стеганосистеми</li>\n                    <li style=\"margin: 15px 0;\">🔄 <strong>Функції E та D</strong> - вбудовування та вилучення</li>\n                    <li style=\"margin: 15px 0;\">⚖️ <strong>Трикутник компромісів</strong> - баланс характеристик</li>\n                    <li style=\"margin: 15px 0;\">🎮 <strong>Моделі атак</strong> - формалізація загроз</li>\n                </ul>\n            </div>\n            <div class=\"formula-box\">\n                <strong>S = (C, M, K, E, D, A)</strong>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "title": "📐 Формальна модель стеганосистеми",
+      "content": "<div class=\"slide-content\"><div class=\"formula-box\">\n                S = (C, M, K, E, D, A)\n            </div>\n            <div class=\"function-grid\">\n                <div class=\"function-card\">\n                    <h4>C - Контейнери</h4>\n                    <p>Множина можливих контейнерів</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>M - Повідомлення</h4>\n                    <p>Дані для приховування</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>K - Ключі</h4>\n                    <p>Простір секретних ключів</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>E - Вбудовування</h4>\n                    <p>E: C × M × K → S</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>D - Вилучення</h4>\n                    <p>D: S × K → M</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>A - Аналіз</h4>\n                    <p>Оцінка придатності</p>\n                </div>\n            </div>\n            <div class=\"model-diagram\">\n                <div class=\"model-box\">Контейнер C</div>\n                <span class=\"arrow\">→</span>\n                <div class=\"model-box\">E(C,M,K)</div>\n                <span class=\"arrow\">→</span>\n                <div class=\"model-box\">Стего S</div>\n                <span class=\"arrow\">→</span>\n                <div class=\"model-box\">D(S,K)</div>\n                <span class=\"arrow\">→</span>\n                <div class=\"model-box\">Повідомлення M</div>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "title": "🔄 Функція вбудовування",
+      "content": "<div class=\"slide-content\"><div class=\"formula-box\">\n                E: C × M × K → S\n            </div>\n            <h3>Властивості функції E:</h3>\n            <div class=\"comparison-grid\">\n                <div class=\"comparison-card\">\n                    <h4>💉 Ін'єктивність</h4>\n                    <p>Різні повідомлення → різні стего-об'єкти</p>\n                    <div class=\"formula-box\">m₁ ≠ m₂ ⇒ E(c,m₁,k) ≠ E(c,m₂,k)</div>\n                </div>\n                <div class=\"comparison-card\">\n                    <h4>🔄 Оборотність</h4>\n                    <p>Існує функція вилучення D</p>\n                    <div class=\"formula-box\">D(E(c,m,k),k) = m</div>\n                </div>\n            </div>\n            <div class=\"info-card\">\n                <h3>Типи вбудовування</h3>\n                <ul>\n                    <li><strong>Лінійне:</strong> s = c + α × w × m</li>\n                    <li><strong>Нелінійне:</strong> s = f(c, m, λ)</li>\n                    <li><strong>Адаптивне:</strong> враховує локальні характеристики</li>\n                </ul>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "title": "🔓 Функція вилучення",
+      "content": "<div class=\"slide-content\"><div class=\"formula-box\">\n                D: S × K → M\n            </div>\n            <div class=\"info-card\">\n                <h3>Вимоги до функції D:</h3>\n                <ol>\n                    <li><strong>Коректність:</strong> D(E(c,m,k),k) = m</li>\n                    <li><strong>Стійкість:</strong> Працює при незначних спотвореннях</li>\n                    <li><strong>Ефективність:</strong> Поліноміальна складність</li>\n                </ol>\n            </div>\n            <h3>Методи підвищення стійкості</h3>\n            <div class=\"function-grid\">\n                <div class=\"function-card\">\n                    <h4>🛡️ Коди корекції</h4>\n                    <p>m̂ = D_ECC(D_base(s,k))</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>🔁 Ітеративне вилучення</h4>\n                    <p>Покрокове уточнення результату</p>\n                </div>\n                <div class=\"function-card\">\n                    <h4>📊 Статистичне декодування</h4>\n                    <p>Використання ймовірнісних методів</p>\n                </div>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "title": "",
+      "content": "<div class=\"slide-content\"><label>Ємність: <span id=\"capacity-value\">33%</span></label>\n                    <input type=\"range\" min=\"0\" max=\"100\" value=\"33\" class=\"slider\" id=\"capacity-slider\" oninput=\"updateTriangle()\"></div>",
+      "notes": ""
+    },
+    {
+      "id": 8,
+      "title": "",
+      "content": "<div class=\"slide-content\"><label>Непомітність: <span id=\"imperceptibility-value\">33%</span></label>\n                    <input type=\"range\" min=\"0\" max=\"100\" value=\"33\" class=\"slider\" id=\"imperceptibility-slider\" oninput=\"updateTriangle()\"></div>",
+      "notes": ""
+    },
+    {
+      "id": 9,
+      "title": "",
+      "content": "<div class=\"slide-content\"><label>Стійкість: <span id=\"robustness-value\">34%</span></label>\n                    <input type=\"range\" min=\"0\" max=\"100\" value=\"34\" class=\"slider\" id=\"robustness-slider\" oninput=\"updateTriangle()\"></div>",
+      "notes": ""
+    },
+    {
+      "id": 10,
+      "title": "🔑 Роль та типи ключів",
+      "content": "<div class=\"slide-content\"><div class=\"comparison-grid\">\n                <div class=\"comparison-card\">\n                    <h3>🔐 Симетричні системи</h3>\n                    <p>k_embed = k_extract</p>\n                    <ul>\n                        <li>Один ключ для обох операцій</li>\n                        <li>Мінімум 128 біт</li>\n                        <li>Приклад: LSB з PRNG</li>\n                    </ul>\n                </div>\n                <div class=\"comparison-card\">\n                    <h3>🔓 Асиметричні системи</h3>\n                    <p>(k_public, k_private)</p>\n                    <ul>\n                        <li>Пара ключів</li>\n                        <li>Рідко використовується</li>\n                        <li>Складна реалізація</li>\n                    </ul>\n                </div>\n            </div>\n            <div class=\"info-card\">\n                <h3>Використання ключів</h3>\n                <div class=\"formula-box\">\n                    positions = PRNG(k).shuffle(range(size))\n                </div>\n                <ul>\n                    <li>Вибір позицій вбудовування</li>\n                    <li>Модуляція сигналу</li>\n                    <li>Адаптивні ваги</li>\n                </ul>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 11,
+      "title": "📡 Моделі стеганографічного каналу",
+      "content": "<div class=\"slide-content\"><h3>Модель Сіммонса (Проблема в'язнів)</h3>\n            <div class=\"model-diagram\">\n                <div class=\"model-box\">Аліса</div>\n                <span class=\"arrow\">→</span>\n                <div class=\"model-box\">Стего</div>\n                <span class=\"arrow\">→</span>\n                <div class=\"model-box\">Боб</div>\n            </div>\n            <div style=\"text-align: center; margin: 20px 0;\">\n                <div class=\"model-box\" style=\"display: inline-block; background: linear-gradient(135deg, #ee0979, #ff6a00);\">\n                    🕵️ Наглядач Віллі\n                </div>\n            </div>\n            \n            <div class=\"comparison-grid\">\n                <div class=\"comparison-card\">\n                    <h4>👁️ Пасивний наглядач</h4>\n                    <ul>\n                        <li>Тільки спостерігає</li>\n                        <li>Намагається виявити</li>\n                        <li>Не модифікує дані</li>\n                    </ul>\n                </div>\n                <div class=\"comparison-card\">\n                    <h4>⚔️ Активний наглядач</h4>\n                    <ul>\n                        <li>Модифікує повідомлення</li>\n                        <li>Компресія, шум, фільтри</li>\n                        <li>Геометричні атаки</li>\n                    </ul>\n                </div>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 12,
+      "title": "🎮 Моделі атак на стеганосистеми",
+      "content": "<div class=\"slide-content\"><div class=\"attack-model\">\n                <div class=\"attack-type\">\n                    <h4>🔍 Виявлення</h4>\n                    <p>Detection</p>\n                </div>\n                <div class=\"attack-type\">\n                    <h4>📏 Оцінка</h4>\n                    <p>Estimation</p>\n                </div>\n                <div class=\"attack-type\">\n                    <h4>📤 Вилучення</h4>\n                    <p>Extraction</p>\n                </div>\n                <div class=\"attack-type\">\n                    <h4>💥 Знищення</h4>\n                    <p>Destruction</p>\n                </div>\n            </div>\n            \n            <h3>Статистична модель атаки</h3>\n            <div class=\"info-card\">\n                <div class=\"formula-box\">\n                    H₀: об'єкт є контейнером<br>\n                    H₁: об'єкт є стего\n                </div>\n                <p>Рішення: T(x) > τ → H₁</p>\n            </div>\n            \n            <div class=\"metric-display\">\n                <div class=\"metric-item\">\n                    <div class=\"metric-value\">0.85</div>\n                    <div class=\"metric-label\">AUC</div>\n                </div>\n                <div class=\"metric-item\">\n                    <div class=\"metric-value\">5%</div>\n                    <div class=\"metric-label\">False Positive</div>\n                </div>\n                <div class=\"metric-item\">\n                    <div class=\"metric-value\">8%</div>\n                    <div class=\"metric-label\">False Negative</div>\n                </div>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 13,
+      "title": "📊 Теоретико-інформаційні обмеження",
+      "content": "<div class=\"slide-content\"><div class=\"info-card\">\n                <h3>Межа Качина</h3>\n                <div class=\"formula-box\">\n                    R ≤ -log₂(1 - ε²/2)\n                </div>\n                <p>Максимальна швидкість вбудовування для ε-безпечної системи</p>\n            </div>\n            \n            <div class=\"info-card\">\n                <h3>Нерівність обробки даних</h3>\n                <div class=\"model-diagram\">\n                    <div class=\"model-box\">C</div>\n                    <span class=\"arrow\">→</span>\n                    <div class=\"model-box\">S</div>\n                    <span class=\"arrow\">→</span>\n                    <div class=\"model-box\">S'</div>\n                    <span class=\"arrow\">→</span>\n                    <div class=\"model-box\">M'</div>\n                </div>\n                <div class=\"formula-box\">\n                    I(C;M) ≥ I(S;M) ≥ I(S';M') ≥ I(M';M)\n                </div>\n            </div>\n            \n            <div class=\"info-card\">\n                <h3>Межа Шеннона</h3>\n                <div class=\"formula-box\">\n                    C = B × log₂(1 + SNR)\n                </div>\n                <p>Пропускна здатність при наявності шуму</p>\n            </div></div>",
+      "notes": ""
+    },
+    {
+      "id": 14,
+      "title": "📋 Підсумки",
+      "content": "<div class=\"slide-content\"><div class=\"info-card\">\n                <h2>🎓 Ключові концепції</h2>\n                <div class=\"comparison-grid\">\n                    <div>\n                        <h4>📐 Формальна модель</h4>\n                        <p>S = (C, M, K, E, D, A)</p>\n                    </div>\n                    <div>\n                        <h4>🔄 Функції E та D</h4>\n                        <p>Вбудовування та вилучення</p>\n                    </div>\n                    <div>\n                        <h4>⚖️ Трикутник компромісів</h4>\n                        <p>Баланс C-I-R</p></div>",
+      "notes": ""
+    }
+  ],
+  "resources": {
+    "formulas": [],
+    "references": []
+  }
+}

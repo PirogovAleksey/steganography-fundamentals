@@ -1,0 +1,546 @@
+/* slides.css - Стилі для слайдових презентацій */
+
+/* ============================================
+   Контейнер слайдів
+   ============================================ */
+#slideContainer {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide-wrapper {
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    position: relative;
+    animation: slideIn 0.5s ease-out;
+}
+
+.slide-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 60px;
+    height: 100%;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    scroll-behavior: smooth;
+}
+
+/* Кастомний скролбар */
+.slide-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.slide-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.slide-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.slide-content::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* ============================================
+   Заголовки слайдів
+   ============================================ */
+.slide-title {
+    color: var(--secondary-color);
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.slide-body {
+    font-size: 1.1em;
+    line-height: 1.8;
+}
+
+/* ============================================
+   Навігація слайдів
+   ============================================ */
+.slide-navigation {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: rgba(255,255,255,0.95);
+    padding: 15px 25px;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.slide-counter {
+    padding: 10px 20px;
+    background: white;
+    border-radius: 25px;
+    font-weight: bold;
+    color: var(--secondary-color);
+    min-width: 100px;
+    text-align: center;
+}
+
+/* ============================================
+   Індикатори слайдів
+   ============================================ */
+.slide-indicators {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 999;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.indicator:hover {
+    background: rgba(255,255,255,0.8);
+    transform: scale(1.2);
+}
+
+.indicator.active {
+    background: white;
+    transform: scale(1.3);
+    border-color: var(--primary-color);
+}
+
+/* ============================================
+   Прогрес слайдів
+   ============================================ */
+.slide-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+}
+
+.slide-progress .progress-bar {
+    height: 4px;
+    margin: 0;
+    border-radius: 0;
+    background: rgba(255,255,255,0.2);
+}
+
+.slide-progress .progress-fill {
+    background: var(--gradient-accent);
+    height: 100%;
+}
+
+.progress-text {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   Компоненти контенту слайдів
+   ============================================ */
+
+/* Титульний слайд */
+.title-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    text-align: center;
+}
+
+.title-slide h2 {
+    font-size: 3em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.title-slide .subtitle {
+    font-size: 1.5em;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.title-slide .overview {
+    background: var(--bg-secondary);
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    max-width: 800px;
+    text-align: left;
+}
+
+/* Секції з формулами */
+.formula-section {
+    margin: 30px 0;
+}
+
+.formula-section .formula-box {
+    font-size: 1.3em;
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #f5f7fa, #e8eaf6);
+}
+
+/* Візуальні сітки */
+.visual-grid {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    gap: 2px;
+    padding: 10px;
+    background: #f0f0f0;
+    border-radius: var(--border-radius);
+    font-family: monospace;
+    font-size: 20px;
+}
+
+.visual-grid.sequential {
+    color: var(--primary-color);
+}
+
+.visual-grid.random {
+    color: var(--secondary-color);
+}
+
+.visual-grid.adaptive {
+    color: var(--accent-color);
+}
+
+/* Картки стратегій */
+.strategies-comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.strategy-card {
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius-lg);
+    padding: 25px;
+    transition: all 0.3s;
+}
+
+.strategy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--secondary-color);
+}
+
+.strategy-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.pros-cons {
+    list-style: none;
+    margin: 15px 0;
+}
+
+.pros-cons .pro {
+    color: var(--success-color);
+    margin: 5px 0;
+}
+
+.pros-cons .con {
+    color: var(--danger-color);
+    margin: 5px 0;
+}
+
+.use-case {
+    background: var(--bg-secondary);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    margin-top: 15px;
+}
+
+/* Нотатки слайдів */
+.slide-notes {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px dashed #ddd;
+}
+
+.slide-notes details {
+    background: #fffbf0;
+    padding: 15px;
+    border-radius: var(--border-radius);
+}
+
+.slide-notes summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+/* ============================================
+   Інтерактивні елементи
+   ============================================ */
+
+/* Квіз */
+.quiz-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s;
+}
+
+.quiz-content {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    max-width: 600px;
+    width: 90%;
+    box-shadow: var(--shadow-xl);
+}
+
+.quiz-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.quiz-option {
+    padding: 15px;
+    background: var(--bg-secondary);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+}
+
+.quiz-option:hover {
+    border-color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.quiz-close {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Пошук */
+.search-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.search-container {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    width: 90%;
+    max-width: 800px;
+    box-shadow: var(--shadow-xl);
+}
+
+.search-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    outline: none;
+}
+
+.search-results {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.search-result {
+    padding: 15px;
+    background: var(--bg-secondary);
+    margin-bottom: 10px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.search-result:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateX(5px);
+}
+
+.search-result strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.search-result mark {
+    background: yellow;
+    color: black;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.search-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.search-close:hover {
+    transform: rotate(90deg);
+}
+
+/* ============================================
+   Адаптивність для слайдів
+   ============================================ */
+@media (max-width: 768px) {
+    .slide-content {
+        padding: 20px 30px;
+    }
+    
+    .slide-navigation {
+        flex-wrap: wrap;
+        bottom: 10px;
+        padding: 10px 15px;
+    }
+    
+    .nav-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    .slide-indicators {
+        bottom: 80px;
+    }
+    
+    .strategies-comparison {
+        grid-template-columns: 1fr;
+    }
+    
+    .title-slide h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .slide-wrapper {
+        width: 100%;
+        height: 100vh;
+    }
+    
+    .slide-content {
+        border-radius: 0;
+        padding: 20px;
+    }
+    
+    .slide-navigation {
+        width: 100%;
+        border-radius: 0;
+        bottom: 0;
+    }
+}
+
+/* ============================================
+   Друк
+   ============================================ */
+@media print {
+    .slide-navigation,
+    .slide-indicators,
+    .slide-progress,
+    .theme-navigation,
+    .search-panel,
+    .quiz-modal {
+        display: none !important;
+    }
+    
+    .slide-content {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-after: always;
+    }
+    
+    body {
+        background: white;
+    }
+}
