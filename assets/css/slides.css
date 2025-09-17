@@ -1,0 +1,619 @@
+/* ================================================================
+   SLIDES.CSS - Стилі для презентацій банківських технологій
+   GitHub Pages | ITCSS Architecture | v1.0
+   ================================================================ */
+
+/* Complete reset and fullscreen setup */
+* {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+html, body {
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body.slides-page {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
+.slides-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+}
+
+/* ----------------------------------------------------------------
+   SLIDE POSITIONING - ABSOLUTE FULLSCREEN
+   ---------------------------------------------------------------- */
+.slide {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    display: none !important;
+    z-index: 1 !important;
+}
+
+.slide.active {
+    display: block !important;
+    z-index: 2 !important;
+}
+
+/* ----------------------------------------------------------------
+   SLIDE CONTAINER - PERFECT CENTER
+   ---------------------------------------------------------------- */
+.slide-container {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90vw !important;
+    max-width: 1200px !important;
+    text-align: center !important;
+}
+
+/* ----------------------------------------------------------------
+   TITLE SLIDE
+   ---------------------------------------------------------------- */
+.slide-title {
+    color: white !important;
+    text-align: center !important;
+}
+
+.slide-title h1 {
+    font-size: 4rem !important;
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+    margin-bottom: 20px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+
+.slide-title .subtitle {
+    font-size: 1.5rem !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 300 !important;
+}
+
+/* ----------------------------------------------------------------
+   CONTENT SLIDES
+   ---------------------------------------------------------------- */
+.slide-content {
+    background: white !important;
+    border-radius: 15px !important;
+    padding: 40px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+    width: 100% !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    text-align: left !important;
+}
+
+.slide-content h2 {
+    color: #333 !important;
+    font-size: 2.2rem !important;
+    margin-bottom: 25px !important;
+    border-bottom: 3px solid #667eea !important;
+    padding-bottom: 10px !important;
+    text-align: center !important;
+}
+
+.slide-content h3 {
+    color: #555 !important;
+    font-size: 1.6rem !important;
+    margin: 20px 0 10px 0 !important;
+}
+
+.slide-content h4 {
+    color: #666 !important;
+    font-size: 1.3rem !important;
+    margin: 15px 0 8px 0 !important;
+}
+
+.slide-content p {
+    font-size: 1.1rem !important;
+    line-height: 1.6 !important;
+    margin: 10px 0 !important;
+    color: #333 !important;
+}
+
+/* ----------------------------------------------------------------
+   LISTS
+   ---------------------------------------------------------------- */
+.slide-list {
+    font-size: 1.1rem !important;
+    line-height: 1.7 !important;
+    margin: 15px 0 !important;
+    padding-left: 20px !important;
+}
+
+.slide-list li {
+    margin: 8px 0 !important;
+    color: #333 !important;
+}
+
+.slide-list li strong {
+    color: #667eea !important;
+}
+
+.slide-list ul {
+    margin: 8px 0 8px 20px !important;
+}
+
+.slide-list ul li {
+    font-size: 1rem !important;
+    margin: 5px 0 !important;
+}
+
+.slide-list ol {
+    margin: 8px 0 8px 20px !important;
+}
+
+.slide-list ol li {
+    font-size: 1rem !important;
+    margin: 5px 0 !important;
+}
+
+/* ----------------------------------------------------------------
+   STATISTICS
+   ---------------------------------------------------------------- */
+.slide-statistics {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 20px !important;
+    margin: 20px 0 !important;
+}
+
+.stat-item {
+    background: #f8f9fa !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    text-align: center !important;
+    border-left: 4px solid #667eea !important;
+}
+
+.stat-item h4 {
+    color: #333 !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
+}
+
+.stat-item ul {
+    text-align: left !important;
+    margin: 10px 0 !important;
+    padding-left: 20px !important;
+}
+
+.stat-value {
+    font-size: 2.5rem !important;
+    font-weight: bold !important;
+    color: #667eea !important;
+    margin-bottom: 8px !important;
+}
+
+.stat-description {
+    font-size: 1rem !important;
+    color: #666 !important;
+    font-weight: 600 !important;
+}
+
+/* ----------------------------------------------------------------
+   BANKING EXAMPLES
+   ---------------------------------------------------------------- */
+.slide-banking-example {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+    color: white !important;
+    border-radius: 15px !important;
+    padding: 40px !important;
+    width: 100% !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    text-align: center !important;
+    position: relative !important;
+}
+
+/* Add semi-transparent overlay for better text contrast */
+.slide-banking-example::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 15px !important;
+    z-index: 1 !important;
+}
+
+.slide-banking-example > * {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.banking-logo {
+    font-size: 3rem !important;
+    margin-bottom: 15px !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+.banking-title {
+    font-size: 2rem !important;
+    font-weight: bold !important;
+    margin-bottom: 25px !important;
+    color: #fff !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-banking-example h3 {
+    color: #ffffff !important;
+    font-size: 1.5rem !important;
+    margin: 20px 0 10px 0 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-banking-example h4 {
+    color: #ffffff !important;
+    font-size: 1.3rem !important;
+    margin: 15px 0 10px 0 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-banking-example p {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
+.slide-banking-example .slide-list {
+    text-align: left !important;
+}
+
+.slide-banking-example .slide-list li {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
+.slide-banking-example .slide-list li strong {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-banking-example .stat-item {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-left: 4px solid #ffffff !important;
+    color: white !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+.slide-banking-example .stat-value {
+    color: #ffffff !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* ----------------------------------------------------------------
+   CYBERSECURITY
+   ---------------------------------------------------------------- */
+.slide-cyber-security {
+    background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%) !important;
+    color: white !important;
+    border-radius: 15px !important;
+    padding: 40px !important;
+    width: 100% !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    position: relative !important;
+}
+
+/* Add semi-transparent overlay for better text contrast */
+.slide-cyber-security::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 15px !important;
+    z-index: 1 !important;
+}
+
+.slide-cyber-security > * {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.slide-cyber-security h2 {
+    color: white !important;
+    border-bottom: 3px solid #ffffff !important;
+    text-align: center !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-cyber-security h3 {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-cyber-security h4 {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.slide-cyber-security p {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
+.slide-cyber-security .slide-list li {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
+.slide-cyber-security .slide-list li strong {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.cyber-threat-level {
+    display: inline-block !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    font-weight: bold !important;
+    font-size: 1rem !important;
+    margin: 15px 0 !important;
+    text-align: center !important;
+}
+
+.threat-high {
+    background: #d32f2f !important;
+    color: white !important;
+}
+
+.threat-medium {
+    background: #f57c00 !important;
+    color: white !important;
+}
+
+.threat-low {
+    background: #388e3c !important;
+    color: white !important;
+}
+
+/* ----------------------------------------------------------------
+   ALERTS
+   ---------------------------------------------------------------- */
+.alert {
+    padding: 15px !important;
+    border-radius: 6px !important;
+    margin: 15px 0 !important;
+    font-size: 1rem !important;
+}
+
+.alert-info {
+    background: #e3f2fd !important;
+    border-left: 4px solid #2196f3 !important;
+    color: #0d47a1 !important;
+}
+
+.alert-success {
+    background: #e8f5e8 !important;
+    border-left: 4px solid #4caf50 !important;
+    color: #1b5e20 !important;
+}
+
+.alert-warning {
+    background: #fff3e0 !important;
+    border-left: 4px solid #ff9800 !important;
+    color: #e65100 !important;
+}
+
+.alert-error {
+    background: #ffebee !important;
+    border-left: 4px solid #f44336 !important;
+    color: #c62828 !important;
+}
+
+/* ----------------------------------------------------------------
+   NAVIGATION
+   ---------------------------------------------------------------- */
+.slide-navigation {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    border-radius: 25px !important;
+    padding: 10px 20px !important;
+    z-index: 1000 !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.slide-btn {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 12px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.slide-btn:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.slide-counter {
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    min-width: 60px !important;
+    text-align: center !important;
+}
+
+/* ----------------------------------------------------------------
+   PROGRESS BAR
+   ---------------------------------------------------------------- */
+.slide-progress {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 4px !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    z-index: 1000 !important;
+}
+
+.slide-progress-bar {
+    height: 100% !important;
+    background: #4CAF50 !important;
+    transition: width 0.3s ease !important;
+}
+
+/* ----------------------------------------------------------------
+   TABLES
+   ---------------------------------------------------------------- */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 15px 0 !important;
+    font-size: 0.95rem !important;
+}
+
+th {
+    background: #667eea !important;
+    color: white !important;
+    padding: 12px !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+}
+
+td {
+    padding: 10px 12px !important;
+    border: 1px solid #ddd !important;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa !important;
+}
+
+/* ----------------------------------------------------------------
+   MOBILE RESPONSIVE
+   ---------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .slide-container {
+        width: 95vw !important;
+        padding: 10px !important;
+    }
+
+    .slide-content {
+        padding: 25px !important;
+    }
+
+    .slide-title h1 {
+        font-size: 2.5rem !important;
+    }
+
+    .slide-content h2 {
+        font-size: 1.8rem !important;
+    }
+
+    .slide-statistics {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    .banking-title {
+        font-size: 1.6rem !important;
+    }
+
+    .slide-navigation {
+        bottom: 10px !important;
+        padding: 8px 15px !important;
+    }
+
+    .slide-btn {
+        font-size: 14px !important;
+        padding: 6px 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .slide-content {
+        padding: 20px 15px !important;
+        margin: 10px !important;
+    }
+
+    .slide-content h2 {
+        font-size: 1.6rem !important;
+    }
+
+    .slide-title h1 {
+        font-size: 2rem !important;
+    }
+
+    .slide-list {
+        font-size: 1rem !important;
+    }
+
+    .stat-item {
+        padding: 15px !important;
+    }
+
+    .banking-title {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ----------------------------------------------------------------
+   PRINT STYLES
+   ---------------------------------------------------------------- */
+@media print {
+    .slide-navigation,
+    .slide-progress {
+        display: none !important;
+    }
+
+    .slide {
+        position: relative !important;
+        display: block !important;
+        page-break-after: always !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .slide-container {
+        position: relative !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .slide-content {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
