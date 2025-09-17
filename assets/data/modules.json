@@ -6,7 +6,7 @@
     "lastUpdated": "2024-12-20",
     "totalModules": 4,
     "totalLectures": 16,
-    "totalLabs": 34,
+    "totalLabs": 17,
     "estimatedHours": 100,
     "language": "uk",
     "institution": "Навчальний заклад",
@@ -80,15 +80,6 @@
           ],
           "status": "planned"
         }
-      ],
-      "labs": [
-        {
-          "id": "1.1",
-          "title": "Вступ до стеганографії",
-          "description": "Текстова стеганографія, перший досвід з LSB, візуальний аналіз",
-          "estimatedTime": 120,
-          "type": "introduction"
-        }
       ]
     },
     {
@@ -151,29 +142,6 @@
             "Мінімізація спотворень"
           ],
           "status": "planned"
-        }
-      ],
-      "labs": [
-        {
-          "id": "2",
-          "title": "LSB методи - основи",
-          "description": "Базовий LSB кодувальник, покращений LSB з ключем, метрики якості",
-          "estimatedTime": 120,
-          "type": "programming"
-        },
-        {
-          "id": "3",
-          "title": "Стеганоаналіз LSB",
-          "description": "Статистичні тести, візуальні методи, автоматичний детектор",
-          "estimatedTime": 120,
-          "type": "analysis"
-        },
-        {
-          "id": "4",
-          "title": "Адаптивні LSB методи",
-          "description": "Edge-based embedding, PVD метод, порівняльний аналіз",
-          "estimatedTime": 120,
-          "type": "programming"
         }
       ]
     },
@@ -238,36 +206,6 @@
           ],
           "status": "planned"
         }
-      ],
-      "labs": [
-        {
-          "id": "5",
-          "title": "DCT стеганографія",
-          "description": "Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG",
-          "estimatedTime": 180,
-          "type": "programming"
-        },
-        {
-          "id": "6",
-          "title": "DWT стеганографія",
-          "description": "Wavelet розкладання, embedding в HH субсмугу, тестування стійкості",
-          "estimatedTime": 180,
-          "type": "programming"
-        },
-        {
-          "id": "7",
-          "title": "Аудіо LSB",
-          "description": "Обробка WAV файлів, аудіо LSB embedding, перцептивний аналіз",
-          "estimatedTime": 120,
-          "type": "audio"
-        },
-        {
-          "id": "8",
-          "title": "Echo hiding",
-          "description": "Echo generation, cepstrum аналіз, noise tolerance",
-          "estimatedTime": 120,
-          "type": "audio"
-        }
       ]
     },
     {
@@ -331,44 +269,130 @@
           ],
           "status": "planned"
         }
-      ],
-      "labs": [
-        {
-          "id": "9",
-          "title": "ML стеганографія",
-          "description": "Autoencoder для стеганографії, neural network training, порівняння методів",
-          "estimatedTime": 180,
-          "type": "machine-learning"
-        },
-        {
-          "id": "10",
-          "title": "Adaptive стеганографія",
-          "description": "Texture аналіз, UNIWARD implementation, security evaluation",
-          "estimatedTime": 180,
-          "type": "advanced"
-        },
-        {
-          "id": "11",
-          "title": "Практичні додатки",
-          "description": "Digital watermarking, covert communication, IoT застосування",
-          "estimatedTime": 120,
-          "type": "practical"
-        },
-        {
-          "id": "12",
-          "title": "ML стеганоаналіз",
-          "description": "Feature extraction, classifier training, adversarial examples",
-          "estimatedTime": 180,
-          "type": "machine-learning"
-        },
-        {
-          "id": "13",
-          "title": "Ensemble методи",
-          "description": "Комбінування feature sets, ensemble classifiers, cross-validation",
-          "estimatedTime": 180,
-          "type": "machine-learning"
-        }
       ]
+    }
+  ],
+  "labs": [
+    {
+      "id": 1,
+      "title": "Вступ до стеганографії",
+      "description": "Текстова стеганографія, перший досвід з LSB, візуальний аналіз",
+      "estimatedTime": 120,
+      "type": "introduction"
+    },
+    {
+      "id": 2,
+      "title": "LSB методи - основи",
+      "description": "Базовий LSB кодувальник, покращений LSB з ключем, метрики якості",
+      "estimatedTime": 120,
+      "type": "programming"
+    },
+    {
+      "id": 3,
+      "title": "Стеганоаналіз LSB",
+      "description": "Статистичні тести, візуальні методи, автоматичний детектор",
+      "estimatedTime": 120,
+      "type": "analysis",
+      "url": "labs/lab3/index.html",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "title": "Адаптивні LSB методи",
+      "description": "Edge-based embedding, PVD метод, порівняльний аналіз",
+      "estimatedTime": 120,
+      "type": "programming"
+    },
+    {
+      "id": 5,
+      "title": "DCT стеганографія",
+      "description": "Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG",
+      "estimatedTime": 180,
+      "type": "programming"
+    },
+    {
+      "id": 6,
+      "title": "DWT стеганографія",
+      "description": "Wavelet розкладання, embedding в HH субсмугу, тестування стійкості",
+      "estimatedTime": 180,
+      "type": "programming"
+    },
+    {
+      "id": 7,
+      "title": "Аудіо LSB",
+      "description": "Обробка WAV файлів, аудіо LSB embedding, перцептивний аналіз",
+      "estimatedTime": 120,
+      "type": "audio"
+    },
+    {
+      "id": 8,
+      "title": "Echo hiding",
+      "description": "Echo generation, cepstrum аналіз, noise tolerance",
+      "estimatedTime": 120,
+      "type": "audio"
+    },
+    {
+      "id": 9,
+      "title": "ML стеганографія",
+      "description": "Autoencoder для стеганографії, neural network training, порівняння методів",
+      "estimatedTime": 180,
+      "type": "machine-learning"
+    },
+    {
+      "id": 10,
+      "title": "Adaptive стеганографія",
+      "description": "Texture аналіз, UNIWARD implementation, security evaluation",
+      "estimatedTime": 180,
+      "type": "advanced"
+    },
+    {
+      "id": 11,
+      "title": "Практичні додатки",
+      "description": "Digital watermarking, covert communication, IoT застосування",
+      "estimatedTime": 120,
+      "type": "practical"
+    },
+    {
+      "id": 12,
+      "title": "ML стеганоаналіз",
+      "description": "Feature extraction, classifier training, adversarial examples",
+      "estimatedTime": 180,
+      "type": "machine-learning"
+    },
+    {
+      "id": 13,
+      "title": "Ensemble методи",
+      "description": "Комбінування feature sets, ensemble classifiers, cross-validation",
+      "estimatedTime": 180,
+      "type": "machine-learning"
+    },
+    {
+      "id": 14,
+      "title": "Проект - розробка методу",
+      "description": "Концепція власного методу, implementation, initial testing",
+      "estimatedTime": 240,
+      "type": "project"
+    },
+    {
+      "id": 15,
+      "title": "Проект - тестування",
+      "description": "Comprehensive testing, security аналіз, оптимізація коду",
+      "estimatedTime": 240,
+      "type": "project"
+    },
+    {
+      "id": 16,
+      "title": "Проект - порівняльний аналіз",
+      "description": "Benchmarking, statistical testing, підготовка звіту",
+      "estimatedTime": 240,
+      "type": "project"
+    },
+    {
+      "id": 17,
+      "title": "Презентації та підсумки",
+      "description": "Презентації проектів, обговорення результатів, підсумки курсу",
+      "estimatedTime": 120,
+      "type": "presentation"
     }
   ],
   "progressTracking": {
@@ -383,7 +407,7 @@
     },
     "labProgress": {
       "completed": 0,
-      "total": 34
+      "total": 17
     }
   },
   "assessment": {

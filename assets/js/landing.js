@@ -2,13 +2,13 @@
  * LANDING.JS - Steganography Course
  * JavaScript для головної сторінки курсу "Основи стеганографії"
  *
- * Адаптовано з banking-information-systems
- * Версія: 2.0
+ * Версія: 2.1 - оновлена структура лабораторних
  */
 
 class StegoLandingPage {
     constructor() {
         this.modules = [];
+        this.labs = [];
         this.courseData = null;
         this.activeTab = 'lectures';
         this.init();
@@ -35,6 +35,7 @@ class StegoLandingPage {
         }
         this.courseData = await response.json();
         this.modules = this.courseData.modules || [];
+        this.labs = this.courseData.labs || [];
         console.log('✅ Завантажено дані курсу:', this.courseData.courseInfo);
     }
 
@@ -49,7 +50,7 @@ class StegoLandingPage {
 
         if (totalModulesEl) totalModulesEl.textContent = info.totalModules || 4;
         if (totalLecturesEl) totalLecturesEl.textContent = info.totalLectures || 16;
-        if (totalLabsEl) totalLabsEl.textContent = info.totalLabs || 34;
+        if (totalLabsEl) totalLabsEl.textContent = info.totalLabs || 17;
         if (totalHoursEl) totalHoursEl.textContent = info.estimatedHours || 100;
     }
 
@@ -117,38 +118,32 @@ class StegoLandingPage {
 
         container.innerHTML = '';
 
-        // Збираємо всі лабораторні з усіх модулів
-        const allLabs = [];
-        this.modules.forEach(module => {
-            if (module.labs) {
-                module.labs.forEach(lab => {
-                    allLabs.push({
-                        ...lab,
-                        moduleId: module.id,
-                        moduleName: module.title,
-                        moduleEmoji: module.emoji
-                    });
-                });
-            }
-        });
+        // Додаємо заголовок та опис
+        const header = document.createElement('div');
+        header.className = 'col-span-full';
+        header.innerHTML = `
+            <h2 class="section-title">🔬 Лабораторні роботи з курсу "Основи стеганографії"</h2>
+            <p class="section-subtitle mb-6">Список лабораторних робіт</p>
+        `;
+        container.appendChild(header);
 
-        if (allLabs.length === 0) {
-            container.innerHTML = `
+        if (this.labs.length === 0) {
+            container.innerHTML += `
                 <div class="col-span-full text-center py-12">
                     <div class="text-6xl mb-4">🔬</div>
                     <h3 class="text-xl font-semibold mb-2">Лабораторні роботи</h3>
-                    <p class="text-gray-600">Практичні завдання будуть додані незабаром</p>
+                    <p class="text-gray-600">Практичні завдання не знайдені</p>
                 </div>
             `;
             return;
         }
 
-        allLabs.forEach(lab => {
-            const labCard = this.createLabCard(lab);
+        this.labs.forEach((lab, index) => {
+            const labCard = this.createLabCard(lab, index + 1);
             container.appendChild(labCard);
         });
 
-        console.log(`🔬 Відрендерено ${allLabs.length} лабораторних робіт`);
+        console.log(`🔬 Відрендерено ${this.labs.length} лабораторних робіт`);
     }
 
     createLectureModuleCard(module, position) {
@@ -178,17 +173,6 @@ class StegoLandingPage {
                         ${this.renderModuleLectures(module.lectures, module.id)}
                     </div>
                 </div>
-                
-                ${module.labs && module.labs.length > 0 ? `
-                    <div class="module-section mt-4">
-                        <div class="module-section-title">
-                            <span>🔬 Лабораторні (${module.labs.length}):</span>
-                        </div>
-                        <div class="module-items">
-                            ${this.renderModuleLabs(module.labs, module.id)}
-                        </div>
-                    </div>
-                ` : ''}
             </div>
         `;
 
@@ -213,34 +197,19 @@ class StegoLandingPage {
         }).join('');
     }
 
-    renderModuleLabs(labs, moduleId) {
-        return labs.map(lab => `
-            <div class="module-item module-lab" 
-                 data-module-id="${moduleId}" 
-                 data-lab-id="${lab.id}">
-                <span class="module-item-title">
-                    ${lab.title}
-                </span>
-                ${lab.estimatedTime ? `<span class="module-item-meta">${lab.estimatedTime} хв</span>` : ''}
-            </div>
-        `).join('');
-    }
-
-    createLabCard(lab) {
+    createLabCard(lab, position) {
         const card = document.createElement('div');
         card.className = 'practical-card';
 
-        const typeIcon = lab.type === 'programming' ? '💻' :
-            lab.type === 'analysis' ? '📊' :
-                lab.type === 'implementation' ? '⚙️' :
-                    lab.type === 'machine-learning' ? '🤖' : '🔬';
+        const typeIcon = this.getLabTypeIcon(lab.type);
+        const typeLabel = this.getLabTypeLabel(lab.type);
 
         card.innerHTML = `
             <div class="practical-header">
                 <div class="practical-icon">${typeIcon}</div>
                 <div class="practical-meta">
-                    <span class="practical-type">Лабораторна ${lab.id}</span>
-                    <span class="practical-module">${lab.moduleEmoji} ${lab.moduleName}</span>
+                    <span class="practical-type">Лабораторна ${position}</span>
+                    <span class="practical-module">${typeLabel}</span>
                 </div>
             </div>
             <h3 class="practical-title">${lab.title}</h3>
@@ -253,10 +222,40 @@ class StegoLandingPage {
         `;
 
         card.addEventListener('click', () => {
-            this.openLab(lab.moduleId, lab.id);
+            this.openLab(lab.id);
         });
 
         return card;
+    }
+
+    getLabTypeIcon(type) {
+        const icons = {
+            'introduction': '🎯',
+            'programming': '💻',
+            'analysis': '📊',
+            'audio': '🎵',
+            'machine-learning': '🤖',
+            'advanced': '⚙️',
+            'practical': '🔧',
+            'project': '📁',
+            'presentation': '🎤'
+        };
+        return icons[type] || '🔬';
+    }
+
+    getLabTypeLabel(type) {
+        const labels = {
+            'introduction': 'Вступ',
+            'programming': 'Програмування',
+            'analysis': 'Аналіз',
+            'audio': 'Аудіо',
+            'machine-learning': 'Машинне навчання',
+            'advanced': 'Складний рівень',
+            'practical': 'Практика',
+            'project': 'Проект',
+            'presentation': 'Презентація'
+        };
+        return labels[type] || 'Лабораторна';
     }
 
     attachLectureEventListeners() {
@@ -266,15 +265,6 @@ class StegoLandingPage {
                 const moduleId = item.dataset.moduleId;
                 const lectureId = item.dataset.lectureId;
                 this.openLecture(moduleId, lectureId);
-            });
-        });
-
-        const labItems = document.querySelectorAll('.module-lab');
-        labItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const moduleId = item.dataset.moduleId;
-                const labId = item.dataset.labId;
-                this.openLab(moduleId, labId);
             });
         });
     }
@@ -304,9 +294,9 @@ class StegoLandingPage {
         alert(`📖 Лекція ${lectureId} модуля ${moduleId} буде доступна після створення`);
     }
 
-    openLab(moduleId, labId) {
-        console.log(`🔬 Відкриття лабораторної ${moduleId}.${labId}`);
-        alert(`🔬 Лабораторна ${labId} модуля ${moduleId} буде доступна після створення`);
+    openLab(labId) {
+        console.log(`🔬 Відкриття лабораторної ${labId}`);
+        alert(`🔬 Лабораторна робота ${labId} буде доступна після створення`);
     }
 
     showError(containerId = 'lectures-container') {
