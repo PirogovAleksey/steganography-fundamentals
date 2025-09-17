@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лабораторна робота №3: Стеганоаналіз LSB - методи виявлення прихованої інформації">
+    <meta name="keywords" content="стеганоаналіз, LSB, chi-square, RS аналіз, візуальні атаки">
+    <title>Лабораторна №3: Стеганоаналіз LSB | Основи стеганографії</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/lab-universal.css">
+
+    <!-- Highlight.js для підсвітки коду -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="lab-header">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../../index.html">Головна</a>
+            <span class="separator">/</span>
+            <a href="../index.html">Лабораторні</a>
+            <span class="separator">/</span>
+            <span class="current">Лабораторна №3</span>
+        </nav>
+        <h1>🔍 Лабораторна робота №3</h1>
+        <p class="subtitle">
+            Стеганоаналіз LSB: Статистичні тести, візуальні методи, автоматичний детектор
+        </p>
+        <div class="tool-badges">
+            <span class="tool-badge">Python</span>
+            <span class="tool-badge">PIL/Pillow</span>
+            <span class="tool-badge">NumPy</span>
+            <span class="tool-badge">Matplotlib</span>
+            <span class="tool-badge">SciPy</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+
+    <!-- Цілі роботи -->
+    <section class="task-box">
+        <h2>🎯 Цілі лабораторної роботи</h2>
+        <ul>
+            <li>Вивчити основні методи стеганоаналізу для виявлення LSB вбудовувань</li>
+            <li>Реалізувати візуальні атаки на LSB стеганографію</li>
+            <li>Освоїти статистичні методи: Chi-square тест та RS аналіз</li>
+            <li>Створити автоматичний детектор LSB стеганографії</li>
+            <li>Навчитися інтерпретувати результати стеганоаналізу</li>
+        </ul>
+    </section>
+
+    <!-- Теоретична частина -->
+    <section>
+        <h2>📚 Теоретична частина</h2>
+
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="switchTab(event, 'visual')">
+                    👁️ Візуальні атаки
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'histogram')">
+                    📊 Гістограмний аналіз
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'chisquare')">
+                    χ² Chi-square тест
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'rsanalysis')">
+                    RS Аналіз
+                </button>
+            </div>
+
+            <!-- Візуальні атаки -->
+            <div class="tab-content active" id="visual">
+                <h3>Візуальні методи виявлення LSB</h3>
+
+                <div class="detection-method">
+                    <h4>🎨 Метод побітових площин (Bit Plane Analysis)</h4>
+                    <p>
+                        LSB стеганографія змінює молодші біти пікселів. Візуалізація окремих бітових площин
+                        може виявити аномалії в розподілі бітів.
+                    </p>
+
+                    <div class="formula-box">
+                        Для кожного пікселя P[i,j]:
+                        BitPlane[k][i,j] = (P[i,j] >> k) & 1
+                        де k = 0..7 (номер біта)
+                    </div>
+
+                    <p><strong>Ознаки наявності стеганографії:</strong></p>
+                    <ul>
+                        <li>Випадковий шум в LSB площині замість природних патернів</li>
+                        <li>Різка зміна текстури між сусідніми бітовими площинами</li>
+                        <li>Блочні артефакти в областях вбудовування</li>
+                    </ul>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔍 Enhanced LSB (Покращена візуалізація)</h4>
+                    <p>
+                        Підсилення контрасту молодших бітів для кращої візуалізації змін:
+                    </p>
+
+                    <div class="formula-box">
+                        Enhanced[i,j] = (P[i,j] & 0x01) * 255
+                    </div>
+                </div>
+            </div>
+
+            <!-- Гістограмний аналіз -->
+            <div class="tab-content" id="histogram">
+                <h3>Гістограмний аналіз</h3>
+
+                <div class="detection-method">
+                    <h4>📈 Аналіз пар значень (PoV)</h4>
+                    <p>
+                        LSB вбудовування створює характерні "сходинки" в гістограмі через злиття
+                        пар значень (2k, 2k+1).
+                    </p>
+
+                    <div class="formula-box">
+                        h[2k] ≈ h[2k+1] після LSB вбудовування
+
+                        Метрика відхилення:
+                        D = Σ|h[2k] - h[2k+1]| / Σh[i]
+                    </div>
+
+                    <p><strong>Інтерпретація:</strong></p>
+                    <ul>
+                        <li>D → 0: висока ймовірність LSB стеганографії</li>
+                        <li>D > 0.05: природне зображення</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chi-square тест -->
+            <div class="tab-content" id="chisquare">
+                <h3>Chi-square тест</h3>
+
+                <div class="detection-method">
+                    <h4>χ² Статистичний тест</h4>
+                    <p>
+                        Chi-square тест перевіряє гіпотезу про рівномірний розподіл LSB бітів:
+                    </p>
+
+                    <div class="formula-box">
+                        χ² = Σ[(h[2k] - h*)² + (h[2k+1] - h*)²] / h*
+
+                        де h* = (h[2k] + h[2k+1]) / 2
+
+                        p-value = P(χ² > χ²_observed | H₀)
+                    </div>
+
+                    <p><strong>Критерії виявлення:</strong></p>
+                    <ul>
+                        <li>p-value > 0.05: природне зображення</li>
+                        <li>p-value < 0.01: висока ймовірність стеганографії</li>
+                        <li>0.01 < p-value < 0.05: підозріле зображення</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RS Аналіз -->
+            <div class="tab-content" id="rsanalysis">
+                <h3>RS Аналіз (Regular-Singular)</h3>
+
+                <div class="detection-method">
+                    <h4>📊 RS Статистика</h4>
+                    <p>
+                        RS аналіз вимірює кількість регулярних та сингулярних груп пікселів:
+                    </p>
+
+                    <div class="formula-box">
+                        Дискримінаційна функція:
+                        f(x₁, x₂, ..., xₙ) = Σ|x_{i+1} - xᵢ|
+
+                        Група G є:
+                        - Regular (R): якщо f(F(G)) > f(G)
+                        - Singular (S): якщо f(F(G)) < f(G)
+                        - Unchanged (U): якщо f(F(G)) = f(G)
+
+                        де F - операція флiпування LSB
+                    </div>
+
+                    <p><strong>Критерій виявлення:</strong></p>
+                    <div class="formula-box">
+                        |R_M - S_M| ≈ |R_{-M} - S_{-M}| для стего
+                        |R_M - S_M| >> |R_{-M} - S_{-M}| для чистого
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Практична частина -->
+    <section>
+        <h2>💻 Практична частина</h2>
+
+        <!-- Завдання 1 -->
+        <div class="task-box">
+            <h3><span class="step-number">1</span>Візуальний стеганоаналіз</h3>
+
+            <h4>Реалізація методу бітових площин:</h4>
+            <pre class="python"><code>import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
+
+def extract_bit_planes(image_path):
+    """Витягує всі 8 бітових площин із зображення"""
+    img = Image.open(image_path).convert('L')  # Grayscale
+    img_array = np.array(img)
+
+    bit_planes = []
+    for bit in range(8):
+        # Витягуємо k-ий біт
+        plane = (img_array >> bit) & 1
+        # Масштабуємо до 0-255 для візуалізації
+        plane = plane * 255
+        bit_planes.append(plane)
+
+    return bit_planes
+
+def visualize_bit_planes(image_path):
+    """Візуалізує всі бітові площини"""
+    planes = extract_bit_planes(image_path)
+
+    fig, axes = plt.subplots(2, 4, figsize=(15, 8))
+    fig.suptitle(f'Bit Planes Analysis: {image_path}', fontsize=16)
+
+    for i, ax in enumerate(axes.flat):
+        ax.imshow(planes[i], cmap='gray')
+        ax.set_title(f'Bit {i} {"(LSB)" if i == 0 else f"({7-i} MSB)"}')
+        ax.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
+def enhanced_lsb_visualization(image_path):
+    """Покращена візуалізація LSB площини"""
+    img = Image.open(image_path)
+    img_array = np.array(img)
+
+    if len(img_array.shape) == 3:  # RGB
+        # Витягуємо LSB з кожного каналу
+        lsb_r = (img_array[:,:,0] & 1) * 255
+        lsb_g = (img_array[:,:,1] & 1) * 255
+        lsb_b = (img_array[:,:,2] & 1) * 255
+
+        # Комбінуємо канали
+        enhanced = np.stack([lsb_r, lsb_g, lsb_b], axis=2)
+    else:  # Grayscale
+        enhanced = (img_array & 1) * 255
+
+    return enhanced
+
+# Приклад використання
+original_img = "original.png"
+stego_img = "stego.png"
+
+print("Аналіз оригінального зображення:")
+visualize_bit_planes(original_img)
+
+print("\nАналіз стего-зображення:")
+visualize_bit_planes(stego_img)</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>LSB площина оригіналу: природні контури та текстури</li>
+                    <li>LSB площина стего: випадковий шум, втрата структури</li>
+                    <li>Вищі бітові площини: мінімальні зміни</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 2 -->
+        <div class="task-box">
+            <h3><span class="step-number">2</span>Chi-square тест</h3>
+
+            <h4>Реалізація Chi-square детектора:</h4>
+            <pre class="python"><code>from scipy import stats
+import numpy as np
+from PIL import Image
+
+def chi_square_test(image_path, block_size=128):
+    """
+    Виконує Chi-square тест для виявлення LSB стеганографії
+
+    Parameters:
+    - image_path: шлях до зображення
+    - block_size: розмір блоку для аналізу
+
+    Returns:
+    - p_values: список p-значень для кожного блоку
+    - detection: True якщо виявлено стеганографію
+    """
+    img = Image.open(image_path).convert('L')
+    img_array = np.array(img)
+
+    height, width = img_array.shape
+    p_values = []
+
+    # Аналізуємо зображення блоками
+    for y in range(0, height - block_size, block_size):
+        for x in range(0, width - block_size, block_size):
+            block = img_array[y:y+block_size, x:x+block_size].flatten()
+
+            # Підрахунок частот для пар значень
+            hist = np.bincount(block, minlength=256)
+
+            # Chi-square статистика
+            chi2_stat = 0
+            pairs_count = 0
+
+            for i in range(0, 256, 2):
+                if i+1 < 256:
+                    observed_even = hist[i]
+                    observed_odd = hist[i+1]
+                    expected = (observed_even + observed_odd) / 2
+
+                    if expected > 0:
+                        chi2_stat += ((observed_even - expected)**2 +
+                                     (observed_odd - expected)**2) / expected
+                        pairs_count += 1
+
+            # Обчислюємо p-value
+            if pairs_count > 0:
+                degrees_of_freedom = pairs_count - 1
+                p_value = 1 - stats.chi2.cdf(chi2_stat, degrees_of_freedom)
+                p_values.append(p_value)
+
+    # Аналіз результатів
+    p_values = np.array(p_values)
+    suspicious_blocks = np.sum(p_values < 0.01)
+    total_blocks = len(p_values)
+
+    detection_ratio = suspicious_blocks / total_blocks if total_blocks > 0 else 0
+    is_stego = detection_ratio > 0.5
+
+    print(f"Chi-square Test Results:")
+    print(f"  Total blocks analyzed: {total_blocks}")
+    print(f"  Suspicious blocks (p < 0.01): {suspicious_blocks}")
+    print(f"  Detection ratio: {detection_ratio:.2%}")
+    print(f"  Mean p-value: {np.mean(p_values):.4f}")
+    print(f"  Detection: {'STEGO DETECTED!' if is_stego else 'Clean image'}")
+
+    return p_values, is_stego
+
+def plot_chi_square_results(p_values):
+    """Візуалізація результатів Chi-square тесту"""
+    plt.figure(figsize=(12, 5))
+
+    # Гістограма p-values
+    plt.subplot(1, 2, 1)
+    plt.hist(p_values, bins=50, edgecolor='black', alpha=0.7)
+    plt.axvline(x=0.01, color='r', linestyle='--', label='Detection threshold')
+    plt.xlabel('p-value')
+    plt.ylabel('Frequency')
+    plt.title('Distribution of Chi-square p-values')
+    plt.legend()
+
+    # Heatmap блоків
+    plt.subplot(1, 2, 2)
+    grid_size = int(np.sqrt(len(p_values)))
+    if grid_size**2 == len(p_values):
+        p_grid = p_values.reshape(grid_size, grid_size)
+        plt.imshow(p_grid, cmap='RdYlGn', vmin=0, vmax=1)
+        plt.colorbar(label='p-value')
+        plt.title('Spatial distribution of p-values')
+    else:
+        plt.plot(p_values)
+        plt.xlabel('Block index')
+        plt.ylabel('p-value')
+        plt.title('Sequential p-values')
+
+    plt.tight_layout()
+    plt.show()
+
+# Приклад використання
+print("Testing original image:")
+p_orig, is_stego_orig = chi_square_test("original.png")
+plot_chi_square_results(p_orig)
+
+print("\n" + "="*50 + "\n")
+
+print("Testing stego image:")
+p_stego, is_stego_stego = chi_square_test("stego.png")
+plot_chi_square_results(p_stego)</code></pre>
+        </div>
+
+        <!-- Завдання 3 -->
+        <div class="task-box">
+            <h3><span class="step-number">3</span>RS Аналіз</h3>
+
+            <h4>Реалізація RS детектора:</h4>
+            <pre class="python"><code>def rs_analysis(image_path, group_size=4):
+    """
+    RS (Regular-Singular) аналіз для виявлення LSB стеганографії
+
+    Parameters:
+    - image_path: шлях до зображення
+    - group_size: розмір групи пікселів для аналізу
+
+    Returns:
+    - rs_values: словник з RS статистикою
+    - is_stego: результат детектування
+    """
+    img = Image.open(image_path).convert('L')
+    img_array = np.array(img, dtype=np.int32)
+
+    def discrimination_function(group):
+        """Обчислює дискримінаційну функцію"""
+        return np.sum(np.abs(np.diff(group)))
+
+    def flip_lsb(value, mask):
+        """Флiпує LSB згідно з маскою"""
+        if mask == 1:
+            return value ^ 1  # XOR з 1 флiпує LSB
+        return value
+
+    # Маски для аналізу
+    mask_positive = np.array([1, 0, 1, 0] * (group_size // 4))[:group_size]
+    mask_negative = 1 - mask_positive
+
+    # Лічильники для різних категорій
+    R_M, S_M, U_M = 0, 0, 0  # Позитивна маска
+    R_m, S_m, U_m = 0, 0, 0  # Негативна маска
+
+    height, width = img_array.shape
+    total_groups = 0
+
+    # Аналіз горизонтальних груп
+    for y in range(height):
+        for x in range(0, width - group_size + 1):
+            group = img_array[y, x:x+group_size].copy()
+
+            # Оригінальна дискримінація
+            f_orig = discrimination_function(group)
+
+            # Застосування позитивної маски
+            group_flipped_pos = group.copy()
+            for i in range(group_size):
+                if mask_positive[i] == 1:
+                    group_flipped_pos[i] = flip_lsb(group_flipped_pos[i], 1)
+            f_pos = discrimination_function(group_flipped_pos)
+
+            # Класифікація для позитивної маски
+            if f_pos > f_orig:
+                R_M += 1
+            elif f_pos < f_orig:
+                S_M += 1
+            else:
+                U_M += 1
+
+            # Застосування негативної маски
+            group_flipped_neg = group.copy()
+            for i in range(group_size):
+                if mask_negative[i] == 1:
+                    group_flipped_neg[i] = flip_lsb(group_flipped_neg[i], 1)
+            f_neg = discrimination_function(group_flipped_neg)
+
+            # Класифікація для негативної маски
+            if f_neg > f_orig:
+                R_m += 1
+            elif f_neg < f_orig:
+                S_m += 1
+            else:
+                U_m += 1
+
+            total_groups += 1
+
+    # Нормалізація
+    if total_groups > 0:
+        R_M = R_M / total_groups
+        S_M = S_M / total_groups
+        R_m = R_m / total_groups
+        S_m = S_m / total_groups
+
+    # RS статистика
+    x1 = R_M - S_M
+    x2 = R_m - S_m
+
+    # Критерій виявлення
+    # Для стего: |x1| ≈ |x2|
+    # Для чистого: |x1| >> |x2|
+    ratio = abs(x2) / abs(x1) if abs(x1) > 0.001 else 1
+
+    is_stego = ratio > 0.7  # Поріг для виявлення
+
+    rs_values = {
+        'R_M': R_M, 'S_M': S_M,
+        'R_m': R_m, 'S_m': S_m,
+        'x1': x1, 'x2': x2,
+        'ratio': ratio
+    }
+
+    print(f"RS Analysis Results:")
+    print(f"  R_M = {R_M:.4f}, S_M = {S_M:.4f}")
+    print(f"  R_-M = {R_m:.4f}, S_-M = {S_m:.4f}")
+    print(f"  |R_M - S_M| = {abs(x1):.4f}")
+    print(f"  |R_-M - S_-M| = {abs(x2):.4f}")
+    print(f"  Ratio = {ratio:.4f}")
+    print(f"  Detection: {'STEGO DETECTED!' if is_stego else 'Clean image'}")
+
+    return rs_values, is_stego
+
+def plot_rs_diagram(rs_values_list, labels):
+    """Візуалізація RS діаграми"""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    # RS значення
+    categories = ['R_M', 'S_M', 'R_-M', 'S_-M']
+    x = np.arange(len(categories))
+    width = 0.35
+
+    for i, (rs_values, label) in enumerate(zip(rs_values_list, labels)):
+        values = [rs_values['R_M'], rs_values['S_M'],
+                 rs_values['R_m'], rs_values['S_m']]
+        offset = width * i
+        ax1.bar(x + offset, values, width, label=label)
+
+    ax1.set_xlabel('RS Categories')
+    ax1.set_ylabel('Proportion')
+    ax1.set_title('RS Analysis Comparison')
+    ax1.set_xticks(x + width / 2)
+    ax1.set_xticklabels(categories)
+    ax1.legend()
+
+    # Різниці
+    differences = []
+    for rs_values in rs_values_list:
+        differences.append([abs(rs_values['x1']), abs(rs_values['x2'])])
+
+    categories2 = ['|R_M - S_M|', '|R_-M - S_-M|']
+    x2 = np.arange(len(categories2))
+
+    for i, (diff, label) in enumerate(zip(differences, labels)):
+        offset = width * i
+        ax2.bar(x2 + offset, diff, width, label=label)
+
+    ax2.set_xlabel('Differences')
+    ax2.set_ylabel('Value')
+    ax2.set_title('RS Differences Analysis')
+    ax2.set_xticks(x2 + width / 2)
+    ax2.set_xticklabels(categories2)
+    ax2.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+# Приклад використання
+rs_orig, is_stego_orig = rs_analysis("original.png")
+rs_stego, is_stego_stego = rs_analysis("stego.png")
+
+plot_rs_diagram([rs_orig, rs_stego], ['Original', 'Stego'])</code></pre>
+        </div>
+
+        <!-- Завдання 4 -->
+        <div class="task-box">
+            <h3><span class="step-number">4</span>Автоматичний детектор</h3>
+
+            <h4>Комбінований детектор LSB стеганографії:</h4>
+            <pre class="python"><code>class LSBDetector:
+    """Комбінований детектор LSB стеганографії"""
+
+    def __init__(self):
+        self.methods = {
+            'chi_square': self.chi_square_detection,
+            'rs_analysis': self.rs_detection,
+            'histogram': self.histogram_detection,
+            'visual': self.visual_detection
+        }
+        self.weights = {
+            'chi_square': 0.3,
+            'rs_analysis': 0.3,
+            'histogram': 0.2,
+            'visual': 0.2
+        }
+
+    def chi_square_detection(self, image_path):
+        """Chi-square метод"""
+        p_values, is_stego = chi_square_test(image_path, block_size=64)
+        confidence = 1 - np.mean(p_values) if len(p_values) > 0 else 0
+        return is_stego, confidence
+
+    def rs_detection(self, image_path):
+        """RS аналіз"""
+        rs_values, is_stego = rs_analysis(image_path)
+        confidence = min(rs_values['ratio'], 1.0) if is_stego else 1 - rs_values['ratio']
+        return is_stego, confidence
+
+    def histogram_detection(self, image_path):
+        """Гістограмний аналіз"""
+        img = Image.open(image_path).convert('L')
+        hist, _ = np.histogram(np.array(img), bins=256, range=(0, 256))
+
+        # Аналіз пар значень
+        pair_diff = 0
+        for i in range(0, 256, 2):
+            if i+1 < 256:
+                pair_diff += abs(hist[i] - hist[i+1])
+
+        # Нормалізація
+        total_pixels = np.sum(hist)
+        normalized_diff = pair_diff / total_pixels if total_pixels > 0 else 1
+
+        is_stego = normalized_diff < 0.05
+        confidence = 1 - normalized_diff * 10 if is_stego else normalized_diff * 10
+        confidence = np.clip(confidence, 0, 1)
+
+        return is_stego, confidence
+
+    def visual_detection(self, image_path):
+        """Візуальний аналіз LSB площини"""
+        img = Image.open(image_path).convert('L')
+        img_array = np.array(img)
+
+        # Витягуємо LSB площину
+        lsb_plane = img_array & 1
+
+        # Обчислюємо ентропію LSB площини
+        hist, _ = np.histogram(lsb_plane.flatten(), bins=2)
+        hist = hist / np.sum(hist)
+        entropy = -np.sum(hist * np.log2(hist + 1e-10))
+
+        # Високa ентропія вказує на випадковість (стеганографія)
+        is_stego = entropy > 0.95
+        confidence = entropy
+
+        return is_stego, confidence
+
+    def detect(self, image_path, verbose=True):
+        """
+        Комбінований аналіз зображення
+
+        Returns:
+        - final_detection: bool
+        - confidence: float (0-1)
+        - detailed_results: dict
+        """
+        results = {}
+        weighted_score = 0
+
+        for method_name, method_func in self.methods.items():
+            try:
+                is_detected, confidence = method_func(image_path)
+                results[method_name] = {
+                    'detected': is_detected,
+                    'confidence': confidence
+                }
+
+                # Зважена оцінка
+                weight = self.weights[method_name]
+                weighted_score += confidence * weight if is_detected else (1-confidence) * weight * (-1)
+
+                if verbose:
+                    status = "🔴 DETECTED" if is_detected else "🟢 CLEAN"
+                    print(f"{method_name:15} : {status} (confidence: {confidence:.2%})")
+
+            except Exception as e:
+                if verbose:
+                    print(f"{method_name:15} : ⚠️ Error - {str(e)}")
+                results[method_name] = {'detected': False, 'confidence': 0, 'error': str(e)}
+
+        # Фінальне рішення
+        final_detection = weighted_score > 0
+        final_confidence = abs(weighted_score) / sum(self.weights.values())
+
+        if verbose:
+            print("\n" + "="*50)
+            print(f"FINAL VERDICT: {'🔴 STEGO DETECTED' if final_detection else '🟢 CLEAN IMAGE'}")
+            print(f"Confidence: {final_confidence:.2%}")
+
+        return final_detection, final_confidence, results
+
+    def generate_report(self, image_path, output_file="steganalysis_report.html"):
+        """Генерує HTML звіт про аналіз"""
+        detection, confidence, results = self.detect(image_path, verbose=False)
+
+        html_template = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Steganalysis Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .header { background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white; padding: 20px; border-radius: 10px; }
+                .result { margin: 20px 0; padding: 15px; border-radius: 8px; }
+                .detected { background: #fee2e2; border: 2px solid #dc2626; }
+                .clean { background: #dcfce7; border: 2px solid #16a34a; }
+                .method { margin: 10px 0; padding: 10px; background: #f3f4f6;
+                    border-radius: 5px; }
+                .confidence { float: right; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>LSB Steganalysis Report</h1>
+                <p>Image: {image_path}</p>
+                <p>Analysis Date: {date}</p>
+            </div>
+
+            <div class="result {result_class}">
+                <h2>Final Verdict: {verdict}</h2>
+                <p>Overall Confidence: {confidence:.2%}</p>
+            </div>
+
+            <h3>Detailed Analysis:</h3>
+            {methods_html}
+        </body>
+        </html>
+        """
+
+        methods_html = ""
+        for method, result in results.items():
+            status = "Detected" if result['detected'] else "Clean"
+            methods_html += f"""
+            <div class="method">
+                <strong>{method}:</strong> {status}
+                <span class="confidence">{result['confidence']:.2%}</span>
+            </div>
+            """
+
+        from datetime import datetime
+
+        html_content = html_template.format(
+            image_path=image_path,
+            date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            verdict="STEGO DETECTED" if detection else "CLEAN IMAGE",
+            confidence=confidence,
+            result_class="detected" if detection else "clean",
+            methods_html=methods_html
+        )
+
+        with open(output_file, 'w') as f:
+            f.write(html_content)
+
+        print(f"Report saved to {output_file}")
+
+# Використання детектора
+detector = LSBDetector()
+
+print("Analyzing original image:")
+print("="*50)
+detector.detect("original.png")
+
+print("\n\nAnalyzing stego image:")
+print("="*50)
+detector.detect("stego.png")
+
+# Генерація звіту
+detector.generate_report("stego.png", "stego_analysis.html")</code></pre>
+        </div>
+    </section>
+
+    <!-- Додаткові завдання -->
+    <section>
+        <h2>🎯 Додаткові завдання</h2>
+
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h4>📊 Завдання 1: Залежність від payload</h4>
+                <p>Дослідіть, як змінюється точність виявлення в залежності від розміру прихованого повідомлення (10%, 25%, 50%, 75%, 100% ємності).</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>🖼️ Завдання 2: Різні формати</h4>
+                <p>Перевірте роботу детектора на різних форматах зображень: BMP, PNG, TIFF. Поясніть різницю в результатах.</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>🔧 Завдання 3: Покращення детектора</h4>
+                <p>Додайте нові методи виявлення: Sample Pairs Analysis, Wavelet statistics. Порівняйте ефективність.</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>🎨 Завдання 4: Адаптивний LSB</h4>
+                <p>Дослідіть можливість виявлення адаптивних LSB методів, які вбудовують дані тільки в текстурні області.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Звіт про виконання -->
+    <section class="submission-section">
+        <h2>📝 Звіт про виконання та формат здачі</h2>
+
+        <div class="submission-grid">
+            <div class="submission-card">
+                <h3>📁 Структура звіту</h3>
+                <ul>
+                    <li>Титульна сторінка з даними студента</li>
+                    <li>Мета та завдання роботи</li>
+                    <li>Теоретична частина (коротко)</li>
+                    <li>Хід виконання роботи</li>
+                    <li>Результати та скріншоти</li>
+                    <li>Аналіз результатів</li>
+                    <li>Висновки</li>
+                    <li>Додатки (повний код)</li>
+                </ul>
+            </div>
+
+            <div class="submission-card">
+                <h3>💾 Файли для здачі</h3>
+                <ul>
+                    <li><span class="file-format">report.pdf</span> - звіт у форматі PDF</li>
+                    <li><span class="file-format">steganalysis.py</span> - основний код детектора</li>
+                    <li><span class="file-format">test_images/</span> - тестові зображення</li>
+                    <li><span class="file-format">results/</span> - результати аналізу</li>
+                    <li><span class="file-format">README.md</span> - інструкція запуску</li>
+                </ul>
+            </div>
+
+            <div class="submission-card">
+                <h3>⚡ Вимоги до коду</h3>
+                <ul>
+                    <li>Коментарі до кожної функції</li>
+                    <li>Docstrings у форматі PEP 257</li>
+                    <li>Обробка винятків (try/except)</li>
+                    <li>Модульна структура коду</li>
+                    <li>requirements.txt з залежностями</li>
+                </ul>
+            </div>
+
+            <div class="submission-card">
+                <h3>🎯 Демонстрація</h3>
+                <ul>
+                    <li>Запуск коду на тестових зображеннях</li>
+                    <li>Пояснення кожного методу виявлення</li>
+                    <li>Аналіз false positives/negatives</li>
+                    <li>Відповіді на питання викладача</li>
+                    <li>Порівняння з еталонними результатами</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="deadline-warning">
+            <strong>⏰ Термін здачі:</strong> Протягом двох тижнів після проведення лабораторної роботи.
+            Затримка здачі знижує оцінку на 10% за кожен тиждень.
+        </div>
+    </section>
+
+
+    <!-- Висновки -->
+    <section class="result-box">
+        <h2>🎓 Висновки</h2>
+        <p>
+            У цій лабораторній роботі ви освоїли основні методи стеганоаналізу для виявлення LSB вбудовувань:
+        </p>
+        <ul>
+            <li><strong>Візуальні методи</strong> - швидка первинна оцінка через аналіз бітових площин</li>
+            <li><strong>Статистичні тести</strong> - кількісна оцінка ймовірності наявності стеганографії</li>
+            <li><strong>RS аналіз</strong> - потужний метод для виявлення LSB заміни</li>
+            <li><strong>Комбінований підхід</strong> - підвищення надійності через об'єднання методів</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Важливо пам'ятати:</strong>
+            <ul>
+                <li>Жоден метод не дає 100% гарантії виявлення</li>
+                <li>Адаптивні методи вбудовування складніше виявити</li>
+                <li>Завжди потрібен баланс між чутливістю та специфічністю детектора</li>
+                <li>Стеганоаналіз - це постійна "гонка озброєнь" між методами приховування та виявлення</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Корисні ресурси -->
+    <section>
+        <h2>📚 Корисні ресурси</h2>
+
+        <div class="resources-list">
+            <ul>
+                <li>📖 <a href="#">Jessica Fridrich - "Steganography in Digital Media"</a></li>
+                <li>🔧 <a href="https://github.com/Paradoxis/StegCracker">StegCracker - інструмент для bruteforce</a></li>
+                <li>🛠️ <a href="https://github.com/b3dk7/StegExpose">StegExpose - універсальний детектор</a></li>
+                <li>📊 <a href="#">Paper: "Reliable Detection of LSB Steganography"</a></li>
+                <li>🎓 <a href="#">Курс: "Digital Image Forensics" (Coursera)</a></li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="lab-footer">
+    <div class="container">
+        <p>&copy; 2024 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../../assets/js/lab-functions.js"></script>
+<script>
+    // Використовуємо функцію з lab-functions.js
+    // Функція switchTab вже визначена в lab-functions.js
+</script>
+
+</body>
+</html>
