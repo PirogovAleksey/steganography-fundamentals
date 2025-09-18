@@ -381,17 +381,27 @@
                 const statusIcon = lecture.status === 'completed' ? '✅' :
                     lecture.status === 'in_progress' ? '🔄' : '📋';
 
+                // Додаємо обробник кліку для лекції 1.3
+                const isLecture13 = lecture.id === '1.3' && lecture.status === 'completed';
+                const clickHandler = isLecture13
+                    ? `onclick="event.stopPropagation(); window.location.href='modules/module1/lecture1/index.html';"`
+                    : 'onclick="event.stopPropagation();"';
+
+                // Додаємо стиль курсора для клікабельної лекції
+                const cursorStyle = isLecture13 ? 'style="cursor: pointer;"' : '';
+
                 return `
-                <div class="module-item module-lecture ${lecture.status}"
-                     onclick="event.stopPropagation();"
-                     data-module-id="${moduleId}"
-                     data-lecture-id="${lecture.id}">
-                    <span class="module-item-title">
-                        ${statusIcon} ${lecture.title}
-                    </span>
-                    ${lecture.duration ? `<span class="module-item-meta">${lecture.duration} хв</span>` : ''}
-                </div>
-            `;
+        <div class="module-item module-lecture ${lecture.status}"
+             ${clickHandler}
+             ${cursorStyle}
+             data-module-id="${moduleId}"
+             data-lecture-id="${lecture.id}">
+            <span class="module-item-title">
+                ${statusIcon} ${lecture.title}
+            </span>
+            ${lecture.duration ? `<span class="module-item-meta">${lecture.duration} хв</span>` : ''}
+        </div>
+        `;
             }).join('');
         }
 
