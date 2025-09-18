@@ -682,21 +682,21 @@ plot_rs_diagram([rs_orig, rs_stego], ['Original', 'Stego'])</code></pre>
         """Генерує HTML звіт про аналіз"""
         detection, confidence, results = self.detect(image_path, verbose=False)
 
-        html_template = """
+                html_template = """
         <!DOCTYPE html>
         <html>
         <head>
             <title>Steganalysis Report</title>
             <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                .header { background: linear-gradient(135deg, #667eea, #764ba2);
-                    color: white; padding: 20px; border-radius: 10px; }
-                .result { margin: 20px 0; padding: 15px; border-radius: 8px; }
-                .detected { background: #fee2e2; border: 2px solid #dc2626; }
-                .clean { background: #dcfce7; border: 2px solid #16a34a; }
-                .method { margin: 10px 0; padding: 10px; background: #f3f4f6;
-                    border-radius: 5px; }
-                .confidence { float: right; font-weight: bold; }
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                .header {{ background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white; padding: 20px; border-radius: 10px; }}
+                .result {{ margin: 20px 0; padding: 15px; border-radius: 8px; }}
+                .detected {{ background: #fee2e2; border: 2px solid #dc2626; }}
+                .clean {{ background: #dcfce7; border: 2px solid #16a34a; }}
+                .method {{ margin: 10px 0; padding: 10px; background: #f3f4f6;
+                    border-radius: 5px; }}
+                .confidence {{ float: right; font-weight: bold; }}
             </style>
         </head>
         <body>
