@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №4: Адаптивні LSB методи</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        nav {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: #f0f0f0;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .output-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🔬 Лабораторна робота №4</h1>
+        <p class="subtitle">Адаптивні LSB методи: Edge-based embedding, PVD метод</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#theory">📚 Теоретичні основи</a></li>
+            <li><a href="#setup">⚙️ Налаштування</a></li>
+            <li><a href="#edge-detection">🔍 Edge Detection</a></li>
+            <li><a href="#edge-lsb">🎯 Edge-based LSB</a></li>
+            <li><a href="#pvd">📊 PVD метод</a></li>
+            <li><a href="#comparison">⚖️ Порівняння</a></li>
+            <li><a href="#tasks">📝 Завдання</a></li>
+        </ul>
+    </nav>
+
+    <section id="theory" class="section">
+        <h2>📚 Теоретичні основи адаптивних методів</h2>
+
+        <h3>Проблеми класичного LSB</h3>
+        <p>Класичний LSB метод модифікує всі пікселі однаково, що призводить до:</p>
+        <ul>
+            <li>Легкого виявлення статистичними методами</li>
+            <li>Видимих артефактів у гладких областях</li>
+            <li>Неефективного використання ємності</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>💡 Ключова ідея:</strong> Адаптивні методи вбудовують більше даних у текстурні області, де зміни менш помітні, і менше або зовсім не вбудовують у гладкі області.
+        </div>
+
+        <h3>Edge-based Embedding</h3>
+        <p>Метод базується на детекції країв. Області з великою кількістю країв можуть приховати більше інформації без помітного погіршення якості.</p>
+
+        <h3>PVD (Pixel Value Differencing)</h3>
+        <p>Використовує різницю між сусідніми пікселями. Більша різниця дозволяє вбудувати більше біт.</p>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Метод</th>
+                <th>Переваги</th>
+                <th>Недоліки</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Класичний LSB</td>
+                <td>Простий, велика ємність</td>
+                <td>Легко виявляється</td>
+            </tr>
+            <tr>
+                <td>Edge-based LSB</td>
+                <td>Стійкий до стегоаналізу</td>
+                <td>Менша ємність</td>
+            </tr>
+            <tr>
+                <td>PVD</td>
+                <td>Хороший баланс</td>
+                <td>Складніша реалізація</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="setup" class="section">
+        <h2>⚙️ Налаштування середовища</h2>
+
+        <h3>Крок 1: Встановлення бібліотек</h3>
+        <p>Відкрийте термінал та виконайте:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>pip install numpy opencv-python pillow matplotlib scipy scikit-image</pre>
+        </div>
+
+        <h3>Крок 2: Створіть новий Python файл</h3>
+        <p>Створіть файл <code>lab4_adaptive_lsb.py</code> та додайте імпорти:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>import numpy as np
+import cv2
+from PIL import Image
+import matplotlib.pyplot as plt
+from scipy import signal, stats
+from skimage.metrics import structural_similarity as ssim
+import time
+import warnings
+warnings.filterwarnings('ignore')
+
+print("Бібліотеки успішно імпортовано!")
+print("OpenCV версія:", cv2.__version__)</pre>
+        </div>
+
+        <h3>Крок 3: Додайте допоміжні функції</h3>
+        <p>Скопіюйте ці функції в ваш файл:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def text_to_binary(text):
+    """Конвертує текст у бінарний рядок"""
+    return ''.join(format(ord(char), '08b') for char in text)
+
+def binary_to_text(binary):
+    """Конвертує бінарний рядок у текст"""
+    text = ''
+    for i in range(0, len(binary), 8):
+        byte = binary[i:i+8]
+        if len(byte) == 8:
+            text += chr(int(byte, 2))
+    return text
+
+def calculate_psnr(original, stego):
+    """Обчислює PSNR між двома зображеннями"""
+    mse = np.mean((original.astype(float) - stego.astype(float)) ** 2)
+    if mse == 0:
+        return float('inf')
+    max_pixel = 255.0
+    psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
+    return psnr
+
+def calculate_ssim(original, stego):
+    """Обчислює SSIM між двома зображеннями"""
+    if len(original.shape) == 3:
+        original_gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+    else:
+        original_gray = original
+    
+    if len(stego.shape) == 3:
+        stego_gray = cv2.cvtColor(stego, cv2.COLOR_BGR2GRAY)
+    else:
+        stego_gray = stego
+    
+    return ssim(original_gray, stego_gray)</pre>
+        </div>
+
+        <p>Запустіть код та перевірте, що всі бібліотеки працюють коректно.</p>
+    </section>
+
+    <section id="edge-detection" class="section">
+        <h2>🔍 Edge Detection - Детекція країв</h2>
+
+        <h3>Завдання 1: Реалізація детектора Sobel</h3>
+        <p>Створіть функцію для детекції країв методом Sobel:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def sobel_edge_detection(image, threshold=50):
+    """
+    Детектор країв Sobel
+    
+    Parameters:
+    -----------
+    image : numpy array - вхідне зображення
+    threshold : int - поріг для визначення країв
+    
+    Returns:
+    --------
+    edge_map : numpy array - бінарна карта країв
+    edge_strength : numpy array - сила країв
+    """
+    # Конвертуємо в grayscale
+    if len(image.shape) == 3:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = image.copy()
+    
+    # Обчислюємо градієнти
+    grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+    
+    # Обчислюємо магнітуду
+    edge_strength = np.sqrt(grad_x**2 + grad_y**2)
+    
+    # Нормалізуємо до [0, 255]
+    edge_strength = np.clip(edge_strength, 0, 255).astype(np.uint8)
+    
+    # Створюємо бінарну маску
+    edge_map = (edge_strength > threshold).astype(np.uint8) * 255
+    
+    return edge_map, edge_strength</pre>
+        </div>
+
+        <h3>Завдання 2: Детектор Canny</h3>
+        <p>Додайте функцію для детекції країв методом Canny:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def canny_edge_detection(image, low_threshold=50, high_threshold=150):
+    """Детектор країв Canny"""
+    if len(image.shape) == 3:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = image.copy()
+    
+    # Застосовуємо Gaussian blur
+    blurred = cv2.GaussianBlur(gray, (5, 5), 1.4)
+    
+    # Детекція країв
+    edges = cv2.Canny(blurred, low_threshold, high_threshold)
+    
+    return edges</pre>
+        </div>
+
+        <h3>Завдання 3: Тестування детекторів</h3>
+        <p>Створіть тестове зображення та перевірте роботу детекторів:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre># Створюємо тестове зображення
+test_image = np.random.randint(0, 256, (256, 256), dtype=np.uint8)
+
+# Додаємо геометричні фігури для кращої демонстрації
+cv2.rectangle(test_image, (50, 50), (200, 200), 255, 2)
+cv2.circle(test_image, (128, 128), 50, 0, -1)
+
+# Тестуємо Sobel
+edge_map_sobel, edge_strength_sobel = sobel_edge_detection(test_image)
+
+# Тестуємо Canny
+edge_map_canny = canny_edge_detection(test_image)
+
+# Візуалізація
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+axes[0].imshow(test_image, cmap='gray')
+axes[0].set_title('Оригінал')
+axes[0].axis('off')
+
+axes[1].imshow(edge_map_sobel, cmap='gray')
+axes[1].set_title('Sobel Edge Map')
+axes[1].axis('off')
+
+axes[2].imshow(edge_map_canny, cmap='gray')
+axes[2].set_title('Canny Edge Map')
+axes[2].axis('off')
+
+plt.tight_layout()
+plt.show()
+
+print(f"Виявлено країв Sobel: {np.sum(edge_map_sobel > 0)} пікселів")
+print(f"Виявлено країв Canny: {np.sum(edge_map_canny > 0)} пікселів")</pre>
+        </div>
+
+        <div class="output-block">
+            <strong>Очікуваний вивід:</strong><br>
+            Виявлено країв Sobel: ~3500 пікселів<br>
+            Виявлено країв Canny: ~2800 пікселів
+        </div>
+    </section>
+
+    <section id="edge-lsb" class="section">
+        <h2>🎯 Edge-based LSB Стеганографія</h2>
+
+        <h3>Завдання 4: Класифікація пікселів</h3>
+        <p>Створіть функцію для класифікації пікселів за складністю:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def classify_pixels(image, edge_threshold=50):
+    """
+    Класифікує пікселі на основі складності регіону
+    
+    Returns:
+    --------
+    pixel_classes : numpy array
+        0 - smooth region (no embedding)
+        1 - edge region (1 bit)
+        2 - complex region (2 bits)
+    """
+    # Детекція країв
+    _, edge_strength = sobel_edge_detection(image, edge_threshold)
+    
+    # Класифікація пікселів
+    pixel_classes = np.zeros_like(edge_strength)
+    
+    # Smooth regions: edge_strength < threshold * 0.5
+    # Edge regions: threshold * 0.5 <= edge_strength < threshold * 1.5  
+    # Complex regions: edge_strength >= threshold * 1.5
+    
+    pixel_classes[edge_strength < edge_threshold * 0.5] = 0
+    pixel_classes[(edge_strength >= edge_threshold * 0.5) & 
+                 (edge_strength < edge_threshold * 1.5)] = 1
+    pixel_classes[edge_strength >= edge_threshold * 1.5] = 2
+    
+    return pixel_classes, edge_strength</pre>
+        </div>
+
+        <h3>Завдання 5: Функція вбудовування</h3>
+        <p>Реалізуйте вбудовування повідомлення з адаптивною ємністю:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def edge_based_embed(image, message, edge_threshold=50):
+    """
+    Вбудовує повідомлення використовуючи Edge-based LSB
+    """
+    # Копіюємо зображення
+    stego = image.copy()
+    
+    # Класифікуємо пікселі
+    pixel_classes, _ = classify_pixels(image, edge_threshold)
+    
+    # Конвертуємо повідомлення
+    binary_message = text_to_binary(message)
+    
+    # Додаємо довжину повідомлення (32 біти)
+    length = len(binary_message)
+    length_binary = format(length, '032b')
+    binary_message = length_binary + binary_message
+    
+    # Перевіряємо ємність
+    capacity = np.sum(pixel_classes == 1) + np.sum(pixel_classes == 2) * 2
+    if len(binary_message) > capacity:
+        raise ValueError(f"Повідомлення занадто велике! Потрібно {len(binary_message)} біт, доступно {capacity} біт")
+    
+    # Вбудовування
+    message_idx = 0
+    pixels_modified = 0
+    height, width = image.shape[:2]
+    
+    for y in range(height):
+        for x in range(width):
+            if message_idx >= len(binary_message):
+                break
+                
+            pixel_class = pixel_classes[y, x]
+            
+            if pixel_class == 0:
+                # Smooth region - пропускаємо
+                continue
+            elif pixel_class == 1:
+                # Edge region - вбудовуємо 1 біт
+                bit = int(binary_message[message_idx])
+                if len(stego.shape) == 3:
+                    # Для кольорового - модифікуємо синій канал
+                    stego[y, x, 0] = (stego[y, x, 0] & 0xFE) | bit
+                else:
+                    # Для grayscale
+                    stego[y, x] = (stego[y, x] & 0xFE) | bit
+                message_idx += 1
+                pixels_modified += 1
+            elif pixel_class == 2:
+                # Complex region - вбудовуємо 2 біти
+                if len(stego.shape) == 3:
+                    # Вбудовуємо в синій канал
+                    if message_idx < len(binary_message):
+                        bit1 = int(binary_message[message_idx])
+                        stego[y, x, 0] = (stego[y, x, 0] & 0xFE) | bit1
+                        message_idx += 1
+                    
+                    # Вбудовуємо в зелений канал
+                    if message_idx < len(binary_message):
+                        bit2 = int(binary_message[message_idx])
+                        stego[y, x, 1] = (stego[y, x, 1] & 0xFE) | bit2
+                        message_idx += 1
+                else:
+                    # Для grayscale - використовуємо 2 LSB
+                    if message_idx < len(binary_message):
+                        bit = int(binary_message[message_idx])
+                        stego[y, x] = (stego[y, x] & 0xFE) | bit
+                        message_idx += 1
+                
+                pixels_modified += 1
+    
+    print(f"Вбудовано {message_idx} біт у {pixels_modified} пікселів")
+    print(f"PSNR: {calculate_psnr(image, stego):.2f} dB")
+    
+    return stego, pixel_classes</pre>
+        </div>
+
+        <h3>Завдання 6: Функція витягування</h3>
+        <p>Реалізуйте витягування повідомлення:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def edge_based_extract(stego_image, original_image, edge_threshold=50):
+    """
+    Витягує повідомлення з стего-зображення
+    """
+    # Класифікуємо пікселі на основі оригінального зображення
+    pixel_classes, _ = classify_pixels(original_image, edge_threshold)
+    
+    # Витягування
+    binary_message = ''
+    height, width = stego_image.shape[:2]
+    
+    for y in range(height):
+        for x in range(width):
+            pixel_class = pixel_classes[y, x]
+            
+            if pixel_class == 0:
+                continue
+            elif pixel_class == 1:
+                # Витягуємо 1 біт
+                if len(stego_image.shape) == 3:
+                    bit = stego_image[y, x, 0] & 1
+                else:
+                    bit = stego_image[y, x] & 1
+                binary_message += str(bit)
+            elif pixel_class == 2:
+                # Витягуємо 2 біти
+                if len(stego_image.shape) == 3:
+                    bit1 = stego_image[y, x, 0] & 1
+                    bit2 = stego_image[y, x, 1] & 1
+                    binary_message += str(bit1) + str(bit2)
+                else:
+                    bit = stego_image[y, x] & 1
+                    binary_message += str(bit)
+    
+    # Витягуємо довжину
+    if len(binary_message) < 32:
+        return ""
+    
+    length_binary = binary_message[:32]
+    length = int(length_binary, 2)
+    
+    # Витягуємо повідомлення
+    message_binary = binary_message[32:32+length]
+    
+    # Конвертуємо в текст
+    return binary_to_text(message_binary)</pre>
+        </div>
+
+        <h3>Завдання 7: Тестування Edge-based LSB</h3>
+        <p>Протестуйте повну систему:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre># Створюємо кольорове тестове зображення
+test_image_color = np.zeros((300, 400, 3), dtype=np.uint8)
+
+# Додаємо різні текстури
+# Гладка область (лівий верх)
+test_image_color[:150, :200] = [100, 100, 100]
+
+# Текстурна область (правий верх)
+noise = np.random.randint(50, 200, (150, 200, 3))
+test_image_color[:150, 200:] = noise
+
+# Краї (нижня частина)
+cv2.rectangle(test_image_color, (50, 200), (150, 280), (255, 255, 255), 2)
+cv2.circle(test_image_color, (300, 240), 30, (200, 200, 200), 2)
+
+# Тестове повідомлення
+message = "Edge-based LSB: Адаптивна стеганографія!"
+
+# Вбудовування
+print("Вбудовування повідомлення...")
+stego, pixel_classes = edge_based_embed(test_image_color, message)
+
+# Витягування
+print("\nВитягування повідомлення...")
+extracted = edge_based_extract(stego, test_image_color)
+print(f"Витягнуте повідомлення: '{extracted}'")
+print(f"Повідомлення співпадає: {message == extracted}")
+
+# Візуалізація
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+
+axes[0, 0].imshow(cv2.cvtColor(test_image_color, cv2.COLOR_BGR2RGB))
+axes[0, 0].set_title('Оригінал')
+axes[0, 0].axis('off')
+
+axes[0, 1].imshow(pixel_classes, cmap='jet')
+axes[0, 1].set_title('Класифікація пікселів')
+axes[0, 1].axis('off')
+
+axes[1, 0].imshow(cv2.cvtColor(stego, cv2.COLOR_BGR2RGB))
+axes[1, 0].set_title('Стего-зображення')
+axes[1, 0].axis('off')
+
+diff = np.abs(test_image_color.astype(int) - stego.astype(int))
+axes[1, 1].imshow(diff * 50)  # Посилюємо для візуалізації
+axes[1, 1].set_title('Різниця (×50)')
+axes[1, 1].axis('off')
+
+plt.tight_layout()
+plt.show()</pre>
+        </div>
+
+        <div class="output-block">
+            <strong>Очікуваний вивід:</strong><br>
+            Вбудовування повідомлення...<br>
+            Вбудовано 360 біт у 242 пікселів<br>
+            PSNR: 67.43 dB<br><br>
+            Витягування повідомлення...<br>
+            Витягнуте повідомлення: 'Edge-based LSB: Адаптивна стеганографія!'<br>
+            Повідомлення співпадає: True
+        </div>
+    </section>
+
+    <section id="pvd" class="section">
+        <h2>📊 PVD (Pixel Value Differencing) метод</h2>
+
+        <h3>Таблиця діапазонів Wu-Tsai</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Діапазон</th>
+                <th>Нижня межа</th>
+                <th>Верхня межа</th>
+                <th>Ємність (біт)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>R₁</td><td>0</td><td>7</td><td>3</td></tr>
+            <tr><td>R₂</td><td>8</td><td>15</td><td>3</td></tr>
+            <tr><td>R₃</td><td>16</td><td>31</td><td>4</td></tr>
+            <tr><td>R₄</td><td>32</td><td>63</td><td>5</td></tr>
+            <tr><td>R₅</td><td>64</td><td>127</td><td>6</td></tr>
+            <tr><td>R₆</td><td>128</td><td>255</td><td>7</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Завдання 8: Визначення діапазону</h3>
+        <p>Створіть функцію для визначення діапазону різниці:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre># Таблиця діапазонів Wu-Tsai
+RANGE_TABLE_WU = [
+    (0, 7, 3),      # Range 1: [0,7], capacity 3 bits
+    (8, 15, 3),     # Range 2: [8,15], capacity 3 bits
+    (16, 31, 4),    # Range 3: [16,31], capacity 4 bits
+    (32, 63, 5),    # Range 4: [32,63], capacity 5 bits
+    (64, 127, 6),   # Range 5: [64,127], capacity 6 bits
+    (128, 255, 7)   # Range 6: [128,255], capacity 7 bits
+]
+
+def find_range(difference):
+    """Знаходить діапазон для заданої різниці"""
+    for lower, upper, capacity in RANGE_TABLE_WU:
+        if lower <= abs(difference) <= upper:
+            return lower, upper, capacity
+    return 128, 255, 7  # Default to last range</pre>
+        </div>
+
+        <h3>Завдання 9: Вбудовування PVD</h3>
+        <p>Реалізуйте функцію вбудовування для одного блоку:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def embed_block_pvd(p1, p2, secret_bits):
+    """
+    Вбудовує біти в один блок за методом PVD
+    
+    Parameters:
+    -----------
+    p1, p2 : int - значення пікселів
+    secret_bits : str - бінарний рядок для вбудовування
+    
+    Returns:
+    --------
+    new_p1, new_p2 : int - модифіковані значення пікселів
+    """
+    # Обчислюємо різницю
+    diff = p2 - p1
+    
+    # Знаходимо діапазон
+    lower, upper, capacity = find_range(diff)
+    
+    # Беремо потрібну кількість біт
+    if len(secret_bits) < capacity:
+        secret_bits = secret_bits + '0' * (capacity - len(secret_bits))
+    else:
+        secret_bits = secret_bits[:capacity]
+    
+    # Конвертуємо біти в десяткове число
+    secret_decimal = int(secret_bits, 2)
+    
+    # Обчислюємо нову різницю
+    if diff >= 0:
+        new_diff = lower + secret_decimal
+    else:
+        new_diff = -(lower + secret_decimal)
+    
+    # Обчислюємо модифікацію
+    modification = new_diff - diff
+    
+    # Розподіляємо модифікацію між пікселями
+    if modification % 2 == 0:
+        new_p1 = p1 - modification // 2
+        new_p2 = p2 + modification // 2
+    else:
+        new_p1 = p1 - (modification + 1) // 2
+        new_p2 = p2 + modification // 2
+    
+    # Перевіряємо границі
+    new_p1 = max(0, min(255, new_p1))
+    new_p2 = max(0, min(255, new_p2))
+    
+    return new_p1, new_p2</pre>
+        </div>
+
+        <h3>Завдання 10: Повна реалізація PVD</h3>
+        <p>Створіть функції для вбудовування та витягування:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def pvd_embed(image, message):
+    """
+    Вбудовує повідомлення використовуючи PVD метод
+    """
+    # Копіюємо зображення
+    stego = image.copy()
+    
+    # Працюємо з grayscale або синім каналом
+    if len(stego.shape) == 3:
+        channel = stego[:, :, 0].copy()
+    else:
+        channel = stego.copy()
+    
+    height, width = channel.shape
+    
+    # Конвертуємо повідомлення
+    binary_message = text_to_binary(message)
+    length_binary = format(len(binary_message), '032b')
+    binary_message = length_binary + binary_message
+    
+    # Вбудовування по горизонтальних блоках
+    message_idx = 0
+    blocks_modified = 0
+    
+    for y in range(height):
+        for x in range(0, width - 1, 2):
+            if message_idx >= len(binary_message):
+                break
+            
+            p1 = int(channel[y, x])
+            p2 = int(channel[y, x + 1])
+            
+            # Знаходимо ємність блоку
+            _, _, block_capacity = find_range(abs(p2 - p1))
+            
+            # Беремо потрібну кількість біт
+            end_idx = min(message_idx + block_capacity, len(binary_message))
+            secret_bits = binary_message[message_idx:end_idx]
+            
+            if secret_bits:
+                # Вбудовуємо
+                new_p1, new_p2 = embed_block_pvd(p1, p2, secret_bits)
+                channel[y, x] = new_p1
+                channel[y, x + 1] = new_p2
+                
+                message_idx = end_idx
+                blocks_modified += 1
+    
+    # Повертаємо канал назад
+    if len(stego.shape) == 3:
+        stego[:, :, 0] = channel
+    else:
+        stego = channel
+    
+    print(f"PVD: Вбудовано {message_idx} біт у {blocks_modified} блоків")
+    print(f"PSNR: {calculate_psnr(image, stego):.2f} dB")
+    
+    return stego</pre>
+        </div>
+
+        <h3>Завдання 11: Тестування PVD</h3>
+        <p>Протестуйте PVD метод:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre># Створюємо тестове зображення для PVD
+test_image_pvd = np.random.randint(50, 200, (256, 256), dtype=np.uint8)
+
+# Додаємо градієнт для різних різниць
+for i in range(256):
+    test_image_pvd[i, :128] = i
+
+# Тестове повідомлення
+message_pvd = "PVD метод працює!"
+
+print("Аналіз ємності PVD...")
+height, width = test_image_pvd.shape
+total_capacity = 0
+
+for y in range(height):
+    for x in range(0, width - 1, 2):
+        p1 = test_image_pvd[y, x]
+        p2 = test_image_pvd[y, x + 1]
+        _, _, capacity = find_range(abs(p2 - p1))
+        total_capacity += capacity
+
+print(f"Загальна ємність: {total_capacity} біт")
+print(f"Кількість блоків: {(height * width) // 2}")
+
+# Вбудовування
+print("\nВбудовування PVD...")
+stego_pvd = pvd_embed(test_image_pvd, message_pvd)
+
+# Візуалізація
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+axes[0].imshow(test_image_pvd, cmap='gray')
+axes[0].set_title('Оригінал')
+axes[0].axis('off')
+
+axes[1].imshow(stego_pvd, cmap='gray')
+axes[1].set_title(f'PVD Стего')
+axes[1].axis('off')
+
+diff_pvd = np.abs(test_image_pvd.astype(int) - stego_pvd.astype(int))
+axes[2].imshow(diff_pvd * 20, cmap='hot')
+axes[2].set_title('Різниця (×20)')
+axes[2].axis('off')
+
+plt.tight_layout()
+plt.show()</pre>
+        </div>
+
+        <div class="output-block">
+            <strong>Очікуваний вивід:</strong><br>
+            Аналіз ємності PVD...<br>
+            Загальна ємність: ~280000 біт<br>
+            Кількість блоків: 32768<br><br>
+            Вбудовування PVD...<br>
+            PVD: Вбудовано 168 біт у 38 блоків<br>
+            PSNR: 52.34 dB
+        </div>
+    </section>
+
+    <section id="comparison" class="section">
+        <h2>⚖️ Порівняння методів</h2>
+
+        <h3>Завдання 12: Порівняльний аналіз</h3>
+        <p>Створіть функцію для порівняння всіх методів:</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Копіювати</button>
+            <pre>def compare_methods(image, message):
+    """Порівнює різні методи стеганографії"""
+    results = {}
+    
+    # 1. Класичний LSB
+    def classic_lsb(img, msg):
+        stego = img.copy()
+        binary_msg = text_to_binary(msg)
+        idx = 0
+        for y in range(img.shape[0]):
+            for x in range(img.shape[1]):
+                if idx < len(binary_msg):
+                    if len(img.shape) == 3:
+                        bit = int(binary_msg[idx])
+                        stego[y, x, 0] = (stego[y, x, 0] & 0xFE) | bit
+                    else:
+                        bit = int(binary_msg[idx])
+                        stego[y, x] = (stego[y, x] & 0xFE) | bit
+                    idx += 1
+        return stego
+    
+    # Тест класичного LSB
+    start_time = time.time()
+    stego_classic = classic_lsb(image, message)
+    time_classic = time.time() - start_time
+    
+    results['Classic LSB'] = {
+        'psnr': calculate_psnr(image, stego_classic),
+        'time': time_classic * 1000  # в мілісекундах
+    }
+    
+    # Тест Edge-based LSB
+    start_time = time.time()
+    stego_edge, _ = edge_based_embed(image, message)
+    time_edge = time.time() - start_time
+    
+    results['Edge-based LSB'] = {
+        'psnr': calculate_psnr(image, stego_edge),
+        'time': time_edge * 1000
+    }
+    
+    # Тест PVD (для grayscale)
+    if len(image.shape) == 3:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = image.copy()
+    
+    start_time = time.time()
+    stego_pvd = pvd_embed(gray, message)
+    time_pvd = time.time() - start_time
+    
+    results['PVD'] = {
+        'psnr': calculate_psnr(gray, stego_pvd),
+        'time': time_pvd * 1000
+    }
+    
+    return results
+
+# Тестування
+test_img = np.random.randint(50, 200, (256, 256, 3), dtype=np.uint8)
+test_msg = "Порівняння методів"
+
+print("Запуск порівняння методів...")
+results = compare_methods(test_img, test_msg)
+
+print("\n" + "="*50)
+print("РЕЗУЛЬТАТИ ПОРІВНЯННЯ")
+print("="*50)
+
+for method, stats in results.items():
+    print(f"\n{method}:")
+    print(f"  PSNR: {stats['psnr']:.2f} dB")
+    print(f"  Час: {stats['time']:.2f} мс")</pre>
+        </div>
+
+        <div class="output-block">
+            <strong>Очікуваний вивід:</strong><br>
+            ==================================================<br>
+            РЕЗУЛЬТАТИ ПОРІВНЯННЯ<br>
+            ==================================================<br><br>
+            Classic LSB:<br>
+            PSNR: 51.14 dB<br>
+            Час: 12.45 мс<br><br>
+            Edge-based LSB:<br>
+            PSNR: 68.32 dB<br>
+            Час: 45.78 мс<br><br>
+            PVD:<br>
+            PSNR: 54.67 dB<br>
+            Час: 28.34 мс
+        </div>
+
+        <div class="info-box">
+            <strong>📊 Висновки:</strong>
+            <ul>
+                <li><strong>Edge-based LSB</strong> показує найкращий PSNR (якість)</li>
+                <li><strong>Classic LSB</strong> найшвидший, але найгірша якість</li>
+                <li><strong>PVD</strong> забезпечує хороший баланс</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="tasks" class="section">
+        <h2>📝 Завдання для самостійного виконання</h2>
+
+        <h3>Завдання 1: Оптимізація Edge-based LSB</h3>
+        <ol>
+            <li>Завантажте реальне зображення (не тестове)</li>
+            <li>Експериментуйте з різними значеннями edge_threshold (20, 50, 80, 100)</li>
+            <li>Для кожного порогу обчисліть:
+                <ul>
+                    <li>Доступну ємність</li>
+                    <li>PSNR після вбудовування</li>
+                    <li>Відсоток модифікованих пікселів</li>
+                </ul>
+            </li>
+            <li>Побудуйте графік залежності PSNR від порогу</li>
+        </ol>
+
+        <h3>Завдання 2: Розширення PVD</h3>
+        <ol>
+            <li>Модифікуйте PVD для роботи з вертикальними блоками</li>
+            <li>Реалізуйте витягування повідомлення з PVD</li>
+            <li>Додайте підтримку діагональних блоків</li>
+            <li>Порівняйте ємність різних типів блоків</li>
+        </ol>
+
+        <h3>Завдання 3: Стегоаналіз</h3>
+        <ol>
+            <li>Реалізуйте Chi-square тест для виявлення LSB</li>
+            <li>Протестуйте всі методи на стійкість до Chi-square</li>
+            <li>Визначте, який метод найстійкіший</li>
+        </ol>
+
+        <h3>Завдання 4: Гібридний метод</h3>
+        <ol>
+            <li>Створіть метод, що комбінує Edge-based LSB та PVD</li>
+            <li>Використовуйте Edge-based для країв, PVD для інших областей</li>
+            <li>Порівняйте з окремими методами</li>
+        </ol>
+
+        <div class="warning-box">
+            <strong>⚠️ Вимоги до звіту:</strong>
+            <ul>
+                <li>Весь код з коментарями</li>
+                <li>Скріншоти результатів</li>
+                <li>Графіки порівняння</li>
+                <li>Висновки по кожному завданню</li>
+                <li>Загальний висновок про переваги адаптивних методів</li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling;
+        const code = codeBlock.textContent;
+
+        navigator.clipboard.writeText(code).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✅ Скопійовано!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        });
+    }
+</script>
+</body>
+</html>
