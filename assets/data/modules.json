@@ -59,17 +59,18 @@
         },
         {
           "id": "1.4",
-          "title": "Теоретичні межі стеганографії",
-          "description": "Інформаційно-теоретичні обмеження",
+          "title": "Фундаментальні компроміси стеганографії",
+          "description": "Трикутник компромісів: ємність, непомітність, стійкість",
           "duration": 80,
           "topics": [
-            "Теорема Шеннона",
-            "Пропускна здатність каналу",
-            "Межі непомітності"
+            "Трикутник компромісів",
+            "Баланс параметрів",
+            "Оптимізація під задачі"
           ],
-          "status": "planned",
-          "slides": 30,
-          "hasPresentation": false
+          "status": "completed",
+          "slides": 11,
+          "hasPresentation": true,
+          "path": "tema4_kompromisy.html"
         }
       ]
     },
@@ -189,27 +190,156 @@
     {
       "id": 1,
       "title": "Вступ до стеганографії",
-      "description": "Основи роботи з інструментами стеганографії",
+      "description": "Текстова стеганографія, перший досвід з LSB, візуальний аналіз",
       "type": "introduction",
-      "estimatedTime": 90,
-      "status": "planned"
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Текстова стеганографія", "Базовий LSB", "Візуальний аналіз"]
     },
     {
       "id": 2,
-      "title": "LSB стеганографія в Python",
-      "description": "Реалізація методу найменшого значущого біта",
+      "title": "LSB методи - основи",
+      "description": "Базовий LSB кодувальник, покращений LSB з ключем, метрики якості",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned"
+      "status": "planned",
+      "topics": ["LSB encoder/decoder", "Key-based LSB", "PSNR, SSIM метрики"]
     },
     {
       "id": 3,
-      "title": "Стегоаналіз зображень",
-      "description": "Виявлення прихованої інформації",
+      "title": "Стеганоаналіз LSB",
+      "description": "Статистичні тести, візуальні методи, автоматичний детектор",
       "type": "analysis",
       "estimatedTime": 120,
       "status": "completed",
-      "path": "labs/lab3/index.html"
+      "path": "labs/lab3/index.html",
+      "topics": ["Chi-square test", "RS аналіз", "Автоматичний детектор"]
+    },
+    {
+      "id": 4,
+      "title": "Адаптивні LSB методи",
+      "description": "Edge-based embedding, PVD метод, порівняльний аналіз",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Edge detection", "PVD метод", "Порівняння методів"]
+    },
+    {
+      "id": 5,
+      "title": "DCT стеганографія",
+      "description": "Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["DCT перетворення", "Quantization tables", "JPEG стійкість"]
+    },
+    {
+      "id": 6,
+      "title": "DWT стеганографія",
+      "description": "Wavelet розкладання, embedding в HH субсмугу, тестування стійкості",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Wavelet transform", "Субсмуговий аналіз", "Робастність"]
+    },
+    {
+      "id": 7,
+      "title": "Аудіо LSB",
+      "description": "Обробка WAV файлів, аудіо LSB embedding, перцептивний аналіз",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["WAV формат", "Audio LSB", "Перцептивна якість"]
+    },
+    {
+      "id": 8,
+      "title": "Echo hiding",
+      "description": "Echo generation, cepstrum аналіз, noise tolerance",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Echo parameters", "Cepstral domain", "Noise resistance"]
+    },
+    {
+      "id": 9,
+      "title": "ML стеганографія",
+      "description": "Autoencoder для стеганографії, neural network training, порівняння методів",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Autoencoders", "Training process", "Performance metrics"]
+    },
+    {
+      "id": 10,
+      "title": "Adaptive стеганографія",
+      "description": "Texture аналіз, UNIWARD implementation, security evaluation",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Texture complexity", "UNIWARD", "Security metrics"]
+    },
+    {
+      "id": 11,
+      "title": "Практичні додатки",
+      "description": "Digital watermarking, covert communication, IoT застосування",
+      "type": "practical",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Watermarking", "Covert channels", "IoT security"]
+    },
+    {
+      "id": 12,
+      "title": "ML стеганоаналіз",
+      "description": "Feature extraction, classifier training, adversarial examples",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Feature engineering", "SVM/CNN classifiers", "Adversarial attacks"]
+    },
+    {
+      "id": 13,
+      "title": "Ensemble методи",
+      "description": "Комбінування feature sets, ensemble classifiers, cross-validation",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Feature fusion", "Ensemble learning", "Validation strategies"]
+    },
+    {
+      "id": 14,
+      "title": "Проект - розробка методу",
+      "description": "Концепція власного методу, implementation, initial testing",
+      "type": "project",
+      "estimatedTime": 180,
+      "status": "planned",
+      "topics": ["Method design", "Implementation", "Unit testing"]
+    },
+    {
+      "id": 15,
+      "title": "Проект - тестування",
+      "description": "Comprehensive testing, security аналіз, оптимізація коду",
+      "type": "project",
+      "estimatedTime": 180,
+      "status": "planned",
+      "topics": ["Integration testing", "Security analysis", "Code optimization"]
+    },
+    {
+      "id": 16,
+      "title": "Проект - порівняльний аналіз",
+      "description": "Benchmarking, statistical testing, підготовка звіту",
+      "type": "project",
+      "estimatedTime": 180,
+      "status": "planned",
+      "topics": ["Performance benchmarks", "Statistical analysis", "Report writing"]
+    },
+    {
+      "id": 17,
+      "title": "Презентації та підсумки",
+      "description": "Презентації проектів, обговорення результатів, підсумки курсу",
+      "type": "presentation",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Project presentations", "Peer review", "Course summary"]
     }
   ]
 }

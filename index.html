@@ -520,8 +520,8 @@
             // Перетворюємо на число для перевірки
             const id = typeof labId === 'string' ? parseInt(labId) : labId;
 
-            if (id === 3) {
-                window.location.href = 'labs/lab3/index.html';
+            if (id === 3 || id === 4) {
+                window.location.href = `labs/lab${id}.html`;
             } else {
                 alert(`🔬 Лабораторна робота ${labId} буде доступна незабаром`);
             }
