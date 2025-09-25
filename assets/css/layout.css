@@ -1,0 +1,425 @@
+/* ================================================================
+   LAYOUT.CSS - Структура та розміщення елементів
+   GitHub Pages | ITCSS Architecture | v1.0
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   CONTAINER & WRAPPER
+   ---------------------------------------------------------------- */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 0 var(--space-6);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 0 var(--space-8);
+    }
+}
+
+/* Wide container for slides */
+.container-wide {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+}
+
+/* Full width */
+.container-full {
+    width: 100%;
+    padding: 0 var(--space-4);
+}
+
+/* ----------------------------------------------------------------
+   GRID SYSTEM
+   ---------------------------------------------------------------- */
+.grid {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.grid-cols-1 { grid-template-columns: 1fr; }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Responsive grid */
+.grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid-auto-sm {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Grid gaps */
+.gap-2 { gap: var(--space-2); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+/* ----------------------------------------------------------------
+   FLEXBOX UTILITIES
+   ---------------------------------------------------------------- */
+.flex {
+    display: flex;
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+/* Flex Direction */
+.flex-row { flex-direction: row; }
+.flex-col { flex-direction: column; }
+.flex-row-reverse { flex-direction: row-reverse; }
+.flex-col-reverse { flex-direction: column-reverse; }
+
+/* Flex Wrap */
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+/* Justify Content */
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.justify-evenly { justify-content: space-evenly; }
+
+/* Align Items */
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+.items-stretch { align-items: stretch; }
+.items-baseline { align-items: baseline; }
+
+/* Align Self */
+.self-start { align-self: flex-start; }
+.self-center { align-self: center; }
+.self-end { align-self: flex-end; }
+.self-stretch { align-self: stretch; }
+
+/* Flex Grow/Shrink */
+.flex-1 { flex: 1 1 0%; }
+.flex-auto { flex: 1 1 auto; }
+.flex-initial { flex: 0 1 auto; }
+.flex-none { flex: none; }
+
+.grow { flex-grow: 1; }
+.shrink { flex-shrink: 1; }
+.shrink-0 { flex-shrink: 0; }
+
+/* ----------------------------------------------------------------
+   MAIN LAYOUT COMPONENTS
+   ---------------------------------------------------------------- */
+
+/* Page wrapper */
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content area */
+.main {
+    flex: 1;
+    padding: var(--space-6) 0;
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding: var(--space-8) 0;
+    }
+}
+
+/* Header */
+.header {
+    background-color: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-gray-200);
+    padding: var(--space-4) 0;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-logo {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--color-gray-50);
+    border-top: 1px solid var(--color-gray-200);
+    padding: var(--space-6) 0;
+    margin-top: auto;
+}
+
+/* ----------------------------------------------------------------
+   SECTION LAYOUTS
+   ---------------------------------------------------------------- */
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: var(--space-12) 0;
+    background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary-dark));
+    color: var(--color-text-inverse);
+}
+
+@media (min-width: 768px) {
+    .hero {
+        padding: var(--space-16) 0;
+    }
+}
+
+.hero-title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-4);
+}
+
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: var(--font-size-5xl);
+    }
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--space-6);
+}
+
+/* Section */
+.section {
+    padding: var(--space-8) 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.section-title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-4);
+}
+
+.section-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ----------------------------------------------------------------
+   SLIDES LAYOUT (для презентацій)
+   ---------------------------------------------------------------- */
+
+/* Slide container */
+.slides-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--color-bg-primary);
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.slide.prev {
+    transform: translateX(-100%);
+}
+
+.slide-content {
+    max-width: 1000px;
+    width: 90%;
+    padding: var(--space-6);
+    text-align: center;
+}
+
+/* Slide navigation */
+.slide-nav {
+    position: fixed;
+    bottom: var(--space-4);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: var(--font-size-sm);
+    z-index: var(--z-fixed);
+}
+
+.slide-controls {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: var(--z-fixed);
+}
+
+.slide-controls.prev {
+    left: var(--space-4);
+}
+
+.slide-controls.next {
+    right: var(--space-4);
+}
+
+/* ----------------------------------------------------------------
+   MODULE CARDS LAYOUT
+   ---------------------------------------------------------------- */
+
+/* Modules grid */
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-6);
+    margin: var(--space-8) 0;
+}
+
+/* Lectures grid */
+.lectures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+}
+
+/* ----------------------------------------------------------------
+   RESPONSIVE LAYOUT ADJUSTMENTS
+   ---------------------------------------------------------------- */
+
+/* Mobile First - все вище вже мобільне */
+
+/* Tablet: 768px+ */
+@media (min-width: 768px) {
+    .grid-cols-2-md { grid-template-columns: repeat(2, 1fr); }
+    .grid-cols-3-md { grid-template-columns: repeat(3, 1fr); }
+
+    .flex-row-md { flex-direction: row; }
+    .flex-col-md { flex-direction: column; }
+
+    .text-left-md { text-align: left; }
+    .text-center-md { text-align: center; }
+    .text-right-md { text-align: right; }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+    .grid-cols-3-lg { grid-template-columns: repeat(3, 1fr); }
+    .grid-cols-4-lg { grid-template-columns: repeat(4, 1fr); }
+
+    .modules-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .slide-content {
+        width: 80%;
+        padding: var(--space-8);
+    }
+}
+
+/* Large Desktop: 1280px+ */
+@media (min-width: 1280px) {
+    .grid-cols-4-xl { grid-template-columns: repeat(4, 1fr); }
+    .grid-cols-6-xl { grid-template-columns: repeat(6, 1fr); }
+
+    .modules-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-8);
+    }
+}
+
+/* ----------------------------------------------------------------
+   SPACING UTILITIES
+   ---------------------------------------------------------------- */
+
+/* Margin */
+.m-0 { margin: 0; }
+.m-1 { margin: var(--space-1); }
+.m-2 { margin: var(--space-2); }
+.m-3 { margin: var(--space-3); }
+.m-4 { margin: var(--space-4); }
+.m-6 { margin: var(--space-6); }
+.m-8 { margin: var(--space-8); }
+
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.mt-2 { margin-top: var(--space-2); }
+.mt-4 { margin-top: var(--space-4); }
+.mt-6 { margin-top: var(--space-6); }
+.mt-8 { margin-top: var(--space-8); }
+
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); }
+.mb-8 { margin-bottom: var(--space-8); }
+
+/* Padding */
+.p-0 { padding: 0; }
+.p-2 { padding: var(--space-2); }
+.p-4 { padding: var(--space-4); }
+.p-6 { padding: var(--space-6); }
+.p-8 { padding: var(--space-8); }
+
+.px-4 { padding-left: var(--space-4); padding-right: var(--space-4); }
+.px-6 { padding-left: var(--space-6); padding-right: var(--space-6); }
+
+.py-2 { padding-top: var(--space-2); padding-bottom: var(--space-2); }
+.py-4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+.py-6 { padding-top: var(--space-6); padding-bottom: var(--space-6); }
+.py-8 { padding-top: var(--space-8); padding-bottom: var(--space-8); }
+
+/* ----------------------------------------------------------------
+   POSITION & Z-INDEX UTILITIES
+   ---------------------------------------------------------------- */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+.top-0 { top: 0; }
+.right-0 { right: 0; }
+.bottom-0 { bottom: 0; }
+.left-0 { left: 0; }
+
+.z-10 { z-index: var(--z-dropdown); }
+.z-20 { z-index: var(--z-sticky); }
+.z-30 { z-index: var(--z-fixed); }
+.z-40 { z-index: var(--z-modal); }
+.z-50 { z-index: var(--z-tooltip); }

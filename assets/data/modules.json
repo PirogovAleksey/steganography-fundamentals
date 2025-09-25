@@ -1,0 +1,345 @@
+{
+  "courseInfo": {
+    "title": "Основи стеганографії",
+    "totalModules": 4,
+    "totalLectures": 16,
+    "totalLabs": 17,
+    "estimatedHours": 100
+  },
+  "modules": [
+    {
+      "id": 1,
+      "title": "Теоретичні основи стеганографії",
+      "emoji": "🔐",
+      "description": "Вступ до стеганографії, математичні основи, принципи побудови систем",
+      "status": "active",
+      "lectures": [
+        {
+          "id": "1.1",
+          "title": "Вступ до стеганографії",
+          "description": "Історія, основні поняття та класифікація методів",
+          "duration": 80,
+          "topics": [
+            "Історія стеганографії",
+            "Основні поняття та термінологія",
+            "Класифікація методів"
+          ],
+          "status": "planned",
+          "slides": 40,
+          "hasPresentation": false
+        },
+        {
+          "id": "1.2",
+          "title": "Математичні основи стеганографії",
+          "description": "Теорія інформації, статистичні методи",
+          "duration": 80,
+          "topics": [
+            "Теорія інформації",
+            "Ентропія та надлишковість",
+            "Статистичні характеристики"
+          ],
+          "status": "planned",
+          "slides": 35,
+          "hasPresentation": false
+        },
+        {
+          "id": "1.3",
+          "title": "Принципи побудови стегосистем",
+          "description": "Архітектура стегосистем, вимоги та методологія проектування",
+          "duration": 80,
+          "topics": [
+            "Архітектура стегосистем",
+            "Вимоги до стегосистем",
+            "Методологія проектування"
+          ],
+          "status": "completed",
+          "slides": 31,
+          "hasPresentation": true,
+          "path": "lectures/lecture1_3/index.html"
+        },
+        {
+          "id": "1.4",
+          "title": "Фундаментальні компроміси стеганографії",
+          "description": "Трикутник компромісів: ємність, непомітність, стійкість",
+          "duration": 80,
+          "topics": [
+            "Трикутник компромісів",
+            "Баланс параметрів",
+            "Оптимізація під задачі"
+          ],
+          "status": "completed",
+          "slides": 11,
+          "hasPresentation": true,
+          "path": "tema4_kompromisy.html"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Стеганографія цифрових зображень",
+      "emoji": "🖼️",
+      "description": "Методи приховування інформації в цифрових зображеннях",
+      "status": "planned",
+      "lectures": [
+        {
+          "id": "2.1",
+          "title": "LSB стеганографія",
+          "description": "Метод найменшого значущого біта",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "2.2",
+          "title": "Стеганографія в частотній області",
+          "description": "DCT, DWT методи",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "2.3",
+          "title": "Адаптивні методи",
+          "description": "HUGO, WOW, S-UNIWARD",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "2.4",
+          "title": "Стегоаналіз зображень",
+          "description": "Методи виявлення прихованої інформації",
+          "duration": 80,
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Стеганографія аудіо та відео",
+      "emoji": "🎵",
+      "description": "Приховування інформації в мультимедійних потоках",
+      "status": "planned",
+      "lectures": [
+        {
+          "id": "3.1",
+          "title": "Аудіо стеганографія",
+          "description": "LSB, фазове кодування, розширення спектру",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "3.2",
+          "title": "Відео стеганографія",
+          "description": "Методи для відеопотоків",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "3.3",
+          "title": "Мережева стеганографія",
+          "description": "Приховування в мережевих протоколах",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "3.4",
+          "title": "Текстова стеганографія",
+          "description": "Лінгвістичні методи приховування",
+          "duration": 80,
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Сучасні методи та застосування",
+      "emoji": "🚀",
+      "description": "Машинне навчання, практичні застосування, майбутнє стеганографії",
+      "status": "planned",
+      "lectures": [
+        {
+          "id": "4.1",
+          "title": "Машинне навчання в стеганографії",
+          "description": "GAN, нейронні мережі",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "4.2",
+          "title": "Цифрові водяні знаки",
+          "description": "Захист авторських прав",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "4.3",
+          "title": "Практичні застосування",
+          "description": "Реальні кейси використання",
+          "duration": 80,
+          "status": "planned"
+        },
+        {
+          "id": "4.4",
+          "title": "Майбутнє стеганографії",
+          "description": "Тренди та перспективи розвитку",
+          "duration": 80,
+          "status": "planned"
+        }
+      ]
+    }
+  ],
+  "labs": [
+    {
+      "id": 1,
+      "title": "Вступ до стеганографії",
+      "description": "Текстова стеганографія, перший досвід з LSB, візуальний аналіз",
+      "type": "introduction",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Текстова стеганографія", "Базовий LSB", "Візуальний аналіз"]
+    },
+    {
+      "id": 2,
+      "title": "LSB методи - основи",
+      "description": "Базовий LSB кодувальник, покращений LSB з ключем, метрики якості",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["LSB encoder/decoder", "Key-based LSB", "PSNR, SSIM метрики"]
+    },
+    {
+      "id": 3,
+      "title": "Стеганоаналіз LSB",
+      "description": "Статистичні тести, візуальні методи, автоматичний детектор",
+      "type": "analysis",
+      "estimatedTime": 120,
+      "status": "completed",
+      "path": "labs/lab3/index.html",
+      "topics": ["Chi-square test", "RS аналіз", "Автоматичний детектор"]
+    },
+    {
+      "id": 4,
+      "title": "Адаптивні LSB методи",
+      "description": "Edge-based embedding, PVD метод, порівняльний аналіз",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Edge detection", "PVD метод", "Порівняння методів"]
+    },
+    {
+      "id": 5,
+      "title": "DCT стеганографія",
+      "description": "Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["DCT перетворення", "Quantization tables", "JPEG стійкість"]
+    },
+    {
+      "id": 6,
+      "title": "DWT стеганографія",
+      "description": "Wavelet розкладання, embedding в HH субсмугу, тестування стійкості",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Wavelet transform", "Субсмуговий аналіз", "Робастність"]
+    },
+    {
+      "id": 7,
+      "title": "Аудіо LSB",
+      "description": "Обробка WAV файлів, аудіо LSB embedding, перцептивний аналіз",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["WAV формат", "Audio LSB", "Перцептивна якість"]
+    },
+    {
+      "id": 8,
+      "title": "Echo hiding",
+      "description": "Echo generation, cepstrum аналіз, noise tolerance",
+      "type": "programming",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Echo parameters", "Cepstral domain", "Noise resistance"]
+    },
+    {
+      "id": 9,
+      "title": "ML стеганографія",
+      "description": "Autoencoder для стеганографії, neural network training, порівняння методів",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Autoencoders", "Training process", "Performance metrics"]
+    },
+    {
+      "id": 10,
+      "title": "Adaptive стеганографія",
+      "description": "Texture аналіз, UNIWARD implementation, security evaluation",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Texture complexity", "UNIWARD", "Security metrics"]
+    },
+    {
+      "id": 11,
+      "title": "Практичні додатки",
+      "description": "Digital watermarking, covert communication, IoT застосування",
+      "type": "practical",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Watermarking", "Covert channels", "IoT security"]
+    },
+    {
+      "id": 12,
+      "title": "ML стеганоаналіз",
+      "description": "Feature extraction, classifier training, adversarial examples",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Feature engineering", "SVM/CNN classifiers", "Adversarial attacks"]
+    },
+    {
+      "id": 13,
+      "title": "Ensemble методи",
+      "description": "Комбінування feature sets, ensemble classifiers, cross-validation",
+      "type": "advanced",
+      "estimatedTime": 150,
+      "status": "planned",
+      "topics": ["Feature fusion", "Ensemble learning", "Validation strategies"]
+    },
+    {
+      "id": 14,
+      "title": "Проект - розробка методу",
+      "description": "Концепція власного методу, implementation, initial testing",
+      "type": "project",
+      "estimatedTime": 180,
+      "status": "planned",
+      "topics": ["Method design", "Implementation", "Unit testing"]
+    },
+    {
+      "id": 15,
+      "title": "Проект - тестування",
+      "description": "Comprehensive testing, security аналіз, оптимізація коду",
+      "type": "project",
+      "estimatedTime": 180,
+      "status": "planned",
+      "topics": ["Integration testing", "Security analysis", "Code optimization"]
+    },
+    {
+      "id": 16,
+      "title": "Проект - порівняльний аналіз",
+      "description": "Benchmarking, statistical testing, підготовка звіту",
+      "type": "project",
+      "estimatedTime": 180,
+      "status": "planned",
+      "topics": ["Performance benchmarks", "Statistical analysis", "Report writing"]
+    },
+    {
+      "id": 17,
+      "title": "Презентації та підсумки",
+      "description": "Презентації проектів, обговорення результатів, підсумки курсу",
+      "type": "presentation",
+      "estimatedTime": 120,
+      "status": "planned",
+      "topics": ["Project presentations", "Peer review", "Course summary"]
+    }
+  ]
+}

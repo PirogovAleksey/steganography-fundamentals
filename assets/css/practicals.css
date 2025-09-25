@@ -1,0 +1,580 @@
+/* ================================================================
+   PRACTICALS.CSS - Стилі для практичних робіт
+   Banking Information Systems | v1.0
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   ПРАКТИЧНІ РОБОТИ - БАЗОВІ СТИЛІ
+   ---------------------------------------------------------------- */
+
+.practical-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.practical-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ----------------------------------------------------------------
+   ЗАГОЛОВКИ ТА СЕКЦІЇ
+   ---------------------------------------------------------------- */
+
+.practical-content h1 {
+    color: #1e40af;
+    font-size: 2.5rem;
+    font-weight: 700;
+    border-bottom: 3px solid #1e40af;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.practical-content h2 {
+    color: #1e3a8a;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 4px solid #059669;
+}
+
+.practical-content h3 {
+    color: #374151;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.practical-content h4 {
+    color: #4b5563;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.practical-content h5 {
+    color: #6b7280;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ----------------------------------------------------------------
+   ТЕКСТ ТА ПАРАГРАФИ
+   ---------------------------------------------------------------- */
+
+.practical-content p {
+    color: #374151;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.practical-content ul,
+.practical-content ol {
+    color: #374151;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.practical-content li {
+    margin-bottom: 0.5rem;
+}
+
+.practical-content strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* ----------------------------------------------------------------
+   ТАБЛИЦІ
+   ---------------------------------------------------------------- */
+
+.practical-content table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 2rem 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.practical-content th {
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.practical-content td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    font-size: 0.95rem;
+}
+
+.practical-content tr:last-child td {
+    border-bottom: none;
+}
+
+.practical-content tr:hover {
+    background: #f9fafb;
+}
+
+.practical-content tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.practical-content tbody tr:nth-child(even):hover {
+    background: #f3f4f6;
+}
+
+/* ----------------------------------------------------------------
+   КОД ТА ПРЕФОРМАТОВАНИЙ ТЕКСТ
+   ---------------------------------------------------------------- */
+
+.practical-content pre {
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.practical-content code {
+    background: #f3f4f6;
+    color: #dc2626;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.practical-content pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+/* ASCII діаграми */
+.practical-content pre.ascii-diagram {
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    color: #374151;
+    font-weight: 500;
+}
+
+/* ----------------------------------------------------------------
+   TASK BOXES ТА ІНФОРМАЦІЙНІ БЛОКИ
+   ---------------------------------------------------------------- */
+
+.task-box {
+    background: linear-gradient(to right, #eff6ff, #f0f9ff);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.task-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #3b82f6;
+}
+
+.task-box h4 {
+    color: #1e40af;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.task-box h5 {
+    color: #1e3a8a;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Інформаційні блоки */
+.info-box {
+    background: #e0f2fe;
+    border-left: 4px solid #0284c7;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.info-box strong {
+    color: #0c4a6e;
+}
+
+.warning-box {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.warning-box strong {
+    color: #78350f;
+}
+
+.success-box {
+    background: #dcfce7;
+    border-left: 4px solid #22c55e;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.success-box strong {
+    color: #14532d;
+}
+
+.error-box {
+    background: #fee2e2;
+    border-left: 4px solid #ef4444;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.error-box strong {
+    color: #7f1d1d;
+}
+
+/* ----------------------------------------------------------------
+   ЧЕК-ЛИСТИ
+   ---------------------------------------------------------------- */
+
+.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.checklist li {
+    padding: 0.75rem 0;
+    padding-left: 2.5rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+    color: #4b5563;
+}
+
+.checklist li:hover {
+    background: #f9fafb;
+    padding-left: 2.75rem;
+}
+
+.checklist li:before {
+    content: "☐";
+    position: absolute;
+    left: 0.75rem;
+    font-size: 1.25rem;
+    color: #9ca3af;
+    transition: all 0.2s ease;
+}
+
+.checklist li.done {
+    color: #059669;
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+
+.checklist li.done:before {
+    content: "✓";
+    color: #059669;
+    font-weight: bold;
+}
+
+/* ----------------------------------------------------------------
+   DOWNLOAD SECTION
+   ---------------------------------------------------------------- */
+
+.download-section {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    text-align: center;
+    margin: 2rem 0;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.download-section h3 {
+    color: white;
+    margin-bottom: 0.75rem;
+    font-size: 1.75rem;
+}
+
+.download-section p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+}
+
+.download-btn {
+    background: white;
+    color: #1e40af;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.download-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    background: #f0f9ff;
+}
+
+/* ----------------------------------------------------------------
+   CARDS ДЛЯ КРИТЕРІЇВ
+   ---------------------------------------------------------------- */
+
+.criteria-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.criteria-card h3 {
+    color: #1e40af;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.criteria-card table {
+    margin: 0;
+    box-shadow: none;
+}
+
+/* ----------------------------------------------------------------
+   BADGES ТА ТЕГИ
+   ---------------------------------------------------------------- */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-primary {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.badge-warning {
+    background: #fed7aa;
+    color: #ea580c;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ----------------------------------------------------------------
+   НАВІГАЦІЯ
+   ---------------------------------------------------------------- */
+
+.practical-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e5e7eb;
+}
+
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-btn-back {
+    background: white;
+    border: 2px solid #e5e7eb;
+    color: #6b7280;
+}
+
+.nav-btn-back:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.nav-btn-next {
+    background: #3b82f6;
+    color: white;
+}
+
+.nav-btn-next:hover {
+    background: #2563eb;
+    transform: translateX(2px);
+}
+
+/* ----------------------------------------------------------------
+   RESPONSIVE DESIGN
+   ---------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .practical-content {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+
+    .practical-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .practical-content h2 {
+        font-size: 1.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .practical-content table {
+        font-size: 0.85rem;
+    }
+
+    .practical-content th,
+    .practical-content td {
+        padding: 0.5rem;
+    }
+
+    .download-btn {
+        display: block;
+        margin: 0.5rem auto;
+        width: 80%;
+    }
+
+    .practical-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ----------------------------------------------------------------
+   PRINT STYLES
+   ---------------------------------------------------------------- */
+
+@media print {
+    .practical-content {
+        box-shadow: none;
+        border: none;
+    }
+
+    .download-section,
+    .practical-nav {
+        display: none;
+    }
+
+    .task-box {
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: avoid;
+    }
+
+    pre {
+        page-break-inside: avoid;
+    }
+}
+
+/* ----------------------------------------------------------------
+   ANIMATIONS
+   ---------------------------------------------------------------- */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.practical-content > * {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Loading state */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
