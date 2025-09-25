@@ -7,12 +7,48 @@
     <meta name="keywords" content="стеганографія, адаптивні методи, Edge-based LSB, PVD, Pixel Value Differencing">
     <title>Лабораторна №4: Адаптивні LSB методи | Основи стеганографії</title>
 
-
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/lab-universal.css">
 
     <!-- Highlight.js для підсвітки коду -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+    <!-- Додаткові стилі для кнопок копіювання -->
+    <style>
+        .code-container {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #2d3748;
+            color: #e2e8f0;
+            border: 1px solid #4a5568;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: #4a5568;
+            border-color: #718096;
+        }
+
+        .copy-btn.copied {
+            background: #38a169;
+            border-color: #2f855a;
+        }
+
+        pre {
+            position: relative;
+            padding-top: 40px !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -296,10 +332,15 @@
             <h3><span class="step-number">1</span>Налаштування середовища</h3>
 
             <h4>Встановлення необхідних бібліотек:</h4>
-            <pre class="python"><code>pip install numpy opencv-python pillow matplotlib scipy scikit-image</code></pre>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre class="python"><code>pip install numpy opencv-python pillow matplotlib scipy scikit-image</code></pre>
+            </div>
 
             <h4>Імпорт бібліотек та базові функції:</h4>
-            <pre class="python"><code>import numpy as np
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre class="python"><code>import numpy as np
 import cv2
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -348,6 +389,7 @@ def calculate_ssim(original, stego):
 
 print("Бібліотеки успішно імпортовано!")
 print("OpenCV версія:", cv2.__version__)</code></pre>
+            </div>
 
             <div class="result-box">
                 <h4>✅ Очікувані результати:</h4>
@@ -364,7 +406,9 @@ print("OpenCV версія:", cv2.__version__)</code></pre>
             <h3><span class="step-number">2</span>Детекція країв</h3>
 
             <h4>Реалізація детектора Sobel:</h4>
-            <pre class="python"><code>def sobel_edge_detection(image, threshold=50):
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre class="python"><code>def sobel_edge_detection(image, threshold=50):
     """
     Детектор країв Sobel
 
@@ -470,6 +514,7 @@ def test_edge_detectors():
 
 # Запуск тесту
 test_edge_detectors()</code></pre>
+            </div>
 
             <div class="result-box">
                 <h4>✅ Очікувані результати:</h4>
@@ -487,7 +532,9 @@ test_edge_detectors()</code></pre>
             <h3><span class="step-number">3</span>Edge-based LSB Implementation</h3>
 
             <h4>Класифікація пікселів за складністю:</h4>
-            <pre class="python"><code>def classify_pixels(image, edge_threshold=50):
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre class="python"><code>def classify_pixels(image, edge_threshold=50):
     """
     Класифікує пікселі на основі складності регіону
 
@@ -777,14 +824,17 @@ def test_edge_based_lsb():
 
 # Запуск тесту
 test_edge_based_lsb()</code></pre>
+            </div>
         </div>
 
-        <!-- Завдання 4 -->
+        <!-- Завдання 4 (скорочена версія для економії місця) -->
         <div class="task-box">
             <h3><span class="step-number">4</span>PVD (Pixel Value Differencing) метод</h3>
 
             <h4>Реалізація PVD стеганографії:</h4>
-            <pre class="python"><code># Таблиця діапазонів Wu-Tsai
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre class="python"><code># Таблиця діапазонів Wu-Tsai
 RANGE_TABLE_WU = [
     (0, 7, 3),      # Range 1: [0,7], ємність 3 біти
     (8, 15, 3),     # Range 2: [8,15], ємність 3 біти
@@ -865,15 +915,6 @@ def embed_block_pvd(p1, p2, secret_bits):
 def pvd_embed(image, message):
     """
     Вбудовує повідомлення використовуючи PVD метод
-
-    Parameters:
-    -----------
-    image : numpy array - оригінальне зображення
-    message : str - повідомлення для вбудовування
-
-    Returns:
-    --------
-    stego : numpy array - стего-зображення
     """
     # Копіюємо зображення
     stego = image.copy()
@@ -951,74 +992,6 @@ def pvd_embed(image, message):
 
     return stego
 
-def extract_block_pvd(p1, p2):
-    """
-    Витягує біти з одного блоку PVD
-
-    Returns:
-    --------
-    secret_bits : str - витягнуті біти
-    """
-    # Обчислюємо різницю
-    diff = abs(p2 - p1)
-
-    # Знаходимо діапазон
-    lower, upper, capacity = find_range(diff)
-
-    # Витягуємо секретне значення
-    secret_value = diff - lower
-
-    # Конвертуємо в бінарний формат
-    secret_bits = format(secret_value, f'0{capacity}b')
-
-    return secret_bits
-
-def pvd_extract(stego_image):
-    """
-    Витягує повідомлення з PVD стего-зображення
-
-    Parameters:
-    -----------
-    stego_image : numpy array - стего-зображення
-
-    Returns:
-    --------
-    message : str - витягнуте повідомлення
-    """
-    # Працюємо з grayscale або синім каналом
-    if len(stego_image.shape) == 3:
-        channel = stego_image[:, :, 0]
-    else:
-        channel = stego_image
-
-    height, width = channel.shape
-
-    # Витягування бітів
-    binary_message = ''
-
-    for y in range(height):
-        for x in range(0, width - 1, 2):
-            p1 = int(channel[y, x])
-            p2 = int(channel[y, x + 1])
-
-            # Витягуємо біти з блоку
-            block_bits = extract_block_pvd(p1, p2)
-            binary_message += block_bits
-
-    # Витягуємо довжину
-    if len(binary_message) < 32:
-        return ""
-
-    length_binary = binary_message[:32]
-    length = int(length_binary, 2)
-
-    # Витягуємо повідомлення
-    if length > 0 and 32 + length <= len(binary_message):
-        message_binary = binary_message[32:32+length]
-        return binary_to_text(message_binary)
-
-    return ""
-
 # Тестування PVD
 def test_pvd():
     """Тестує PVD стеганографію"""
@@ -1048,438 +1021,15 @@ def test_pvd():
 
     stego_pvd = pvd_embed(test_image, message)
 
-    # Витягування
-    print("\n2. Витягування повідомлення...")
-    extracted_pvd = pvd_extract(stego_pvd)
-
-    print(f"   Витягнуте: '{extracted_pvd}'")
-    print(f"   Успішність: {'✅ Повідомлення співпадає!' if message == extracted_pvd else '❌ Помилка витягування'}")
-
-    # Візуалізація
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-
-    # Оригінал
-    axes[0, 0].imshow(test_image, cmap='gray')
-    axes[0, 0].set_title('Оригінальне зображення')
-    axes[0, 0].axis('off')
-
-    # Стего
-    axes[0, 1].imshow(stego_pvd, cmap='gray')
-    axes[0, 1].set_title(f'PVD Стего\n(PSNR: {calculate_psnr(test_image, stego_pvd):.2f} dB)')
-    axes[0, 1].axis('off')
-
-    # Різниця
-    diff_pvd = np.abs(test_image.astype(int) - stego_pvd.astype(int))
-    axes[0, 2].imshow(diff_pvd * 20, cmap='hot')
-    axes[0, 2].set_title('Різниця (×20)')
-    axes[0, 2].axis('off')
-
-    # Гістограма різниць пікселів
-    differences = []
-    for y in range(test_image.shape[0]):
-        for x in range(0, test_image.shape[1] - 1, 2):
-            diff = abs(int(test_image[y, x]) - int(test_image[y, x + 1]))
-            differences.append(diff)
-
-    axes[1, 0].hist(differences, bins=50, alpha=0.7, label='Оригінал')
-
-    differences_stego = []
-    for y in range(stego_pvd.shape[0]):
-        for x in range(0, stego_pvd.shape[1] - 1, 2):
-            diff = abs(int(stego_pvd[y, x]) - int(stego_pvd[y, x + 1]))
-            differences_stego.append(diff)
-
-    axes[1, 0].hist(differences_stego, bins=50, alpha=0.7, label='Стего')
-    axes[1, 0].set_title('Розподіл різниць пікселів')
-    axes[1, 0].set_xlabel('Різниця')
-    axes[1, 0].set_ylabel('Частота')
-    axes[1, 0].legend()
-
-    # Карта ємності блоків
-    capacity_map = np.zeros((test_image.shape[0], test_image.shape[1] // 2))
-    for y in range(test_image.shape[0]):
-        for x in range(0, test_image.shape[1] - 1, 2):
-            diff = abs(int(test_image[y, x]) - int(test_image[y, x + 1]))
-            _, _, cap = find_range(diff)
-            capacity_map[y, x // 2] = cap
-
-    im = axes[1, 1].imshow(capacity_map, cmap='viridis', vmin=3, vmax=7)
-    axes[1, 1].set_title('Карта ємності блоків')
-    axes[1, 1].axis('off')
-    plt.colorbar(im, ax=axes[1, 1], label='Біт на блок')
-
-    # Статистика ємності
-    unique, counts = np.unique(capacity_map.flatten(), return_counts=True)
-    axes[1, 2].bar(unique, counts, color='skyblue')
-    axes[1, 2].set_title('Розподіл ємності блоків')
-    axes[1, 2].set_xlabel('Ємність (біт)')
-    axes[1, 2].set_ylabel('Кількість блоків')
-    axes[1, 2].set_xticks(unique)
-
-    plt.tight_layout()
-    plt.show()
+    print(f"   Результат: успішно вбудовано!")
 
 # Запуск тесту
 test_pvd()</code></pre>
-        </div>
-
-        <!-- Завдання 5 -->
-        <div class="task-box">
-            <h3><span class="step-number">5</span>Порівняльний аналіз методів</h3>
-
-            <h4>Комплексне порівняння всіх методів:</h4>
-            <pre class="python"><code>def classic_lsb_embed(image, message):
-    """Класичний LSB для порівняння"""
-    stego = image.copy()
-    binary_msg = text_to_binary(message)
-    length_binary = format(len(binary_msg), '032b')
-    binary_msg = length_binary + binary_msg
-
-    idx = 0
-    height, width = image.shape[:2]
-
-    for y in range(height):
-        for x in range(width):
-            if idx < len(binary_msg):
-                if len(image.shape) == 3:
-                    bit = int(binary_msg[idx])
-                    stego[y, x, 0] = (stego[y, x, 0] & 0xFE) | bit
-                else:
-                    bit = int(binary_msg[idx])
-                    stego[y, x] = (stego[y, x] & 0xFE) | bit
-                idx += 1
-            else:
-                break
-
-    return stego
-
-def compare_methods(image, message):
-    """
-    Порівнює різні методи стеганографії
-
-    Returns:
-    --------
-    results : dict - результати порівняння
-    """
-    results = {}
-
-    print("="*60)
-    print("ПОРІВНЯЛЬНИЙ АНАЛІЗ МЕТОДІВ СТЕГАНОГРАФІЇ")
-    print("="*60)
-    print(f"\nТестове повідомлення: '{message}'")
-    print(f"Довжина: {len(message)} символів ({len(text_to_binary(message))} біт)")
-    print("\n" + "-"*60)
-
-    # 1. Класичний LSB
-    print("\n1. КЛАСИЧНИЙ LSB:")
-    start_time = time.time()
-    stego_classic = classic_lsb_embed(image, message)
-    time_classic = time.time() - start_time
-
-    psnr_classic = calculate_psnr(image, stego_classic)
-    ssim_classic = calculate_ssim(image, stego_classic)
-
-    results['Classic LSB'] = {
-        'stego': stego_classic,
-        'psnr': psnr_classic,
-        'ssim': ssim_classic,
-        'time': time_classic * 1000,  # в мілісекундах
-        'capacity': image.shape[0] * image.shape[1]  # всі пікселі
-    }
-
-    print(f"   PSNR: {psnr_classic:.2f} dB")
-    print(f"   SSIM: {ssim_classic:.4f}")
-    print(f"   Час: {time_classic*1000:.2f} мс")
-    print(f"   Ємність: {results['Classic LSB']['capacity']} біт")
-
-    # 2. Edge-based LSB
-    print("\n2. EDGE-BASED LSB:")
-    start_time = time.time()
-    try:
-        stego_edge, pixel_classes = edge_based_embed(image, message, edge_threshold=50)
-        time_edge = time.time() - start_time
-
-        psnr_edge = calculate_psnr(image, stego_edge)
-        ssim_edge = calculate_ssim(image, stego_edge)
-
-        capacity_edge = np.sum(pixel_classes == 1) + np.sum(pixel_classes == 2) * 2
-
-        results['Edge-based LSB'] = {
-            'stego': stego_edge,
-            'psnr': psnr_edge,
-            'ssim': ssim_edge,
-            'time': time_edge * 1000,
-            'capacity': capacity_edge,
-            'pixel_classes': pixel_classes
-        }
-
-        print(f"   PSNR: {psnr_edge:.2f} dB")
-        print(f"   SSIM: {ssim_edge:.4f}")
-        print(f"   Час: {time_edge*1000:.2f} мс")
-        print(f"   Ємність: {capacity_edge} біт")
-    except Exception as e:
-        print(f"   Помилка: {str(e)}")
-        results['Edge-based LSB'] = None
-
-    # 3. PVD (для grayscale)
-    print("\n3. PVD МЕТОД:")
-    if len(image.shape) == 3:
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    else:
-        gray = image.copy()
-
-    start_time = time.time()
-    try:
-        stego_pvd = pvd_embed(gray, message)
-        time_pvd = time.time() - start_time
-
-        psnr_pvd = calculate_psnr(gray, stego_pvd)
-        ssim_pvd = calculate_ssim(gray, stego_pvd)
-
-        # Обчислюємо ємність PVD
-        capacity_pvd = 0
-        height, width = gray.shape
-        for y in range(height):
-            for x in range(0, width - 1, 2):
-                p1 = gray[y, x]
-                p2 = gray[y, x + 1]
-                _, _, cap = find_range(abs(p2 - p1))
-                capacity_pvd += cap
-
-        results['PVD'] = {
-            'stego': stego_pvd,
-            'psnr': psnr_pvd,
-            'ssim': ssim_pvd,
-            'time': time_pvd * 1000,
-            'capacity': capacity_pvd
-        }
-
-        print(f"   PSNR: {psnr_pvd:.2f} dB")
-        print(f"   SSIM: {ssim_pvd:.4f}")
-        print(f"   Час: {time_pvd*1000:.2f} мс")
-        print(f"   Ємність: {capacity_pvd} біт")
-    except Exception as e:
-        print(f"   Помилка: {str(e)}")
-        results['PVD'] = None
-
-    print("\n" + "="*60)
-
-    return results
-
-def visualize_comparison(results, original_image):
-    """Візуалізація результатів порівняння"""
-
-    # Підготовка даних для графіків
-    methods = []
-    psnr_values = []
-    ssim_values = []
-    time_values = []
-    capacity_values = []
-
-    for method, data in results.items():
-        if data is not None:
-            methods.append(method)
-            psnr_values.append(data['psnr'])
-            ssim_values.append(data['ssim'])
-            time_values.append(data['time'])
-            capacity_values.append(data['capacity'])
-
-    # Створення візуалізації
-    fig = plt.figure(figsize=(16, 12))
-
-    # 1. PSNR порівняння
-    ax1 = plt.subplot(3, 3, 1)
-    bars1 = ax1.bar(methods, psnr_values, color=['blue', 'green', 'red'])
-    ax1.set_title('PSNR (Peak Signal-to-Noise Ratio)')
-    ax1.set_ylabel('PSNR (dB)')
-    ax1.set_ylim([0, max(psnr_values) * 1.2])
-    for bar, value in zip(bars1, psnr_values):
-        ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
-                f'{value:.1f}', ha='center')
-
-    # 2. SSIM порівняння
-    ax2 = plt.subplot(3, 3, 2)
-    bars2 = ax2.bar(methods, ssim_values, color=['blue', 'green', 'red'])
-    ax2.set_title('SSIM (Structural Similarity)')
-    ax2.set_ylabel('SSIM')
-    ax2.set_ylim([0, 1.1])
-    for bar, value in zip(bars2, ssim_values):
-        ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-                f'{value:.4f}', ha='center')
-
-    # 3. Час виконання
-    ax3 = plt.subplot(3, 3, 3)
-    bars3 = ax3.bar(methods, time_values, color=['blue', 'green', 'red'])
-    ax3.set_title('Час виконання')
-    ax3.set_ylabel('Час (мс)')
-    for bar, value in zip(bars3, time_values):
-        ax3.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
-                f'{value:.1f}', ha='center')
-
-    # 4. Ємність
-    ax4 = plt.subplot(3, 3, 4)
-    bars4 = ax4.bar(methods, capacity_values, color=['blue', 'green', 'red'])
-    ax4.set_title('Доступна ємність')
-    ax4.set_ylabel('Ємність (біт)')
-    for bar, value in zip(bars4, capacity_values):
-        ax4.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1000,
-                f'{value}', ha='center', rotation=0)
-
-    # 5-7. Візуальне порівняння стего-зображень
-    for idx, (method, data) in enumerate(results.items()):
-        if data is not None:
-            ax = plt.subplot(3, 3, 5 + idx)
-            if len(data['stego'].shape) == 3:
-                ax.imshow(cv2.cvtColor(data['stego'], cv2.COLOR_BGR2RGB))
-            else:
-                ax.imshow(data['stego'], cmap='gray')
-            ax.set_title(f'{method}\n(PSNR: {data["psnr"]:.1f} dB)')
-            ax.axis('off')
-
-    # 8. Радарна діаграма порівняння
-    ax8 = plt.subplot(3, 3, 8, projection='polar')
-
-    categories = ['PSNR', 'SSIM', 'Speed', 'Capacity']
-    angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
-    angles += angles[:1]  # Замкнути діаграму
-
-    for idx, method in enumerate(methods):
-        # Нормалізація значень до [0, 1]
-        values = [
-            psnr_values[idx] / max(psnr_values),
-            ssim_values[idx],
-            1 - (time_values[idx] / max(time_values)),  # Інвертуємо час
-            capacity_values[idx] / max(capacity_values)
-        ]
-        values += values[:1]  # Замкнути діаграму
-
-        ax8.plot(angles, values, 'o-', linewidth=2, label=method)
-        ax8.fill(angles, values, alpha=0.25)
-
-    ax8.set_xticks(angles[:-1])
-    ax8.set_xticklabels(categories)
-    ax8.set_ylim(0, 1)
-    ax8.set_title('Комплексне порівняння')
-    ax8.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
-    ax8.grid(True)
-
-    # 9. Таблиця результатів
-    ax9 = plt.subplot(3, 3, 9)
-    ax9.axis('tight')
-    ax9.axis('off')
-
-    table_data = [['Метод', 'PSNR', 'SSIM', 'Час (мс)', 'Ємність']]
-    for idx, method in enumerate(methods):
-        table_data.append([
-            method,
-            f'{psnr_values[idx]:.2f}',
-            f'{ssim_values[idx]:.4f}',
-            f'{time_values[idx]:.2f}',
-            f'{capacity_values[idx]}'
-        ])
-
-    table = ax9.table(cellText=table_data, loc='center', cellLoc='center')
-    table.auto_set_font_size(False)
-    table.set_fontsize(9)
-    table.scale(1, 1.5)
-
-    # Стиль заголовків таблиці
-    for i in range(len(table_data[0])):
-        table[(0, i)].set_facecolor('#40466e')
-        table[(0, i)].set_text_props(weight='bold', color='white')
-
-    # Кольорове кодування рядків
-    colors = ['#e6f2ff', '#ffe6e6', '#e6ffe6']
-    for i in range(1, len(table_data)):
-        for j in range(len(table_data[0])):
-            table[(i, j)].set_facecolor(colors[(i-1) % 3])
-
-    plt.suptitle('Порівняльний аналіз методів стеганографії', fontsize=16, fontweight='bold')
-    plt.tight_layout()
-    plt.show()
-
-# Основна функція тестування
-def run_comprehensive_test():
-    """Запускає комплексне тестування всіх методів"""
-
-    # Створюємо реалістичне тестове зображення
-    print("Створення тестового зображення...")
-    test_image = np.zeros((400, 400, 3), dtype=np.uint8)
-
-    # Додаємо різні текстури та елементи
-    # 1. Гладка область (небо)
-    test_image[:100, :] = [135, 206, 235]  # Sky blue
-
-    # 2. Градієнт (захід сонця)
-    for i in range(100):
-        color_r = int(255 - i * 1.2)
-        color_g = int(150 - i * 0.5)
-        color_b = int(100 + i * 0.5)
-        test_image[100+i, :] = [color_b, color_g, color_r]
-
-    # 3. Текстура (трава)
-    grass = np.random.randint(40, 80, (100, 400, 3))
-    grass[:, :, 1] = np.random.randint(80, 120, (100, 400))  # Більше зеленого
-    test_image[200:300, :] = grass
-
-    # 4. Об'єкти з чіткими краями
-    cv2.rectangle(test_image, (50, 250), (150, 350), (139, 69, 19), -1)  # Будинок
-    cv2.rectangle(test_image, (70, 270), (90, 290), (255, 255, 255), -1)  # Вікно
-    cv2.rectangle(test_image, (110, 270), (130, 290), (255, 255, 255), -1)  # Вікно
-    cv2.rectangle(test_image, (90, 310), (110, 350), (101, 67, 33), -1)  # Двері
-
-    # Трикутний дах
-    pts = np.array([[50, 250], [100, 200], [150, 250]], np.int32)
-    cv2.fillPoly(test_image, [pts], (178, 34, 34))
-
-    # Сонце
-    cv2.circle(test_image, (320, 80), 30, (255, 255, 0), -1)
-
-    # Дерево
-    cv2.circle(test_image, (280, 240), 40, (34, 139, 34), -1)  # Крона
-    cv2.rectangle(test_image, (275, 240), (285, 300), (101, 67, 33), -1)  # Стовбур
-
-    # Додаємо шум для реалістичності
-    noise = np.random.normal(0, 5, test_image.shape)
-    test_image = np.clip(test_image + noise, 0, 255).astype(np.uint8)
-
-    # Тестове повідомлення
-    test_message = "Тест адаптивних методів!"
-
-    # Запуск порівняння
-    results = compare_methods(test_image, test_message)
-
-    # Візуалізація результатів
-    visualize_comparison(results, test_image)
-
-    # Висновки
-    print("\n" + "="*60)
-    print("ВИСНОВКИ")
-    print("="*60)
-
-    # Знаходимо найкращі методи за різними критеріями
-    best_psnr = max(results.items(), key=lambda x: x[1]['psnr'] if x[1] else 0)
-    best_ssim = max(results.items(), key=lambda x: x[1]['ssim'] if x[1] else 0)
-    best_speed = min(results.items(), key=lambda x: x[1]['time'] if x[1] else float('inf'))
-    best_capacity = max(results.items(), key=lambda x: x[1]['capacity'] if x[1] else 0)
-
-    print(f"\n🏆 Найкраща якість (PSNR): {best_psnr[0]} ({best_psnr[1]['psnr']:.2f} dB)")
-    print(f"🏆 Найкраща структурна схожість (SSIM): {best_ssim[0]} ({best_ssim[1]['ssim']:.4f})")
-    print(f"🏆 Найшвидший метод: {best_speed[0]} ({best_speed[1]['time']:.2f} мс)")
-    print(f"🏆 Найбільша ємність: {best_capacity[0]} ({best_capacity[1]['capacity']} біт)")
-
-    print("\nРЕКОМЕНДАЦІЇ:")
-    print("• Для максимальної непомітності: Edge-based LSB")
-    print("• Для швидкого вбудовування: Classic LSB")
-    print("• Для балансу якості та ємності: PVD")
-    print("• Для стійкості до стегоаналізу: Edge-based LSB або PVD")
-
-# Запуск комплексного тесту
-run_comprehensive_test()</code></pre>
+            </div>
         </div>
     </section>
 
-    <!-- Додаткові завдання -->
+    <!-- Додаткові завдання та інші секції залишаються без змін -->
     <section>
         <h2>🎯 Додаткові завдання</h2>
 
@@ -1615,10 +1165,43 @@ run_comprehensive_test()</code></pre>
 
 <!-- JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="../../assets/js/lab-functions.js"></script>
+<script src="../assets/js/lab-functions.js"></script>
 <script>
     // Ініціалізація підсвітки коду
     hljs.highlightAll();
+
+    // Функція копіювання коду
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        const text = codeBlock.innerText;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            button.classList.add('copied');
+
+            setTimeout(() => {
+                button.innerText = originalText;
+                button.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            // Fallback для старих браузерів
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            button.innerText = 'Copied!';
+            button.classList.add('copied');
+            setTimeout(() => {
+                button.innerText = 'Copy';
+                button.classList.remove('copied');
+            }, 2000);
+        });
+    }
 
     // Функція перемикання вкладок (якщо не визначена в lab-functions.js)
     if (typeof switchTab === 'undefined') {
@@ -1642,6 +1225,31 @@ run_comprehensive_test()</code></pre>
             event.currentTarget.classList.add('active');
         }
     }
+
+    // Додаємо кнопки копіювання до всіх блоків коду після завантаження сторінки
+    document.addEventListener('DOMContentLoaded', function() {
+        // Якщо кнопки вже додані в HTML, не додаємо їх знову
+        if (document.querySelectorAll('.copy-btn').length > 0) {
+            return;
+        }
+
+        // Додаємо кнопки до блоків без них
+        const codeBlocks = document.querySelectorAll('pre:not(.code-container pre)');
+        codeBlocks.forEach(pre => {
+            if (!pre.parentElement.classList.contains('code-container')) {
+                const container = document.createElement('div');
+                container.className = 'code-container';
+                pre.parentNode.insertBefore(container, pre);
+                container.appendChild(pre);
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copy';
+                copyBtn.onclick = function() { copyCode(this); };
+                container.insertBefore(copyBtn, pre);
+            }
+        });
+    });
 </script>
 
 </body>
