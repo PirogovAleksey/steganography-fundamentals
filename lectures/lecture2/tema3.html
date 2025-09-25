@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математичні моделі - Лекція 2</title>
+    
+    <!-- Посилання на спільні стилі -->
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/slides.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="../../manifest.json">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Мінімальні стилі для завантаження -->
+    <style>
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .theme-navigation {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .lecture-themes-nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .lecture-themes-nav select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .lecture-themes-nav button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Контейнер для слайдів -->
+    <div id="slideContainer">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Завантаження Математичні моделі...</p>
+        </div>
+    </div>
+    
+    <!-- Універсальний движок слайдів -->
+    <script src="../../assets/js/slide-engine.js"></script>
+    
+    <!-- Конфігурація та ініціалізація -->
+    <script>
+        // Ініціалізація движка
+        const slideEngine = new UniversalSlideEngine({
+            containerId: 'slideContainer',
+            dataUrl: '../../assets/data/lecture2/tema3_mathematical_models.json',
+            lectureId: 'lecture2-tema3',
+            enableKeyboard: true,
+            enableTouch: true,
+            enableSearch: true,
+            enableProgress: true,
+            enableQuiz: true,
+            enablePrint: true,
+            autoSave: true,
+            theme: localStorage.getItem('preferred-theme') || 'default'
+        });
+        
+        // Навігація між темами лекції
+        const themeNav = `
+            <div class="lecture-themes-nav">
+                <select id="themeSelector" onchange="switchTheme(this.value)">
+                    <option value="tema1" >Тема 1: Теорія інформації</option>
+                    <option value="tema2" >Тема 2: Статистичні основи</option>
+                    <option value="tema3" selected>Тема 3: Математичні моделі</option>
+                    <option value="tema4" >Тема 4: Метрики якості</option>
+                </select>
+                <button onclick="goToLectureMenu()">📚 Меню лекції</button>
+                <button onclick="goToMainMenu()">🏠 Головна</button>
+            </div>
+        `;
+        
+        // Додаємо навігацію після завантаження
+        slideEngine.on('initialized', () => {
+            const navContainer = document.createElement('div');
+            navContainer.innerHTML = themeNav;
+            navContainer.className = 'theme-navigation';
+            document.body.appendChild(navContainer);
+        });
+        
+        // Функції навігації
+        function switchTheme(tema) {
+            if (tema === 'tema3') return;
+            window.location.href = `./${tema}.html`;
+        }
+        
+        function goToLectureMenu() {
+            window.location.href = './index.html';
+        }
+        
+        function goToMainMenu() {
+            window.location.href = '../../index.html';
+        }
+        
+        // Трекінг прогресу
+        slideEngine.on('slideChange', (data) => {
+            const stats = JSON.parse(localStorage.getItem('lecture-stats') || '{}');
+            if (!stats.lecture2) stats.lecture2 = {};
+            if (!stats.lecture2.tema3) stats.lecture2.tema3 = {
+                views: 0,
+                completed: false,
+                lastSlide: 0,
+                totalTime: 0
+            };
+            
+            stats.lecture2.tema3.lastSlide = data.current;
+            stats.lecture2.tema3.views++;
+            
+            if (data.current === data.total - 1) {
+                stats.lecture2.tema3.completed = true;
+            }
+            
+            localStorage.setItem('lecture-stats', JSON.stringify(stats));
+        });
+    </script>
+</body>
+</html>
