@@ -284,19 +284,51 @@ class StegoLandingPage {
     openLecture(moduleId, lectureId) {
         console.log(`📖 Відкриття лекції ${moduleId}.${lectureId}`);
 
-        // Для лекції 1.1 перенаправляємо на існуючі файли
-        if (moduleId == 1 && lectureId === '1.1') {
-            window.location.href = 'lectures/lecture1/index.html';
+        // Знаходимо модуль та лекцію в даних
+        const module = this.modules.find(m => m.id == moduleId);
+        if (!module) {
+            alert(`📖 Модуль ${moduleId} не знайдено`);
             return;
         }
 
-        // Для інших - показуємо повідомлення
-        alert(`📖 Лекція ${lectureId} модуля ${moduleId} буде доступна після створення`);
+        const lecture = module.lectures.find(l => l.id === lectureId);
+        if (!lecture) {
+            alert(`📖 Лекція ${lectureId} не знайдена`);
+            return;
+        }
+
+        // Якщо є шлях у даних і лекція completed - використовуємо його
+        if (lecture.path && lecture.status === 'completed') {
+            window.location.href = lecture.path;
+        }
+        // Інакше показуємо повідомлення
+        else if (lecture.status !== 'completed') {
+            alert(`📖 Лекція ${lectureId} буде доступна незабаром`);
+        }
     }
 
     openLab(labId) {
         console.log(`🔬 Відкриття лабораторної ${labId}`);
-        alert(`🔬 Лабораторна робота ${labId} буде доступна після створення`);
+
+        // Знаходимо лабораторну в даних
+        const lab = this.labs.find(l => l.id == labId);
+        if (!lab) {
+            alert(`🔬 Лабораторна робота ${labId} не знайдена`);
+            return;
+        }
+
+        // Якщо є шлях у даних - використовуємо його
+        if (lab.path) {
+            window.location.href = lab.path;
+        }
+        // Якщо статус completed або має явний файл
+        else if (lab.status === 'completed') {
+            window.location.href = `labs/lab${lab.id}.html`;
+        }
+        // Інакше - показуємо повідомлення
+        else {
+            alert(`🔬 Лабораторна робота ${labId} буде доступна незабаром`);
+        }
     }
 
     showError(containerId = 'lectures-container') {
