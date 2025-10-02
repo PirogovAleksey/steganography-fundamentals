@@ -7,9 +7,9 @@
  * Простий API для роботи з LocalStorage
  * Зберігає прогрес студентів по лекціях
  */
-class BankingStorage {
+class StegoStorage {
     constructor() {
-        this.prefix = 'banking_tech_';
+        this.prefix = 'stego_course_';
         this.version = '1.0';
         this.init();
     }
@@ -28,7 +28,7 @@ class BankingStorage {
         if (!this.getItem('initialized')) {
             this.setItem('initialized', true);
             this.setItem('version', this.version);
-            console.log('Banking Tech Storage initialized');
+            console.log('Stego Course Storage initialized');
         }
     }
 
@@ -348,9 +348,9 @@ class BankingStorage {
    ================================================================ */
 
 // Створюємо глобальний екземпляр
-const Storage = new BankingStorage();
+const Storage = new StegoStorage();
 
 // Експортуємо для використання в інших модулях
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { BankingStorage, Storage };
+    module.exports = { StegoStorage, Storage };
 }
