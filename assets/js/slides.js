@@ -37,12 +37,8 @@ class SlidesManager {
     async init() {
         console.log('🎬 Ініціалізація SlidesManager...');
 
-        // Чекаємо готовності DOM
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.setup());
-        } else {
-            this.setup();
-        }
+        // Викликаємо setup напряму (DOM вже готовий при створенні екземпляра)
+        this.setup();
     }
 
     /**

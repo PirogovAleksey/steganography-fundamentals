@@ -29,7 +29,7 @@ class StegoLandingPage {
     }
 
     async loadCourseData() {
-        const response = await fetch('assets/data/modules.json');
+        const response = await fetch(PATHS.DATA_MODULES);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -152,10 +152,10 @@ class StegoLandingPage {
         // Додаємо клік на картку для переходу до модуля
         card.style.cursor = 'pointer';
         card.onclick = function() {
-            window.location.href = `modules/module${module.id}/index.html`;
+            window.location.href = PATHS.MODULE(module.id);
         };
 
-        const statusBadge = this.getStatusBadge(module.status);
+        const statusBadge = getStatusBadge(module.status);
 
         // Підрахунок готових лекцій
         const completedLectures = module.lectures.filter(l => l.status === 'completed').length;
@@ -180,7 +180,7 @@ class StegoLandingPage {
                 </div>
 
                 <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                    <a href="modules/module${module.id}/index.html"
+                    <a href="${PATHS.MODULE(module.id)}"
                        class="module-action-button"
                        style="display: block; text-decoration: none; color: white;"
                        onclick="event.stopPropagation();">
@@ -195,13 +195,12 @@ class StegoLandingPage {
 
     renderModuleLectures(lectures, moduleId) {
         return lectures.map(lecture => {
-            const statusIcon = lecture.status === 'completed' ? '✅' :
-                lecture.status === 'in_progress' ? '🔄' : '📋';
+            const statusIcon = getLectureStatusIcon(lecture.status);
 
             // Перевіряємо чи лекція доступна для кліку
             const isClickable = lecture.status === 'completed' && lecture.path;
             const clickHandler = isClickable
-                ? `onclick="event.stopPropagation(); window.location.href='modules/module${moduleId}/${lecture.path}';"`
+                ? `onclick="event.stopPropagation(); window.location.href='${PATHS.MODULE_LECTURE(moduleId, lecture.path)}';"`
                 : 'onclick="event.stopPropagation();"';
             const cursorStyle = isClickable ? 'style="cursor: pointer;"' : '';
 
@@ -224,8 +223,8 @@ class StegoLandingPage {
         const card = document.createElement('div');
         card.className = 'practical-card';
 
-        const typeIcon = this.getLabTypeIcon(lab.type);
-        const typeLabel = this.getLabTypeLabel(lab.type);
+        const typeIcon = getLabTypeIcon(lab.type);
+        const typeLabel = getLabTypeLabel(lab.type);
 
         card.innerHTML = `
             <div class="practical-header">
@@ -251,48 +250,6 @@ class StegoLandingPage {
         return card;
     }
 
-    getLabTypeIcon(type) {
-        const icons = {
-            'introduction': '🎯',
-            'programming': '💻',
-            'analysis': '📊',
-            'audio': '🎵',
-            'machine-learning': '🤖',
-            'advanced': '⚙️',
-            'practical': '🔧',
-            'project': '📁',
-            'presentation': '🎤'
-        };
-        return icons[type] || '🔬';
-    }
-
-    getLabTypeLabel(type) {
-        const labels = {
-            'introduction': 'Вступ',
-            'programming': 'Програмування',
-            'analysis': 'Аналіз',
-            'audio': 'Аудіо',
-            'machine-learning': 'Машинне навчання',
-            'advanced': 'Складний рівень',
-            'practical': 'Практика',
-            'project': 'Проект',
-            'presentation': 'Презентація'
-        };
-        return labels[type] || 'Лабораторна';
-    }
-
-    getStatusBadge(status) {
-        const statusConfig = {
-            'active': { text: 'Активний', class: 'badge-success' },
-            'completed': { text: 'Завершено', class: 'badge-primary' },
-            'planned': { text: 'Заплановано', class: 'badge-outline' },
-            'in_progress': { text: 'В процесі', class: 'badge-warning' }
-        };
-
-        const config = statusConfig[status] || statusConfig['planned'];
-        return `<span class="badge ${config.class}">${config.text}</span>`;
-    }
-
     openLab(labId) {
         console.log(`🔬 Відкриття лабораторної ${labId}`);
 
@@ -305,10 +262,10 @@ class StegoLandingPage {
                 window.location.href = lab.path;
             } else {
                 // Інакше використовуємо стандартний шлях
-                window.location.href = `labs/lab${labId}.html`;
+                window.location.href = PATHS.LAB(labId);
             }
         } else {
-            alert(`🔬 Лабораторна робота ${labId} буде доступна незабаром`);
+            alert(MESSAGES.INFO.LAB_COMING_SOON(labId));
         }
     }
 
@@ -319,58 +276,14 @@ class StegoLandingPage {
                 <div class="col-span-full">
                     <div class="alert alert-error">
                         <div class="alert-title">❌ Помилка завантаження</div>
-                        Не вдалося завантажити дані курсу.
-                        <br><small>Перевірте наявність файлу assets/data/modules.json</small>
+                        ${MESSAGES.ERROR.LOAD_DATA}
+                        <br><small>${MESSAGES.ERROR.CHECK_FILE}</small>
                     </div>
                 </div>
             `;
         }
     }
 }
-
-// Додаємо необхідні стилі для кнопки модуля
-const style = document.createElement('style');
-style.textContent = `
-    .module-card-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-
-    .module-card-link:hover {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .module-preview {
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .module-preview:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .module-action-button {
-        display: inline-block;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        text-align: center;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .module-action-button:hover {
-        background: linear-gradient(135deg, #764ba2, #667eea);
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-`;
-document.head.appendChild(style);
 
 // Ініціалізація після завантаження DOM
 document.addEventListener('DOMContentLoaded', () => {
