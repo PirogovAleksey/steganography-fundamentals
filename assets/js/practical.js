@@ -1,6 +1,6 @@
 /**
  * PRACTICAL.JS - JavaScript для практичних робіт
- * Banking Information Systems
+ * Steganography Fundamentals Course
  * v1.0
  */
 

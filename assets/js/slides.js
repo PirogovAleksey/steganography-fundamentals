@@ -4,7 +4,7 @@
    ================================================================ */
 
 /**
- * Менеджер слайдів для лекцій банківських технологій
+ * Менеджер слайдів для лекцій курсу стеганографії
  * Завантажує slides.json, керує навігацією, зберігає прогрес
  */
 class SlidesManager {
@@ -369,11 +369,8 @@ class SlidesManager {
             case 'content':
                 html = this.renderContentSlide(slide);
                 break;
-            case 'banking-example':
-                html = this.renderBankingSlide(slide);
-                break;
-            case 'cyber-security':
-                html = this.renderSecuritySlide(slide);
+            case 'stego-example':
+                html = this.renderStegoExampleSlide(slide);
                 break;
             case 'statistics':
                 html = this.renderStatisticsSlide(slide);
@@ -419,33 +416,20 @@ class SlidesManager {
     }
 
     /**
-     * Рендеринг банківського прикладу
+     * Рендеринг прикладу стеганографії
      */
-    renderBankingSlide(slide) {
+    renderStegoExampleSlide(slide) {
         return `
-      <div class="slide-banking-example">
-        ${slide.logo ? `<div class="banking-logo">${slide.logo}</div>` : ''}
-        <h2 class="banking-title">${slide.bank || slide.title}</h2>
-        ${slide.case ? `
-          <div class="banking-case">
-            <h3>${slide.case.title}</h3>
-            <p>${slide.case.description}</p>
-            ${slide.case.stats ? this.renderStats(slide.case.stats) : ''}
+      <div class="slide-stego-example">
+        ${slide.icon ? `<div class="stego-icon">${slide.icon}</div>` : ''}
+        <h2 class="stego-title">${slide.title}</h2>
+        ${slide.example ? `
+          <div class="stego-case">
+            <h3>${slide.example.title}</h3>
+            <p>${slide.example.description}</p>
+            ${slide.example.details ? this.renderDetails(slide.example.details) : ''}
           </div>
         ` : ''}
-        ${slide.content ? `<div class="content">${slide.content}</div>` : ''}
-      </div>
-    `;
-    }
-
-    /**
-     * Рендеринг слайду з кібербезпеки
-     */
-    renderSecuritySlide(slide) {
-        return `
-      <div class="slide-cyber-security">
-        <h2>${slide.title}</h2>
-        ${slide.threats ? this.renderThreats(slide.threats) : ''}
         ${slide.content ? `<div class="content">${slide.content}</div>` : ''}
       </div>
     `;
@@ -485,36 +469,15 @@ class SlidesManager {
     }
 
     /**
-     * Рендеринг статистичних даних
+     * Рендеринг деталей прикладу
      */
-    renderStats(stats) {
-        if (!Array.isArray(stats)) return '';
+    renderDetails(details) {
+        if (!Array.isArray(details)) return '';
 
         return `
-      <ul class="stats-list">
-        ${stats.map(stat => `<li>${stat}</li>`).join('')}
+      <ul class="details-list">
+        ${details.map(detail => `<li>${detail}</li>`).join('')}
       </ul>
-    `;
-    }
-
-    /**
-     * Рендеринг загроз безпеки
-     */
-    renderThreats(threats) {
-        if (!Array.isArray(threats)) return '';
-
-        return `
-      <div class="threats-list">
-        ${threats.map(threat => `
-          <div class="threat-item">
-            <span class="cyber-threat-level threat-${threat.level || 'medium'}">
-              ${threat.level || 'medium'} risk
-            </span>
-            <h3>${threat.name}</h3>
-            <p>${threat.description || ''}</p>
-          </div>
-        `).join('')}
-      </div>
     `;
     }
 

@@ -105,7 +105,6 @@ class StegoLandingPage {
             }
         });
 
-        this.attachLectureEventListeners();
         console.log(`📖 Відрендерено ${this.modules.length} модулів з лекціями`);
     }
 
@@ -150,6 +149,12 @@ class StegoLandingPage {
         const card = document.createElement('div');
         card.className = 'module-preview';
 
+        // Додаємо клік на картку для переходу до модуля
+        card.style.cursor = 'pointer';
+        card.onclick = function() {
+            window.location.href = `modules/module${module.id}/index.html`;
+        };
+
         const statusBadge = this.getStatusBadge(module.status);
 
         // Підрахунок готових лекцій
@@ -164,7 +169,7 @@ class StegoLandingPage {
                     ${statusBadge}
                 </div>
                 <p class="module-preview-description mb-4">${module.description}</p>
-                
+
                 <div class="module-section">
                     <div class="module-section-title">
                         <span>📖 Лекції (${completedLectures}/${totalLectures}):</span>
@@ -172,6 +177,15 @@ class StegoLandingPage {
                     <div class="module-items">
                         ${this.renderModuleLectures(module.lectures, module.id)}
                     </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                    <a href="modules/module${module.id}/index.html"
+                       class="module-action-button"
+                       style="display: block; text-decoration: none; color: white;"
+                       onclick="event.stopPropagation();">
+                        Перейти до модуля →
+                    </a>
                 </div>
             </div>
         `;
@@ -184,9 +198,18 @@ class StegoLandingPage {
             const statusIcon = lecture.status === 'completed' ? '✅' :
                 lecture.status === 'in_progress' ? '🔄' : '📋';
 
+            // Перевіряємо чи лекція доступна для кліку
+            const isClickable = lecture.status === 'completed' && lecture.path;
+            const clickHandler = isClickable
+                ? `onclick="event.stopPropagation(); window.location.href='modules/module${moduleId}/${lecture.path}';"`
+                : 'onclick="event.stopPropagation();"';
+            const cursorStyle = isClickable ? 'style="cursor: pointer;"' : '';
+
             return `
-                <div class="module-item module-lecture ${lecture.status}" 
-                     data-module-id="${moduleId}" 
+                <div class="module-item module-lecture ${lecture.status}"
+                     ${clickHandler}
+                     ${cursorStyle}
+                     data-module-id="${moduleId}"
                      data-lecture-id="${lecture.id}">
                     <span class="module-item-title">
                         ${statusIcon} ${lecture.title}
@@ -258,17 +281,6 @@ class StegoLandingPage {
         return labels[type] || 'Лабораторна';
     }
 
-    attachLectureEventListeners() {
-        const lectureItems = document.querySelectorAll('.module-lecture');
-        lectureItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const moduleId = item.dataset.moduleId;
-                const lectureId = item.dataset.lectureId;
-                this.openLecture(moduleId, lectureId);
-            });
-        });
-    }
-
     getStatusBadge(status) {
         const statusConfig = {
             'active': { text: 'Активний', class: 'badge-success' },
@@ -281,22 +293,23 @@ class StegoLandingPage {
         return `<span class="badge ${config.class}">${config.text}</span>`;
     }
 
-    openLecture(moduleId, lectureId) {
-        console.log(`📖 Відкриття лекції ${moduleId}.${lectureId}`);
-
-        // Для лекції 1.1 перенаправляємо на існуючі файли
-        if (moduleId == 1 && lectureId === '1.1') {
-            window.location.href = 'lectures/lecture1/index.html';
-            return;
-        }
-
-        // Для інших - показуємо повідомлення
-        alert(`📖 Лекція ${lectureId} модуля ${moduleId} буде доступна після створення`);
-    }
-
     openLab(labId) {
         console.log(`🔬 Відкриття лабораторної ${labId}`);
-        alert(`🔬 Лабораторна робота ${labId} буде доступна після створення`);
+
+        // Знаходимо лабораторну в даних
+        const lab = this.labs.find(l => l.id === labId);
+
+        if (lab && lab.status === 'completed') {
+            // Якщо лабораторна має власний path, використовуємо його
+            if (lab.path) {
+                window.location.href = lab.path;
+            } else {
+                // Інакше використовуємо стандартний шлях
+                window.location.href = `labs/lab${labId}.html`;
+            }
+        } else {
+            alert(`🔬 Лабораторна робота ${labId} буде доступна незабаром`);
+        }
     }
 
     showError(containerId = 'lectures-container') {
@@ -314,6 +327,50 @@ class StegoLandingPage {
         }
     }
 }
+
+// Додаємо необхідні стилі для кнопки модуля
+const style = document.createElement('style');
+style.textContent = `
+    .module-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .module-card-link:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .module-preview {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .module-preview:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .module-action-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .module-action-button:hover {
+        background: linear-gradient(135deg, #764ba2, #667eea);
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+`;
+document.head.appendChild(style);
 
 // Ініціалізація після завантаження DOM
 document.addEventListener('DOMContentLoaded', () => {
