@@ -1,8 +1,12 @@
 /**
  * PRACTICAL.JS - JavaScript для практичних робіт
  * Steganography Fundamentals Course
- * v1.0
+ * v2.0 - ES6 Modules + Constants
  */
+
+// ES6 Module Imports
+import { Storage } from './storage.js';
+import { TIMINGS, MESSAGES } from './constants.js';
 
 // ================================================================
 // CHECKLIST FUNCTIONALITY
@@ -161,7 +165,7 @@ function showCompletionMessage(checklist) {
         setTimeout(() => {
             message.remove();
         }, 500);
-    }, 3000);
+    }, TIMINGS.COMPLETION_MESSAGE_DURATION);
 }
 
 // ================================================================
@@ -292,7 +296,7 @@ function copyCodeToClipboard(codeBlock, button) {
         setTimeout(() => {
             button.innerHTML = '📋 Копіювати';
             button.classList.remove('success');
-        }, 2000);
+        }, TIMINGS.TOAST_DURATION);
     }).catch(err => {
         // Помилка копіювання
         button.innerHTML = '❌ Помилка';
@@ -300,7 +304,7 @@ function copyCodeToClipboard(codeBlock, button) {
 
         setTimeout(() => {
             button.innerHTML = '📋 Копіювати';
-        }, 2000);
+        }, TIMINGS.TOAST_DURATION);
     });
 }
 
@@ -357,7 +361,7 @@ function trackTimeSpent() {
         timeSpent += 60; // Додаємо хвилину
         Storage.setItem(`practical_${practicalId}_time`, timeSpent);
         updateTimeDisplay(timeSpent);
-    }, 60000); // Кожну хвилину
+    }, TIMINGS.TIME_TRACK_INTERVAL);
 }
 
 /**
@@ -576,16 +580,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ================================================================
-// EXPORT
+// ES6 MODULE EXPORT
 // ================================================================
 
-// Експортуємо функції для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initChecklists,
-        initTableSorting,
-        initCodeCopy,
-        trackProgress,
-        trackDownloads
-    };
-}
+export {
+    initChecklists,
+    initTableSorting,
+    initCodeCopy,
+    trackProgress,
+    trackDownloads
+};

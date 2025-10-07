@@ -2,8 +2,19 @@
  * LANDING.JS - Steganography Course
  * JavaScript для головної сторінки курсу "Основи стеганографії"
  *
- * Версія: 2.1 - оновлена структура лабораторних
+ * Версія: 2.2 - ES6 Modules + Constants
  */
+
+// ES6 Module Imports
+import { Storage } from './storage.js';
+import {
+    PATHS,
+    MESSAGES,
+    getLabTypeIcon,
+    getLabTypeLabel,
+    getStatusBadge,
+    getLectureStatusIcon
+} from './constants.js';
 
 class StegoLandingPage {
     constructor() {
@@ -319,7 +330,5 @@ window.addEventListener('load', () => {
     }
 });
 
-// Експорт для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { StegoLandingPage };
-}
+// ES6 Module Export
+export { StegoLandingPage };

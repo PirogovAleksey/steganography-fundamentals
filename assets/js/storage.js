@@ -344,13 +344,10 @@ class StegoStorage {
 }
 
 /* ================================================================
-   GLOBAL INSTANCE - готовий до використання
+   ES6 MODULE EXPORTS
    ================================================================ */
 
-// Створюємо глобальний екземпляр
+// Створюємо та експортуємо екземпляр
 const Storage = new StegoStorage();
 
-// Експортуємо для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { StegoStorage, Storage };
-}
+export { StegoStorage, Storage };

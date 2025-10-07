@@ -193,24 +193,21 @@ function getLectureStatusIcon(status) {
 }
 
 // ================================================================
-// EXPORT
+// ES6 MODULE EXPORTS
 // ================================================================
 
-// Експорт для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        PATHS,
-        LAB_TYPES,
-        STATUS_CONFIG,
-        LECTURE_STATUS_ICONS,
-        STORAGE_KEYS,
-        MESSAGES,
-        TIMINGS,
-        GESTURES,
-        getLabTypeIcon,
-        getLabTypeLabel,
-        getStatusConfig,
-        getStatusBadge,
-        getLectureStatusIcon
-    };
-}
+export {
+    PATHS,
+    LAB_TYPES,
+    STATUS_CONFIG,
+    LECTURE_STATUS_ICONS,
+    STORAGE_KEYS,
+    MESSAGES,
+    TIMINGS,
+    GESTURES,
+    getLabTypeIcon,
+    getLabTypeLabel,
+    getStatusConfig,
+    getStatusBadge,
+    getLectureStatusIcon
+};

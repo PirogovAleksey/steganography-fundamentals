@@ -1,7 +1,11 @@
 /* ================================================================
    SLIDES.JS - Управління презентаціями лекцій
-   GitHub Pages | Мінімальна архітектура | v1.0
+   GitHub Pages | ES6 Modules | v2.0
    ================================================================ */
+
+// ES6 Module Imports
+import { Storage } from './storage.js';
+import { TIMINGS, MESSAGES, GESTURES } from './constants.js';
 
 /**
  * Менеджер слайдів для лекцій курсу стеганографії
@@ -25,7 +29,7 @@ class SlidesManager {
 
         // Налаштування
         this.autoSave = true;
-        this.autoSaveInterval = 5000; // 5 секунд
+        this.autoSaveInterval = TIMINGS.AUTO_SAVE_INTERVAL;
         this.keyboardEnabled = true;
 
         this.init();
@@ -74,7 +78,7 @@ class SlidesManager {
 
         } catch (error) {
             console.error('❌ Помилка ініціалізації SlidesManager:', error);
-            this.showError('Помилка завантаження лекції');
+            this.showError(MESSAGES.ERROR.LOAD_LECTURE);
         }
     }
 
@@ -127,7 +131,7 @@ class SlidesManager {
 
         } catch (error) {
             console.error('❌ Помилка завантаження slides.json:', error);
-            throw error;
+            throw new Error(MESSAGES.ERROR.LOAD_SLIDES);
         }
     }
 
@@ -301,7 +305,7 @@ class SlidesManager {
     setupTouchGestures() {
         let startX = null;
         let startY = null;
-        const minSwipeDistance = 50;
+        const minSwipeDistance = GESTURES.MIN_SWIPE_DISTANCE;
 
         this.container.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
@@ -620,7 +624,5 @@ if (document.readyState === 'loading') {
     slidesManager = new SlidesManager();
 }
 
-// Експорт для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { SlidesManager };
-}
+// ES6 Module Export
+export { SlidesManager };
