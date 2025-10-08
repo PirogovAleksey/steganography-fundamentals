@@ -19,10 +19,19 @@
 
         .wavelet-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             border-left: 5px solid #667eea;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .wavelet-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .wavelet-card ul li {
+            margin: 0.5rem 0;
         }
 
         .subbands-container {
@@ -36,7 +45,7 @@
 
         .subband {
             border-radius: 10px;
-            padding: 1.5rem;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -46,10 +55,10 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        .ll-band { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .lh-band { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .hl-band { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .hh-band { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .ll-band { background: #f0f4ff; border-left: 5px solid #667eea; color: #1e293b; }
+        .lh-band { background: #fef1f7; border-left: 5px solid #f093fb; color: #1e293b; }
+        .hl-band { background: #f0f9ff; border-left: 5px solid #4facfe; color: #1e293b; }
+        .hh-band { background: #f0fdf4; border-left: 5px solid #43e97b; color: #1e293b; }
 
         .comparison-table {
             width: 100%;
@@ -62,8 +71,9 @@
         }
 
         .comparison-table th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: #f0f4ff;
+            border-left: 5px solid #667eea;
+            color: #1e293b;
             padding: 1rem;
             text-align: left;
         }
@@ -108,8 +118,8 @@
             <div class="slide-content">
                 <h2>🔬 Вступ до вейвлет-перетворення</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.2rem; line-height: 1.8; color: #1e293b;">
                         Дискретне вейвлет-перетворення (ДВП) представляє альтернативний підхід до аналізу зображень порівняно з DCT. Основна відмінність - багатомасштабний аналіз з адаптивною локалізацією.
                     </p>
                 </div>
@@ -203,21 +213,21 @@
                     <h3 style="color: #667eea;">🔷 Вейвлет Хаара</h3>
                     <p style="font-size: 1.05rem;">Найпростіший тип - використовує прямокутні функції</p>
                     <div class="wavelet-grid">
-                        <div style="background: #dcfce7; padding: 1rem; border-radius: 8px;">
+                        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px;">
                             <h4 style="color: #059669;">✅ Переваги</h4>
-                            <ul>
-                                <li>Простота реалізації</li>
-                                <li>Швидкість обчислень</li>
-                                <li>Цілочисельна арифметика</li>
-                                <li>Без втрат при зворотному перетворенні</li>
+                            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                                <li style="margin: 0.5rem 0;">Простота реалізації</li>
+                                <li style="margin: 0.5rem 0;">Швидкість обчислень</li>
+                                <li style="margin: 0.5rem 0;">Цілочисельна арифметика</li>
+                                <li style="margin: 0.5rem 0;">Без втрат при зворотному перетворенні</li>
                             </ul>
                         </div>
-                        <div style="background: #fee2e2; padding: 1rem; border-radius: 8px;">
+                        <div style="background: #fee2e2; padding: 1.5rem; border-radius: 8px;">
                             <h4 style="color: #dc2626;">❌ Недоліки</h4>
-                            <ul>
-                                <li>Розривність функції</li>
-                                <li>Створює артефакти</li>
-                                <li>Погана локалізація в частотній області</li>
+                            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                                <li style="margin: 0.5rem 0;">Розривність функції</li>
+                                <li style="margin: 0.5rem 0;">Створює артефакти</li>
+                                <li style="margin: 0.5rem 0;">Погана локалізація в частотній області</li>
                             </ul>
                         </div>
                     </div>
@@ -313,7 +323,7 @@
                 <div class="wavelet-card" style="margin-bottom: 1.5rem;">
                     <h3 style="color: #667eea;">1️⃣ Заміна молодшого біта (LSB)</h3>
                     <p style="font-size: 1.1rem;">Найпростіший метод - заміна молодших бітів вейвлет-коефіцієнтів</p>
-                    <div style="background: #dbeafe; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <strong>Переваги:</strong> Простий у реалізації, висока ємність<br>
                         <strong>Недоліки:</strong> Вразливий до статистичного аналізу
                     </div>
@@ -322,7 +332,7 @@
                 <div class="wavelet-card" style="margin-bottom: 1.5rem;">
                     <h3 style="color: #10b981;">2️⃣ Квантування з модуляцією (QIM)</h3>
                     <p style="font-size: 1.1rem;">Коефіцієнти квантуються з різним кроком залежно від біта</p>
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <strong>Переваги:</strong> Сліпе витягування (без оригіналу), краща стійкість<br>
                         <strong>Застосування:</strong> Професійні системи водяних знаків
                     </div>
@@ -331,7 +341,7 @@
                 <div class="wavelet-card">
                     <h3 style="color: #8b5cf6;">3️⃣ Адаптивне вбудовування</h3>
                     <p style="font-size: 1.1rem;">Сила вбудовування адаптується до локальних характеристик</p>
-                    <div style="background: #f3e8ff; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #f3e8ff; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <strong>Принцип:</strong> В текстурованих областях можна вбудовувати з більшою силою без візуальних артефактів<br>
                         <strong>Основа:</strong> Аналіз локальної дисперсії коефіцієнтів
                     </div>
@@ -346,9 +356,9 @@
             <div class="slide-content">
                 <h2>👁️ Адаптивність на основі людського зору</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>🧠 Модель маскування</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Людський зір має властивість маскування - в складних текстурованих областях зміни менш помітні. ДВП дозволяє ефективно використовувати це явище.
                     </p>
                 </div>
@@ -356,19 +366,19 @@
                 <h3 style="color: #10b981;">Принцип адаптивного вбудовування:</h3>
 
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0;">
-                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1.5rem; border-radius: 8px;">
                         <strong>Крок 1</strong><br>
                         Обчислення локальної текстурності для кожної області
                     </div>
-                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1.5rem; border-radius: 8px;">
                         <strong>Крок 2</strong><br>
                         Визначення порогу маскування на основі текстурності
                     </div>
-                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1.5rem; border-radius: 8px;">
                         <strong>Крок 3</strong><br>
                         Адаптація сили вбудовування до порогу
                     </div>
-                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1.5rem; border-radius: 8px;">
                         <strong>Крок 4</strong><br>
                         Максимальне вбудовування в текстуровані області
                     </div>
@@ -452,7 +462,7 @@
                         <li>Модифікуються середні біти коефіцієнтів</li>
                         <li>Використовується код корекції помилок для підвищення стійкості</li>
                     </ol>
-                    <div style="background: #dbeafe; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <strong>Результат:</strong> Ємність ≈ 5% від розміру зображення, стійкість до JPEG з Q>50
                     </div>
                 </div>
@@ -466,7 +476,7 @@
                         <li>Квантування коефіцієнтів з адаптивним кроком</li>
                         <li>Вбудовування через модуляцію індексу квантування</li>
                     </ol>
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <strong>Особливість:</strong> Сліпе витягування (без оригіналу) + висока стійкість до різних видів обробки
                     </div>
                 </div>
@@ -492,19 +502,19 @@
 
                 <h3 style="color: #667eea;">Фактори, що впливають на стійкість:</h3>
                 <div class="wavelet-grid">
-                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #1e40af;">🌊 Вибір вейвлета</h4>
                         <p>Біортогональні стійкіші за Хаара</p>
                     </div>
-                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #92400e;">📊 Рівень декомпозиції</h4>
                         <p>Глибші рівні стійкіші</p>
                     </div>
-                    <div style="background: #e0e7ff; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #e0e7ff; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #4338ca;">🎯 Субдіапазон</h4>
                         <p>LL найстійкіший, HH найслабший</p>
                     </div>
-                    <div style="background: #fce7f3; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #fce7f3; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #9f1239;">⚡ Сила вбудовування</h4>
                         <p>Компроміс з непомітністю</p>
                     </div>
@@ -566,9 +576,9 @@
             <div class="slide-content">
                 <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px;">
                     <h3>Ключові ідеї:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
+                    <ul style="line-height: 2; font-size: 1.1rem; color: #1e293b;">
                         <li>✓ ДВП надає потужний інструментарій для приховування інформації</li>
                         <li>✓ Багатомасштабна природа дозволяє гнучко адаптуватися до характеристик зображення</li>
                         <li>✓ Відсутність блокових артефактів + природна ієрархія = привабливість для водяних знаків</li>

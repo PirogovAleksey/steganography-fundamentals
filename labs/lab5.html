@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лабораторна робота №5: DCT стеганографія - вбудовування в частотну область">
+    <meta name="keywords" content="стеганографія, DCT, JPEG, частотні методи, дискретне косинусне перетворення">
+    <title>Лабораторна №5: DCT стеганографія | Основи стеганографії</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/lab-universal.css">
+
+    <!-- Highlight.js для підсвітки коду -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="lab-header">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Головна</a>
+            <span class="separator">/</span>
+            <a href="../index.html">Лабораторні</a>
+            <span class="separator">/</span>
+            <span class="current">Лабораторна №5</span>
+        </nav>
+        <h1>🎨 Лабораторна робота №5</h1>
+        <p class="subtitle">
+            DCT стеганографія: Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG
+        </p>
+        <div class="tool-badges">
+            <span class="tool-badge">Python</span>
+            <span class="tool-badge">OpenCV</span>
+            <span class="tool-badge">NumPy</span>
+            <span class="tool-badge">PIL/Pillow</span>
+            <span class="tool-badge">Matplotlib</span>
+            <span class="tool-badge">SciPy</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+
+    <!-- Цілі роботи -->
+    <section class="task-box">
+        <h2>🎯 Цілі лабораторної роботи</h2>
+        <ul>
+            <li>Вивчити принципи дискретного косинусного перетворення (DCT)</li>
+            <li>Освоїти процес JPEG стиснення та квантування коефіцієнтів</li>
+            <li>Реалізувати методи вбудовування в DCT коефіцієнти</li>
+            <li>Дослідити стійкість DCT стеганографії до JPEG компресії</li>
+            <li>Порівняти різні стратегії вибору коефіцієнтів для вбудовування</li>
+        </ul>
+    </section>
+
+    <!-- Теоретична частина -->
+    <section>
+        <h2>📚 Теоретична частина</h2>
+
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="switchTab(event, 'dct-basics')">
+                    🌊 Основи DCT
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'jpeg-compression')">
+                    🗜️ JPEG стиснення
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'embedding-methods')">
+                    📊 Методи вбудовування
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'jpeg-resistance')">
+                    🛡️ Стійкість до JPEG
+                </button>
+            </div>
+
+            <!-- Основи DCT -->
+            <div class="tab-content active" id="dct-basics">
+                <h3>Дискретне косинусне перетворення</h3>
+
+                <div class="detection-method">
+                    <h4>🎵 Що таке DCT?</h4>
+                    <p>
+                        <strong>Дискретне косинусне перетворення (DCT)</strong> — це математичне перетворення, яке розкладає сигнал на суму косинусоїд з різними частотами. В стеганографії DCT використовується для переходу від просторової до частотної області.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>2D DCT формула для блоку 8×8:</strong><br><br>
+                        F(u,v) = (1/4) C(u) C(v) Σ Σ f(x,y) cos[(2x+1)uπ/16] cos[(2y+1)vπ/16]<br><br>
+                        де:<br>
+                        - f(x,y) - значення пікселя в позиції (x,y)<br>
+                        - F(u,v) - DCT коефіцієнт для частоти (u,v)<br>
+                        - C(u), C(v) = 1/√2 для u,v=0, інакше 1
+                    </div>
+
+                    <h4>🔍 Властивості DCT</h4>
+                    <ul>
+                        <li><strong>Компактність енергії:</strong> більшість енергії зосереджена в низьких частотах</li>
+                        <li><strong>Декореляція:</strong> DCT знижує кореляцію між сусідніми пікселями</li>
+                        <li><strong>Оборотність:</strong> можна точно відновити оригінал через inverse DCT</li>
+                        <li><strong>Ефективність для JPEG:</strong> основа алгоритму JPEG стиснення</li>
+                    </ul>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📐 Блочна структура DCT</h4>
+                    <p>
+                        Зображення розбивається на блоки 8×8 пікселів. До кожного блоку застосовується DCT окремо:
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Порядок коефіцієнтів у блоці 8×8:</strong><br><br>
+                        DC (0,0) - найважливіший, середнє значення блоку<br>
+                        AC (0,1)-(7,7) - змінні частоти, від низьких до високих<br><br>
+                        Зигзагоподібний порядок (від DC до високих частот):<br>
+                        DC → (0,1) → (1,0) → (2,0) → (1,1) → ... → (7,7) AC
+                    </div>
+
+                    <p><strong>Чому це важливо для стеганографії:</strong></p>
+                    <ul>
+                        <li>DC коефіцієнт містить основну енергію — модифікація дуже помітна</li>
+                        <li>Низькі AC коефіцієнти стійкі до стиснення, але видимі при великих змінах</li>
+                        <li>Середні AC коефіцієнти — оптимальний баланс непомітності та стійкості</li>
+                        <li>Високі AC коефіцієнти — часто обнуляються при JPEG стисненні</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JPEG стиснення -->
+            <div class="tab-content" id="jpeg-compression">
+                <h3>Принципи JPEG стиснення</h3>
+
+                <div class="detection-method">
+                    <h4>🗜️ Етапи JPEG компресії</h4>
+                    <p>
+                        JPEG використовує DCT для стиснення зображень з втратами. Розуміння цього процесу критично для створення стійких DCT методів стеганографії.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Алгоритм JPEG стиснення:</strong><br><br>
+                        1. Розбиття на блоки 8×8<br>
+                        2. Зсув значень: pixel - 128 (центрування навколо 0)<br>
+                        3. Застосування 2D DCT<br>
+                        4. Квантування коефіцієнтів<br>
+                        5. Зигзагоподібне сканування<br>
+                        6. Ентропійне кодування (Huffman)
+                    </div>
+
+                    <h4>⚙️ Квантування — ключ до компресії</h4>
+                    <p>
+                        Квантування — це ділення DCT коефіцієнтів на значення з таблиці квантування з округленням. Це основне джерело втрат у JPEG.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Формула квантування:</strong><br><br>
+                        FQ(u,v) = round( F(u,v) / Q(u,v) )<br><br>
+                        де:<br>
+                        - F(u,v) - DCT коефіцієнт<br>
+                        - Q(u,v) - значення з таблиці квантування<br>
+                        - FQ(u,v) - квантований коефіцієнт
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📊 Таблиця квантування JPEG</h4>
+                    <p>
+                        Стандартна таблиця квантування для яскравості (luminance) при якості Q=50:
+                    </p>
+
+                    <div class="formula-box">
+                        16  11  10  16  24  40  51  61<br>
+                        12  12  14  19  26  58  60  55<br>
+                        14  13  16  24  40  57  69  56<br>
+                        14  17  22  29  51  87  80  62<br>
+                        18  22  37  56  68 109 103  77<br>
+                        24  35  55  64  81 104 113  92<br>
+                        49  64  78  87 103 121 120 101<br>
+                        72  92  95  98 112 100 103  99<br><br>
+                        Менші значення → менше втрат, більша якість<br>
+                        Більші значення → більше втрат, менша якість
+                    </div>
+
+                    <p><strong>Вплив на стеганографію:</strong></p>
+                    <ul>
+                        <li>Високі частоти (нижній правий кут) мають великі значення Q → легко зануляються</li>
+                        <li>Низькі частоти (верхній лівий кут) мають малі Q → зберігаються краще</li>
+                        <li>Для стійкої стеганографії вбудовування повинно враховувати Q(u,v)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Методи вбудовування -->
+            <div class="tab-content" id="embedding-methods">
+                <h3>Методи вбудовування в DCT коефіцієнти</h3>
+
+                <div class="detection-method">
+                    <h4>1️⃣ JSteg - найпростіший метод</h4>
+                    <p>
+                        <strong>JSteg</strong> замінює молодший біт (LSB) квантованих DCT коефіцієнтів. Працює тільки з ненульовими коефіцієнтами.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Алгоритм JSteg:</strong><br><br>
+                        1. Застосувати DCT та квантування<br>
+                        2. Пропустити DC коефіцієнти та коефіцієнти зі значенням 0, 1, -1<br>
+                        3. Замінити LSB ненульових AC коефіцієнтів<br>
+                        4. Застосувати деквантування та inverse DCT<br><br>
+                        Переваги: простота, висока ємність<br>
+                        Недоліки: вразливість до Chi-square атаки
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>2️⃣ F5 - покращений метод</h4>
+                    <p>
+                        <strong>F5</strong> використовує матричне кодування та зменшення абсолютного значення замість LSB заміни.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Принцип F5:</strong><br><br>
+                        Замість: coef = (coef & ~1) | bit  (LSB заміна)<br>
+                        Використовує:<br>
+                        - Якщо потрібен біт 0 і LSB=1: coef = coef - 1<br>
+                        - Якщо потрібен біт 1 і LSB=0: coef = coef - 1<br>
+                        - Інакше: не змінювати<br><br>
+                        Переваги: стійкіший до стеганоаналізу<br>
+                        Недоліки: зменшення ємності через shrinkage
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>3️⃣ Адаптивний вибір коефіцієнтів</h4>
+                    <p>
+                        Сучасні методи обирають коефіцієнти для вбудовування на основі таблиці квантування та характеристик блоку.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Стратегії вибору коефіцієнтів:</strong><br><br>
+                        1. За діапазоном частот: використовувати середні частоти (позиції 10-30 в zigzag)<br>
+                        2. За величиною квантування: Q(u,v) < поріг<br>
+                        3. За величиною коефіцієнта: |F(u,v)| > мінімум<br>
+                        4. Комбінований підхід: всі умови разом<br><br>
+                        Приклад: вбудовувати тільки коли Q < 20 ТА |coef| > 5
+                    </div>
+                </div>
+            </div>
+
+            <!-- Стійкість до JPEG -->
+            <div class="tab-content" id="jpeg-resistance">
+                <h3>Стійкість до JPEG компресії</h3>
+
+                <div class="detection-method">
+                    <h4>🛡️ Фактори стійкості</h4>
+                    <p>
+                        Стійкість DCT стеганографії залежить від вибору коефіцієнтів та методу вбудовування.
+                    </p>
+
+                    <ul>
+                        <li><strong>Низькі частоти:</strong> максимальна стійкість, але зміни помітні візуально</li>
+                        <li><strong>Середні частоти:</strong> оптимальний баланс стійкості та непомітності</li>
+                        <li><strong>Високі частоти:</strong> непомітні, але легко втрачаються при стисненні</li>
+                    </ul>
+
+                    <div class="formula-box">
+                        <strong>Вимірювання стійкості:</strong><br><br>
+                        BER (Bit Error Rate) = кількість_помилок / загальна_кількість_бітів<br><br>
+                        Тестування при різних якостях JPEG:<br>
+                        - Q=90-100: висока якість, BER < 1%<br>
+                        - Q=70-90: середня якість, BER = 1-10%<br>
+                        - Q=50-70: низька якість, BER = 10-30%<br>
+                        - Q<50: дуже низька якість, BER > 30%
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>⚙️ Стратегії підвищення стійкості</h4>
+
+                    <p><strong>1. Коди корекції помилок (ECC)</strong></p>
+                    <ul>
+                        <li>Reed-Solomon коди для виправлення помилок</li>
+                        <li>Повторне кодування бітів (redundancy)</li>
+                        <li>Контрольні суми для детекції пошкоджень</li>
+                    </ul>
+
+                    <p><strong>2. Адаптивна сила вбудовування</strong></p>
+                    <ul>
+                        <li>Більша модифікація для коефіцієнтів з великим |значенням|</li>
+                        <li>Врахування значення Q(u,v) при виборі сили</li>
+                        <li>Відмова від вбудовування в "слабкі" коефіцієнти</li>
+                    </ul>
+
+                    <p><strong>3. Вбудовування в квантовані коефіцієнти</strong></p>
+                    <div class="formula-box">
+                        Працювати безпосередньо з квантованими коефіцієнтами,<br>
+                        щоб уникнути втрат при повторному квантуванні:<br><br>
+                        Original → DCT → Quantize → [EMBED HERE] → Dequantize → IDCT
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Практичні завдання -->
+    <section>
+        <h2>💻 Практичні завдання</h2>
+
+        <!-- Завдання 1 -->
+        <div class="task-box">
+            <h3><span class="step-number">1</span>Налаштування середовища та реалізація DCT</h3>
+
+            <h4>Імпорт бібліотек:</h4>
+            <pre class="python"><code>import numpy as np
+import cv2
+from PIL import Image
+import matplotlib.pyplot as plt
+from scipy.fftpack import dct, idct
+from scipy.signal import convolve2d
+import os
+
+# Допоміжні функції
+def text_to_binary(text):
+    """Конвертує текст в бінарний рядок"""
+    return ''.join(format(ord(char), '08b') for char in text)
+
+def binary_to_text(binary):
+    """Конвертує бінарний рядок в текст"""
+    chars = [binary[i:i+8] for i in range(0, len(binary), 8)]
+    return ''.join(chr(int(char, 2)) for char in chars if len(char) == 8)
+
+def calculate_psnr(img1, img2):
+    """Обчислює PSNR між двома зображеннями"""
+    mse = np.mean((img1.astype(float) - img2.astype(float)) ** 2)
+    if mse == 0:
+        return float('inf')
+    max_pixel = 255.0
+    psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
+    return psnr
+
+print("Бібліотеки успішно імпортовані!")
+print("NumPy версія:", np.__version__)
+print("OpenCV версія:", cv2.__version__)</code></pre>
+
+            <h4>Реалізація блочного DCT:</h4>
+            <pre class="python"><code>def dct2d_block(block):
+    """
+    Застосовує 2D DCT до блоку 8x8
+
+    Parameters:
+    -----------
+    block : numpy array - блок 8x8 пікселів
+
+    Returns:
+    --------
+    dct_block : numpy array - DCT коефіцієнти
+    """
+    return dct(dct(block.T, norm='ortho').T, norm='ortho')
+
+def idct2d_block(block):
+    """
+    Застосовує inverse 2D DCT до блоку 8x8
+
+    Parameters:
+    -----------
+    block : numpy array - DCT коефіцієнти 8x8
+
+    Returns:
+    --------
+    spatial_block : numpy array - просторові значення пікселів
+    """
+    return idct(idct(block.T, norm='ortho').T, norm='ortho')
+
+def apply_dct_to_image(image):
+    """
+    Застосовує DCT до всього зображення блоками 8x8
+
+    Parameters:
+    -----------
+    image : numpy array - вхідне зображення (grayscale)
+
+    Returns:
+    --------
+    dct_image : numpy array - DCT коефіцієнти всього зображення
+    """
+    height, width = image.shape
+    dct_image = np.zeros_like(image, dtype=np.float32)
+
+    # Обробка кожного блоку 8x8
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            # Витягуємо блок
+            block = image[i:i+8, j:j+8]
+
+            # Зсув на 128 (центрування)
+            block = block.astype(np.float32) - 128
+
+            # Застосовуємо DCT
+            dct_block = dct2d_block(block)
+
+            # Зберігаємо результат
+            dct_image[i:i+8, j:j+8] = dct_block
+
+    return dct_image
+
+def apply_idct_to_image(dct_image, original_shape):
+    """
+    Застосовує inverse DCT до всього зображення
+
+    Parameters:
+    -----------
+    dct_image : numpy array - DCT коефіцієнти
+    original_shape : tuple - розмір вихідного зображення
+
+    Returns:
+    --------
+    reconstructed : numpy array - відновлене зображення
+    """
+    height, width = original_shape
+    reconstructed = np.zeros((height, width), dtype=np.float32)
+
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            # Витягуємо DCT блок
+            dct_block = dct_image[i:i+8, j:j+8]
+
+            # Inverse DCT
+            spatial_block = idct2d_block(dct_block)
+
+            # Зсув назад на +128
+            spatial_block = spatial_block + 128
+
+            # Обмеження діапазону [0, 255]
+            spatial_block = np.clip(spatial_block, 0, 255)
+
+            # Зберігаємо результат
+            reconstructed[i:i+8, j:j+8] = spatial_block
+
+    return reconstructed.astype(np.uint8)
+
+# Тестування DCT
+def test_dct_transform():
+    """Тестує коректність DCT/IDCT трансформації"""
+    # Створюємо тестове зображення
+    test_image = np.random.randint(0, 256, (256, 256), dtype=np.uint8)
+
+    print("Оригінальне зображення:", test_image.shape, test_image.dtype)
+
+    # Застосовуємо DCT
+    dct_result = apply_dct_to_image(test_image)
+    print("DCT коефіцієнти:", dct_result.shape, dct_result.dtype)
+    print("Діапазон DCT коефіцієнтів:", dct_result.min(), "-", dct_result.max())
+
+    # Застосовуємо inverse DCT
+    reconstructed = apply_idct_to_image(dct_result, test_image.shape)
+    print("Відновлене зображення:", reconstructed.shape, reconstructed.dtype)
+
+    # Перевірка точності
+    mse = np.mean((test_image.astype(float) - reconstructed.astype(float)) ** 2)
+    psnr = calculate_psnr(test_image, reconstructed)
+
+    print(f"\nТочність відновлення:")
+    print(f"  MSE: {mse:.6f}")
+    print(f"  PSNR: {psnr:.2f} dB")
+
+    if psnr > 40:
+        print("  ✅ DCT/IDCT працює коректно!")
+    else:
+        print("  ❌ Можливі проблеми з точністю")
+
+    # Візуалізація
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+    axes[0].imshow(test_image, cmap='gray')
+    axes[0].set_title('Оригінальне зображення')
+    axes[0].axis('off')
+
+    # Візуалізація DCT (логарифмічна шкала)
+    dct_viz = np.log(np.abs(dct_result) + 1)
+    axes[1].imshow(dct_viz, cmap='hot')
+    axes[1].set_title('DCT коефіцієнти (log scale)')
+    axes[1].axis('off')
+
+    axes[2].imshow(reconstructed, cmap='gray')
+    axes[2].set_title(f'Відновлене (PSNR: {psnr:.2f} dB)')
+    axes[2].axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
+# Запуск тесту
+test_dct_transform()</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>PSNR > 40 dB для ідеальної трансформації</li>
+                    <li>DCT коефіцієнти в діапазоні від -1000 до 1000</li>
+                    <li>Візуально ідентичне відновлене зображення</li>
+                    <li>Енергія зосереджена в верхньому лівому куті DCT блоків</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 2 -->
+        <div class="task-box">
+            <h3><span class="step-number">2</span>JPEG квантування та деквантування</h3>
+
+            <h4>Реалізація таблиць квантування:</h4>
+            <pre class="python"><code>def get_quantization_table(quality=50):
+    """
+    Генерує таблицю квантування на основі якості JPEG
+
+    Parameters:
+    -----------
+    quality : int - якість JPEG (1-100)
+
+    Returns:
+    --------
+    Q : numpy array - таблиця квантування 8x8
+    """
+    # Базова таблиця квантування для яскравості (JPEG standard)
+    Q_base = np.array([
+        [16, 11, 10, 16, 24, 40, 51, 61],
+        [12, 12, 14, 19, 26, 58, 60, 55],
+        [14, 13, 16, 24, 40, 57, 69, 56],
+        [14, 17, 22, 29, 51, 87, 80, 62],
+        [18, 22, 37, 56, 68, 109, 103, 77],
+        [24, 35, 55, 64, 81, 104, 113, 92],
+        [49, 64, 78, 87, 103, 121, 120, 101],
+        [72, 92, 95, 98, 112, 100, 103, 99]
+    ], dtype=np.float32)
+
+    # Масштабування на основі якості
+    if quality < 50:
+        scale = 5000 / quality
+    else:
+        scale = 200 - 2 * quality
+
+    Q = np.floor((Q_base * scale + 50) / 100)
+    Q[Q < 1] = 1
+    Q[Q > 255] = 255
+
+    return Q
+
+def quantize_dct_block(dct_block, Q):
+    """
+    Квантує DCT блок
+
+    Parameters:
+    -----------
+    dct_block : numpy array - DCT коефіцієнти 8x8
+    Q : numpy array - таблиця квантування 8x8
+
+    Returns:
+    --------
+    quantized : numpy array - квантовані коефіцієнти
+    """
+    return np.round(dct_block / Q)
+
+def dequantize_dct_block(quantized_block, Q):
+    """
+    Деквантує DCT блок
+
+    Parameters:
+    -----------
+    quantized_block : numpy array - квантовані коефіцієнти 8x8
+    Q : numpy array - таблиця квантування 8x8
+
+    Returns:
+    --------
+    dequantized : numpy array - деквантовані DCT коефіцієнти
+    """
+    return quantized_block * Q
+
+def jpeg_compress_decompress(image, quality=50):
+    """
+    Симулює JPEG стиснення/розстиснення
+
+    Parameters:
+    -----------
+    image : numpy array - вхідне зображення
+    quality : int - якість JPEG (1-100)
+
+    Returns:
+    --------
+    compressed_image : numpy array - зображення після JPEG
+    quantized_dct : numpy array - квантовані DCT коефіцієнти
+    """
+    height, width = image.shape
+    Q = get_quantization_table(quality)
+
+    # DCT
+    dct_image = apply_dct_to_image(image)
+
+    # Квантування
+    quantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            dct_block = dct_image[i:i+8, j:j+8]
+            quantized_dct[i:i+8, j:j+8] = quantize_dct_block(dct_block, Q)
+
+    # Деквантування
+    dequantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            quant_block = quantized_dct[i:i+8, j:j+8]
+            dequantized_dct[i:i+8, j:j+8] = dequantize_dct_block(quant_block, Q)
+
+    # Inverse DCT
+    compressed_image = apply_idct_to_image(dequantized_dct, image.shape)
+
+    return compressed_image, quantized_dct
+
+# Тестування JPEG компресії
+def test_jpeg_compression():
+    """Тестує вплив різних рівнів якості JPEG"""
+    # Завантажуємо або створюємо тестове зображення
+    test_image = np.random.randint(0, 256, (256, 256), dtype=np.uint8)
+
+    qualities = [90, 70, 50, 30, 10]
+
+    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+    axes = axes.flatten()
+
+    # Оригінальне зображення
+    axes[0].imshow(test_image, cmap='gray')
+    axes[0].set_title('Оригінал')
+    axes[0].axis('off')
+
+    # Тестуємо різні якості
+    for idx, quality in enumerate(qualities):
+        compressed, _ = jpeg_compress_decompress(test_image, quality)
+        psnr = calculate_psnr(test_image, compressed)
+
+        axes[idx + 1].imshow(compressed, cmap='gray')
+        axes[idx + 1].set_title(f'Q={quality}, PSNR={psnr:.2f} dB')
+        axes[idx + 1].axis('off')
+
+        print(f"Quality {quality}: PSNR = {psnr:.2f} dB")
+
+    plt.tight_layout()
+    plt.show()
+
+    # Візуалізація таблиць квантування
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+
+    for idx, quality in enumerate([90, 50, 10]):
+        Q = get_quantization_table(quality)
+        im = axes[idx].imshow(Q, cmap='hot', interpolation='nearest')
+        axes[idx].set_title(f'Таблиця квантування Q={quality}')
+
+        # Додаємо значення в клітинки
+        for i in range(8):
+            for j in range(8):
+                axes[idx].text(j, i, f'{int(Q[i, j])}',
+                             ha='center', va='center', color='white', fontsize=8)
+
+        plt.colorbar(im, ax=axes[idx])
+
+    plt.tight_layout()
+    plt.show()
+
+# Запуск тесту
+test_jpeg_compression()</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Q=90: PSNR > 35 dB, високая якість</li>
+                    <li>Q=50: PSNR ≈ 30 dB, помірна якість</li>
+                    <li>Q=10: PSNR < 25 dB, видимі блочні артефакти</li>
+                    <li>Таблиці квантування збільшуються при зменшенні якості</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 3 -->
+        <div class="task-box">
+            <h3><span class="step-number">3</span>Вбудовування в DCT коефіцієнти</h3>
+
+            <h4>Реалізація JSteg методу:</h4>
+            <pre class="python"><code>def get_zigzag_indices():
+    """
+    Повертає індекси для зигзагоподібного сканування блоку 8x8
+
+    Returns:
+    --------
+    indices : list of tuples - послідовність індексів (i, j)
+    """
+    indices = [
+        (0,0),
+        (0,1), (1,0),
+        (2,0), (1,1), (0,2),
+        (0,3), (1,2), (2,1), (3,0),
+        (4,0), (3,1), (2,2), (1,3), (0,4),
+        (0,5), (1,4), (2,3), (3,2), (4,1), (5,0),
+        (5,1), (4,2), (3,3), (2,4), (1,5), (0,6),
+        (0,7), (1,6), (2,5), (3,4), (4,3), (5,2), (6,1), (7,0),
+        (7,1), (6,2), (5,3), (4,4), (3,5), (2,6), (1,7),
+        (2,7), (3,6), (4,5), (5,4), (6,3), (7,2),
+        (3,7), (4,6), (5,5), (6,4), (7,3),
+        (4,7), (5,6), (6,5), (7,4),
+        (5,7), (6,6), (7,5),
+        (6,7), (7,6),
+        (7,7)
+    ]
+    return indices
+
+def jsteg_embed(image, message, quality=75):
+    """
+    Вбудовує повідомлення методом JSteg
+
+    Parameters:
+    -----------
+    image : numpy array - вхідне зображення (grayscale)
+    message : str - повідомлення для вбудовування
+    quality : int - якість JPEG
+
+    Returns:
+    --------
+    stego_image : numpy array - стего-зображення
+    capacity : int - використана ємність в бітах
+    """
+    height, width = image.shape
+
+    # Перевіряємо, що розміри кратні 8
+    if height % 8 != 0 or width % 8 != 0:
+        print(f"⚠️ Увага: розміри зображення ({height}×{width}) не кратні 8. Буде використано {(height//8)*8}×{(width//8)*8}")
+
+    Q = get_quantization_table(quality)
+
+    # Конвертуємо повідомлення в біти
+    binary_message = text_to_binary(message)
+    # Додаємо довжину повідомлення (32 біти)
+    length_binary = format(len(binary_message), '032b')
+    binary_data = length_binary + binary_message
+
+    print(f"Повідомлення: {len(message)} символів")
+    print(f"Біти для вбудовування: {len(binary_data)} біт")
+
+    # DCT перетворення
+    dct_image = apply_dct_to_image(image)
+
+    # Квантування
+    quantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            dct_block = dct_image[i:i+8, j:j+8]
+            quantized_dct[i:i+8, j:j+8] = quantize_dct_block(dct_block, Q)
+
+    # Вбудовування в квантовані коефіцієнти
+    zigzag_indices = get_zigzag_indices()
+    bit_index = 0
+    blocks_used = 0
+
+    for block_i in range(0, height - 7, 8):
+        for block_j in range(0, width - 7, 8):
+            if bit_index >= len(binary_data):
+                break
+
+            block = quantized_dct[block_i:block_i+8, block_j:block_j+8].copy()
+            block_modified = False
+
+            # Пропускаємо DC коефіцієнт, обробляємо тільки AC
+            for idx in range(1, len(zigzag_indices)):
+                if bit_index >= len(binary_data):
+                    break
+
+                i, j = zigzag_indices[idx]
+                coef = int(block[i, j])
+
+                # JSteg: пропускаємо 0, 1, -1
+                if abs(coef) <= 1:
+                    continue
+
+                # Вбудовуємо біт в LSB (правильно для від'ємних чисел)
+                bit = int(binary_data[bit_index])
+
+                # Зберігаємо знак та працюємо з абсолютним значенням
+                sign = 1 if coef >= 0 else -1
+                abs_coef = abs(coef)
+
+                # Замінюємо LSB
+                new_abs_coef = (abs_coef & ~1) | bit
+                new_coef = sign * new_abs_coef
+
+                block[i, j] = new_coef
+                bit_index += 1
+                block_modified = True
+
+            if block_modified:
+                quantized_dct[block_i:block_i+8, block_j:block_j+8] = block
+                blocks_used += 1
+
+        if bit_index >= len(binary_data):
+            break
+
+    if bit_index < len(binary_data):
+        print(f"⚠️ Недостатньо ємності! Вбудовано тільки {bit_index}/{len(binary_data)} біт")
+    else:
+        print(f"✅ Успішно вбудовано {bit_index} біт в {blocks_used} блоків")
+
+    # Деквантування
+    dequantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            quant_block = quantized_dct[i:i+8, j:j+8]
+            dequantized_dct[i:i+8, j:j+8] = dequantize_dct_block(quant_block, Q)
+
+    # Inverse DCT
+    stego_image = apply_idct_to_image(dequantized_dct, image.shape)
+
+    return stego_image, bit_index
+
+def jsteg_extract(stego_image, quality=75):
+    """
+    Витягує повідомлення методом JSteg
+
+    Parameters:
+    -----------
+    stego_image : numpy array - стего-зображення
+    quality : int - якість JPEG (має бути така ж, як при вбудовуванні)
+
+    Returns:
+    --------
+    extracted_message : str - витягнуте повідомлення
+    """
+    height, width = stego_image.shape
+    Q = get_quantization_table(quality)
+
+    # DCT та квантування
+    dct_image = apply_dct_to_image(stego_image)
+
+    quantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            dct_block = dct_image[i:i+8, j:j+8]
+            quantized_dct[i:i+8, j:j+8] = quantize_dct_block(dct_block, Q)
+
+    # Витягування бітів
+    zigzag_indices = get_zigzag_indices()
+    extracted_bits = []
+    message_length = None
+
+    # Спочатку витягуємо довжину повідомлення (32 біти)
+    for block_i in range(0, height - 7, 8):
+        for block_j in range(0, width - 7, 8):
+            block = quantized_dct[block_i:block_i+8, block_j:block_j+8]
+
+            # Пропускаємо DC, обробляємо AC
+            for idx in range(1, len(zigzag_indices)):
+                i, j = zigzag_indices[idx]
+                coef = int(block[i, j])
+
+                # Пропускаємо 0, 1, -1
+                if abs(coef) <= 1:
+                    continue
+
+                # Витягуємо LSB з абсолютного значення (правильно для від'ємних чисел)
+                abs_coef = abs(coef)
+                bit = abs_coef & 1
+                extracted_bits.append(str(bit))
+
+                # Коли витягнули 32 біти, отримуємо довжину повідомлення
+                if message_length is None and len(extracted_bits) == 32:
+                    message_length = int(''.join(extracted_bits), 2)
+                    # Перевірка на адекватність довжини
+                    if message_length > 1000000 or message_length < 0:
+                        print(f"⚠️ Підозріла довжина повідомлення: {message_length}")
+                        return "[Помилка: некоректна довжина]"
+
+                # Коли витягнули всі біти повідомлення
+                if message_length is not None and len(extracted_bits) >= 32 + message_length:
+                    break
+
+            # Вихід з циклу блоків
+            if message_length is not None and len(extracted_bits) >= 32 + message_length:
+                break
+
+        # Вихід з циклу рядків блоків
+        if message_length is not None and len(extracted_bits) >= 32 + message_length:
+            break
+
+    # Декодування повідомлення
+    if len(extracted_bits) < 32:
+        return "[Помилка: недостатньо даних]"
+
+    if message_length is None:
+        return "[Помилка: не вдалось отримати довжину]"
+
+    # Витягуємо біти повідомлення (після 32 бітів довжини)
+    message_bits = ''.join(extracted_bits[32:32 + message_length])
+
+    # Перевіряємо, що отримали достатньо бітів
+    if len(message_bits) < message_length:
+        print(f"⚠️ Витягнуто {len(message_bits)} з {message_length} очікуваних бітів")
+
+    try:
+        extracted_message = binary_to_text(message_bits)
+        return extracted_message
+    except Exception as e:
+        return f"[Помилка декодування: {str(e)}]"
+
+# Тестування JSteg
+def test_jsteg():
+    """Тестує JSteg вбудовування та витягування"""
+    # Створюємо тестове зображення
+    test_image = np.random.randint(50, 200, (512, 512), dtype=np.uint8)
+
+    # Повідомлення для вбудовування
+    message = "Це тестове повідомлення для DCT стеганографії!"
+    print(f"Оригінальне повідомлення: '{message}'")
+
+    # Вбудовування
+    stego_image, capacity = jsteg_embed(test_image, message, quality=75)
+
+    # Оцінка якості
+    psnr = calculate_psnr(test_image, stego_image)
+    print(f"\nЯкість стего-зображення: PSNR = {psnr:.2f} dB")
+
+    # Витягування
+    extracted = jsteg_extract(stego_image, quality=75)
+    print(f"Витягнуте повідомлення: '{extracted}'")
+
+    if extracted == message:
+        print("✅ Повідомлення витягнуто коректно!")
+    else:
+        print("❌ Помилка витягування")
+
+    # Візуалізація
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+    axes[0].imshow(test_image, cmap='gray')
+    axes[0].set_title('Оригінальне зображення')
+    axes[0].axis('off')
+
+    axes[1].imshow(stego_image, cmap='gray')
+    axes[1].set_title(f'Стего (PSNR: {psnr:.2f} dB)')
+    axes[1].axis('off')
+
+    # Різниця
+    diff = np.abs(test_image.astype(float) - stego_image.astype(float))
+    axes[2].imshow(diff, cmap='hot')
+    axes[2].set_title('Різниця (×10 для візуалізації)')
+    axes[2].axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
+# Запуск тесту
+test_jsteg()</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Успішне вбудовування повідомлення</li>
+                    <li>PSNR > 38 dB (висока якість)</li>
+                    <li>100% точність витягування без JPEG компресії</li>
+                    <li>Ємність: ~1000-2000 біт для зображення 512×512</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 4 -->
+        <div class="task-box">
+            <h3><span class="step-number">4</span>Тестування стійкості до JPEG компресії</h3>
+
+            <h4>Аналіз стійкості:</h4>
+            <pre class="python"><code>def test_jpeg_resistance():
+    """
+    Тестує стійкість DCT стеганографії до JPEG компресії
+    """
+    # Створюємо тестове зображення
+    test_image = np.random.randint(50, 200, (512, 512), dtype=np.uint8)
+
+    # Вбудовуємо повідомлення
+    message = "Тестове повідомлення для перевірки стійкості до JPEG!"
+    original_quality = 90  # Висока якість для вбудовування
+
+    print(f"Оригінальне повідомлення: '{message}'")
+    print(f"Довжина: {len(message)} символів")
+
+    stego_image, _ = jsteg_embed(test_image, message, quality=original_quality)
+
+    # Тестуємо різні якості повторної компресії
+    test_qualities = [100, 95, 90, 85, 80, 75, 70, 60, 50]
+
+    results = []
+
+    for quality in test_qualities:
+        # Застосовуємо JPEG компресію
+        compressed_stego, _ = jpeg_compress_decompress(stego_image, quality)
+
+        # Намагаємось витягнути повідомлення
+        extracted = jsteg_extract(compressed_stego, quality=original_quality)
+
+        # Обчислюємо BER (Bit Error Rate)
+        if extracted:
+            # Порівнюємо символ за символом
+            min_len = min(len(message), len(extracted))
+            errors = sum(1 for i in range(min_len) if i >= len(extracted) or message[i] != extracted[i])
+            errors += abs(len(message) - len(extracted))  # Додаємо різницю в довжині
+
+            ber = (errors * 8) / (len(message) * 8) * 100  # BER в відсотках
+            success = (extracted == message)
+        else:
+            ber = 100.0
+            success = False
+
+        # PSNR між стего та стисненим
+        psnr = calculate_psnr(stego_image, compressed_stego)
+
+        results.append({
+            'quality': quality,
+            'psnr': psnr,
+            'ber': ber,
+            'success': success,
+            'extracted': extracted
+        })
+
+        status = "✅" if success else "❌"
+        print(f"{status} Q={quality:3d}: PSNR={psnr:5.2f} dB, BER={ber:5.1f}%, Витягнуто: '{extracted[:30]}...'")
+
+    # Візуалізація результатів
+    qualities = [r['quality'] for r in results]
+    psnrs = [r['psnr'] for r in results]
+    bers = [r['ber'] for r in results]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+
+    # Графік PSNR
+    ax1.plot(qualities, psnrs, 'b-o', linewidth=2, markersize=8)
+    ax1.set_xlabel('Якість JPEG')
+    ax1.set_ylabel('PSNR (dB)', color='b')
+    ax1.tick_params(axis='y', labelcolor='b')
+    ax1.grid(True, alpha=0.3)
+    ax1.set_title('Якість зображення після JPEG компресії')
+    ax1.invert_xaxis()
+
+    # Графік BER
+    ax2.plot(qualities, bers, 'r-o', linewidth=2, markersize=8)
+    ax2.set_xlabel('Якість JPEG')
+    ax2.set_ylabel('BER (%)', color='r')
+    ax2.tick_params(axis='y', labelcolor='r')
+    ax2.axhline(y=0, color='g', linestyle='--', label='Ідеально (0% BER)')
+    ax2.grid(True, alpha=0.3)
+    ax2.set_title('Частота помилок витягування (BER)')
+    ax2.legend()
+    ax2.invert_xaxis()
+
+    plt.tight_layout()
+    plt.show()
+
+    # Статистика
+    successful = sum(1 for r in results if r['success'])
+    print(f"\n📊 Підсумок:")
+    print(f"  Успішних витягувань: {successful}/{len(results)}")
+    print(f"  Мінімальна якість для 100% витягування: Q={qualities[successful-1] if successful > 0 else 'N/A'}")
+
+# Запуск тесту
+test_jpeg_resistance()</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Q≥90: BER = 0%, повне відновлення</li>
+                    <li>Q=80-90: BER < 5%, часткові помилки</li>
+                    <li>Q<80: BER > 10%, значні втрати даних</li>
+                    <li>Графіки показують залежність якості від компресії</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 5 -->
+        <div class="task-box">
+            <h3><span class="step-number">5</span>Порівняння стратегій вибору коефіцієнтів</h3>
+
+            <h4>Адаптивний вибір коефіцієнтів:</h4>
+            <pre class="python"><code>def adaptive_dct_embed(image, message, quality=75, strategy='medium_freq'):
+    """
+    Вбудовує повідомлення з адаптивним вибором коефіцієнтів
+
+    Parameters:
+    -----------
+    image : numpy array - вхідне зображення
+    message : str - повідомлення
+    quality : int - якість JPEG
+    strategy : str - стратегія вибору:
+        'low_freq' - низькі частоти (1-10 в zigzag)
+        'medium_freq' - середні частоти (10-30 в zigzag)
+        'high_freq' - високі частоти (30-64 в zigzag)
+        'adaptive' - на основі таблиці квантування
+
+    Returns:
+    --------
+    stego_image : numpy array - стего-зображення
+    capacity : int - використана ємність
+    """
+    height, width = image.shape
+    Q = get_quantization_table(quality)
+
+    binary_message = text_to_binary(message)
+    length_binary = format(len(binary_message), '032b')
+    binary_data = length_binary + binary_message
+
+    # DCT та квантування
+    dct_image = apply_dct_to_image(image)
+    quantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            dct_block = dct_image[i:i+8, j:j+8]
+            quantized_dct[i:i+8, j:j+8] = quantize_dct_block(dct_block, Q)
+
+    # Визначаємо діапазон коефіцієнтів для вбудовування
+    zigzag_indices = get_zigzag_indices()
+
+    if strategy == 'low_freq':
+        coef_range = range(1, 10)  # Низькі частоти
+    elif strategy == 'medium_freq':
+        coef_range = range(10, 30)  # Середні частоти
+    elif strategy == 'high_freq':
+        coef_range = range(30, 64)  # Високі частоти
+    else:  # adaptive
+        coef_range = range(1, 64)
+
+    bit_index = 0
+
+    for block_i in range(0, height - 7, 8):
+        for block_j in range(0, width - 7, 8):
+            if bit_index >= len(binary_data):
+                break
+
+            block = quantized_dct[block_i:block_i+8, block_j:block_j+8].copy()
+
+            for idx in coef_range:
+                if bit_index >= len(binary_data):
+                    break
+
+                i, j = zigzag_indices[idx]
+                coef = int(block[i, j])
+
+                # Адаптивна стратегія: використовуємо Q
+                if strategy == 'adaptive':
+                    # Вбудовуємо тільки якщо Q < 20 та |coef| > 3
+                    if Q[i, j] > 20 or abs(coef) <= 3:
+                        continue
+                else:
+                    # Для інших стратегій: пропускаємо малі коефіцієнти
+                    if abs(coef) <= 1:
+                        continue
+
+                # Вбудовуємо біт (правильно для від'ємних чисел)
+                bit = int(binary_data[bit_index])
+
+                # Зберігаємо знак та працюємо з абсолютним значенням
+                sign = 1 if coef >= 0 else -1
+                abs_coef = abs(coef)
+                new_abs_coef = (abs_coef & ~1) | bit
+                new_coef = sign * new_abs_coef
+
+                block[i, j] = new_coef
+                bit_index += 1
+
+            quantized_dct[block_i:block_i+8, block_j:block_j+8] = block
+
+        if bit_index >= len(binary_data):
+            break
+
+    # Деквантування та IDCT
+    dequantized_dct = np.zeros_like(dct_image)
+    for i in range(0, height - 7, 8):
+        for j in range(0, width - 7, 8):
+            quant_block = quantized_dct[i:i+8, j:j+8]
+            dequantized_dct[i:i+8, j:j+8] = dequantize_dct_block(quant_block, Q)
+
+    stego_image = apply_idct_to_image(dequantized_dct, image.shape)
+
+    return stego_image, bit_index
+
+def compare_strategies():
+    """
+    Порівнює різні стратегії вибору коефіцієнтів
+    """
+    # Тестове зображення
+    test_image = np.random.randint(50, 200, (512, 512), dtype=np.uint8)
+    message = "Тест стратегій вибору DCT коефіцієнтів!"
+
+    strategies = ['low_freq', 'medium_freq', 'high_freq', 'adaptive']
+    strategy_names = {
+        'low_freq': 'Низькі частоти',
+        'medium_freq': 'Середні частоти',
+        'high_freq': 'Високі частоти',
+        'adaptive': 'Адаптивний'
+    }
+
+    results = []
+
+    print("Порівняння стратегій:\n")
+
+    for strategy in strategies:
+        # Вбудовування
+        stego, capacity = adaptive_dct_embed(test_image, message, quality=75, strategy=strategy)
+
+        # Якість
+        psnr = calculate_psnr(test_image, stego)
+
+        # Тест стійкості до JPEG Q=70
+        compressed, _ = jpeg_compress_decompress(stego, quality=70)
+        psnr_after_jpeg = calculate_psnr(test_image, compressed)
+
+        results.append({
+            'strategy': strategy,
+            'name': strategy_names[strategy],
+            'psnr': psnr,
+            'psnr_jpeg': psnr_after_jpeg,
+            'capacity': capacity
+        })
+
+        print(f"{strategy_names[strategy]:20s}: PSNR={psnr:5.2f} dB, "
+              f"PSNR після JPEG={psnr_after_jpeg:5.2f} dB, Ємність={capacity} біт")
+
+    # Візуалізація
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+    strategies_list = [r['name'] for r in results]
+    psnrs = [r['psnr'] for r in results]
+    psnrs_jpeg = [r['psnr_jpeg'] for r in results]
+    capacities = [r['capacity'] for r in results]
+
+    # PSNR без компресії
+    axes[0].bar(strategies_list, psnrs, color='skyblue')
+    axes[0].set_ylabel('PSNR (dB)')
+    axes[0].set_title('Якість стего-зображення')
+    axes[0].tick_params(axis='x', rotation=45)
+    axes[0].grid(True, alpha=0.3)
+
+    # PSNR після JPEG
+    axes[1].bar(strategies_list, psnrs_jpeg, color='lightcoral')
+    axes[1].set_ylabel('PSNR (dB)')
+    axes[1].set_title('Якість після JPEG Q=70')
+    axes[1].tick_params(axis='x', rotation=45)
+    axes[1].grid(True, alpha=0.3)
+
+    # Ємність
+    axes[2].bar(strategies_list, capacities, color='lightgreen')
+    axes[2].set_ylabel('Ємність (біт)')
+    axes[2].set_title('Ємність вбудовування')
+    axes[2].tick_params(axis='x', rotation=45)
+    axes[2].grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.show()
+
+    print("\n📊 Висновки:")
+    print("  • Низькі частоти: стійкі, але помітні зміни")
+    print("  • Середні частоти: оптимальний баланс")
+    print("  • Високі частоти: непомітні, але нестійкі")
+    print("  • Адаптивний: найкращий загальний результат")
+
+# Запуск порівняння
+compare_strategies()</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Низькі частоти: найвища стійкість, найнижчий PSNR</li>
+                    <li>Середні частоти: збалансований результат</li>
+                    <li>Високі частоти: найвищий PSNR, найнижча стійкість</li>
+                    <li>Адаптивна стратегія: компроміс між усіма параметрами</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Завдання для аналізу -->
+    <section class="analysis-section">
+        <h2>🔬 Завдання для додаткового аналізу</h2>
+
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h4>📊 Завдання 1: Аналіз ємності</h4>
+                <p>Обчисліть теоретичну та практичну ємність для різних якостей JPEG. Чому вони відрізняються?</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>🔍 Завдання 2: Візуальний аналіз</h4>
+                <p>Створіть візуалізацію DCT блоків до та після вбудовування. Які коефіцієнти змінюються найбільше?</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>⚡ Завдання 3: Швидкість обробки</h4>
+                <p>Виміряйте час виконання вбудовування для зображень різного розміру. Як масштабується алгоритм?</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>🛡️ Завдання 4: Порівняння з LSB</h4>
+                <p>Порівняйте DCT стеганографію з просторовою LSB за стійкістю до JPEG компресії. Створіть порівняльну таблицю.</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>🎯 Завдання 5: F5 алгоритм</h4>
+                <p>Реалізуйте спрощену версію F5 методу з зменшенням коефіцієнтів замість LSB заміни.</p>
+            </div>
+
+            <div class="analysis-card">
+                <h4>📈 Завдання 6: Матричне кодування</h4>
+                <p>Дослідіть, як матричне кодування (наприклад, (3,1) код) може підвищити ємність при тій самій модифікації.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Звіт про виконання -->
+    <section class="submission-section">
+        <h2>📝 Звіт про виконання та формат здачі</h2>
+
+        <div class="submission-grid">
+            <div class="submission-card">
+                <h3>📁 Структура звіту</h3>
+                <ul>
+                    <li>Титульна сторінка з даними студента</li>
+                    <li>Мета та завдання роботи</li>
+                    <li>Теоретичні основи DCT та JPEG</li>
+                    <li>Опис реалізації JSteg методу</li>
+                    <li>Результати тестів стійкості до JPEG</li>
+                    <li>Порівняльний аналіз стратегій</li>
+                    <li>Висновки та рекомендації</li>
+                    <li>Додатки (повний код)</li>
+                </ul>
+            </div>
+
+            <div class="submission-card">
+                <h3>💾 Файли для здачі</h3>
+                <ul>
+                    <li><span class="file-format">report.pdf</span> - звіт у форматі PDF</li>
+                    <li><span class="file-format">dct_steganography.py</span> - основний код</li>
+                    <li><span class="file-format">jsteg.py</span> - реалізація JSteg</li>
+                    <li><span class="file-format">jpeg_resistance_test.py</span> - тести стійкості</li>
+                    <li><span class="file-format">test_images/</span> - тестові зображення</li>
+                    <li><span class="file-format">results/</span> - графіки та результати</li>
+                </ul>
+            </div>
+
+            <div class="submission-card">
+                <h3>⚡ Вимоги до коду</h3>
+                <ul>
+                    <li>Модульна структура з окремими функціями</li>
+                    <li>Docstrings для всіх функцій</li>
+                    <li>Обробка винятків та помилок</li>
+                    <li>Валідація розмірів зображень (кратні 8)</li>
+                    <li>Коментарі для складних операцій</li>
+                </ul>
+            </div>
+
+            <div class="submission-card">
+                <h3>🎯 Критерії оцінювання</h3>
+                <ul>
+                    <li>Коректна реалізація DCT/IDCT (25%)</li>
+                    <li>Реалізація JSteg методу (25%)</li>
+                    <li>Тести стійкості до JPEG (20%)</li>
+                    <li>Порівняльний аналіз (15%)</li>
+                    <li>Додаткові завдання (10%)</li>
+                    <li>Оформлення звіту (5%)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="deadline-warning">
+            <strong>⏰ Термін здачі:</strong> Протягом двох тижнів після проведення лабораторної роботи.
+            Затримка здачі знижує оцінку на 10% за кожен тиждень.
+        </div>
+    </section>
+
+    <!-- Висновки -->
+    <section class="result-box">
+        <h2>🎓 Висновки</h2>
+        <p>
+            У цій лабораторній роботі ви освоїли DCT стеганографію:
+        </p>
+        <ul>
+            <li><strong>DCT перетворення</strong> - переведення зображення з просторової в частотну область забезпечує основу для стійкої стеганографії</li>
+            <li><strong>JPEG квантування</strong> - розуміння процесу квантування критично для створення методів, стійких до JPEG компресії</li>
+            <li><strong>JSteg метод</strong> - простий, але ефективний підхід до вбудовування в DCT коефіцієнти</li>
+            <li><strong>Стійкість до JPEG</strong> - правильний вибір коефіцієнтів забезпечує високу стійкість до стиснення</li>
+            <li><strong>Стратегії вбудовування</strong> - адаптивний підхід дає найкращий баланс між якістю, стійкістю та ємністю</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Ключові висновки:</strong>
+            <ul>
+                <li>DCT стеганографія значно стійкіша до JPEG компресії порівняно з просторовими методами</li>
+                <li>Середні частоти (позиції 10-30 в zigzag) дають оптимальний баланс</li>
+                <li>Якість JPEG при вбудовуванні повинна бути вищою за очікувану компресію</li>
+                <li>Комбінування з кодами корекції помилок (ECC) підвищує надійність</li>
+                <li>Візуальна якість залежить більше від стратегії вибору коефіцієнтів, ніж від кількості вбудованих даних</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Корисні ресурси -->
+    <section>
+        <h2>📚 Корисні ресурси</h2>
+
+        <div class="resources-list">
+            <ul>
+                <li>📖 <a href="https://en.wikipedia.org/wiki/JPEG#Discrete_cosine_transform">JPEG DCT - Wikipedia</a></li>
+                <li>📄 <a href="#">Fridrich J. "Steganography in Digital Media" - Chapter 4: JPEG Steganography</a></li>
+                <li>🔧 <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.dct.html">SciPy DCT Documentation</a></li>
+                <li>📊 <a href="#">Westfeld A. "F5—A Steganographic Algorithm" (2001)</a></li>
+                <li>🎓 <a href="#">Provos N., Honeyman P. "Hide and Seek: An Introduction to Steganography"</a></li>
+                <li>💻 <a href="https://github.com/topics/jpeg-steganography">GitHub: JPEG Steganography Projects</a></li>
+                <li>🔬 <a href="#">Cox I. et al. "Digital Watermarking and Steganography" (2nd edition)</a></li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="lab-footer">
+    <div class="container">
+        <p>&copy; 2024 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../assets/js/lab-functions.js"></script>
+<script>
+    // Ініціалізація підсвітки коду
+    hljs.highlightAll();
+
+    // Функція перемикання вкладок (якщо не визначена в lab-functions.js)
+    if (typeof switchTab === 'undefined') {
+        function switchTab(event, tabId) {
+            // Приховуємо всі вкладки
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Деактивуємо всі кнопки
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Показуємо вибрану вкладку
+            document.getElementById(tabId).classList.add('active');
+
+            // Активуємо натиснуту кнопку
+            event.currentTarget.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>

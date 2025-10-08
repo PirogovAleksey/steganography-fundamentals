@@ -19,10 +19,19 @@
 
         .qim-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             border-left: 5px solid #667eea;
+        }
+
+        .qim-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .qim-card ul li {
+            margin: 0.5rem 0;
         }
 
         .quantizer-demo {
@@ -54,8 +63,9 @@
         }
 
         .comparison-table th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: #f0f4ff;
+            border-left: 5px solid #667eea;
+            color: #1e293b;
             padding: 1rem;
             text-align: left;
         }
@@ -89,9 +99,9 @@
             <div class="slide-content">
                 <h2>🎯 Вступ до QIM</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Quantization Index Modulation</h3>
-                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                    <p style="font-size: 1.2rem; line-height: 1.8; color: #1e293b;">
                         QIM представляє <strong>теоретично обґрунтований</strong> підхід до стеганографії, базований на принципах теорії інформації. Метод використовує процес квантування для вбудовування інформації.
                     </p>
                 </div>
@@ -116,9 +126,9 @@
             <div class="slide-content">
                 <h2>📐 Принцип квантування</h2>
 
-                <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0fdf4; border-left: 5px solid #10b981; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Що таке квантування?</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Процес округлення неперервних значень до найближчих дискретних рівнів.
                     </p>
                 </div>
@@ -227,8 +237,8 @@
             <div class="slide-content">
                 <h2>📊 Векторне квантування</h2>
 
-                <div style="background: linear-gradient(135deg, #8b5cf6, #6b21a8); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                <div style="background: #faf5ff; border-left: 5px solid #8b5cf6; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Векторне QIM працює з <strong>групами коефіцієнтів одночасно</strong>, що дозволяє досягти кращої ефективності порівняно зі скалярним підходом.
                     </p>
                 </div>
@@ -299,9 +309,9 @@
             <div class="slide-content">
                 <h2>🧠 Адаптивний QIM</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Принципи адаптації</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Адаптивні схеми регулюють <strong>крок квантування</strong> залежно від локальних характеристик сигналу.
                     </p>
                 </div>
@@ -484,12 +494,12 @@
                     <p style="font-size: 1.1rem;">
                         Зловмисник намагається визначити крок квантування <strong>Δ</strong> через аналіз гістограми коефіцієнтів. Після визначення можлива модифікація або видалення даних.
                     </p>
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <h4 style="color: #059669;">Протидія:</h4>
-                        <ul>
-                            <li>Використання змінного кроку</li>
-                            <li>Додавання dither для маскування</li>
-                            <li>Адаптивне квантування</li>
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li style="margin: 0.5rem 0;">Використання змінного кроку</li>
+                            <li style="margin: 0.5rem 0;">Додавання dither для маскування</li>
+                            <li style="margin: 0.5rem 0;">Адаптивне квантування</li>
                         </ul>
                     </div>
                 </div>
@@ -499,12 +509,12 @@
                     <p style="font-size: 1.1rem;">
                         Додавання випадкового шуму амплітудою ≈ <strong>Δ/2</strong> може зруйнувати вбудовані дані.
                     </p>
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <h4 style="color: #059669;">Протидія:</h4>
-                        <ul>
-                            <li>Коди корекції помилок</li>
-                            <li>Повторне кодування</li>
-                            <li>Збільшення кроку квантування</li>
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li style="margin: 0.5rem 0;">Коди корекції помилок</li>
+                            <li style="margin: 0.5rem 0;">Повторне кодування</li>
+                            <li style="margin: 0.5rem 0;">Збільшення кроку квантування</li>
                         </ul>
                     </div>
                 </div>
@@ -583,12 +593,12 @@
                             <li>Розподілення змін по багатьох коефіцієнтах</li>
                         </ol>
                     </div>
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                         <h4 style="color: #059669;">Переваги STDM:</h4>
-                        <ul>
-                            <li>Висока стійкість до локальних спотворень</li>
-                            <li>Складність аналізу для зловмисника</li>
-                            <li>Гнучкість у виборі компромісів</li>
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li style="margin: 0.5rem 0;">Висока стійкість до локальних спотворень</li>
+                            <li style="margin: 0.5rem 0;">Складність аналізу для зловмисника</li>
+                            <li style="margin: 0.5rem 0;">Гнучкість у виборі компромісів</li>
                         </ul>
                     </div>
                 </div>
@@ -602,9 +612,9 @@
             <div class="slide-content">
                 <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px;">
                     <h3>Ключові ідеї:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
+                    <ul style="line-height: 2; font-size: 1.1rem; color: #1e293b;">
                         <li>✓ QIM - теоретично обґрунтований метод з математичною базою</li>
                         <li>✓ Використання квантування → передбачуваність спотворень</li>
                         <li>✓ Сліпе витягування без оригіналу → практичність</li>

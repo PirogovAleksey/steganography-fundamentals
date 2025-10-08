@@ -26,10 +26,19 @@
 
         .comparison-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             border-top: 4px solid #667eea;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .comparison-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .comparison-card ul li {
+            margin: 0.5rem 0;
         }
 
         .method-card {
@@ -42,16 +51,26 @@
 
         .advantage-list {
             background: #dcfce7;
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: 8px;
             margin: 0.5rem 0;
         }
 
+        .advantage-list ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
         .disadvantage-list {
             background: #fee2e2;
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: 8px;
             margin: 0.5rem 0;
+        }
+
+        .disadvantage-list ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
         }
 
         .step-box {
@@ -72,9 +91,18 @@
 
         .quality-card {
             background: linear-gradient(145deg, #ffffff, #f3f4f6);
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             border: 1px solid #e5e7eb;
+        }
+
+        .quality-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .quality-card ul li {
+            margin: 0.5rem 0;
         }
     </style>
 </head>
@@ -100,8 +128,8 @@
             <div class="slide-content">
                 <h2>🌊 Вступ до частотних методів стеганографії</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+                    <p style="font-size: 1.2rem; line-height: 1.8; color: #1e293b;">
                         Фотографія - це просторове представлення, але її можна представити як набір хвиль різної частоти. Це подібно до того, як складний музичний акорд складається з окремих нот.
                     </p>
                 </div>
@@ -216,12 +244,12 @@
             <div class="slide-content">
                 <h2>⚙️ Квантування - ключ до стиснення і стеганографії</h2>
 
-                <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #fffbeb; border-left: 5px solid #fbbf24; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Що таке квантування?</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Це процес округлення чисел з різним кроком для різних частот:
                     </p>
-                    <ul style="font-size: 1.05rem;">
+                    <ul style="font-size: 1.05rem; color: #1e293b;">
                         <li>Постійна складова → округлюється точно</li>
                         <li>Низькі частоти → малий крок округлення</li>
                         <li>Високі частоти → великий крок (або обнуляються)</li>
@@ -367,9 +395,9 @@
             <div class="slide-content">
                 <h2>🧠 Адаптивні методи - розумний вибір місць</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>💡 Принцип адаптивності</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Сучасні методи НЕ вбудовують дані рівномірно. Вони аналізують зображення і вибирають місця, де зміни будуть найменш помітними.
                     </p>
                 </div>
@@ -553,9 +581,9 @@
             <div class="slide-content">
                 <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px;">
                     <h3>Ключові ідеї:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
+                    <ul style="line-height: 2; font-size: 1.1rem; color: #1e293b;">
                         <li>✓ DCT-методи пройшли шлях від простої заміни бітів (JSteg) до складних адаптивних систем (UNIWARD)</li>
                         <li>✓ Основний тренд - перехід від максимізації ємності до мінімізації виявності</li>
                         <li>✓ Успішна стеганографія - не про максимум даних, а про непомітність</li>

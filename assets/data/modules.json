@@ -231,7 +231,7 @@
       "description": "Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "completed",
       "topics": ["DCT перетворення", "Quantization tables", "JPEG стійкість"]
     },
     {

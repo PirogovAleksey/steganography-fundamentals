@@ -19,15 +19,25 @@
 
         .spectrum-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             border-top: 4px solid #667eea;
         }
 
+        .spectrum-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .spectrum-card ul li {
+            margin: 0.5rem 0;
+        }
+
         .gain-box {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: white;
+            background: #fffbeb;
+            border-left: 5px solid #fbbf24;
+            color: #1e293b;
             padding: 2rem;
             border-radius: 15px;
             margin: 1.5rem 0;
@@ -43,9 +53,18 @@
 
         .prn-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             border-left: 5px solid #667eea;
+        }
+
+        .prn-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .prn-card ul li {
+            margin: 0.5rem 0;
         }
 
         .embedding-flow {
@@ -78,8 +97,8 @@
             <div class="slide-content">
                 <h2>🎖️ Вступ до технології розширення спектру</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.2rem; line-height: 1.8; color: #1e293b;">
                         Методи розширення спектру прийшли в стеганографію з <strong>військових систем зв'язку</strong>, де використовувалися для захисту від перехоплення та глушіння сигналів.
                     </p>
                 </div>
@@ -181,9 +200,9 @@
             <div class="slide-content">
                 <h2>🔀 Пряме розширення спектру (DSSS)</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Direct Sequence Spread Spectrum</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Множить інформаційний сигнал на псевдовипадкову послідовність з набагато вищою частотою.
                     </p>
                 </div>
@@ -217,9 +236,9 @@
             <div class="slide-content">
                 <h2>🎛️ Стрибки по частотах (FHSS)</h2>
 
-                <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #f0fdf4; border-left: 5px solid #10b981; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Frequency Hopping Spread Spectrum</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Передає інформацію, швидко перемикаючись між різними частотними каналами за псевдовипадковим законом.
                     </p>
                 </div>
@@ -252,9 +271,9 @@
             <div class="slide-content">
                 <h2>🔢 Псевдовипадкові послідовності (ПВП)</h2>
 
-                <div style="background: linear-gradient(135deg, #8b5cf6, #6b21a8); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <div style="background: #faf5ff; border-left: 5px solid #8b5cf6; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
                     <h3>Роль ПВП</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         ПВП - це основа методів розширення спектру. Вони визначають, як саме розподіляється інформація по контейнеру.
                     </p>
                 </div>
@@ -280,7 +299,7 @@
                     <div class="prn-card">
                         <h3 style="color: #667eea;">🔷 LFSR</h3>
                         <p><strong>Лінійні регістри зсуву</strong></p>
-                        <div style="background: #dbeafe; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                             <p><strong>+</strong> Прості в реалізації, швидкі</p>
                             <p><strong>-</strong> Криптографічно слабкі</p>
                         </div>
@@ -289,7 +308,7 @@
                     <div class="prn-card" style="border-left-color: #10b981;">
                         <h3 style="color: #10b981;">🔷 m-послідовності</h3>
                         <p><strong>Максимальні послідовності</strong></p>
-                        <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                             <p><strong>+</strong> Ідеальні автокореляційні властивості</p>
                             <p><strong>!</strong> Важливо для надійного витягування</p>
                         </div>
@@ -298,7 +317,7 @@
                     <div class="prn-card" style="border-left-color: #f59e0b;">
                         <h3 style="color: #f59e0b;">🔷 Послідовності Голда</h3>
                         <p><strong>Gold sequences</strong></p>
-                        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                             <p><strong>+</strong> Мінімальна взаємна кореляція</p>
                             <p><strong>!</strong> Кілька незалежних каналів в одному зображенні</p>
                         </div>
@@ -307,7 +326,7 @@
                     <div class="prn-card" style="border-left-color: #8b5cf6;">
                         <h3 style="color: #8b5cf6;">🔷 Криптографічні</h3>
                         <p><strong>AES, ChaCha20</strong></p>
-                        <div style="background: #f3e8ff; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <div style="background: #f3e8ff; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
                             <p><strong>+</strong> Максимальна безпека</p>
                             <p><strong>-</strong> Вища обчислювальна складність</p>
                         </div>
@@ -338,15 +357,15 @@
 
                 <h3 style="color: #10b981;">Вибір параметра сили α:</h3>
                 <div class="spectrum-grid">
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #059669;">α < 1</h4>
                         <p>Висока непомітність<br>Низька стійкість</p>
                     </div>
-                    <div style="background: #dbeafe; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #1e40af;">α = 1-5</h4>
                         <p>Оптимальний баланс<br>Рекомендований діапазон</p>
                     </div>
-                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px;">
                         <h4 style="color: #92400e;">α > 5</h4>
                         <p>Висока стійкість<br>Помітні артефакти</p>
                     </div>
@@ -361,8 +380,8 @@
             <div class="slide-content">
                 <h2>✖️ Мультиплікативне вбудовування</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
                         Замість додавання, сигнал <strong>множиться</strong> на коефіцієнти зображення. Це забезпечує адаптивність - сильніші зміни в яскравих областях, слабші в темних.
                     </p>
                 </div>
@@ -534,9 +553,9 @@
             <div class="slide-content">
                 <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px;">
                     <h3>Ключові ідеї:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
+                    <ul style="line-height: 2; font-size: 1.1rem; color: #1e293b;">
                         <li>✓ Розширення спектру жертвує ємністю заради стійкості та безпеки</li>
                         <li>✓ Розподілення інформації з ПВП → виняткова стійкість до атак</li>
                         <li>✓ Накопичення слабких сигналів → надійне витягування навіть з спотворених зображень</li>
