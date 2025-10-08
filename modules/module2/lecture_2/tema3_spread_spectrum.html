@@ -12,26 +12,49 @@
     <style>
         .spectrum-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 1.5rem 0;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2.5rem 0 2rem 0;
         }
 
         .spectrum-card {
-            background: white;
-            padding: 2rem;
+            background: #ffffff;
+            padding: 2rem 3rem 2rem 2rem;
             border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-top: 4px solid #667eea;
+            min-height: 250px;
+        }
+
+        .spectrum-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 1.5rem 0;
+            padding: 0 0 0 0.5rem;
+            line-height: 1.4;
         }
 
         .spectrum-card ul {
-            margin: 1rem 0;
-            padding-left: 1.5rem;
+            margin: 0 0 0 0.5rem;
+            padding: 0 0 0 1.5rem;
+            list-style-position: outside;
+            list-style-type: disc;
         }
 
         .spectrum-card ul li {
-            margin: 0.5rem 0;
+            margin: 0.8rem 0;
+            padding: 0 0.5rem 0 0.3rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .spectrum-card ul li:first-child {
+            margin-top: 0;
+        }
+
+        .spectrum-card ul li:last-child {
+            margin-bottom: 0;
         }
 
         .gain-box {
@@ -121,10 +144,10 @@
     <div class="slide">
         <div class="slide-container">
             <div class="slide-content">
-                <h2>💡 Основна концепція</h2>
+                <h2 style="margin-bottom: 2rem;">💡 Основна концепція</h2>
 
                 <div class="spectrum-grid">
-                    <div class="spectrum-card" style="border-top-color: #dc2626;">
+                    <div class="spectrum-card" style="border-top-color: #ef4444;">
                         <h3 style="color: #dc2626;">❌ Традиційна передача</h3>
                         <ul>
                             <li>Мінімальна смуга частот</li>
@@ -135,7 +158,7 @@
                     </div>
 
                     <div class="spectrum-card" style="border-top-color: #10b981;">
-                        <h3 style="color: #10b981;">✅ Розширення спектру</h3>
+                        <h3 style="color: #059669;">✅ Розширення спектру</h3>
                         <ul>
                             <li>Широка смуга частот</li>
                             <li>Надлишкова передача</li>
@@ -145,12 +168,12 @@
                     </div>
                 </div>
 
-                <h3 style="color: #667eea; margin-top: 2rem;">Ключові характеристики:</h3>
-                <ul style="font-size: 1.1rem; line-height: 2;">
-                    <li>📊 Сигнал розподіляється по широкій смузі частот</li>
-                    <li>📉 Потужність сигналу на кожній частоті дуже мала</li>
-                    <li>🌫️ Сигнал виглядає як шум для стороннього спостерігача</li>
-                    <li>🔐 Відновлення можливе тільки зі знанням секретного ключа</li>
+                <h3 style="color: #667eea; margin: 2.5rem 0 1.5rem 0; font-size: 1.25rem; font-weight: 600;">Ключові характеристики:</h3>
+                <ul style="font-size: 1.05rem; line-height: 1.7; color: #334155; margin: 0; padding: 0 0 0 1.5rem;">
+                    <li style="margin: 0.7rem 0; padding: 0;">📊 Сигнал розподіляється по широкій смузі частот</li>
+                    <li style="margin: 0.7rem 0; padding: 0;">📉 Потужність сигналу на кожній частоті дуже мала</li>
+                    <li style="margin: 0.7rem 0; padding: 0;">🌫️ Сигнал виглядає як шум для стороннього спостерігача</li>
+                    <li style="margin: 0.7rem 0; padding: 0;">🔐 Відновлення можливе тільки зі знанням секретного ключа</li>
                 </ul>
             </div>
         </div>
