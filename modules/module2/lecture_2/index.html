@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лекція 6: Частотні методи стеганографії - DCT, DWT, розширення спектру, QIM">
+    <title>Лекція 6: Частотні методи стеганографії | Основи стеганографії</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/modules.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../../module2/index.html">Модуль 2</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Лекція 6</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Lecture Hero -->
+<section class="lecture-hero">
+    <div class="container">
+        <div class="lecture-number-badge">Лекція 6</div>
+        <h1>Частотні методи стеганографії</h1>
+        <p class="landing-subtitle">
+            Методи приховування інформації в частотній області: DCT, DWT, розширення спектру та квантова індексна модуляція
+        </p>
+
+        <div class="lecture-meta">
+            <span class="lecture-meta-item">
+                ⏱️ 120 хвилин
+            </span>
+            <span class="lecture-meta-item">
+                📊 4 Теми
+            </span>
+            <span class="lecture-meta-item">
+                🎯 Практичні методи
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+
+        <!-- Learning Objectives -->
+        <section class="lecture-objectives">
+            <h3>🎯 Цілі лекції</h3>
+            <ul>
+                <li>Освоїти методи стеганографії на основі дискретного косинусного перетворення (DCT)</li>
+                <li>Вивчити застосування дискретного вейвлет-перетворення (DWT) для приховування даних</li>
+                <li>Зрозуміти принципи розширення спектру в стеганографії</li>
+                <li>Опанувати методи квантової індексної модуляції (QIM)</li>
+                <li>Вміти порівнювати та вибирати оптимальні методи для різних застосувань</li>
+            </ul>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section">
+            <h2 class="section-title">📚 Теми лекції</h2>
+
+            <div class="topics-grid">
+
+                <!-- Тема 1 -->
+                <a href="tema1_dct.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 1</span>
+                        <span class="topic-duration">⏱️ 30 хв</span>
+                    </div>
+                    <h3 class="topic-title">📸 Методи на основі DCT</h3>
+                    <p class="topic-description">
+                        Стеганографія в JPEG: дискретне косинусне перетворення, JSteg, OutGuess, F5, адаптивні методи
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">DCT в JPEG</span>
+                        <span class="subtopic-badge">JSteg & OutGuess</span>
+                        <span class="subtopic-badge">F5 алгоритм</span>
+                        <span class="subtopic-badge">Адаптивні методи</span>
+                    </div>
+                </a>
+
+                <!-- Тема 2 -->
+                <a href="tema2_dwt.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 2</span>
+                        <span class="topic-duration">⏱️ 30 хв</span>
+                    </div>
+                    <h3 class="topic-title">🌊 Методи на основі DWT</h3>
+                    <p class="topic-description">
+                        Дискретне вейвлет-перетворення: багатомасштабний аналіз, типи вейвлетів, вбудовування в субдіапазони
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Вейвлет-декомпозиція</span>
+                        <span class="subtopic-badge">Субдіапазони LL/LH/HL/HH</span>
+                        <span class="subtopic-badge">Адаптивне вбудовування</span>
+                        <span class="subtopic-badge">Порівняння з DCT</span>
+                    </div>
+                </a>
+
+                <!-- Тема 3 -->
+                <a href="tema3_spread_spectrum.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 3</span>
+                        <span class="topic-duration">⏱️ 30 хв</span>
+                    </div>
+                    <h3 class="topic-title">📡 Розширення спектру</h3>
+                    <p class="topic-description">
+                        Методи Spread Spectrum: DSSS, FHSS, псевдовипадкові послідовності, кореляційне детектування
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">DSSS & FHSS</span>
+                        <span class="subtopic-badge">ПВП послідовності</span>
+                        <span class="subtopic-badge">Виграш від обробки</span>
+                        <span class="subtopic-badge">Стійкість</span>
+                    </div>
+                </a>
+
+                <!-- Тема 4 -->
+                <a href="tema4_qim.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 4</span>
+                        <span class="topic-duration">⏱️ 30 хв</span>
+                    </div>
+                    <h3 class="topic-title">⚙️ Квантова індексна модуляція</h3>
+                    <p class="topic-description">
+                        QIM методи: принципи квантування, dither модуляція, DC-QIM, порівняння з LSB
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Принципи QIM</span>
+                        <span class="subtopic-badge">Dither модуляція</span>
+                        <span class="subtopic-badge">Адаптивний QIM</span>
+                        <span class="subtopic-badge">STDM</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="lecture-resources">
+            <h3>📚 Додаткові матеріали</h3>
+            <div class="resource-links">
+                <a href="#" class="resource-link">
+                    📖 Provos N., Honeyman P. "Detecting Steganographic Content on the Internet"
+                </a>
+                <a href="#" class="resource-link">
+                    📄 Chen B., Wornell G.W. "Quantization Index Modulation"
+                </a>
+                <a href="#" class="resource-link">
+                    🔗 JPEG стандарт та DCT перетворення
+                </a>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="lecture-navigation">
+            <div class="lecture-nav-buttons">
+                <a href="../../module2/index.html" class="btn btn-outline">
+                    ← Назад до модуля 2
+                </a>
+                <a href="tema1_dct.html" class="btn btn-primary">
+                    Почати лекцію →
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content text-center">
+            <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

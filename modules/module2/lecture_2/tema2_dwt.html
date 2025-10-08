@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Методи на основі DWT | Лекція 6.2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+
+    <style>
+        .wavelet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .wavelet-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .subbands-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+            height: 300px;
+        }
+
+        .subband {
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .ll-band { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .lh-band { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .hl-band { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .hh-band { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pyramid-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-title">
+                <h1>🌊 Методи стеганографії на основі DWT</h1>
+                <div class="subtitle">
+                    Тема 2: Дискретне вейвлет-перетворення
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 2: Вступ -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔬 Вступ до вейвлет-перетворення</h2>
+
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                        Дискретне вейвлет-перетворення (ДВП) представляє альтернативний підхід до аналізу зображень порівняно з DCT. Основна відмінність - багатомасштабний аналіз з адаптивною локалізацією.
+                    </p>
+                </div>
+
+                <div class="wavelet-grid">
+                    <div class="wavelet-card">
+                        <h3 style="color: #667eea;">📐 DCT</h3>
+                        <ul>
+                            <li>Фіксовані блоки 8×8</li>
+                            <li>Тільки частотна інформація</li>
+                            <li>Блокові артефакти</li>
+                            <li>Для JPEG стиснення</li>
+                        </ul>
+                    </div>
+
+                    <div class="wavelet-card" style="border-left-color: #10b981;">
+                        <h3 style="color: #10b981;">🌊 DWT</h3>
+                        <ul>
+                            <li>Багатомасштабний аналіз</li>
+                            <li>Частотна + просторова інформація</li>
+                            <li>Плавні переходи</li>
+                            <li>Для JPEG2000</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>🔍 Аналогія:</strong> Вейвлет-перетворення - це як розгляд зображення через систему лінз різної сили. Кожна лінза показує різний рівень деталізації, зберігаючи інформацію про розташування.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Багатомасштабний аналіз -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📊 Багатомасштабний аналіз</h2>
+
+                <div class="pyramid-box">
+                    <h3 style="color: #667eea;">Піраміда декомпозиції</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                        ДВП розкладає зображення на компоненти різного масштабу подібно до того, як художник спочатку робить грубий ескіз, потім додає основні деталі, і нарешті - дрібні штрихи.
+                    </p>
+                    <div style="text-align: center; font-family: monospace; font-size: 1.1rem; line-height: 2;">
+                        Рівень 1: N/2 × N/2<br>
+                        ↓<br>
+                        Рівень 2: N/4 × N/4<br>
+                        ↓<br>
+                        Рівень 3: N/8 × N/8<br>
+                        ↓<br>
+                        ...
+                    </div>
+                </div>
+
+                <h3 style="color: #10b981; margin-top: 2rem;">Чотири типи інформації на кожному рівні:</h3>
+
+                <div class="subbands-container">
+                    <div class="subband ll-band">
+                        <h3>LL</h3>
+                        <p>Апроксимація</p>
+                        <small>Зменшена версія зображення</small>
+                    </div>
+                    <div class="subband lh-band">
+                        <h3>LH</h3>
+                        <p>Горизонтальні деталі</p>
+                        <small>Вертикальні краї та лінії</small>
+                    </div>
+                    <div class="subband hl-band">
+                        <h3>HL</h3>
+                        <p>Вертикальні деталі</p>
+                        <small>Горизонтальні краї та лінії</small>
+                    </div>
+                    <div class="subband hh-band">
+                        <h3>HH</h3>
+                        <p>Діагональні деталі</p>
+                        <small>Кути та текстури</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Типи вейвлетів -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📐 Типи вейвлетів для стеганографії</h2>
+
+                <div class="wavelet-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #667eea;">🔷 Вейвлет Хаара</h3>
+                    <p style="font-size: 1.05rem;">Найпростіший тип - використовує прямокутні функції</p>
+                    <div class="wavelet-grid">
+                        <div style="background: #dcfce7; padding: 1rem; border-radius: 8px;">
+                            <h4 style="color: #059669;">✅ Переваги</h4>
+                            <ul>
+                                <li>Простота реалізації</li>
+                                <li>Швидкість обчислень</li>
+                                <li>Цілочисельна арифметика</li>
+                                <li>Без втрат при зворотному перетворенні</li>
+                            </ul>
+                        </div>
+                        <div style="background: #fee2e2; padding: 1rem; border-radius: 8px;">
+                            <h4 style="color: #dc2626;">❌ Недоліки</h4>
+                            <ul>
+                                <li>Розривність функції</li>
+                                <li>Створює артефакти</li>
+                                <li>Погана локалізація в частотній області</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wavelet-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #3b82f6;">🔷 Вейвлети Добеші (Daubechies)</h3>
+                    <p style="font-size: 1.05rem;">Сімейство ортогональних вейвлетів з компактним носієм</p>
+                    <ul>
+                        <li><strong>db2, db4</strong> - баланс між складністю та ефективністю</li>
+                        <li><strong>db8 та вище</strong> - для високоякісних водяних знаків</li>
+                        <li>Чим вищий порядок → тим гладша функція → краща частотна локалізація</li>
+                    </ul>
+                </div>
+
+                <div class="wavelet-card">
+                    <h3 style="color: #10b981;">🔷 Біортогональні вейвлети</h3>
+                    <p style="font-size: 1.05rem;">Використовуються в JPEG2000</p>
+                    <ul>
+                        <li>Симетричність зменшує крайові ефекти</li>
+                        <li>Краще зберігання країв зображення</li>
+                        <li>Сумісність з JPEG2000 стандартом</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Вибір субдіапазонів -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎯 Вибір субдіапазонів для вбудовування</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                    <tr>
+                        <th>Субдіапазон</th>
+                        <th>Характеристики</th>
+                        <th>Для стеганографії</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong style="color: #667eea;">LL (апроксимація)</strong></td>
+                        <td>
+                            • Містить основну енергію зображення<br>
+                            • Максимальна стійкість до спотворень
+                        </td>
+                        <td>
+                            <span style="color: #dc2626;">❌ Рідко використовується</span><br>
+                            Високий ризик візуальних артефактів
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: #10b981;">LH та HL (середні частоти)</strong></td>
+                        <td>
+                            • Оптимальний баланс<br>
+                            • Містять інформацію про краї
+                        </td>
+                        <td>
+                            <span style="color: #10b981;">✅ Основне місце для даних</span><br>
+                            Стійкість до стиснення та фільтрації
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: #f59e0b;">HH (високі частоти)</strong></td>
+                        <td>
+                            • Мінімальні візуальні спотворення<br>
+                            • Низька стійкість до обробки
+                        </td>
+                        <td>
+                            <span style="color: #f59e0b;">⚠️ Для крихких водяних знаків</span><br>
+                            Часто обнуляється при стисненні
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-success" style="margin-top: 2rem;">
+                    <strong>💡 Золоте правило:</strong> LH та HL субдіапазони середніх рівнів (2-3) дають найкращий компроміс між непомітністю та стійкістю!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Методи модифікації -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔧 Методи модифікації коефіцієнтів</h2>
+
+                <div class="wavelet-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #667eea;">1️⃣ Заміна молодшого біта (LSB)</h3>
+                    <p style="font-size: 1.1rem;">Найпростіший метод - заміна молодших бітів вейвлет-коефіцієнтів</p>
+                    <div style="background: #dbeafe; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>Переваги:</strong> Простий у реалізації, висока ємність<br>
+                        <strong>Недоліки:</strong> Вразливий до статистичного аналізу
+                    </div>
+                </div>
+
+                <div class="wavelet-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #10b981;">2️⃣ Квантування з модуляцією (QIM)</h3>
+                    <p style="font-size: 1.1rem;">Коефіцієнти квантуються з різним кроком залежно від біта</p>
+                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>Переваги:</strong> Сліпе витягування (без оригіналу), краща стійкість<br>
+                        <strong>Застосування:</strong> Професійні системи водяних знаків
+                    </div>
+                </div>
+
+                <div class="wavelet-card">
+                    <h3 style="color: #8b5cf6;">3️⃣ Адаптивне вбудовування</h3>
+                    <p style="font-size: 1.1rem;">Сила вбудовування адаптується до локальних характеристик</p>
+                    <div style="background: #f3e8ff; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>Принцип:</strong> В текстурованих областях можна вбудовувати з більшою силою без візуальних артефактів<br>
+                        <strong>Основа:</strong> Аналіз локальної дисперсії коефіцієнтів
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Адаптивність на основі людського зору -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>👁️ Адаптивність на основі людського зору</h2>
+
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3>🧠 Модель маскування</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Людський зір має властивість маскування - в складних текстурованих областях зміни менш помітні. ДВП дозволяє ефективно використовувати це явище.
+                    </p>
+                </div>
+
+                <h3 style="color: #10b981;">Принцип адаптивного вбудовування:</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0;">
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                        <strong>Крок 1</strong><br>
+                        Обчислення локальної текстурності для кожної області
+                    </div>
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                        <strong>Крок 2</strong><br>
+                        Визначення порогу маскування на основі текстурності
+                    </div>
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                        <strong>Крок 3</strong><br>
+                        Адаптація сили вбудовування до порогу
+                    </div>
+                    <div style="background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px;">
+                        <strong>Крок 4</strong><br>
+                        Максимальне вбудовування в текстуровані області
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 2rem;">Вибір рівня декомпозиції</h3>
+                <ul style="font-size: 1.1rem;">
+                    <li><strong>1-2 рівні</strong> - для малих зображень або висока локалізація</li>
+                    <li><strong>3-4 рівні</strong> - стандартний вибір для більшості застосувань</li>
+                    <li><strong>5+ рівнів</strong> - для великих зображень з плавними переходами</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Порівняння DWT з DCT -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚖️ Порівняння ДВП з ДКП</h2>
+
+                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h3 style="color: #059669;">✅ Переваги ДВП</h3>
+                    <div class="wavelet-grid">
+                        <div>
+                            <h4 style="color: #10b981;">🔄 Гнучкість представлення</h4>
+                            <p>Можна вибирати оптимальний масштаб аналізу для різних типів зображень</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #10b981;">🎨 Відсутність блокових артефактів</h4>
+                            <p>Плавні переходи між областями, важливо при великих обсягах даних</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #10b981;">📊 Природна ієрархія</h4>
+                            <p>Багаторівнева структура дозволяє прогресивне вбудовування</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #10b981;">🎯 Краща адаптивність</h4>
+                            <p>Можливість точної адаптації до локальних характеристик</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px;">
+                    <h3 style="color: #dc2626;">❌ Обмеження ДВП</h3>
+                    <div class="wavelet-grid">
+                        <div>
+                            <h4 style="color: #dc2626;">💻 Обчислювальна складність</h4>
+                            <p>Більше обчислень та пам'яті порівняно з блоковим ДКП</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #dc2626;">🔄 Чутливість до геометричних спотворень</h4>
+                            <p>Відсутність інваріантності до зсуву та повороту</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #dc2626;">📋 Відсутність стандартизації</h4>
+                            <p>Немає єдиного стандарту (окрім JPEG2000, який не набув поширення)</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #dc2626;">📦 Буферизація</h4>
+                            <p>Необхідність обробки всього зображення ускладнює реал-тайм</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Практичні алгоритми -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔬 Практичні алгоритми на основі ДВП</h2>
+
+                <div class="wavelet-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #667eea;">🔷 Алгоритм Ксіа (Xia)</h3>
+                    <p>Один з перших практичних алгоритмів ДВП-стеганографії</p>
+                    <ol style="font-size: 1.05rem; margin-top: 1rem;">
+                        <li>Виконується 3-рівневе ДВП з вейвлетом Хаара</li>
+                        <li>Вибираються коефіцієнти субдіапазонів HL₃ та LH₃</li>
+                        <li>Модифікуються середні біти коефіцієнтів</li>
+                        <li>Використовується код корекції помилок для підвищення стійкості</li>
+                    </ol>
+                    <div style="background: #dbeafe; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>Результат:</strong> Ємність ≈ 5% від розміру зображення, стійкість до JPEG з Q>50
+                    </div>
+                </div>
+
+                <div class="wavelet-card">
+                    <h3 style="color: #10b981;">🔷 Алгоритм Кундура-Хатзінакоса</h3>
+                    <p>Більш складний адаптивний алгоритм</p>
+                    <ol style="font-size: 1.05rem; margin-top: 1rem;">
+                        <li>Повне ДВП зображення без обмеження рівнів</li>
+                        <li>Відбір значущих коефіцієнтів за адаптивним порогом</li>
+                        <li>Квантування коефіцієнтів з адаптивним кроком</li>
+                        <li>Вбудовування через модуляцію індексу квантування</li>
+                    </ol>
+                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>Особливість:</strong> Сліпе витягування (без оригіналу) + висока стійкість до різних видів обробки
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Стійкість та вразливості -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🛡️ Стійкість та вразливості</h2>
+
+                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h3 style="color: #059669;">✅ До чого стійкі ДВП-методи</h3>
+                    <ul style="font-size: 1.1rem; line-height: 2;">
+                        <li>📸 Стиснення з втратами (JPEG, JPEG2000) при правильному виборі коефіцієнтів</li>
+                        <li>🌫️ Фільтрація низьких частот (розмиття)</li>
+                        <li>📡 Додавання шуму низької інтенсивності</li>
+                        <li>🔆 Зміна яскравості та контрасту</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #667eea;">Фактори, що впливають на стійкість:</h3>
+                <div class="wavelet-grid">
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px;">
+                        <h4 style="color: #1e40af;">🌊 Вибір вейвлета</h4>
+                        <p>Біортогональні стійкіші за Хаара</p>
+                    </div>
+                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+                        <h4 style="color: #92400e;">📊 Рівень декомпозиції</h4>
+                        <p>Глибші рівні стійкіші</p>
+                    </div>
+                    <div style="background: #e0e7ff; padding: 1rem; border-radius: 8px;">
+                        <h4 style="color: #4338ca;">🎯 Субдіапазон</h4>
+                        <p>LL найстійкіший, HH найслабший</p>
+                    </div>
+                    <div style="background: #fce7f3; padding: 1rem; border-radius: 8px;">
+                        <h4 style="color: #9f1239;">⚡ Сила вбудовування</h4>
+                        <p>Компроміс з непомітністю</p>
+                    </div>
+                </div>
+
+                <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+                    <h3 style="color: #dc2626;">⚠️ Вразливості</h3>
+                    <ul style="font-size: 1.1rem;">
+                        <li><strong>Статистичні зміни:</strong> Розподіл коефіцієнтів змінюється (Лаплас → інше)</li>
+                        <li><strong>Міжмасштабні залежності:</strong> Порушуються кореляції між рівнями</li>
+                        <li><strong>Машинне навчання:</strong> Детектори витягують сотні ознак для виявлення</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Практичні рекомендації -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>💡 Практичні рекомендації</h2>
+
+                <h3 style="color: #667eea;">Вибір параметрів для конкретних задач</h3>
+
+                <div class="wavelet-card" style="margin-bottom: 1rem;">
+                    <h4 style="color: #10b981;">📦 Для максимальної ємності</h4>
+                    <ul>
+                        <li>Вейвлет Хаара (простота → більше коефіцієнтів)</li>
+                        <li>Всі субдіапазони крім LL</li>
+                        <li>Мінімальна кількість рівнів декомпозиції</li>
+                    </ul>
+                </div>
+
+                <div class="wavelet-card" style="margin-bottom: 1rem;">
+                    <h4 style="color: #3b82f6;">🛡️ Для максимальної стійкості</h4>
+                    <ul>
+                        <li>Біортогональні вейвлети</li>
+                        <li>LH та HL субдіапазони глибоких рівнів</li>
+                        <li>Велика сила вбудовування + код корекції помилок</li>
+                    </ul>
+                </div>
+
+                <div class="wavelet-card">
+                    <h4 style="color: #8b5cf6;">👁️ Для максимальної непомітності</h4>
+                    <ul>
+                        <li>Вейвлети Добеші високого порядку</li>
+                        <li>Адаптивне вбудовування за текстурою</li>
+                        <li>HH субдіапазони та крайові області</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 12: Висновки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📌 Висновки</h2>
+
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+                    <h3>Ключові ідеї:</h3>
+                    <ul style="line-height: 2; font-size: 1.1rem;">
+                        <li>✓ ДВП надає потужний інструментарій для приховування інформації</li>
+                        <li>✓ Багатомасштабна природа дозволяє гнучко адаптуватися до характеристик зображення</li>
+                        <li>✓ Відсутність блокових артефактів + природна ієрархія = привабливість для водяних знаків</li>
+                        <li>✓ Основні виклики: обчислювальна складність + чутливість до геометричних спотворень</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
+                        <strong>Майбутнє ДВП-стеганографії:</strong> Адаптивні методи з машинним навчанням для оптимального вибору параметрів + інтеграція з новими стандартами стиснення.
+                    </p>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                        🏠 До переліку тем
+                    </a>
+                    <a href="tema3_spread_spectrum.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                        Далі: Розширення спектру →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="slide-navigation">
+    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
+    <span id="slide-counter" class="slide-counter">1 / 12</span>
+    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" style="width: 8%;"></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

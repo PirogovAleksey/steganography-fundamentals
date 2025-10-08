@@ -90,10 +90,12 @@
         },
         {
           "id": "2.2",
-          "title": "Стеганографія в частотній області",
-          "description": "DCT, DWT методи",
-          "duration": 80,
-          "status": "planned"
+          "title": "Частотні методи стеганографії",
+          "description": "DCT, DWT, розширення спектру та квантова індексна модуляція",
+          "duration": 120,
+          "status": "completed",
+          "hasPresentation": true,
+          "path": "lecture_2/index.html"
         },
         {
           "id": "2.3",
