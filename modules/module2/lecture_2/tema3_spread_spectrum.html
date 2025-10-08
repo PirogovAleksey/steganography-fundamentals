@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розширення спектру | Лекція 6.3</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+
+    <style>
+        .spectrum-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2.5rem 0 2rem 0;
+        }
+
+        .spectrum-card {
+            background: #ffffff;
+            padding: 2rem 3rem 2rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+            min-height: 250px;
+        }
+
+        .spectrum-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 1.5rem 0;
+            padding: 0 0 0 0.5rem;
+            line-height: 1.4;
+        }
+
+        .spectrum-card ul {
+            margin: 0 0 0 0.5rem;
+            padding: 0 0 0 1.5rem;
+            list-style-position: outside;
+            list-style-type: disc;
+        }
+
+        .spectrum-card ul li {
+            margin: 0.8rem 0;
+            padding: 0 0.5rem 0 0.3rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .spectrum-card ul li:first-child {
+            margin-top: 0;
+        }
+
+        .spectrum-card ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        .gain-box {
+            background: #fffbeb;
+            border-left: 5px solid #fbbf24;
+            color: #1e293b;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .prn-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .prn-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .prn-card ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .prn-card ul li {
+            margin: 0.5rem 0;
+        }
+
+        .embedding-flow {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-title">
+                <h1>📡 Методи розширення спектру</h1>
+                <div class="subtitle">
+                    Тема 3: Spread Spectrum в стеганографії
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 2: Вступ -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎖️ Вступ до технології розширення спектру</h2>
+
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.2rem; line-height: 1.8; color: #1e293b;">
+                        Методи розширення спектру прийшли в стеганографію з <strong>військових систем зв'язку</strong>, де використовувалися для захисту від перехоплення та глушіння сигналів.
+                    </p>
+                </div>
+
+                <div class="spectrum-card">
+                    <h3 style="color: #667eea;">🎯 Основний принцип</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Розподілення інформаційного сигналу по широкій смузі частот, що робить його схожим на природний шум.
+                    </p>
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 2rem;">
+                    <strong>🔊 Аналогія:</strong> Замість того, щоб кричати одне слово голосно (що привертає увагу), метод розширення спектру розподіляє це слово як ледь чутний шепіт по всій кімнаті. Кожен окремий звук майже нечутний, але той, хто знає, як їх зібрати разом, може відновити початкове повідомлення.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Основна концепція -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2 style="margin-bottom: 2rem;">💡 Основна концепція</h2>
+
+                <div class="spectrum-grid">
+                    <div class="spectrum-card" style="border-top-color: #ef4444;">
+                        <h3 style="color: #dc2626;">❌ Традиційна передача</h3>
+                        <ul>
+                            <li>Мінімальна смуга частот</li>
+                            <li>Ефективно використовує канал</li>
+                            <li>Легко виявити</li>
+                            <li>Вразлива до завад</li>
+                        </ul>
+                    </div>
+
+                    <div class="spectrum-card" style="border-top-color: #10b981;">
+                        <h3 style="color: #059669;">✅ Розширення спектру</h3>
+                        <ul>
+                            <li>Широка смуга частот</li>
+                            <li>Надлишкова передача</li>
+                            <li>Схоже на шум</li>
+                            <li>Стійке до завад</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin: 2.5rem 0 1.5rem 0; font-size: 1.25rem; font-weight: 600;">Ключові характеристики:</h3>
+                <ul style="font-size: 1.05rem; line-height: 1.7; color: #334155; margin: 0; padding: 0 0 0 1.5rem;">
+                    <li style="margin: 0.7rem 0; padding: 0;">📊 Сигнал розподіляється по широкій смузі частот</li>
+                    <li style="margin: 0.7rem 0; padding: 0;">📉 Потужність сигналу на кожній частоті дуже мала</li>
+                    <li style="margin: 0.7rem 0; padding: 0;">🌫️ Сигнал виглядає як шум для стороннього спостерігача</li>
+                    <li style="margin: 0.7rem 0; padding: 0;">🔐 Відновлення можливе тільки зі знанням секретного ключа</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Виграш від обробки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📈 Виграш від обробки (Processing Gain)</h2>
+
+                <div class="gain-box">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Виграш від обробки</h3>
+                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                        Відношення ширини смуги розширеного сигналу до ширини смуги інформаційного сигналу
+                    </p>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 10px; border: 2px solid #667eea;">
+                    <h3 style="color: #667eea;">📊 Приклад: Розширення в 1000 разів</h3>
+                    <div class="spectrum-grid" style="margin-top: 1.5rem;">
+                        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px;">
+                            <h4 style="color: #1e40af;">📉 Потужність</h4>
+                            <p>Сигнал стає в <strong>1000 разів слабшим</strong> на кожній частоті</p>
+                        </div>
+                        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px;">
+                            <h4 style="color: #059669;">🛡️ Стійкість</h4>
+                            <p>Стійкість до перешкод зростає в <strong>30 разів (30 дБ)</strong></p>
+                        </div>
+                        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px;">
+                            <h4 style="color: #92400e;">⏱️ Швидкість</h4>
+                            <p>Швидкість передачі зменшується в <strong>1000 разів</strong></p>
+                        </div>
+                        <div style="background: #f3e8ff; padding: 1.5rem; border-radius: 8px;">
+                            <h4 style="color: #6b21a8;">🎯 Компроміс</h4>
+                            <p>Більший виграш = краще приховування, але менша ємність</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: DSSS -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔀 Пряме розширення спектру (DSSS)</h2>
+
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3>Direct Sequence Spread Spectrum</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
+                        Множить інформаційний сигнал на псевдовипадкову послідовність з набагато вищою частотою.
+                    </p>
+                </div>
+
+                <h3 style="color: #10b981;">Принцип роботи в стеганографії:</h3>
+                <div class="embedding-flow">
+                    <ol style="font-size: 1.1rem; line-height: 2;">
+                        <li><strong>Крок 1:</strong> Біт повідомлення перетворюється в послідовність +1 або -1</li>
+                        <li><strong>Крок 2:</strong> Множиться на довгу псевдовипадкову послідовність (чіп-код)</li>
+                        <li><strong>Крок 3:</strong> Результат додається до коефіцієнтів зображення з малою амплітудою</li>
+                        <li><strong>Крок 4:</strong> Розподілення по всьому зображенню забезпечує непомітність</li>
+                    </ol>
+                </div>
+
+                <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+                    <h4 style="color: #1e40af;">💡 Приклад</h4>
+                    <ul>
+                        <li>Один біт даних розширюється в <strong>1024 чіпи</strong></li>
+                        <li>Кожен чіп вбудовується в окремий піксель/коефіцієнт</li>
+                        <li>Амплітуда кожної зміни дуже мала (±1 рівень яскравості)</li>
+                        <li>При витягуванні 1024 слабких сигнали підсумовуються в один сильний</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: FHSS -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎛️ Стрибки по частотах (FHSS)</h2>
+
+                <div style="background: #f0fdf4; border-left: 5px solid #10b981; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3>Frequency Hopping Spread Spectrum</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
+                        Передає інформацію, швидко перемикаючись між різними частотними каналами за псевдовипадковим законом.
+                    </p>
+                </div>
+
+                <h3 style="color: #667eea;">Застосування в стеганографії зображень:</h3>
+                <div class="embedding-flow">
+                    <ol style="font-size: 1.1rem; line-height: 2;">
+                        <li>Зображення ділиться на частотні канали (субдіапазони)</li>
+                        <li>Послідовність вбудовування визначається псевдовипадковим генератором</li>
+                        <li>Кожен біт вбудовується в різний канал</li>
+                        <li>Порядок каналів відомий тільки з ключем</li>
+                    </ol>
+                </div>
+
+                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+                    <h4 style="color: #059669;">✅ Переваги FHSS</h4>
+                    <ul style="font-size: 1.05rem;">
+                        <li>Складність виявлення через розподілення по різних частотах</li>
+                        <li>Стійкість до вузькосмугових перешкод</li>
+                        <li>Можливість уникнення пошкоджених областей</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Псевдовипадкові послідовності -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔢 Псевдовипадкові послідовності (ПВП)</h2>
+
+                <div style="background: #faf5ff; border-left: 5px solid #8b5cf6; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3>Роль ПВП</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
+                        ПВП - це основа методів розширення спектру. Вони визначають, як саме розподіляється інформація по контейнеру.
+                    </p>
+                </div>
+
+                <h3 style="color: #667eea;">Вимоги до ПВП для стеганографії:</h3>
+                <ul style="font-size: 1.1rem; line-height: 2;">
+                    <li>🔄 Довгий період повторення (більше розміру зображення)</li>
+                    <li>📊 Гарні кореляційні властивості (низька взаємна кореляція)</li>
+                    <li>⚖️ Рівномірний розподіл значень</li>
+                    <li>🔐 Криптографічна стійкість (неможливість передбачення)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Типи генераторів ПВП -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚙️ Типи генераторів ПВП</h2>
+
+                <div class="prn-types">
+                    <div class="prn-card">
+                        <h3 style="color: #667eea;">🔷 LFSR</h3>
+                        <p><strong>Лінійні регістри зсуву</strong></p>
+                        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                            <p><strong>+</strong> Прості в реалізації, швидкі</p>
+                            <p><strong>-</strong> Криптографічно слабкі</p>
+                        </div>
+                    </div>
+
+                    <div class="prn-card" style="border-left-color: #10b981;">
+                        <h3 style="color: #10b981;">🔷 m-послідовності</h3>
+                        <p><strong>Максимальні послідовності</strong></p>
+                        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                            <p><strong>+</strong> Ідеальні автокореляційні властивості</p>
+                            <p><strong>!</strong> Важливо для надійного витягування</p>
+                        </div>
+                    </div>
+
+                    <div class="prn-card" style="border-left-color: #f59e0b;">
+                        <h3 style="color: #f59e0b;">🔷 Послідовності Голда</h3>
+                        <p><strong>Gold sequences</strong></p>
+                        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                            <p><strong>+</strong> Мінімальна взаємна кореляція</p>
+                            <p><strong>!</strong> Кілька незалежних каналів в одному зображенні</p>
+                        </div>
+                    </div>
+
+                    <div class="prn-card" style="border-left-color: #8b5cf6;">
+                        <h3 style="color: #8b5cf6;">🔷 Криптографічні</h3>
+                        <p><strong>AES, ChaCha20</strong></p>
+                        <div style="background: #f3e8ff; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                            <p><strong>+</strong> Максимальна безпека</p>
+                            <p><strong>-</strong> Вища обчислювальна складність</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Вбудовування -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>💉 Методи вбудовування</h2>
+
+                <div class="spectrum-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="color: #667eea;">1️⃣ Адитивне вбудовування</h3>
+                    <p style="font-size: 1.05rem;">Додавання розширеного сигналу до зображення</p>
+                    <div class="embedding-flow" style="margin-top: 1rem;">
+                        <ol>
+                            <li>Генерація ПВП на основі секретного ключа</li>
+                            <li>Модуляція ПВП бітами повідомлення (+1 для "1", -1 для "0")</li>
+                            <li>Масштабування до малої амплітуди (параметр сили α)</li>
+                            <li>Додавання до пікселів або частотних коефіцієнтів</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3 style="color: #10b981;">Вибір параметра сили α:</h3>
+                <div class="spectrum-grid">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #059669;">α < 1</h4>
+                        <p>Висока непомітність<br>Низька стійкість</p>
+                    </div>
+                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #1e40af;">α = 1-5</h4>
+                        <p>Оптимальний баланс<br>Рекомендований діапазон</p>
+                    </div>
+                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #92400e;">α > 5</h4>
+                        <p>Висока стійкість<br>Помітні артефакти</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Мультиплікативне вбудовування -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>✖️ Мультиплікативне вбудовування</h2>
+
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #1e293b;">
+                        Замість додавання, сигнал <strong>множиться</strong> на коефіцієнти зображення. Це забезпечує адаптивність - сильніші зміни в яскравих областях, слабші в темних.
+                    </p>
+                </div>
+
+                <div class="spectrum-grid">
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+                        <h3 style="color: #059669;">✅ Переваги</h3>
+                        <ul>
+                            <li>Природна адаптація до характеристик зображення</li>
+                            <li>Краща стійкість до зміни яскравості та контрасту</li>
+                            <li>Менша помітність в темних областях</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px;">
+                        <h3 style="color: #dc2626;">❌ Недоліки</h3>
+                        <ul>
+                            <li>Складніше витягування</li>
+                            <li>Чутливість до нелінійних спотворень</li>
+                            <li>Потреба в точній калібрації</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Кореляційний детектор -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔍 Витягування та детектування</h2>
+
+                <div class="spectrum-card">
+                    <h3 style="color: #667eea;">Кореляційний детектор</h3>
+                    <p style="font-size: 1.1rem;">Основний метод витягування - обчислення кореляції між зображенням та ПВП</p>
+
+                    <div class="embedding-flow" style="margin-top: 1.5rem;">
+                        <h4>Процес витягування:</h4>
+                        <ol style="font-size: 1.05rem;">
+                            <li>Генерація тієї ж ПВП з секретним ключем</li>
+                            <li>Обчислення кореляції між зображенням та ПВП</li>
+                            <li>Порівняння результату з порогом</li>
+                            <li>Прийняття рішення про значення біта</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="gain-box" style="margin-top: 2rem;">
+                    <h3>📊 Статистична надійність</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        При розширенні в N разів, відношення сигнал/шум покращується в <strong>√N разів</strong>.
+                        <br><br>
+                        Приклад: При N=1024, покращення становить <strong>32 рази</strong>, що дозволяє надійно виявляти дуже слабкі сигнали!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 12: Типи витягування -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📤 Типи витягування</h2>
+
+                <div class="spectrum-grid">
+                    <div class="spectrum-card" style="border-top-color: #10b981;">
+                        <h3 style="color: #10b981;">🔍 Інформоване</h3>
+                        <p><strong>Потребує оригінальне зображення</strong></p>
+                        <ul style="margin-top: 1rem;">
+                            <li>Обчислює різницю між оригіналом та стего</li>
+                            <li>Застосовує кореляційний детектор</li>
+                            <li>Найвища надійність</li>
+                            <li>Не завжди практично</li>
+                        </ul>
+                    </div>
+
+                    <div class="spectrum-card" style="border-top-color: #3b82f6;">
+                        <h3 style="color: #3b82f6;">👁️ Сліпе</h3>
+                        <p><strong>Працює без оригіналу</strong></p>
+                        <ul style="margin-top: 1rem;">
+                            <li>Практичніше для реальних застосувань</li>
+                            <li>Складніше через "шум" зображення</li>
+                            <li>Вимагає сильнішого вбудовування</li>
+                            <li>Потребує довших ПВП</li>
+                        </ul>
+                    </div>
+
+                    <div class="spectrum-card" style="border-top-color: #f59e0b;">
+                        <h3 style="color: #f59e0b;">⚖️ Напівсліпе</h3>
+                        <p><strong>Використовує статистичні характеристики</strong></p>
+                        <ul style="margin-top: 1rem;">
+                            <li>Знає середнє та дисперсію оригіналу</li>
+                            <li>Не потребує саме зображення</li>
+                            <li>Компроміс між надійністю та практичністю</li>
+                            <li>Хороший баланс</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 13: Стійкість -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🛡️ Стійкість методів розширення спектру</h2>
+
+                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h3 style="color: #059669;">✅ Стійкі до:</h3>
+                    <ul style="font-size: 1.1rem; line-height: 2;">
+                        <li>📡 Додавання гаусового шуму (завдяки кореляційному накопиченню)</li>
+                        <li>📸 JPEG стиснення (при вбудовуванні в стійкі частоти)</li>
+                        <li>🌫️ Фільтрація (низькочастотна, медіанна)</li>
+                        <li>🔄 Незначні геометричні спотворення</li>
+                        <li>🔆 Зміна яскравості та контрасту</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px;">
+                    <h3 style="color: #dc2626;">❌ Вразливі до:</h3>
+                    <ul style="font-size: 1.1rem; line-height: 2;">
+                        <li>🔄 Сильні геометричні трансформації (поворот, масштабування)</li>
+                        <li>⏱️ Десинхронізуючі атаки</li>
+                        <li>📊 Нелінійні спотворення (гамма-корекція)</li>
+                        <li>✂️ Вирізання частин зображення</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-warning" style="margin-top: 1.5rem;">
+                    <strong>⚠️ Критична проблема:</strong> Синхронізація! Навіть невеликий зсув може зруйнувати кореляцію.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 14: Порівняння з іншими методами -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚖️ Порівняння з іншими методами</h2>
+
+                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h3 style="color: #059669;">✅ Переваги розширення спектру</h3>
+                    <ul style="font-size: 1.1rem; line-height: 2;">
+                        <li><strong>Висока стійкість:</strong> Розподілення по всьому зображенню → стійкість до локальних пошкоджень</li>
+                        <li><strong>Складність видалення:</strong> Без знання ПВП практично неможливо видалити дані</li>
+                        <li><strong>Статистична непомітність:</strong> При малій амплітуді неможливо відрізнити від природного шуму</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px;">
+                    <h3 style="color: #dc2626;">❌ Недоліки та обмеження</h3>
+                    <ul style="font-size: 1.1rem; line-height: 2;">
+                        <li><strong>Мала ємність:</strong> Типова ємність 0.01-0.1% від розміру контейнера</li>
+                        <li><strong>Обчислювальна складність:</strong> Обробка всього зображення для кожного біта</li>
+                        <li><strong>Проблеми синхронізації:</strong> Чутливість до геометричних спотворень</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 15: Висновки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📌 Висновки</h2>
+
+                <div style="background: #f0f4ff; border-left: 5px solid #667eea; padding: 2rem; border-radius: 15px;">
+                    <h3>Ключові ідеї:</h3>
+                    <ul style="line-height: 2; font-size: 1.1rem; color: #1e293b;">
+                        <li>✓ Розширення спектру жертвує ємністю заради стійкості та безпеки</li>
+                        <li>✓ Розподілення інформації з ПВП → виняткова стійкість до атак</li>
+                        <li>✓ Накопичення слабких сигналів → надійне витягування навіть з спотворених зображень</li>
+                        <li>✓ Ідеально для застосувань, де стійкість критичніша за ємність</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
+                        <strong>Основна сила методу:</strong> Статистична природа. Виявлення потребує повного знання системи. Успішна стеганографія - це мистецтво балансу!
+                    </p>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                        🏠 До переліку тем
+                    </a>
+                    <a href="tema4_qim.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                        Далі: Квантова індексна модуляція →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="slide-navigation">
+    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
+    <span id="slide-counter" class="slide-counter">1 / 15</span>
+    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" style="width: 7%;"></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

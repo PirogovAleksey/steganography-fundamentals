@@ -55,7 +55,7 @@
           "status": "completed",
           "slides": 31,
           "hasPresentation": true,
-          "path": "lectures/lecture1_3/index.html"
+          "path": "lecture1/index.html"
         },
         {
           "id": "1.4",
@@ -70,7 +70,7 @@
           "status": "completed",
           "slides": 11,
           "hasPresentation": true,
-          "path": "tema4_kompromisy.html"
+          "path": "lecture4/index.html"
         }
       ]
     },
@@ -90,10 +90,12 @@
         },
         {
           "id": "2.2",
-          "title": "Стеганографія в частотній області",
-          "description": "DCT, DWT методи",
-          "duration": 80,
-          "status": "planned"
+          "title": "Частотні методи стеганографії",
+          "description": "DCT, DWT, розширення спектру та квантова індексна модуляція",
+          "duration": 120,
+          "status": "completed",
+          "hasPresentation": true,
+          "path": "lecture_2/index.html"
         },
         {
           "id": "2.3",
@@ -212,7 +214,6 @@
       "type": "analysis",
       "estimatedTime": 120,
       "status": "completed",
-      "path": "labs/lab3/index.html",
       "topics": ["Chi-square test", "RS аналіз", "Автоматичний детектор"]
     },
     {
@@ -221,7 +222,7 @@
       "description": "Edge-based embedding, PVD метод, порівняльний аналіз",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "completed",
       "topics": ["Edge detection", "PVD метод", "Порівняння методів"]
     },
     {
@@ -230,7 +231,7 @@
       "description": "Дискретне косинусне перетворення, embedding в DCT, стійкість до JPEG",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "completed",
       "topics": ["DCT перетворення", "Quantization tables", "JPEG стійкість"]
     },
     {

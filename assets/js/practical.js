@@ -1,8 +1,12 @@
 /**
  * PRACTICAL.JS - JavaScript для практичних робіт
- * Banking Information Systems
- * v1.0
+ * Steganography Fundamentals Course
+ * v2.0 - ES6 Modules + Constants
  */
+
+// ES6 Module Imports
+import { Storage } from './storage.js';
+import { TIMINGS, MESSAGES } from './constants.js';
 
 // ================================================================
 // CHECKLIST FUNCTIONALITY
@@ -53,10 +57,10 @@ function initChecklists() {
 }
 
 /**
- * Зберігання стану чек-листа в localStorage
+ * Зберігання стану чек-листа через Storage API
  */
 function saveChecklistState(checklistId) {
-    if (!checklistId) return;
+    if (!checklistId || !Storage) return;
 
     const checklist = document.getElementById(checklistId);
     if (!checklist) return;
@@ -68,26 +72,25 @@ function saveChecklistState(checklistId) {
         state[index] = item.classList.contains('done');
     });
 
-    localStorage.setItem(`checklist_${checklistId}`, JSON.stringify(state));
+    Storage.setItem(`checklist_${checklistId}`, state);
 }
 
 /**
- * Відновлення стану чек-листа з localStorage
+ * Відновлення стану чек-листа через Storage API
  */
 function restoreChecklistState(checklistId) {
-    if (!checklistId) return;
+    if (!checklistId || !Storage) return;
 
-    const savedState = localStorage.getItem(`checklist_${checklistId}`);
+    const savedState = Storage.getItem(`checklist_${checklistId}`);
     if (!savedState) return;
 
     const checklist = document.getElementById(checklistId);
     if (!checklist) return;
 
-    const state = JSON.parse(savedState);
     const items = checklist.querySelectorAll('li');
 
     items.forEach((item, index) => {
-        if (state[index]) {
+        if (savedState[index]) {
             item.classList.add('done');
         }
     });
@@ -162,7 +165,7 @@ function showCompletionMessage(checklist) {
         setTimeout(() => {
             message.remove();
         }, 500);
-    }, 3000);
+    }, TIMINGS.COMPLETION_MESSAGE_DURATION);
 }
 
 // ================================================================
@@ -293,7 +296,7 @@ function copyCodeToClipboard(codeBlock, button) {
         setTimeout(() => {
             button.innerHTML = '📋 Копіювати';
             button.classList.remove('success');
-        }, 2000);
+        }, TIMINGS.TOAST_DURATION);
     }).catch(err => {
         // Помилка копіювання
         button.innerHTML = '❌ Помилка';
@@ -301,7 +304,7 @@ function copyCodeToClipboard(codeBlock, button) {
 
         setTimeout(() => {
             button.innerHTML = '📋 Копіювати';
-        }, 2000);
+        }, TIMINGS.TOAST_DURATION);
     });
 }
 
@@ -314,17 +317,17 @@ function copyCodeToClipboard(codeBlock, button) {
  */
 function trackProgress() {
     const practicalId = getPracticalId();
-    if (!practicalId) return;
+    if (!practicalId || !Storage) return;
 
-    const startTime = localStorage.getItem(`practical_${practicalId}_start`);
+    const startTime = Storage.getItem(`practical_${practicalId}_start`);
 
     if (!startTime) {
         // Перший вхід - зберігаємо час початку
-        localStorage.setItem(`practical_${practicalId}_start`, Date.now());
+        Storage.setItem(`practical_${practicalId}_start`, Date.now());
     }
 
     // Оновлюємо час останнього відвідування
-    localStorage.setItem(`practical_${practicalId}_last_visit`, Date.now());
+    Storage.setItem(`practical_${practicalId}_last_visit`, Date.now());
 
     // Відстежуємо загальний час
     trackTimeSpent();
@@ -350,15 +353,15 @@ function getPracticalId() {
  */
 function trackTimeSpent() {
     const practicalId = getPracticalId();
-    if (!practicalId) return;
+    if (!practicalId || !Storage) return;
 
-    let timeSpent = parseInt(localStorage.getItem(`practical_${practicalId}_time`) || '0');
+    let timeSpent = parseInt(Storage.getItem(`practical_${practicalId}_time`) || 0);
 
     setInterval(() => {
         timeSpent += 60; // Додаємо хвилину
-        localStorage.setItem(`practical_${practicalId}_time`, timeSpent);
+        Storage.setItem(`practical_${practicalId}_time`, timeSpent);
         updateTimeDisplay(timeSpent);
-    }, 60000); // Кожну хвилину
+    }, TIMINGS.TIME_TRACK_INTERVAL);
 }
 
 /**
@@ -401,14 +404,16 @@ function trackDownloads() {
             const fileName = button.textContent.trim();
             const practicalId = getPracticalId();
 
+            if (!Storage) return;
+
             // Зберігаємо інформацію про завантаження
-            const downloads = JSON.parse(localStorage.getItem('downloads') || '[]');
+            const downloads = Storage.getItem('downloads', []);
             downloads.push({
                 practical: practicalId,
                 file: fileName,
                 timestamp: Date.now()
             });
-            localStorage.setItem('downloads', JSON.stringify(downloads));
+            Storage.setItem('downloads', downloads);
 
             console.log(`📥 Завантажено: ${fileName}`);
         });
@@ -575,16 +580,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ================================================================
-// EXPORT
+// ES6 MODULE EXPORT
 // ================================================================
 
-// Експортуємо функції для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initChecklists,
-        initTableSorting,
-        initCodeCopy,
-        trackProgress,
-        trackDownloads
-    };
-}
+export {
+    initChecklists,
+    initTableSorting,
+    initCodeCopy,
+    trackProgress,
+    trackDownloads
+};

@@ -2,8 +2,19 @@
  * LANDING.JS - Steganography Course
  * JavaScript для головної сторінки курсу "Основи стеганографії"
  *
- * Версія: 2.1 - оновлена структура лабораторних
+ * Версія: 2.2 - ES6 Modules + Constants
  */
+
+// ES6 Module Imports
+import { Storage } from './storage.js';
+import {
+    PATHS,
+    MESSAGES,
+    getLabTypeIcon,
+    getLabTypeLabel,
+    getStatusBadge,
+    getLectureStatusIcon
+} from './constants.js';
 
 class StegoLandingPage {
     constructor() {
@@ -29,7 +40,7 @@ class StegoLandingPage {
     }
 
     async loadCourseData() {
-        const response = await fetch('assets/data/modules.json');
+        const response = await fetch(PATHS.DATA_MODULES);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -105,7 +116,6 @@ class StegoLandingPage {
             }
         });
 
-        this.attachLectureEventListeners();
         console.log(`📖 Відрендерено ${this.modules.length} модулів з лекціями`);
     }
 
@@ -150,7 +160,13 @@ class StegoLandingPage {
         const card = document.createElement('div');
         card.className = 'module-preview';
 
-        const statusBadge = this.getStatusBadge(module.status);
+        // Додаємо клік на картку для переходу до модуля
+        card.style.cursor = 'pointer';
+        card.onclick = function() {
+            window.location.href = PATHS.MODULE(module.id);
+        };
+
+        const statusBadge = getStatusBadge(module.status);
 
         // Підрахунок готових лекцій
         const completedLectures = module.lectures.filter(l => l.status === 'completed').length;
@@ -164,7 +180,7 @@ class StegoLandingPage {
                     ${statusBadge}
                 </div>
                 <p class="module-preview-description mb-4">${module.description}</p>
-                
+
                 <div class="module-section">
                     <div class="module-section-title">
                         <span>📖 Лекції (${completedLectures}/${totalLectures}):</span>
@@ -172,6 +188,15 @@ class StegoLandingPage {
                     <div class="module-items">
                         ${this.renderModuleLectures(module.lectures, module.id)}
                     </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                    <a href="${PATHS.MODULE(module.id)}"
+                       class="module-action-button"
+                       style="display: block; text-decoration: none; color: white;"
+                       onclick="event.stopPropagation();">
+                        Перейти до модуля →
+                    </a>
                 </div>
             </div>
         `;
@@ -181,12 +206,20 @@ class StegoLandingPage {
 
     renderModuleLectures(lectures, moduleId) {
         return lectures.map(lecture => {
-            const statusIcon = lecture.status === 'completed' ? '✅' :
-                lecture.status === 'in_progress' ? '🔄' : '📋';
+            const statusIcon = getLectureStatusIcon(lecture.status);
+
+            // Перевіряємо чи лекція доступна для кліку
+            const isClickable = lecture.status === 'completed' && lecture.path;
+            const clickHandler = isClickable
+                ? `onclick="event.stopPropagation(); window.location.href='${PATHS.MODULE_LECTURE(moduleId, lecture.path)}';"`
+                : 'onclick="event.stopPropagation();"';
+            const cursorStyle = isClickable ? 'style="cursor: pointer;"' : '';
 
             return `
-                <div class="module-item module-lecture ${lecture.status}" 
-                     data-module-id="${moduleId}" 
+                <div class="module-item module-lecture ${lecture.status}"
+                     ${clickHandler}
+                     ${cursorStyle}
+                     data-module-id="${moduleId}"
                      data-lecture-id="${lecture.id}">
                     <span class="module-item-title">
                         ${statusIcon} ${lecture.title}
@@ -201,8 +234,8 @@ class StegoLandingPage {
         const card = document.createElement('div');
         card.className = 'practical-card';
 
-        const typeIcon = this.getLabTypeIcon(lab.type);
-        const typeLabel = this.getLabTypeLabel(lab.type);
+        const typeIcon = getLabTypeIcon(lab.type);
+        const typeLabel = getLabTypeLabel(lab.type);
 
         card.innerHTML = `
             <div class="practical-header">
@@ -228,75 +261,23 @@ class StegoLandingPage {
         return card;
     }
 
-    getLabTypeIcon(type) {
-        const icons = {
-            'introduction': '🎯',
-            'programming': '💻',
-            'analysis': '📊',
-            'audio': '🎵',
-            'machine-learning': '🤖',
-            'advanced': '⚙️',
-            'practical': '🔧',
-            'project': '📁',
-            'presentation': '🎤'
-        };
-        return icons[type] || '🔬';
-    }
-
-    getLabTypeLabel(type) {
-        const labels = {
-            'introduction': 'Вступ',
-            'programming': 'Програмування',
-            'analysis': 'Аналіз',
-            'audio': 'Аудіо',
-            'machine-learning': 'Машинне навчання',
-            'advanced': 'Складний рівень',
-            'practical': 'Практика',
-            'project': 'Проект',
-            'presentation': 'Презентація'
-        };
-        return labels[type] || 'Лабораторна';
-    }
-
-    attachLectureEventListeners() {
-        const lectureItems = document.querySelectorAll('.module-lecture');
-        lectureItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const moduleId = item.dataset.moduleId;
-                const lectureId = item.dataset.lectureId;
-                this.openLecture(moduleId, lectureId);
-            });
-        });
-    }
-
-    getStatusBadge(status) {
-        const statusConfig = {
-            'active': { text: 'Активний', class: 'badge-success' },
-            'completed': { text: 'Завершено', class: 'badge-primary' },
-            'planned': { text: 'Заплановано', class: 'badge-outline' },
-            'in_progress': { text: 'В процесі', class: 'badge-warning' }
-        };
-
-        const config = statusConfig[status] || statusConfig['planned'];
-        return `<span class="badge ${config.class}">${config.text}</span>`;
-    }
-
-    openLecture(moduleId, lectureId) {
-        console.log(`📖 Відкриття лекції ${moduleId}.${lectureId}`);
-
-        // Для лекції 1.1 перенаправляємо на існуючі файли
-        if (moduleId == 1 && lectureId === '1.1') {
-            window.location.href = 'lectures/lecture1/index.html';
-            return;
-        }
-
-        // Для інших - показуємо повідомлення
-        alert(`📖 Лекція ${lectureId} модуля ${moduleId} буде доступна після створення`);
-    }
-
     openLab(labId) {
         console.log(`🔬 Відкриття лабораторної ${labId}`);
-        alert(`🔬 Лабораторна робота ${labId} буде доступна після створення`);
+
+        // Знаходимо лабораторну в даних
+        const lab = this.labs.find(l => l.id === labId);
+
+        if (lab && lab.status === 'completed') {
+            // Якщо лабораторна має власний path, використовуємо його
+            if (lab.path) {
+                window.location.href = lab.path;
+            } else {
+                // Інакше використовуємо стандартний шлях
+                window.location.href = PATHS.LAB(labId);
+            }
+        } else {
+            alert(MESSAGES.INFO.LAB_COMING_SOON(labId));
+        }
     }
 
     showError(containerId = 'lectures-container') {
@@ -306,8 +287,8 @@ class StegoLandingPage {
                 <div class="col-span-full">
                     <div class="alert alert-error">
                         <div class="alert-title">❌ Помилка завантаження</div>
-                        Не вдалося завантажити дані курсу.
-                        <br><small>Перевірте наявність файлу assets/data/modules.json</small>
+                        ${MESSAGES.ERROR.LOAD_DATA}
+                        <br><small>${MESSAGES.ERROR.CHECK_FILE}</small>
                     </div>
                 </div>
             `;
@@ -349,7 +330,5 @@ window.addEventListener('load', () => {
     }
 });
 
-// Експорт для використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { StegoLandingPage };
-}
+// ES6 Module Export
+export { StegoLandingPage };

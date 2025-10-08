@@ -832,3 +832,49 @@
 .col-span-full {
     grid-column: 1 / -1;
 }
+
+/* ----------------------------------------------------------------
+   MODULE PREVIEW ENHANCEMENTS (from landing.js)
+   ---------------------------------------------------------------- */
+
+/* Module card links */
+.module-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.module-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Module preview interactive styles */
+.module-preview {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.module-preview:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Module action button */
+.module-action-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.module-action-button:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
