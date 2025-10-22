@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Порівняльний аналіз адаптивних методів | Лекція 7.4</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+
+    <style>
+        .algorithm-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .method-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .advantage-list {
+            background: #dcfce7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table td {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+        }
+
+        .rating {
+            display: inline-block;
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-title">
+                <h1>📊 Порівняльний аналіз адаптивних методів</h1>
+                <div class="subtitle">
+                    Тема 4: Оцінка та порівняння HUGO, WOW, S-UNIWARD
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 2: Огляд методів -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎭 Три підходи до адаптивності</h2>
+
+                <div class="comparison-grid">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px;">
+                        <h3 style="text-align: center;">🎭 HUGO</h3>
+                        <p style="text-align: center; margin-top: 1rem;">
+                            Статистичний підхід<br>
+                            <strong>SPAM модель</strong><br>
+                            Мінімізація змін ознак
+                        </p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%); color: #1a202c; padding: 1.5rem; border-radius: 10px;">
+                        <h3 style="text-align: center;">🌊 WOW</h3>
+                        <p style="text-align: center; margin-top: 1rem;">
+                            Директивний підхід<br>
+                            <strong>Вейвлет-фільтри</strong><br>
+                            Аналіз напрямків
+                        </p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 10px;">
+                        <h3 style="text-align: center;">📐 S-UNIWARD</h3>
+                        <p style="text-align: center; margin-top: 1rem;">
+                            Універсальний підхід<br>
+                            <strong>Багаторівнева декомпозиція</strong><br>
+                            Відносне спотворення
+                        </p>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    Кожен метод використовує свій підхід до визначення "безпечних" місць для вбудовування
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Порівняльна таблиця -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📋 Детальне порівняння</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Критерій</th>
+                            <th>HUGO</th>
+                            <th>WOW</th>
+                            <th>S-UNIWARD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #f9fafb;">
+                            <td><strong>Безпека</strong></td>
+                            <td><span class="rating">★★★★☆</span> Висока</td>
+                            <td><span class="rating">★★★★☆</span> Висока</td>
+                            <td><span class="rating">★★★★★</span> Найвища</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td><strong>Швидкість</strong></td>
+                            <td><span class="rating">★★☆☆☆</span> Повільна</td>
+                            <td><span class="rating">★★★★☆</span> Швидка</td>
+                            <td><span class="rating">★★★☆☆</span> Середня</td>
+                        </tr>
+                        <tr style="background: #f9fafb;">
+                            <td><strong>Складність реалізації</strong></td>
+                            <td><span class="rating">★★★★★</span> Складна</td>
+                            <td><span class="rating">★★☆☆☆</span> Проста</td>
+                            <td><span class="rating">★★★☆☆</span> Середня</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td><strong>Універсальність</strong></td>
+                            <td>Тільки spatial</td>
+                            <td>Тільки spatial</td>
+                            <td>Spatial, DCT, DWT</td>
+                        </tr>
+                        <tr style="background: #f9fafb;">
+                            <td><strong>Пам'ять</strong></td>
+                            <td>Висока</td>
+                            <td>Низька</td>
+                            <td>Середня</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td><strong>Payload (bpp)</strong></td>
+                            <td>До 0.5</td>
+                            <td>До 0.5</td>
+                            <td>До 0.5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Метрики безпеки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🛡️ Стійкість до стегоаналізу</h2>
+
+                <div class="method-card">
+                    <h3>Тестування на BOSS базі (10000 зображень)</h3>
+                    <p style="font-size: 1.05rem;">Payload: 0.4 bpp | Детектор: Ensemble Classifier</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
+                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                        <h4 style="color: #92400e;">HUGO</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0; color: #92400e;">
+                            58%
+                        </div>
+                        <p>Точність виявлення</p>
+                    </div>
+
+                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                        <h4 style="color: #1e40af;">WOW</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0; color: #1e40af;">
+                            57%
+                        </div>
+                        <p>Точність виявлення</p>
+                    </div>
+
+                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                        <h4 style="color: #065f46;">S-UNIWARD</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0; color: #065f46;">
+                            54%
+                        </div>
+                        <p>Точність виявлення</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>💡 Довідка:</strong> 50% = випадковий вибір (не виявлено). Нижче = краще безпека!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Швидкодія -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚡ Порівняння швидкодії</h2>
+
+                <div class="method-card">
+                    <h3>Час вбудовування (зображення 512×512, 0.4 bpp)</h3>
+                    <p style="font-size: 1.05rem;">Тестування на Intel i7, 16GB RAM</p>
+                </div>
+
+                <div style="background: #f8fafc; padding: 2rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <div style="display: flex; align-items: center; margin: 1rem 0;">
+                        <div style="width: 150px; font-weight: bold;">HUGO:</div>
+                        <div style="flex: 1; background: #cbd5e1; height: 30px; border-radius: 5px; position: relative;">
+                            <div style="background: #667eea; width: 90%; height: 100%; border-radius: 5px;"></div>
+                            <span style="position: absolute; right: 10px; top: 5px; font-weight: bold;">~18 сек</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin: 1rem 0;">
+                        <div style="width: 150px; font-weight: bold;">WOW:</div>
+                        <div style="flex: 1; background: #cbd5e1; height: 30px; border-radius: 5px; position: relative;">
+                            <div style="background: #10b981; width: 20%; height: 100%; border-radius: 5px;"></div>
+                            <span style="position: absolute; right: 10px; top: 5px; font-weight: bold;">~4 сек</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin: 1rem 0;">
+                        <div style="width: 150px; font-weight: bold;">S-UNIWARD:</div>
+                        <div style="flex: 1; background: #cbd5e1; height: 30px; border-radius: 5px; position: relative;">
+                            <div style="background: #f59e0b; width: 50%; height: 100%; border-radius: 5px;"></div>
+                            <span style="position: absolute; right: 10px; top: 5px; font-weight: bold;">~10 сек</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Висновок:</strong> WOW найшвидший, S-UNIWARD збалансований, HUGO найповільніший
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Практичні рекомендації -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎯 Коли використовувати який метод?</h2>
+
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h3>🎭 Використовуйте HUGO, якщо:</h3>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Потрібна максимальна безпека для spatial domain</li>
+                        <li>Швидкість не критична</li>
+                        <li>Є достатньо обчислювальних ресурсів</li>
+                        <li>Працюєте з природними фотографіями</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h3>🌊 Використовуйте WOW, якщо:</h3>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Потрібен баланс між безпекою та швидкістю</li>
+                        <li>Обробляєте багато зображень</li>
+                        <li>Працюєте в реальному часі</li>
+                        <li>Простота реалізації важлива</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h3>📐 Використовуйте S-UNIWARD, якщо:</h3>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Потрібна найвища безпека</li>
+                        <li>Працюєте з різними форматами (JPEG, spatial)</li>
+                        <li>Важлива універсальність</li>
+                        <li>Це дослідницький або академічний проект</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Еволюція методів -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📈 Еволюція адаптивних методів</h2>
+
+                <div style="position: relative; padding: 2rem 0;">
+                    <div style="border-left: 4px solid #667eea; padding-left: 2rem; margin: 2rem 0;">
+                        <div style="background: #eff6ff; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                            <h4 style="color: #1e40af;">2010: LSB, базові методи</h4>
+                            <p>Рівномірне вбудовування, легко виявляються</p>
+                        </div>
+
+                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                            <h4 style="color: #065f46;">2012: HUGO</h4>
+                            <p>Перший справжній адаптивний метод з SPAM моделлю</p>
+                        </div>
+
+                        <div style="background: #fef3c7; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                            <h4 style="color: #92400e;">2013: WOW</h4>
+                            <p>Директивний підхід, швидше та практичніше</p>
+                        </div>
+
+                        <div style="background: #fce7f3; padding: 1rem; border-radius: 10px;">
+                            <h4 style="color: #9f1239;">2014: S-UNIWARD</h4>
+                            <p>Універсальний підхід, найкраща безпека</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>💡 Тренд:</strong> Від простих до складних, від швидких до безпечних, від специфічних до універсальних
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Майбутнє -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🚀 Сучасні тренди та майбутнє</h2>
+
+                <div class="comparison-grid">
+                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border: 2px solid #667eea;">
+                        <h4 style="color: #667eea; text-align: center;">🤖 Deep Learning</h4>
+                        <p>GAN-based стеганографія, навчання на даних</p>
+                    </div>
+
+                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border: 2px solid #10b981;">
+                        <h4 style="color: #10b981; text-align: center;">🎨 Content-Aware</h4>
+                        <p>Семантичний аналіз, розпізнавання об'єктів</p>
+                    </div>
+
+                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border: 2px solid #f59e0b;">
+                        <h4 style="color: #f59e0b; text-align: center;">⚡ Оптимізація</h4>
+                        <p>Швидші алгоритми, GPU прискорення</p>
+                    </div>
+                </div>
+
+                <div class="advantage-list" style="margin-top: 2rem;">
+                    <h4>🔮 Перспективні напрямки</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li><strong>Adversarial стеганографія:</strong> методи, стійкі до ML-детекторів</li>
+                        <li><strong>Multi-domain:</strong> одночасне вбудовування в кілька областей</li>
+                        <li><strong>Adaptive payload:</strong> динамічна ємність залежно від зображення</li>
+                        <li><strong>Privacy-preserving:</strong> захист приватності під час передачі</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Практичні поради -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>💡 Практичні поради</h2>
+
+                <div class="method-card">
+                    <h4>✅ Найкращі практики</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Завжди <strong>шифруйте</strong> повідомлення перед вбудовуванням</li>
+                        <li>Використовуйте <strong>payload &lt; 0.4 bpp</strong> для безпеки</li>
+                        <li>Тестуйте на <strong>різних зображеннях</strong></li>
+                        <li>Використовуйте <strong>формати без втрат</strong> (PNG, TIFF)</li>
+                        <li>Комбінуйте з <strong>криптографією</strong></li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h4>⚠️ Типові помилки</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Занадто високий payload (виявлюваність зростає)</li>
+                        <li>Використання JPEG після вбудовування (додаткове спотворення)</li>
+                        <li>Ігнорування формату зображення</li>
+                        <li>Відсутність тестування на реальних даних</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Підсумки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📝 Загальні підсумки</h2>
+
+                <div class="algorithm-box">
+                    <h3 style="text-align: center; color: #667eea;">Ключові висновки</h3>
+                </div>
+
+                <div class="advantage-list">
+                    <ul style="font-size: 1.15rem; line-height: 2;">
+                        <li><strong>Адаптивні методи</strong> - це майбутнє стеганографії</li>
+                        <li><strong>HUGO</strong> - піонер адаптивного підходу (статистичний)</li>
+                        <li><strong>WOW</strong> - найкращий баланс швидкості та безпеки</li>
+                        <li><strong>S-UNIWARD</strong> - універсальний стандарт з найвищою безпекою</li>
+                        <li><strong>Вибір методу</strong> залежить від ваших вимог та обмежень</li>
+                        <li><strong>Майбутнє</strong> - за deep learning та content-aware методами</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success" style="margin-top: 2rem;">
+                    <strong>💡 Головне:</strong> Не існує "найкращого" методу - кожен оптимальний для своїх умов. Розумійте компроміси та вибирайте відповідно до ваших потреб!
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="slide-navigation">
+    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
+    <span id="slide-counter" class="slide-counter">1 / 10</span>
+    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" style="width: 10%;"></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

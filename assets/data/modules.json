@@ -92,7 +92,7 @@
           "id": "2.2",
           "title": "Частотні методи стеганографії",
           "description": "DCT, DWT, розширення спектру та квантова індексна модуляція",
-          "duration": 120,
+          "duration": 80,
           "status": "completed",
           "hasPresentation": true,
           "path": "lecture_2/index.html"
@@ -100,9 +100,18 @@
         {
           "id": "2.3",
           "title": "Адаптивні методи",
-          "description": "HUGO, WOW, S-UNIWARD",
+          "description": "HUGO, WOW, S-UNIWARD та інші сучасні адаптивні методи стеганографії",
           "duration": 80,
-          "status": "planned"
+          "topics": [
+            "HUGO (Highly Undetectable steGO)",
+            "WOW (Wavelet Obtained Weights)",
+            "S-UNIWARD (Spatial Universal Wavelet Relative Distortion)",
+            "Порівняльний аналіз методів"
+          ],
+          "status": "completed",
+          "slides": 43,
+          "hasPresentation": true,
+          "path": "lecture_3/index.html"
         },
         {
           "id": "2.4",

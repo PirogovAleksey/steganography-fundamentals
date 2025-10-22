@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOW - Wavelet Obtained Weights | Лекція 7.2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+
+    <style>
+        .algorithm-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .method-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .advantage-list {
+            background: #dcfce7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .formula-box {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-title">
+                <h1>🌊 WOW - Wavelet Obtained Weights</h1>
+                <div class="subtitle">
+                    Тема 2: Вейвлет-орієнтована адаптивна стеганографія
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 2: Вступ -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎯 Ідея WOW</h2>
+
+                <div style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+                    <h3 style="color: #0369a1;">Основний принцип</h3>
+                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                        WOW використовує <strong>вейвлет-перетворення</strong> для визначення напрямків в зображенні
+                        (горизонтальні, вертикальні, діагональні) та <strong>уникає змін</strong> вздовж цих напрямків
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: #991b1b;">❌ HUGO підхід</h4>
+                        <p>Аналізує глобальну статистику без врахування локальних напрямків</p>
+                    </div>
+                    <div style="background: #ecfdf5; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: #065f46;">✅ WOW підхід</h4>
+                        <p>Враховує напрямки текстури та уникає змін вздовж них</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>💡 Ключ до успіху:</strong> Зміни перпендикулярні до напрямків текстури менш помітні, ніж зміни вздовж них
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Вейвлети в WOW -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🌊 Вейвлет-декомпозиція</h2>
+
+                <div class="method-card">
+                    <h3>Три типи директивних фільтрів</h3>
+                    <ul style="font-size: 1.1rem; line-height: 2;">
+                        <li><strong>K<sup>H</sup></strong> - Горизонтальний фільтр (виявляє вертикальні краї)</li>
+                        <li><strong>K<sup>V</sup></strong> - Вертикальний фільтр (виявляє горизонтальні краї)</li>
+                        <li><strong>K<sup>D</sup></strong> - Діагональний фільтр (виявляє діагональні структури)</li>
+                    </ul>
+                </div>
+
+                <div class="algorithm-box">
+                    <h4>Приклад фільтрів</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <p style="text-align: center;"><strong>K<sup>H</sup></strong></p>
+                            <code>[-1 2 -1]<br>[-1 2 -1]<br>[-1 2 -1]</code>
+                        </div>
+                        <div>
+                            <p style="text-align: center;"><strong>K<sup>V</sup></strong></p>
+                            <code>[-1 -1 -1]<br>[2 2 2]<br>[-1 -1 -1]</code>
+                        </div>
+                        <div>
+                            <p style="text-align: center;"><strong>K<sup>D</sup></strong></p>
+                            <code>[2 -1 -1]<br>[-1 2 -1]<br>[-1 -1 2]</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    Застосовуючи ці фільтри, WOW визначає напрямок текстури в кожній точці зображення
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Обчислення ваг -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚖️ Вагові коефіцієнти</h2>
+
+                <div class="method-card">
+                    <h3>Крок 1: Застосування фільтрів</h3>
+                    <div class="formula-box">
+                        R<sub>i,j</sub><sup>H</sup> = |I * K<sup>H</sup>|<sub>i,j</sub><br>
+                        R<sub>i,j</sub><sup>V</sup> = |I * K<sup>V</sup>|<sub>i,j</sub><br>
+                        R<sub>i,j</sub><sup>D</sup> = |I * K<sup>D</sup>|<sub>i,j</sub>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>Крок 2: Обчислення вартості</h3>
+                    <div class="formula-box">
+                        ρ<sub>i,j</sub> = 1 / (1 + σ · (R<sub>i,j</sub><sup>H</sup> + R<sub>i,j</sub><sup>V</sup> + R<sub>i,j</sub><sup>D</sup>))
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem;">де σ - параметр стабілізації (типово σ = 1)</p>
+                </div>
+
+                <div class="advantage-list">
+                    <h4>✅ Властивості вартості:</h4>
+                    <ul>
+                        <li>Висока вартість (велике ρ) = слабка текстура = уникати</li>
+                        <li>Низька вартість (мале ρ) = сильна текстура = безпечно</li>
+                        <li>Автоматична нормалізація</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Алгоритм WOW -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚙️ Алгоритм WOW - покроково</h2>
+
+                <div class="method-card" style="background: #f9fafb;">
+                    <h4 style="color: #1e40af;">Крок 1: Підготовка фільтрів</h4>
+                    <p>Визначаємо три директивні фільтри K<sup>H</sup>, K<sup>V</sup>, K<sup>D</sup></p>
+                </div>
+
+                <div class="method-card" style="background: #f9fafb;">
+                    <h4 style="color: #1e40af;">Крок 2: Застосування фільтрів</h4>
+                    <p>Згортаємо зображення з кожним фільтром, отримуємо три карти відгуків</p>
+                </div>
+
+                <div class="method-card" style="background: #f9fafb;">
+                    <h4 style="color: #1e40af;">Крок 3: Обчислення вартості</h4>
+                    <p>Для кожного пікселя обчислюємо ρ на основі всіх трьох відгуків</p>
+                </div>
+
+                <div class="method-card" style="background: #f9fafb;">
+                    <h4 style="color: #1e40af;">Крок 4: STC кодування</h4>
+                    <p>Використовуємо Syndrome Trellis Codes для оптимального вбудовування</p>
+                </div>
+
+                <div class="method-card" style="background: #f9fafb;">
+                    <h4 style="color: #1e40af;">Крок 5: Модифікація</h4>
+                    <p>Змінюємо обрані пікселі ±1, отримуємо стего-зображення</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Чому працює WOW -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔍 Чому WOW ефективний?</h2>
+
+                <div style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+                    <h3 style="color: #0369a1;">Ключова інтуїція</h3>
+                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                        Людське око краще помічає зміни <strong>вздовж напрямків текстури</strong>, ніж зміни <strong>перпендикулярні</strong> до них
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div style="background: #fff7ed; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: #9a3412;">📏 Вздовж краю</h4>
+                        <p>Зміна створює "сходинку" на краю - <strong>помітно!</strong></p>
+                    </div>
+                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: #14532d;">⊥ Перпендикулярно</h4>
+                        <p>Зміна сприймається як частина текстури - <strong>непомітно!</strong></p>
+                    </div>
+                </div>
+
+                <div class="advantage-list">
+                    <h4>✅ Переваги директивного підходу:</h4>
+                    <ul>
+                        <li>Простий і зрозумілий принцип</li>
+                        <li>Швидке обчислення (лише згортка з 3 фільтрами)</li>
+                        <li>Добре працює на природних зображеннях</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Переваги WOW -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>✅ Переваги WOW</h2>
+
+                <div class="advantage-list">
+                    <h4>🚀 Швидкодія</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li><strong>Швидше за HUGO</strong> в 3-4 рази</li>
+                        <li>Проста згортка - ефективна реалізація</li>
+                        <li>Підходить для обробки в реальному часі</li>
+                    </ul>
+                </div>
+
+                <div class="advantage-list">
+                    <h4>🛡️ Безпека</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Порівнянна з HUGO стійкість</li>
+                        <li>Добрі результати на BOSS competition</li>
+                        <li>Стійкий до ансамблевих класифікаторів</li>
+                    </ul>
+                </div>
+
+                <div class="advantage-list">
+                    <h4>🔧 Практичність</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Легка реалізація (простіше за HUGO)</li>
+                        <li>Мало параметрів для налаштування</li>
+                        <li>Працює "out of the box"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Недоліки WOW -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚠️ Недоліки та обмеження WOW</h2>
+
+                <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <h4 style="color: #991b1b;">🎨 Тільки spatial domain</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Не працює з JPEG (потрібна адаптація)</li>
+                        <li>Вимагає формати без втрат (PNG, BMP)</li>
+                        <li>Після збереження в JPEG дані можуть пошкодитись</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <h4 style="color: #991b1b;">📉 Залежність від текстури</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Менш ефективний на гладких зображеннях</li>
+                        <li>Потребує достатньо країв для роботи</li>
+                        <li>Небо, стіни - проблемні області</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <h4 style="color: #991b1b;">🔬 Дещо поступається S-UNIWARD</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Трохи гірша безпека ніж S-UNIWARD</li>
+                        <li>Не універсальний (не працює в різних доменах)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Порівняння WOW vs HUGO -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚖️ WOW vs HUGO</h2>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 1rem;">
+                    <thead>
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 1rem; border: 1px solid #ddd;">Аспект</th>
+                            <th style="padding: 1rem; border: 1px solid #ddd;">HUGO</th>
+                            <th style="padding: 1rem; border: 1px solid #ddd;">WOW</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #f9fafb;">
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;"><strong>Підхід</strong></td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Статистична модель (SPAM)</td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Директивні фільтри</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;"><strong>Швидкість</strong></td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">~18 сек</td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">~4 сек ⚡</td>
+                        </tr>
+                        <tr style="background: #f9fafb;">
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;"><strong>Безпека</strong></td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Дуже висока (58%)</td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Дуже висока (57%)</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;"><strong>Складність</strong></td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Складна</td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Проста ✅</td>
+                        </tr>
+                        <tr style="background: #f9fafb;">
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;"><strong>Пам'ять</strong></td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Висока</td>
+                            <td style="padding: 0.8rem; border: 1px solid #ddd;">Низька ✅</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-success">
+                    <strong>💡 Висновок:</strong> WOW - практичніший вибір для більшості реальних застосувань завдяки балансу швидкості та безпеки
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Підсумки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📝 Підсумки WOW</h2>
+
+                <div class="advantage-list">
+                    <ul style="font-size: 1.15rem; line-height: 2;">
+                        <li><strong>Директивний підхід:</strong> використовує напрямки текстури</li>
+                        <li><strong>Три фільтри:</strong> аналіз по всіх напрямках</li>
+                        <li><strong>Проста реалізація:</strong> легше за HUGO</li>
+                        <li><strong>Висока швидкість:</strong> ефективні обчислення</li>
+                        <li><strong>Відмінна безпека:</strong> конкурує з HUGO</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success" style="margin-top: 2rem;">
+                    <strong>💡 Головне:</strong> WOW пропонує чудовий баланс між безпекою та швидкодією, що робить його практичним вибором для реальних застосувань
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="slide-navigation">
+    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
+    <span id="slide-counter" class="slide-counter">1 / 10</span>
+    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" style="width: 10%;"></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>
