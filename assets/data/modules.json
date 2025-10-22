@@ -249,7 +249,7 @@
       "description": "Wavelet розкладання, embedding в HH субсмугу, тестування стійкості",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "completed",
       "topics": ["Wavelet transform", "Субсмуговий аналіз", "Робастність"]
     },
     {
