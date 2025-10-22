@@ -5,7 +5,9 @@
       "Bash(cat:*)",
       "Bash(node:*)",
       "Bash(python:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(rm:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
