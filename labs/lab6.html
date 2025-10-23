@@ -1289,7 +1289,7 @@ def test_robustness():
     for idx, result in enumerate(results):
         bers = [a['ber'] for a in result['attacks']]
         axes[0].bar(x_pos + idx*width, bers, width,
-                   label=f"{result['subband']} (α={result['alpha']})",
+                   label=f"{result['subband']} (δ={result['delta']})",
                    color=result['color'], alpha=0.7)
 
     axes[0].set_ylabel('BER (%)')
@@ -1304,7 +1304,7 @@ def test_robustness():
     for idx, result in enumerate(results):
         psnrs = [a['psnr'] for a in result['attacks']]
         axes[1].bar(x_pos + idx*width, psnrs, width,
-                   label=f"{result['subband']} (α={result['alpha']})",
+                   label=f"{result['subband']} (δ={result['delta']})",
                    color=result['color'], alpha=0.7)
 
     axes[1].set_ylabel('PSNR (dB)')
@@ -1328,7 +1328,7 @@ def test_robustness():
         total = len(result['attacks'])
         avg_ber = np.mean([a['ber'] for a in result['attacks']])
 
-        print(f"\\n{subband} субсмуга (α={result['alpha']}):")
+        print(f"\\n{subband} субсмуга (δ={result['delta']}):")
         print(f"  Успішних витягувань: {successful}/{total}")
         print(f"  Середній BER: {avg_ber:.2f}%")
 
