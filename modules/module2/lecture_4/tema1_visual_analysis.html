@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вступ та візуальний стегоаналіз | Лекція 8.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+
+    <style>
+        .algorithm-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            border-top: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .method-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .advantage-list {
+            background: #dcfce7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .disadvantage-list {
+            background: #fee2e2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .formula-box {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+        }
+
+        .three-col-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, #ffffff, #f3f4f6);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-title">
+                <h1>👁️ Вступ та візуальний стегоаналіз</h1>
+                <div class="subtitle">
+                    Тема 1: Основи стегоаналізу та методи виявлення
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 2: Що таке стегоаналіз -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔍 Що таке стегоаналіз?</h2>
+
+                <div class="algorithm-box">
+                    <h3 style="text-align: center; color: #667eea;">Визначення</h3>
+                    <p style="font-size: 1.3rem; text-align: center; margin: 1.5rem 0;">
+                        <strong>Стегоаналіз</strong> — це наука і мистецтво виявлення прихованої інформації<br>
+                        та оцінки її присутності в цифрових медіафайлах
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div style="background: #ecfdf5; padding: 1.5rem; border-radius: 10px; border-left: 5px solid #10b981;">
+                        <h4 style="color: #065f46;">🛡️ Стеганографія (Alice)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Приховує повідомлення</li>
+                            <li>Максимізує непомітність</li>
+                            <li>Намагається обманути детектори</li>
+                            <li>Мета: передати дані</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px; border-left: 5px solid #ef4444;">
+                        <h4 style="color: #991b1b;">🔎 Стегоаналіз (Warden)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Виявляє повідомлення</li>
+                            <li>Шукає аномалії</li>
+                            <li>Розробляє детектори</li>
+                            <li>Мета: виявити факт передачі</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>📌 Важливо:</strong> Це гра "кота і миші" — покращення методів стеганографії стимулює розвиток стегоаналізу, і навпаки
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Типи стегоаналізу -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📊 Типи стегоаналізу</h2>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">🎯 Targeted Steganalysis (Цільовий)</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Створюється спеціально для виявлення <strong>конкретного методу</strong> стеганографії
+                    </p>
+                    <div class="advantage-list">
+                        <strong>✅ Переваги:</strong>
+                        <ul>
+                            <li>Висока точність для конкретного методу</li>
+                            <li>Простіша реалізація</li>
+                            <li>Швидше обчислення</li>
+                        </ul>
+                    </div>
+                    <div class="disadvantage-list">
+                        <strong>❌ Недоліки:</strong>
+                        <ul>
+                            <li>Не виявляє інші методи</li>
+                            <li>Треба знати, який метод використовується</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">🌐 Universal/Blind Steganalysis (Універсальний)</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Виявляє присутність <strong>будь-якої</strong> прихованої інформації без знання методу
+                    </p>
+                    <div class="advantage-list">
+                        <strong>✅ Переваги:</strong>
+                        <ul>
+                            <li>Виявляє невідомі методи</li>
+                            <li>Універсальне застосування</li>
+                            <li>Адаптується до нових загроз</li>
+                        </ul>
+                    </div>
+                    <div class="disadvantage-list">
+                        <strong>❌ Недоліки:</strong>
+                        <ul>
+                            <li>Нижча точність</li>
+                            <li>Потребує машинного навчання</li>
+                            <li>Обчислювально складніший</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Моделі атак -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🎭 Моделі атак стегоаналізу</h2>
+
+                <div class="three-col-grid">
+                    <div class="feature-card">
+                        <h4 style="color: #667eea; text-align: center;">📸 Cover-Only Attack</h4>
+                        <p style="text-align: center; line-height: 1.6;">
+                            Аналітик має доступ лише до <strong>підозрілих файлів</strong><br><br>
+                            Шукає аномалії без порівняння з оригіналами
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 style="color: #667eea; text-align: center;">🔄 Known-Cover Attack</h4>
+                        <p style="text-align: center; line-height: 1.6;">
+                            Аналітик має <strong>оригінальні cover-файли</strong><br><br>
+                            Може порівняти і знайти відмінності
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 style="color: #667eea; text-align: center;">💬 Known-Message Attack</h4>
+                        <p style="text-align: center; line-height: 1.6;">
+                            Аналітик знає <strong>приховане повідомлення</strong><br><br>
+                            Найсильніша атака, дозволяє вивчити метод
+                        </p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Практично:</strong> В реальності найчастіше використовується <strong>Cover-Only Attack</strong>, бо доступу до оригіналів немає
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Візуальний аналіз -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>👁️ Візуальний аналіз</h2>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">Принцип методу</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Людське око або спеціалізовані алгоритми шукають <strong>візуальні аномалії</strong>,
+                        які можуть вказувати на наявність прихованих даних
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: #0369a1;">📊 Аналіз LSB-площини</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Витягнути молодші біти</li>
+                            <li>Відобразити як окреме зображення</li>
+                            <li>Стегано: шум/візерунки</li>
+                            <li>Чисте: випадковість</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: #92400e;">🎨 Аналіз палітри</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Дублікати близьких кольорів</li>
+                            <li>Невикористані палітрні індекси</li>
+                            <li>Порушення порядку</li>
+                            <li>EzStego, Steganos детектується</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="disadvantage-list">
+                    <strong>⚠️ Обмеження візуального аналізу:</strong>
+                    <ul>
+                        <li>Суб'єктивний — залежить від досвіду аналітика</li>
+                        <li>Низька автоматизація</li>
+                        <li>Неефективний для адаптивних методів</li>
+                        <li>Не дає кількісної оцінки</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Гістограмний аналіз -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📊 Гістограмний аналіз</h2>
+
+                <div class="algorithm-box">
+                    <h3 style="text-align: center; color: #667eea;">Ідея методу</h3>
+                    <p style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0;">
+                        LSB-вбудовування порушує <strong>статистичні властивості</strong> розподілу пікселів<br>
+                        Це можна виявити через аналіз гістограми
+                    </p>
+                </div>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">🔢 Ефект LSB-заміни</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1rem;">
+                        При LSB-заміні пари сусідніх значень (2k, 2k+1) вирівнюються:
+                    </p>
+                    <div class="formula-box">
+                        h(2k) ≈ h(2k+1) після вбудовування
+                    </div>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li><strong>Природне зображення:</strong> h(2k) ≠ h(2k+1) (різні частоти)</li>
+                        <li><strong>Після LSB:</strong> частоти пар вирівнюються → підозріло</li>
+                        <li><strong>Виявлення:</strong> перевірити відхилення від природного розподілу</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>✅ Застосування:</strong> Працює для простої LSB-заміни, але не для LSB matching (+/-1 зміна)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Chi-square тест -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>χ² Chi-Square тест</h2>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">📐 Принцип роботи</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Статистичний тест, який перевіряє, чи пари значень (2k, 2k+1) мають <strong>однакову частоту</strong>
+                    </p>
+                </div>
+
+                <div class="formula-box" style="margin: 1.5rem 0;">
+                    <div style="font-size: 1.3rem; margin-bottom: 1rem;">
+                        χ² = Σ [(h(2k) - h(2k+1))² / (h(2k) + h(2k+1))]
+                    </div>
+                    <p style="font-size: 0.95rem; color: #64748b;">
+                        k = 0, 1, 2, ..., 127 (для 8-бітних значень)
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="advantage-list">
+                        <strong>✅ Переваги:</strong>
+                        <ul>
+                            <li>Швидкий та ефективний</li>
+                            <li>Працює без оригінального зображення</li>
+                            <li>Може оцінити довжину повідомлення</li>
+                            <li>Добре виявляє послідовне LSB</li>
+                        </ul>
+                    </div>
+                    <div class="disadvantage-list">
+                        <strong>❌ Обмеження:</strong>
+                        <ul>
+                            <li>Не працює для LSB matching</li>
+                            <li>Не виявляє випадкове вбудовування</li>
+                            <li>Неефективний для адаптивних методів</li>
+                            <li>Потребує великої кількості пікселів</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: RS аналіз -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🔄 RS аналіз (Regular/Singular)</h2>
+
+                <div class="algorithm-box">
+                    <h3 style="text-align: center; color: #667eea;">Ідея методу (Fridrich et al., 2001)</h3>
+                    <p style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0;">
+                        Вимірює зміну "гладкості" зображення при додаванні/відніманні 1 від пікселів
+                    </p>
+                </div>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">🎯 Класифікація груп пікселів</h3>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li><strong>Regular (R):</strong> гладка група, f(G) зростає при модифікації (+1 або -1)</li>
+                        <li><strong>Singular (S):</strong> шумна група, f(G) зменшується при модифікації</li>
+                        <li><strong>Unusable (U):</strong> незмінна група, f(G) не змінюється</li>
+                    </ul>
+                    <p style="font-size: 1.05rem; margin-top: 1rem;">
+                        де <strong>f(G)</strong> — функція варіації (сума абсолютних різниць між сусідніми пікселями)
+                    </p>
+                </div>
+
+                <div class="formula-box">
+                    <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                        Природне зображення: R<sub>M</sub> ≈ R<sub>-M</sub> і S<sub>M</sub> ≈ S<sub>-M</sub>
+                    </div>
+                    <div style="font-size: 1.2rem;">
+                        Після LSB: R<sub>M</sub> ≠ R<sub>-M</sub> (порушення симетрії)
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>💡 Переваги RS:</strong> Виявляє як LSB replacement, так і LSB matching (на відміну від χ²)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Sample Pair Analysis -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>👥 Sample Pair Analysis</h2>
+
+                <div class="method-card">
+                    <h3 style="color: #667eea;">Метод Dumitrescu et al. (2003)</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Аналізує <strong>пари сусідніх пікселів</strong> і їх відносини до парних/непарних значень
+                    </p>
+                </div>
+
+                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <h4 style="color: #0369a1;">🔢 Класифікація пар (x, y):</h4>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li><strong>X:</strong> x = 2k, y = 2k+1 (сусідні парне/непарне)</li>
+                        <li><strong>Y:</strong> x = 2k, y = 2k-1 (сусідні парне/непарне, інший порядок)</li>
+                        <li><strong>Z:</strong> x = 2k, y = 2k (обидва парні) або x = 2k+1, y = 2k+1 (обидва непарні)</li>
+                    </ul>
+                </div>
+
+                <div class="formula-box">
+                    <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                        p = (X - Y) / (X + Y/2)
+                    </div>
+                    <p style="font-size: 0.95rem; color: #64748b;">
+                        де p — оцінка ймовірності вбудовування (0 ≤ p ≤ 1)
+                    </p>
+                </div>
+
+                <div class="advantage-list">
+                    <strong>✅ Особливості:</strong>
+                    <ul>
+                        <li>Виявляє як LSB replacement, так і LSB matching</li>
+                        <li>Дає кількісну оцінку payload (розміру повідомлення)</li>
+                        <li>Працює на невеликих ділянках</li>
+                        <li>Більш точний за χ² для LSB matching</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Обмеження методів -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>⚠️ Обмеження статистичних методів</h2>
+
+                <div class="disadvantage-list">
+                    <h3 style="color: #991b1b;">❌ Проблеми класичних методів</h3>
+                    <ul style="font-size: 1.1rem; line-height: 1.8;">
+                        <li><strong>LSB-specific:</strong> χ², RS, Sample Pair — працюють лише для LSB у просторовій області</li>
+                        <li><strong>Адаптивні методи:</strong> HUGO, WOW, S-UNIWARD уникають ці детектори</li>
+                        <li><strong>Частотні методи:</strong> DCT, DWT стеганографія потребує інших підходів</li>
+                        <li><strong>Низька ємність:</strong> якщо повідомлення мале (<10%), детектування складне</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <h3 style="color: #92400e;">🚀 Необхідність нових підходів</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Для виявлення сучасних методів потрібні:
+                    </p>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>📊 <strong>Багаті моделі ознак</strong> (SRM, SPAM)</li>
+                        <li>🤖 <strong>Машинне навчання</strong> (Ensemble, CNN)</li>
+                        <li>🎯 <strong>Універсальні детектори</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Підсумки -->
+    <div class="slide">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>📝 Підсумки теми</h2>
+
+                <div class="three-col-grid">
+                    <div class="feature-card">
+                        <h4 style="color: #667eea; text-align: center;">🎯 Типи</h4>
+                        <ul style="font-size: 0.95rem; line-height: 1.6;">
+                            <li>Targeted vs Universal</li>
+                            <li>Cover-only attack</li>
+                            <li>Known-cover attack</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4 style="color: #667eea; text-align: center;">👁️ Візуальні</h4>
+                        <ul style="font-size: 0.95rem; line-height: 1.6;">
+                            <li>LSB-площина</li>
+                            <li>Палітра</li>
+                            <li>Гістограми</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4 style="color: #667eea; text-align: center;">📊 Статистичні</h4>
+                        <ul style="font-size: 0.95rem; line-height: 1.6;">
+                            <li>Chi-square (χ²)</li>
+                            <li>RS аналіз</li>
+                            <li>Sample Pair</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-success" style="margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">✅ Що ми вивчили:</h3>
+                    <ul style="font-size: 1.05rem; line-height: 1.8;">
+                        <li>Зрозуміли різницю між targeted і universal стегоаналізом</li>
+                        <li>Вивчили візуальні методи виявлення (LSB-площина, гістограми)</li>
+                        <li>Освоїли статистичні тести: χ², RS, Sample Pair</li>
+                        <li>Усвідомили обмеження цих методів для сучасної стеганографії</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>➡️ Далі:</strong> Стегоаналіз частотних методів (DCT, DWT детектування)
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="slide-navigation">
+    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
+    <span id="slide-counter" class="slide-counter">1 / 11</span>
+    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" style="width: 9%;"></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>
