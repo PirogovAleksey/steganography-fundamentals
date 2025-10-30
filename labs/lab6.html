@@ -1294,7 +1294,7 @@ def test_robustness():
 
     axes[0].set_ylabel('BER (%)')
     axes[0].set_title('Bit Error Rate після атак')
-    axes[0].set_xticks(x_pos + width)
+    axes[0].set_xticks(x_pos + width * (len(results) - 1) / 2)
     axes[0].set_xticklabels(attack_names, rotation=45, ha='right')
     axes[0].legend()
     axes[0].grid(True, alpha=0.3)
@@ -1309,7 +1309,7 @@ def test_robustness():
 
     axes[1].set_ylabel('PSNR (dB)')
     axes[1].set_title('Якість зображення після атак')
-    axes[1].set_xticks(x_pos + width)
+    axes[1].set_xticks(x_pos + width * (len(results) - 1) / 2)
     axes[1].set_xticklabels(attack_names, rotation=45, ha='right')
     axes[1].legend()
     axes[1].grid(True, alpha=0.3)
