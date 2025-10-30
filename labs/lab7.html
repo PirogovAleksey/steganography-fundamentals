@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лабораторна робота №7: Аудіо LSB - стеганографія в аудіофайлах">
+    <meta name="keywords" content="стеганографія, аудіо, LSB, WAV, перцептивна якість">
+    <title>Лабораторна №7: Аудіо LSB | Основи стеганографії</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/lab-universal.css">
+
+    <!-- Highlight.js для підсвітки коду -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="lab-header">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Головна</a>
+            <span class="separator">/</span>
+            <a href="../index.html">Лабораторні</a>
+            <span class="separator">/</span>
+            <span class="current">Лабораторна №7</span>
+        </nav>
+        <h1>🎵 Лабораторна робота №7</h1>
+        <p class="subtitle">
+            Аудіо LSB: Обробка WAV файлів, аудіо LSB embedding, перцептивний аналіз
+        </p>
+        <div class="tool-badges">
+            <span class="tool-badge">Python</span>
+            <span class="tool-badge">Wave</span>
+            <span class="tool-badge">NumPy</span>
+            <span class="tool-badge">Librosa</span>
+            <span class="tool-badge">Matplotlib</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+
+    <!-- Цілі роботи -->
+    <section class="task-box">
+        <h2>🎯 Цілі лабораторної роботи</h2>
+        <ul>
+            <li>Вивчити структуру WAV файлів та методи їх обробки</li>
+            <li>Освоїти принципи аудіо LSB стеганографії</li>
+            <li>Реалізувати encoder/decoder для приховування даних в аудіо</li>
+            <li>Дослідити перцептивну якість стеганографічних аудіо</li>
+            <li>Провести порівняльний аналіз з іншими методами аудіо стеганографії</li>
+        </ul>
+    </section>
+
+    <!-- Теоретична частина -->
+    <section>
+        <h2>📚 Теоретична частина</h2>
+
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="switchTab(event, 'wav-format')">
+                    🎼 WAV формат
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'audio-lsb')">
+                    🔊 Audio LSB
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'perceptual-quality')">
+                    👂 Перцептивна якість
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'advanced-methods')">
+                    🚀 Інші методи
+                </button>
+            </div>
+
+            <!-- WAV формат -->
+            <div class="tab-content active" id="wav-format">
+                <h3>Структура WAV файлів</h3>
+
+                <div class="detection-method">
+                    <h4>🎼 Що таке WAV?</h4>
+                    <p>
+                        <strong>WAV (Waveform Audio File Format)</strong> — це стандартний формат для зберігання аудіо на ПК. Розроблений Microsoft та IBM, використовує контейнер RIFF (Resource Interchange File Format). WAV зазвичай містить <strong>несжаті PCM (Pulse-Code Modulation)</strong> дані, що робить його ідеальним для стеганографії.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Структура WAV файлу:</strong><br><br>
+                        RIFF Header (12 байт):<br>
+                        • ChunkID: "RIFF" (4 байти)<br>
+                        • ChunkSize: розмір файлу - 8 (4 байти)<br>
+                        • Format: "WAVE" (4 байти)<br><br>
+
+                        fmt Subchunk (24+ байт):<br>
+                        • Subchunk1ID: "fmt " (4 байти)<br>
+                        • AudioFormat: 1 для PCM (2 байти)<br>
+                        • NumChannels: моно=1, стерео=2 (2 байти)<br>
+                        • SampleRate: 44100 Hz типово (4 байти)<br>
+                        • BitsPerSample: 8, 16, 24, або 32 біт (2 байти)<br><br>
+
+                        data Subchunk:<br>
+                        • Subchunk2ID: "data" (4 байти)<br>
+                        • Subchunk2Size: розмір даних (4 байти)<br>
+                        • Data: аудіо семпли
+                    </div>
+
+                    <h4>🔍 Характеристики аудіо</h4>
+                    <ul>
+                        <li><strong>Sample rate:</strong> частота дискретизації (типово 44.1 kHz для CD якості)</li>
+                        <li><strong>Bit depth:</strong> кількість біт на семпл (8, 16, 24, 32)</li>
+                        <li><strong>Channels:</strong> моно (1) або стерео (2)</li>
+                        <li><strong>Bitrate:</strong> sample_rate × bit_depth × channels (напр. 1411.2 kbps для CD)</li>
+                        <li><strong>Duration:</strong> num_samples / sample_rate</li>
+                    </ul>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📊 Представлення аудіо даних</h4>
+                    <p>
+                        Аудіо семпли зберігаються як цілі числа:
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Діапазони значень:</strong><br><br>
+                        • 8-bit: 0 to 255 (unsigned)<br>
+                        • 16-bit: -32768 to 32767 (signed)<br>
+                        • 24-bit: -8388608 to 8388607 (signed)<br>
+                        • 32-bit: -2147483648 to 2147483647 (signed)<br><br>
+
+                        Для стеганографії найчастіше використовують 16-bit PCM,<br>
+                        оскільки це стандарт CD якості з хорошим співвідношенням<br>
+                        якість/розмір і достатньою кількістю біт для вбудовування.
+                    </div>
+
+                    <h4>🎯 Чому WAV для стеганографії?</h4>
+                    <ul>
+                        <li><strong>Несжатість:</strong> немає втрат інформації від компресії</li>
+                        <li><strong>Висока надлишковість:</strong> людське вухо не чутливе до малих змін</li>
+                        <li><strong>Велика ємність:</strong> 1 хв стерео = ~10 MB = можна заховати ~80 KB</li>
+                        <li><strong>Простота:</strong> прямий доступ до семплів без декодування</li>
+                        <li><strong>Поширеність:</strong> широко підтримується всіма програмами</li>
+                    </ul>
+                </div>
+
+                <div class="detection-method">
+                    <h4>💻 Робота з WAV в Python</h4>
+                    <pre><code class="language-python">import wave
+import numpy as np
+
+# Читання WAV файлу
+def read_wav(filename):
+    with wave.open(filename, 'rb') as wav:
+        # Отримання параметрів
+        n_channels = wav.getnchannels()
+        sample_width = wav.getsampwidth()
+        framerate = wav.getframerate()
+        n_frames = wav.getnframes()
+
+        # Читання сирих байтів
+        audio_data = wav.readframes(n_frames)
+
+        # Конвертація в numpy array
+        if sample_width == 1:  # 8-bit
+            dtype = np.uint8
+        elif sample_width == 2:  # 16-bit
+            dtype = np.int16
+        else:
+            dtype = np.int32
+
+        samples = np.frombuffer(audio_data, dtype=dtype)
+
+    return samples, framerate, n_channels, sample_width
+
+# Запис WAV файлу
+def write_wav(filename, samples, framerate, n_channels, sample_width):
+    with wave.open(filename, 'wb') as wav:
+        wav.setnchannels(n_channels)
+        wav.setsampwidth(sample_width)
+        wav.setframerate(framerate)
+        wav.writeframes(samples.tobytes())</code></pre>
+                </div>
+            </div>
+
+            <!-- Audio LSB -->
+            <div class="tab-content" id="audio-lsb">
+                <h3>Аудіо LSB стеганографія</h3>
+
+                <div class="detection-method">
+                    <h4>🔊 Принцип Audio LSB</h4>
+                    <p>
+                        <strong>Audio LSB</strong> працює аналогічно до image LSB, але замість пікселів модифікує аудіо семпли. Для 16-bit аудіо один семпл має 16 біт, і ми можемо використати 1-4 найменш значущі біти для вбудовування без помітної деградації якості.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Алгоритм вбудовування (1-bit LSB):</strong><br><br>
+                        1. sample = 16-bit аудіо семпл (наприклад, 25678)<br>
+                        2. message_bit = біт повідомлення (0 або 1)<br>
+                        3. sample_modified = (sample & 0xFFFE) | message_bit<br><br>
+
+                        Пояснення:<br>
+                        • sample & 0xFFFE — обнуляє LSB (маска ...11111110)<br>
+                        • | message_bit — встановлює новий LSB<br><br>
+
+                        Зміна амплітуди: ±1 від оригіналу<br>
+                        Вплив на якість: практично непомітний для слуху
+                    </div>
+
+                    <h4>📈 Ємність аудіо LSB</h4>
+                    <p>Розрахунок максимальної ємності:</p>
+                    <div class="formula-box">
+                        <strong>Формула ємності:</strong><br><br>
+                        Capacity (bits) = num_samples × LSB_bits_used<br><br>
+
+                        Приклад для 16-bit, 44.1 kHz стерео, 1 хвилина:<br>
+                        • Samples = 44100 × 60 × 2 = 5,292,000<br>
+                        • Using 1 LSB: 5,292,000 bits = 661,500 байт ≈ 646 KB<br>
+                        • Using 2 LSB: 1,323,000 байт ≈ 1.26 MB<br><br>
+
+                        Практично використовують 1-2 LSB біти для балансу<br>
+                        між ємністю та непомітністю.
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔧 Реалізація Audio LSB Encoder</h4>
+                    <pre><code class="language-python">def audio_lsb_encode(audio_samples, message, num_lsb=1):
+    """
+    Вбудовує повідомлення в аудіо семпли використовуючи LSB
+
+    Args:
+        audio_samples: numpy array з аудіо семплами
+        message: bytes - повідомлення для вбудовування
+        num_lsb: кількість LSB біт для використання (1-4)
+
+    Returns:
+        stego_samples: numpy array з модифікованими семплами
+    """
+    samples = audio_samples.copy()
+
+    # Конвертуємо повідомлення в біти
+    message_bits = ''.join([format(byte, '08b') for byte in message])
+
+    # Додаємо довжину повідомлення на початок (32 біти)
+    length_bits = format(len(message), '032b')
+    full_message = length_bits + message_bits
+
+    # Перевірка ємності
+    max_bits = len(samples) * num_lsb
+    if len(full_message) > max_bits:
+        raise ValueError(f"Message too large! Max capacity: {max_bits} bits")
+
+    # Створюємо маску для LSB
+    mask = (0xFFFF << num_lsb) & 0xFFFF  # Для 16-bit
+
+    # Вбудовуємо біти
+    bit_index = 0
+    for i in range(len(samples)):
+        if bit_index >= len(full_message):
+            break
+
+        # Очищуємо LSB біти
+        samples[i] = samples[i] & mask
+
+        # Отримуємо num_lsb біт з повідомлення
+        bits_to_embed = int(full_message[bit_index:bit_index+num_lsb], 2)
+
+        # Вбудовуємо біти
+        samples[i] = samples[i] | bits_to_embed
+
+        bit_index += num_lsb
+
+    return samples</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔓 Реалізація Audio LSB Decoder</h4>
+                    <pre><code class="language-python">def audio_lsb_decode(stego_samples, num_lsb=1):
+    """
+    Витягує повідомлення з стего аудіо
+
+    Args:
+        stego_samples: numpy array з стего семплами
+        num_lsb: кількість LSB біт, що використовувалися
+
+    Returns:
+        message: bytes - витягнуте повідомлення
+    """
+    # Створюємо маску для витягування LSB
+    mask = (1 << num_lsb) - 1
+
+    # Витягуємо довжину повідомлення (перші 32 біти)
+    length_bits = ''
+    for i in range(32 // num_lsb):
+        bits = stego_samples[i] & mask
+        length_bits += format(bits, f'0{num_lsb}b')
+
+    message_length = int(length_bits[:32], 2)
+
+    # Витягуємо повідомлення
+    message_bits = length_bits[32:]
+    start_index = 32 // num_lsb
+
+    bits_needed = message_length * 8
+    samples_needed = (bits_needed + num_lsb - 1) // num_lsb
+
+    for i in range(start_index, start_index + samples_needed):
+        bits = stego_samples[i] & mask
+        message_bits += format(bits, f'0{num_lsb}b')
+
+    # Конвертуємо біти в bytes
+    message = bytearray()
+    for i in range(0, message_length * 8, 8):
+        byte = int(message_bits[i:i+8], 2)
+        message.append(byte)
+
+    return bytes(message)</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🎯 Покращення базового LSB</h4>
+                    <ul>
+                        <li><strong>Randomized LSB:</strong> використання PRNG для вибору семплів (як у зображеннях)</li>
+                        <li><strong>Adaptive LSB:</strong> використання більше біт у гучних частинах, менше в тихих</li>
+                        <li><strong>Multi-channel:</strong> розподіл даних між каналами (L/R для стерео)</li>
+                        <li><strong>Selective embedding:</strong> вбудовування тільки в певних частотних діапазонах</li>
+                        <li><strong>Error correction:</strong> додавання Reed-Solomon або Hamming кодів</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Перцептивна якість -->
+            <div class="tab-content" id="perceptual-quality">
+                <h3>Перцептивна якість аудіо</h3>
+
+                <div class="detection-method">
+                    <h4>👂 Людське сприйняття звуку</h4>
+                    <p>
+                        Людське вухо не є ідеальним сенсором і має обмеження, які ми можемо використати для стеганографії:
+                    </p>
+
+                    <ul>
+                        <li><strong>Частотний діапазон:</strong> 20 Hz - 20 kHz (з віком звужується до 16 kHz)</li>
+                        <li><strong>Динамічний діапазон:</strong> ~120 dB (від порогу чутності до больового порогу)</li>
+                        <li><strong>Часова роздільність:</strong> ~10 мс для виявлення окремих звуків</li>
+                        <li><strong>Маскування:</strong> гучні звуки маскують тихі (частотне та часове)</li>
+                        <li><strong>Критичні смуги:</strong> вухо працює як банк фільтрів (~24 смуги)</li>
+                    </ul>
+
+                    <div class="formula-box">
+                        <strong>Психоакустична модель:</strong><br><br>
+                        Аудіо кодеки (MP3, AAC) використовують психоакустичні моделі<br>
+                        для визначення, які частини сигналу можна змінювати/видаляти<br>
+                        без помітного впливу на сприйняття.<br><br>
+
+                        Ключові ефекти:<br>
+                        • Frequency masking: гучний тон маскує сусідні тихі<br>
+                        • Temporal masking: перед та після гучного звуку<br>
+                        • Threshold of hearing: найтихіший звук, що чується
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📊 Метрики якості аудіо</h4>
+                    <p><strong>1. Signal-to-Noise Ratio (SNR)</strong></p>
+                    <div class="formula-box">
+                        SNR = 10 × log₁₀(P_signal / P_noise) [dB]<br><br>
+
+                        Де:<br>
+                        P_signal = середня потужність оригінального сигналу<br>
+                        P_noise = середня потужність шуму (різниці)<br><br>
+
+                        Інтерпретація:<br>
+                        • > 40 dB: відмінна якість, непомітні зміни<br>
+                        • 30-40 dB: хороша якість, дуже малі зміни<br>
+                        • 20-30 dB: прийнятна якість, помітні при уважному прослуховуванні<br>
+                        • < 20 dB: погана якість, чітко помітні спотворення
+                    </div>
+
+                    <p><strong>2. Perceptual Evaluation of Speech Quality (PESQ)</strong></p>
+                    <p>
+                        Стандарт ITU-T для оцінки якості мовлення. Оцінка від -0.5 до 4.5,<br>
+                        де 4.5 = ідеальна якість. Враховує психоакустичні особливості.
+                    </p>
+
+                    <p><strong>3. Short-Time Objective Intelligibility (STOI)</strong></p>
+                    <p>
+                        Метрика розбірливості мовлення (0 до 1). Значення > 0.9 означає<br>
+                        відмінну розбірливість.
+                    </p>
+
+                    <p><strong>4. Mean Opinion Score (MOS)</strong></p>
+                    <p>
+                        Суб'єктивна оцінка людьми від 1 (погано) до 5 (відмінно).<br>
+                        Золотий стандарт, але вимагає великої кількості тестувальників.
+                    </p>
+                </div>
+
+                <div class="detection-method">
+                    <h4>💻 Обчислення SNR в Python</h4>
+                    <pre><code class="language-python">def calculate_snr(original, modified):
+    """
+    Обчислює SNR між оригінальним та модифікованим аудіо
+
+    Args:
+        original: numpy array оригінальних семплів
+        modified: numpy array модифікованих семплів
+
+    Returns:
+        snr_db: SNR в децибелах
+    """
+    # Потужність сигналу
+    signal_power = np.mean(original ** 2)
+
+    # Потужність шуму (різниці)
+    noise = modified - original
+    noise_power = np.mean(noise ** 2)
+
+    # Уникаємо ділення на нуль
+    if noise_power == 0:
+        return float('inf')
+
+    # SNR в dB
+    snr = 10 * np.log10(signal_power / noise_power)
+
+    return snr
+
+# Приклад використання
+snr = calculate_snr(original_samples, stego_samples)
+print(f"SNR: {snr:.2f} dB")
+
+if snr > 40:
+    print("Відмінна якість - зміни непомітні")
+elif snr > 30:
+    print("Хороша якість - дуже малі зміни")
+elif snr > 20:
+    print("Прийнятна якість")
+else:
+    print("Погана якість - помітні спотворення")</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🎧 Спектральний аналіз</h4>
+                    <p>
+                        Корисно порівнювати спектри оригінального та стего аудіо:
+                    </p>
+                    <pre><code class="language-python">import matplotlib.pyplot as plt
+from scipy import signal
+
+def plot_spectrogram(audio_samples, sample_rate, title):
+    """Відображає спектрограму аудіо"""
+    f, t, Sxx = signal.spectrogram(audio_samples, sample_rate)
+
+    plt.figure(figsize=(10, 6))
+    plt.pcolormesh(t, f, 10 * np.log10(Sxx), shading='auto')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.title(title)
+    plt.colorbar(label='Power [dB]')
+    plt.ylim([0, sample_rate/2])
+    plt.show()
+
+# Порівняння спектрограм
+plot_spectrogram(original, sample_rate, "Original Audio")
+plot_spectrogram(stego, sample_rate, "Stego Audio")
+
+# Різниця спектрів показує, де відбулися зміни
+diff = stego - original
+plot_spectrogram(diff, sample_rate, "Difference (Noise)")</code></pre>
+                </div>
+            </div>
+
+            <!-- Інші методи -->
+            <div class="tab-content" id="advanced-methods">
+                <h3>Інші методи аудіо стеганографії</h3>
+
+                <div class="detection-method">
+                    <h4>🚀 Phase Coding</h4>
+                    <p>
+                        <strong>Фазове кодування</strong> використовує той факт, що людське вухо нечутливе до абсолютної фази сигналу, а тільки до відносних фазових зсувів.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Алгоритм Phase Coding:</strong><br><br>
+                        1. Розділити аудіо на сегменти (наприклад, по 1024 семпли)<br>
+                        2. Застосувати DFT до кожного сегменту<br>
+                        3. Модифікувати фазу першого сегменту згідно з бітами повідомлення<br>
+                        4. Налаштувати фази інших сегментів для збереження відносних різниць<br>
+                        5. Застосувати IDFT для отримання стего аудіо<br><br>
+
+                        Переваги:<br>
+                        • Висока непомітність (людина не чує фазу)<br>
+                        • Стійкість до шуму<br>
+
+                        Недоліки:<br>
+                        • Низька ємність (1 біт на сегмент)<br>
+                        • Складність реалізації
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🌊 Spread Spectrum</h4>
+                    <p>
+                        <strong>Розширення спектру</strong> — метод з високою стійкістю до атак. Повідомлення розподіляється по всьому частотному спектру.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Direct Sequence Spread Spectrum (DSSS):</strong><br><br>
+                        1. Кожен біт повідомлення представляється псевдовипадковою послідовністю<br>
+                        2. Послідовність додається до аудіо сигналу<br>
+                        3. Для декодування використовується той самий PRNG з ключем<br>
+                        4. Кореляція з оригінальною послідовністю витягує біт<br><br>
+
+                        Переваги:<br>
+                        • Висока стійкість до шуму, компресії, фільтрації<br>
+                        • Безпечність (потрібен ключ для декодування)<br>
+
+                        Недоліки:<br>
+                        • Дуже низька ємність<br>
+                        • Складна реалізація
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🎚️ Echo Hiding</h4>
+                    <p>
+                        <strong>Приховування ехо</strong> вбудовує інформацію додаванням короткого ехо до аудіо сигналу.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Параметри ехо:</strong><br><br>
+                        • Delay: затримка ехо (наприклад, 0.5-1 мс для "0", 1-2 мс для "1")<br>
+                        • Amplitude: амплітуда ехо (низька, щоб не помітити)<br>
+                        • Decay rate: швидкість загасання<br><br>
+
+                        y_stego(t) = y_original(t) + α × y_original(t - d)<br><br>
+
+                        Де d — затримка, α — амплітуда (зазвичай 0.1-0.3)<br><br>
+
+                        Декодування через cepstrum аналіз:<br>
+                        виявлення піків у кепстрі вказує на наявність та параметри ехо
+                    </div>
+
+                    <p>Буде детально розглянуто в лабораторній роботі №8.</p>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📊 Порівняльна таблиця методів</h4>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: var(--color-primary); color: white;">
+                                <th style="padding: 12px; border: 1px solid #ddd;">Метод</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Ємність</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Непомітність</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Стійкість</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Складність</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>LSB</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Хороша</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Проста</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Phase Coding</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Дуже низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Відмінна</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Середня</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Середня</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Spread Spectrum</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Дуже низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Відмінна</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Складна</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Echo Hiding</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Дуже хороша</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Середня</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Середня</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="margin-top: 15px;"><strong>Висновок:</strong> LSB є найпростішим та найємнішим методом, але має низьку стійкість. Для критичних застосувань краще використовувати комбінацію методів або більш стійкі техніки як spread spectrum.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Практичні завдання -->
+    <section>
+        <h2>💻 Практичні завдання</h2>
+
+        <!-- Завдання 1 -->
+        <div class="task-box">
+            <h3><span class="step-number">1</span>Базовий Audio LSB Encoder/Decoder</h3>
+
+            <h4>Встановлення бібліотек:</h4>
+            <pre class="python"><code># Встановлення необхідних бібліотек
+# В терміналі:
+# pip install numpy matplotlib scipy librosa
+
+import wave
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Перевірка версій
+print("NumPy версія:", np.__version__)
+print("✅ Бібліотеки успішно імпортовані!")
+</code></pre>
+
+            <h4>Базові функції для роботи з WAV:</h4>
+            <pre class="python"><code>def read_wav(filename):
+    """
+    Читання WAV файлу та отримання параметрів
+
+    Parameters:
+    -----------
+    filename : str - шлях до WAV файлу
+
+    Returns:
+    --------
+    samples : numpy array - аудіо семпли (int16 для 16-bit)
+    framerate : int - частота дискретизації (зазвичай 44100 Hz)
+    n_channels : int - кількість каналів (1=моно, 2=стерео)
+    sample_width : int - кількість байт на семпл (2 для 16-bit)
+
+    ВАЖЛИВО: Функція підтримує 8, 16, 32 бітні формати
+    """
+    with wave.open(filename, 'rb') as wav:
+        n_channels = wav.getnchannels()
+        sample_width = wav.getsampwidth()
+        framerate = wav.getframerate()
+        n_frames = wav.getnframes()
+
+        # Читання сирих байтів
+        audio_data = wav.readframes(n_frames)
+
+        # Визначення типу даних на основі sample_width
+        if sample_width == 1:  # 8-bit
+            dtype = np.uint8
+        elif sample_width == 2:  # 16-bit (найпоширеніший)
+            dtype = np.int16
+        else:  # 32-bit
+            dtype = np.int32
+
+        # Конвертація в numpy array
+        samples = np.frombuffer(audio_data, dtype=dtype)
+
+    print(f"Завантажено: {filename}")
+    print(f"  Формат: {n_channels} канал(и), {sample_width*8}-bit, {framerate} Hz")
+    print(f"  Тривалість: {n_frames/framerate:.2f} сек")
+    print(f"  Семплів: {len(samples)}")
+
+    return samples, framerate, n_channels, sample_width
+
+def write_wav(filename, samples, framerate, n_channels, sample_width):
+    """
+    Запис WAV файлу з заданими параметрами
+
+    Parameters:
+    -----------
+    filename : str - шлях для збереження
+    samples : numpy array - аудіо семпли
+    framerate : int - частота дискретизації
+    n_channels : int - кількість каналів
+    sample_width : int - кількість байт на семпл
+    """
+    with wave.open(filename, 'wb') as wav:
+        wav.setnchannels(n_channels)
+        wav.setsampwidth(sample_width)
+        wav.setframerate(framerate)
+        wav.writeframes(samples.tobytes())
+
+    print(f"✅ Збережено: {filename}")
+
+def calculate_capacity(num_samples, num_lsb):
+    """
+    Обчислює максимальну ємність для LSB стеганографії
+
+    Parameters:
+    -----------
+    num_samples : int - кількість семплів в аудіо
+    num_lsb : int - кількість LSB біт для використання
+
+    Returns:
+    --------
+    capacity_bytes : int - ємність в байтах
+    """
+    # 32 біти для header (довжина повідомлення)
+    available_bits = (num_samples * num_lsb) - 32
+    capacity_bytes = available_bits // 8
+    return capacity_bytes
+
+print("Функції для роботи з WAV готові!")
+</code></pre>
+
+            <h4>Реалізація Audio LSB Encoder:</h4>
+            <pre class="python"><code>def audio_lsb_encode(audio_file, message, output_file, num_lsb=1):
+    """
+    Вбудовує повідомлення в аудіо використовуючи LSB
+
+    Parameters:
+    -----------
+    audio_file : str - шлях до оригінального WAV файлу
+    message : bytes - повідомлення для вбудовування (байтовий рядок)
+    output_file : str - шлях для збереження стего-аудіо
+    num_lsb : int - кількість LSB біт для використання (1-4)
+                    1 LSB: найкраща якість, низька ємність
+                    2 LSB: добрий баланс (рекомендовано)
+                    3-4 LSB: висока ємність, помітна деградація
+
+    Returns:
+    --------
+    bits_embedded : int - кількість вбудованих біт
+
+    ВАЖЛИВО:
+    - Автоматично додає header з довжиною повідомлення (32 біти)
+    - Використовує bit masking для модифікації LSB
+    - Максимальна зміна семплу: ±(2^num_lsb - 1)
+    """
+    # Читаємо оригінальне аудіо
+    samples, sr, channels, width = read_wav(audio_file)
+    stego_samples = samples.copy().astype(np.int32)  # int32 для уникнення overflow
+
+    # Конвертуємо повідомлення в біти
+    length_bits = format(len(message), '032b')  # 32-бітний header
+    message_bits = ''.join([format(byte, '08b') for byte in message])
+    full_message = length_bits + message_bits
+
+    print(f"\n📊 Статистика вбудовування:")
+    print(f"  Довжина повідомлення: {len(message)} байт")
+    print(f"  Біти для вбудовування: {len(full_message)} (32 header + {len(message_bits)} data)")
+
+    # Перевірка ємності
+    max_capacity = calculate_capacity(len(samples), num_lsb)
+    print(f"  Максимальна ємність: {max_capacity} байт")
+
+    if len(message) > max_capacity:
+        raise ValueError(f"Повідомлення завелике! Макс: {max_capacity} байт, потрібно: {len(message)} байт")
+
+    # Створюємо маску для очищення LSB біт
+    # Наприклад, для 16-bit та num_lsb=2: mask = 0xFFFC (11111111 11111100)
+    mask = ~((1 << num_lsb) - 1)  # Універсальна маска
+
+    # Вбудовування: заміна LSB біт повідомленням
+    bit_idx = 0
+    for i in range(len(stego_samples)):
+        if bit_idx >= len(full_message):
+            break
+
+        # Очищуємо LSB біти та встановлюємо нові
+        bits_to_embed = int(full_message[bit_idx:bit_idx+num_lsb].ljust(num_lsb, '0'), 2)
+        stego_samples[i] = (stego_samples[i] & mask) | bits_to_embed
+
+        bit_idx += num_lsb
+
+    # Зберігаємо стего-аудіо (конвертуємо назад в int16)
+    write_wav(output_file, stego_samples.astype(np.int16), sr, channels, width)
+
+    print(f"✅ Вбудовано {len(full_message)} біт у {output_file}")
+
+    return len(full_message)
+
+def audio_lsb_decode(stego_file, num_lsb=1):
+    """
+    Витягує повідомлення з стего-аудіо використовуючи LSB
+
+    Parameters:
+    -----------
+    stego_file : str - шлях до стего-аудіо файлу
+    num_lsb : int - кількість LSB біт (має бути той самий, що при вбудовуванні!)
+
+    Returns:
+    --------
+    message : bytes - витягнуте повідомлення
+
+    ВАЖЛИВО:
+    - Це СЛІПИЙ (blind) метод - не потребує оригінального аудіо
+    - Спочатку витягує 32-бітний header з довжиною
+    - Потім витягує відповідну кількість біт повідомлення
+    """
+    # Читаємо стего-аудіо
+    samples, _, _, _ = read_wav(stego_file)
+
+    # Створюємо маску для витягування LSB біт
+    # Наприклад, для num_lsb=2: mask = 0x0003 (00000000 00000011)
+    mask = (1 << num_lsb) - 1
+
+    print(f"\n📊 Статистика витягування:")
+
+    # Крок 1: Витягуємо довжину повідомлення (перші 32 біти)
+    length_bits = ''
+    samples_for_length = 32 // num_lsb + (1 if 32 % num_lsb != 0 else 0)
+
+    for i in range(samples_for_length):
+        bits = samples[i] & mask
+        length_bits += format(bits, f'0{num_lsb}b')
+
+    message_length = int(length_bits[:32], 2)
+    print(f"  Довжина повідомлення: {message_length} байт")
+
+    # Крок 2: Витягуємо повідомлення
+    message_bits = length_bits[32:]  # Залишок після header
+    start_idx = samples_for_length
+    bits_needed = message_length * 8
+    samples_needed = (bits_needed - len(message_bits) + num_lsb - 1) // num_lsb
+
+    for i in range(start_idx, start_idx + samples_needed):
+        bits = samples[i] & mask
+        message_bits += format(bits, f'0{num_lsb}b')
+
+    # Крок 3: Конвертуємо біти в bytes
+    message = bytearray()
+    for i in range(0, message_length * 8, 8):
+        if i + 8 <= len(message_bits):
+            byte = int(message_bits[i:i+8], 2)
+            message.append(byte)
+
+    print(f"✅ Витягнуто {len(message)} байт")
+
+    return bytes(message)
+
+print("Audio LSB функції готові!")
+</code></pre>
+
+            <h4>Тестування та демонстрація:</h4>
+            <pre class="python"><code># Приклад 1: Базове вбудовування тексту
+print("="*60)
+print("ТЕСТ 1: Базове вбудовування")
+print("="*60)
+
+message = b"Секретне повідомлення в аудіо!"
+print(f"Оригінальне повідомлення: {message.decode('utf-8')}")
+
+# Припускаємо, що у вас є файл 'test_audio.wav'
+# Вбудовування
+audio_lsb_encode('test_audio.wav', message, 'stego_audio.wav', num_lsb=2)
+
+# Витягування
+extracted = audio_lsb_decode('stego_audio.wav', num_lsb=2)
+print(f"Витягнуте повідомлення: {extracted.decode('utf-8')}")
+
+if extracted == message:
+    print("✅ УСПІХ: Повідомлення витягнуто коректно!")
+else:
+    print("❌ ПОМИЛКА: Повідомлення не збігається!")
+
+# Приклад 2: Тестування різних довжин
+print("\n" + "="*60)
+print("ТЕСТ 2: Різні довжини повідомлень")
+print("="*60)
+
+test_lengths = [10, 100, 500, 1000]
+for length in test_lengths:
+    msg = b'X' * length
+    try:
+        audio_lsb_encode('test_audio.wav', msg, f'stego_{length}.wav', num_lsb=1)
+        decoded = audio_lsb_decode(f'stego_{length}.wav', num_lsb=1)
+        status = "✅ OK" if decoded == msg else "❌ FAIL"
+        print(f"  {length} байт: {status}")
+    except ValueError as e:
+        print(f"  {length} байт: ⚠️ {e}")
+
+# Приклад 3: Тестування різної кількості LSB
+print("\n" + "="*60)
+print("ТЕСТ 3: Різна кількість LSB біт")
+print("="*60)
+
+message = b"Test message for LSB comparison"
+for num_lsb in [1, 2, 3, 4]:
+    audio_lsb_encode('test_audio.wav', message, f'stego_{num_lsb}lsb.wav', num_lsb)
+    decoded = audio_lsb_decode(f'stego_{num_lsb}lsb.wav', num_lsb)
+    status = "✅ OK" if decoded == message else "❌ FAIL"
+    print(f"  {num_lsb} LSB: {status}")
+
+print("\n✅ Всі тести завершено!")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Всі тести проходять успішно (100% точність витягування)</li>
+                    <li>Стего-файл має той самий розмір, що й оригінал</li>
+                    <li>Для 1-2 LSB: зміни непомітні на слух</li>
+                    <li>Ємність для 44.1kHz стерео, 1 хв: ~646 KB (1 LSB), ~1.26 MB (2 LSB)</li>
+                    <li>Час обробки: < 1 сек для 1-хвилинного файлу</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 2 -->
+        <div class="task-box">
+            <h3><span class="step-number">2</span>Аналіз якості та ємності</h3>
+
+            <h4>Реалізація SNR Calculator:</h4>
+            <pre class="python"><code>def calculate_snr(original, modified):
+    """
+    Обчислює Signal-to-Noise Ratio між оригінальним та модифікованим аудіо
+
+    Parameters:
+    -----------
+    original : numpy array - оригінальні семпли
+    modified : numpy array - модифіковані семпли
+
+    Returns:
+    --------
+    snr_db : float - SNR в децибелах
+
+    Інтерпретація SNR:
+    - > 40 dB: Відмінна якість, практично непомітні зміни
+    - 30-40 dB: Хороша якість, дуже малі зміни
+    - 20-30 dB: Прийнятна якість, помітні при уважному прослуховуванні
+    - < 20 dB: Погана якість, чітко помітні спотворення
+    """
+    # Потужність оригінального сигналу
+    signal_power = np.mean(original.astype(float) ** 2)
+
+    # Шум (різниця між оригіналом та модифікованим)
+    noise = modified.astype(float) - original.astype(float)
+    noise_power = np.mean(noise ** 2)
+
+    # Уникаємо ділення на нуль
+    if noise_power == 0:
+        return float('inf')
+
+    # SNR в децибелах
+    snr = 10 * np.log10(signal_power / noise_power)
+    return snr
+
+def analyze_audio_quality(original_file, stego_file, num_lsb):
+    """
+    Повний аналіз якості стего-аудіо
+
+    Parameters:
+    -----------
+    original_file : str - шлях до оригінального аудіо
+    stego_file : str - шлях до стего-аудіо
+    num_lsb : int - кількість використаних LSB біт
+
+    Returns:
+    --------
+    analysis_results : dict - словник з результатами аналізу
+    """
+    # Читаємо обидва файли
+    orig_samples, sr, _, _ = read_wav(original_file)
+    stego_samples, _, _, _ = read_wav(stego_file)
+
+    # Обчислюємо SNR
+    snr = calculate_snr(orig_samples, stego_samples)
+
+    # Статистика змін
+    diff = stego_samples.astype(float) - orig_samples.astype(float)
+    max_diff = np.max(np.abs(diff))
+    mean_diff = np.mean(np.abs(diff))
+    std_diff = np.std(diff)
+
+    # Відсоток змінених семплів
+    changed_samples = np.sum(diff != 0)
+    percent_changed = (changed_samples / len(orig_samples)) * 100
+
+    # Визначення якості
+    if snr > 40:
+        quality = "Відмінна"
+        emoji = "✅"
+    elif snr > 30:
+        quality = "Хороша"
+        emoji = "✅"
+    elif snr > 20:
+        quality = "Прийнятна"
+        emoji = "⚠️"
+    else:
+        quality = "Погана"
+        emoji = "❌"
+
+    print(f"\n{'='*50}")
+    print(f"📊 Аналіз якості для {num_lsb} LSB")
+    print(f"{'='*50}")
+    print(f"  SNR: {snr:.2f} dB")
+    print(f"  Максимальна зміна: {max_diff}")
+    print(f"  Середня зміна: {mean_diff:.4f}")
+    print(f"  Std відхилення: {std_diff:.4f}")
+    print(f"  Змінено семплів: {changed_samples} ({percent_changed:.2f}%)")
+    print(f"  {emoji} Якість: {quality}")
+
+    return {
+        'num_lsb': num_lsb,
+        'snr': snr,
+        'max_diff': max_diff,
+        'mean_diff': mean_diff,
+        'std_diff': std_diff,
+        'percent_changed': percent_changed,
+        'quality': quality
+    }
+
+def plot_audio_comparison(original_file, stego_file, num_lsb):
+    """
+    Візуалізує порівняння оригінального та стего-аудіо
+
+    Створює 3 графіки:
+    1. Waveform оригіналу та стего
+    2. Різниця (шум)
+    3. Спектрограми
+    """
+    orig_samples, sr, _, _ = read_wav(original_file)
+    stego_samples, _, _ , _ = read_wav(stego_file)
+
+    # Обмежуємо для візуалізації (перші 2 секунди)
+    samples_to_show = min(sr * 2, len(orig_samples))
+    orig_show = orig_samples[:samples_to_show]
+    stego_show = stego_samples[:samples_to_show]
+    time = np.linspace(0, len(orig_show) / sr, len(orig_show))
+
+    fig = plt.figure(figsize=(15, 10))
+
+    # 1. Waveform порівняння
+    ax1 = plt.subplot(3, 2, 1)
+    ax1.plot(time, orig_show, label='Оригінал', alpha=0.7)
+    ax1.set_title('Оригінальне аудіо')
+    ax1.set_xlabel('Час (с)')
+    ax1.set_ylabel('Амплітуда')
+    ax1.grid(True, alpha=0.3)
+
+    ax2 = plt.subplot(3, 2, 2)
+    ax2.plot(time, stego_show, label='Стего', alpha=0.7, color='orange')
+    ax2.set_title(f'Стего-аудіо ({num_lsb} LSB)')
+    ax2.set_xlabel('Час (с)')
+    ax2.set_ylabel('Амплітуда')
+    ax2.grid(True, alpha=0.3)
+
+    # 2. Різниця (шум)
+    ax3 = plt.subplot(3, 2, 3)
+    diff = stego_show - orig_show
+    ax3.plot(time, diff, color='red', alpha=0.7)
+    ax3.set_title(f'Різниця (Шум) - SNR: {calculate_snr(orig_samples, stego_samples):.2f} dB')
+    ax3.set_xlabel('Час (с)')
+    ax3.set_ylabel('Амплітуда')
+    ax3.grid(True, alpha=0.3)
+
+    # 3. Гістограма змін
+    ax4 = plt.subplot(3, 2, 4)
+    ax4.hist(diff, bins=50, alpha=0.7, color='red')
+    ax4.set_title('Розподіл змін')
+    ax4.set_xlabel('Величина зміни')
+    ax4.set_ylabel('Частота')
+    ax4.grid(True, alpha=0.3)
+
+    # 4. Спектрограма оригіналу
+    ax5 = plt.subplot(3, 2, 5)
+    f, t, Sxx = signal.spectrogram(orig_show, sr)
+    ax5.pcolormesh(t, f, 10 * np.log10(Sxx + 1e-10), shading='auto')
+    ax5.set_title('Спектрограма оригіналу')
+    ax5.set_ylabel('Частота (Hz)')
+    ax5.set_xlabel('Час (с)')
+    ax5.set_ylim([0, sr/2])
+
+    # 5. Спектрограма стего
+    ax6 = plt.subplot(3, 2, 6)
+    f, t, Sxx = signal.spectrogram(stego_show, sr)
+    ax6.pcolormesh(t, f, 10 * np.log10(Sxx + 1e-10), shading='auto', cmap='hot')
+    ax6.set_title('Спектрограма стего')
+    ax6.set_ylabel('Частота (Hz)')
+    ax6.set_xlabel('Час (с)')
+    ax6.set_ylim([0, sr/2])
+
+    plt.tight_layout()
+    plt.savefig(f'audio_analysis_{num_lsb}lsb.png', dpi=150, bbox_inches='tight')
+    print(f"📊 Графік збережено: audio_analysis_{num_lsb}lsb.png")
+    plt.show()
+
+print("Функції аналізу якості готові!")
+</code></pre>
+
+            <h4>Експериментальне дослідження:</h4>
+            <pre class="python"><code># Експеримент: Порівняння різної кількості LSB біт
+print("="*60)
+print("ЕКСПЕРИМЕНТ: Вплив кількості LSB на якість та ємність")
+print("="*60)
+
+# Тестовий файл
+test_file = 'test_audio.wav'
+message = b"Тестове повідомлення для аналізу якості"
+
+results = []
+
+for num_lsb in [1, 2, 3, 4]:
+    print(f"\n--- Тестування {num_lsb} LSB ---")
+
+    # Вбудовування
+    stego_file = f'stego_{num_lsb}lsb.wav'
+    audio_lsb_encode(test_file, message, stego_file, num_lsb)
+
+    # Аналіз якості
+    analysis = analyze_audio_quality(test_file, stego_file, num_lsb)
+    results.append(analysis)
+
+    # Візуалізація (опціонально)
+    # plot_audio_comparison(test_file, stego_file, num_lsb)
+
+# Створення зведеної таблиці
+print("\n" + "="*60)
+print("ЗВЕДЕНА ТАБЛИЦЯ РЕЗУЛЬТАТІВ")
+print("="*60)
+print(f"{'LSB':<6} {'SNR (dB)':<12} {'Max Δ':<10} {'Mean Δ':<12} {'Якість':<15}")
+print("-"*60)
+
+for r in results:
+    print(f"{r['num_lsb']:<6} {r['snr']:<12.2f} {r['max_diff']:<10} {r['mean_diff']:<12.4f} {r['quality']:<15}")
+
+# Візуалізація порівняння
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+# Графік 1: SNR vs LSB
+lsbs = [r['num_lsb'] for r in results]
+snrs = [r['snr'] for r in results]
+ax1.plot(lsbs, snrs, marker='o', linewidth=2, markersize=10, color='#2E86AB')
+ax1.axhline(y=40, color='green', linestyle='--', alpha=0.5, label='Відмінна якість (>40 dB)')
+ax1.axhline(y=30, color='orange', linestyle='--', alpha=0.5, label='Хороша якість (>30 dB)')
+ax1.set_xlabel('Кількість LSB біт', fontsize=12)
+ax1.set_ylabel('SNR (dB)', fontsize=12)
+ax1.set_title('Залежність SNR від кількості LSB', fontsize=14, fontweight='bold')
+ax1.grid(True, alpha=0.3)
+ax1.legend()
+ax1.set_xticks([1, 2, 3, 4])
+
+# Графік 2: Максимальна зміна vs LSB
+max_diffs = [r['max_diff'] for r in results]
+ax2.bar(lsbs, max_diffs, color=['#06A77D', '#F77F00', '#D62828', '#8B0000'], alpha=0.7, edgecolor='black')
+ax2.set_xlabel('Кількість LSB біт', fontsize=12)
+ax2.set_ylabel('Максимальна зміна семплу', fontsize=12)
+ax2.set_title('Максимальна зміна vs кількість LSB', fontsize=14, fontweight='bold')
+ax2.grid(True, alpha=0.3, axis='y')
+ax2.set_xticks([1, 2, 3, 4])
+
+plt.tight_layout()
+plt.savefig('lsb_quality_comparison.png', dpi=150, bbox_inches='tight')
+print("\n📊 Графіки збережено: lsb_quality_comparison.png")
+plt.show()
+
+# Висновки
+print("\n" + "="*60)
+print("📝 ВИСНОВКИ")
+print("="*60)
+print(f"✅ 1 LSB: SNR = {results[0]['snr']:.2f} dB - {results[0]['quality']} якість")
+print(f"✅ 2 LSB: SNR = {results[1]['snr']:.2f} dB - {results[1]['quality']} якість (оптимальний баланс)")
+print(f"⚠️ 3 LSB: SNR = {results[2]['snr']:.2f} dB - {results[2]['quality']} якість")
+print(f"⚠️ 4 LSB: SNR = {results[3]['snr']:.2f} dB - {results[3]['quality']} якість")
+print("\nРекомендація: Використовуйте 1-2 LSB для непомітного вбудовування")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>1 LSB: SNR > 45 dB (відмінна якість, практично непомітно)</li>
+                    <li>2 LSB: SNR 35-45 dB (хороша якість, рекомендований варіант)</li>
+                    <li>3 LSB: SNR 25-35 dB (прийнятна якість)</li>
+                    <li>4 LSB: SNR 15-25 dB (погана якість, помітні артефакти)</li>
+                    <li>Спектрограми оригіналу та стего майже ідентичні для 1-2 LSB</li>
+                    <li>Максимальна зміна семплу: ±1 (1 LSB), ±3 (2 LSB), ±7 (3 LSB), ±15 (4 LSB)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 3 -->
+        <div class="task-box">
+            <h3><span class="step-number">3</span>Randomized LSB з ключем</h3>
+
+            <h4>Генерація псевдовипадкових позицій:</h4>
+            <pre class="python"><code>def generate_positions(key, num_samples, capacity):
+    """
+    Генерує псевдовипадкові позиції для вбудовування
+
+    Parameters:
+    -----------
+    key : int - ключ для ініціалізації PRNG
+    num_samples : int - загальна кількість семплів в аудіо
+    capacity : int - потрібна кількість позицій
+
+    Returns:
+    --------
+    positions : numpy array - відсортовані псевдовипадкові позиції
+
+    ВАЖЛИВО:
+    - Використовує той самий ключ для encoding/decoding
+    - Позиції без повторень (replace=False)
+    - Сортування для ефективності доступу
+    """
+    if capacity > num_samples:
+        raise ValueError(f"Недостатньо семплів! Потрібно {capacity}, доступно {num_samples}")
+
+    # Ініціалізуємо PRNG з ключем
+    np.random.seed(key)
+
+    # Генеруємо унікальні випадкові позиції
+    positions = np.random.choice(num_samples, capacity, replace=False)
+
+    # Сортуємо для ефективного послідовного доступу
+    positions = np.sort(positions)
+
+    print(f"✅ Згенеровано {len(positions)} позицій з ключем {key}")
+    return positions
+
+def random_lsb_encode(audio_file, message, output_file, key, num_lsb=1):
+    """
+    Вбудовує повідомлення в псевдовипадкові позиції (randomized LSB)
+
+    Parameters:
+    -----------
+    audio_file : str - шлях до оригінального WAV
+    message : bytes - повідомлення для вбудовування
+    output_file : str - шлях для збереження стего
+    key : int - секретний ключ для генерації позицій
+    num_lsb : int - кількість LSB біт (1-4)
+
+    Returns:
+    --------
+    samples_used : int - кількість використаних семплів
+
+    ВАЖЛИВО:
+    - Підвищує безпечність через розподілення змін по всьому аудіо
+    - Потребує того самого ключа для декодування
+    - Складніше виявити стегоаналізом порівняно з sequential LSB
+    - Довжина зберігається в ПОСЛІДОВНИХ позиціях (перші N семплів)
+    - Повідомлення зберігається в ВИПАДКОВИХ позиціях
+    """
+    # Читаємо аудіо
+    samples, sr, channels, width = read_wav(audio_file)
+    stego = samples.copy().astype(np.int32)  # int32 для уникнення overflow
+
+    # Конвертуємо повідомлення в біти
+    length_bits = format(len(message), '032b')
+    message_bits = ''.join([format(byte, '08b') for byte in message])
+
+    print(f"\n📊 Randomized LSB Encoding:")
+    print(f"  Повідомлення: {len(message)} байт")
+    print(f"  Ключ: {key}")
+    print(f"  LSB біт: {num_lsb}")
+
+    # Маска для очищення LSB
+    mask = ~((1 << num_lsb) - 1)  # Універсальна маска
+
+    # Крок 1: Вбудовуємо довжину в ПОСЛІДОВНІ позиції (перші семпли)
+    length_samples = (32 + num_lsb - 1) // num_lsb
+    bit_idx = 0
+    for i in range(length_samples):
+        bits_to_embed = int(length_bits[bit_idx:bit_idx+num_lsb].ljust(num_lsb, '0'), 2)
+        stego[i] = (stego[i] & mask) | bits_to_embed
+        bit_idx += num_lsb
+
+    # Крок 2: Вбудовуємо повідомлення в ВИПАДКОВІ позиції (після заголовка)
+    message_samples_needed = (len(message_bits) + num_lsb - 1) // num_lsb
+    available_samples = len(samples) - length_samples
+
+    if message_samples_needed > available_samples:
+        raise ValueError(f"Повідомлення завелике! Доступно {available_samples} семплів")
+
+    # Генеруємо випадкові позиції в доступному діапазоні
+    positions = generate_positions(key, available_samples, message_samples_needed)
+    positions = positions + length_samples  # Зсув на розмір заголовка
+
+    # Вбудовування повідомлення
+    bit_idx = 0
+    for pos in positions:
+        if bit_idx >= len(message_bits):
+            break
+        bits_to_embed = int(message_bits[bit_idx:bit_idx+num_lsb].ljust(num_lsb, '0'), 2)
+        stego[pos] = (stego[pos] & mask) | bits_to_embed
+        bit_idx += num_lsb
+
+    # Зберігаємо (конвертуємо назад в int16)
+    write_wav(output_file, stego.astype(np.int16), sr, channels, width)
+
+    print(f"✅ Вбудовано у {length_samples + len(positions)} позицій")
+    print(f"  Заголовок: {length_samples} семплів (послідовно)")
+    print(f"  Повідомлення: {len(positions)} семплів (випадково)")
+    return length_samples + len(positions)
+
+def random_lsb_decode(stego_file, key, num_lsb=1):
+    """
+    Витягує повідомлення з randomized LSB стего
+
+    Parameters:
+    -----------
+    stego_file : str - шлях до стего-аудіо
+    key : int - той самий ключ, що використовувався при вбудовуванні
+    num_lsb : int - кількість LSB біт
+
+    Returns:
+    --------
+    message : bytes - витягнуте повідомлення
+
+    ВАЖЛИВО:
+    - ОБОВ'ЯЗКОВО потрібен правильний ключ
+    - Неправильний ключ дасть випадкові дані
+    - Довжина витягується з ПОСЛІДОВНИХ позицій (перші N семплів)
+    - Повідомлення витягується з ВИПАДКОВИХ позицій
+    """
+    # Читаємо стего
+    samples, _, _, _ = read_wav(stego_file)
+
+    print(f"\n📊 Randomized LSB Decoding:")
+    print(f"  Ключ: {key}")
+    print(f"  LSB біт: {num_lsb}")
+
+    # Маска для витягування LSB
+    mask = (1 << num_lsb) - 1
+
+    # Крок 1: Витягуємо довжину з ПОСЛІДОВНИХ позицій (перші семпли)
+    length_samples = (32 + num_lsb - 1) // num_lsb
+    length_bits = ''
+    for i in range(length_samples):
+        bits = samples[i] & mask
+        length_bits += format(bits, f'0{num_lsb}b')
+
+    message_length = int(length_bits[:32], 2)
+    print(f"  Довжина повідомлення: {message_length} байт")
+
+    # Перевірка адекватності
+    if message_length > 100000:
+        raise ValueError(f"Невалідна довжина: {message_length}. Можливо неправильний ключ?")
+
+    # Крок 2: Витягуємо повідомлення з ВИПАДКОВИХ позицій (після заголовка)
+    message_bits_needed = message_length * 8
+    message_samples_needed = (message_bits_needed + num_lsb - 1) // num_lsb
+    available_samples = len(samples) - length_samples
+
+    # Генеруємо ті самі випадкові позиції, що й при кодуванні
+    positions = generate_positions(key, available_samples, message_samples_needed)
+    positions = positions + length_samples  # Зсув на розмір заголовка
+
+    # Витягуємо біти повідомлення
+    message_bits = ''
+    for pos in positions:
+        bits = samples[pos] & mask
+        message_bits += format(bits, f'0{num_lsb}b')
+
+    # Беремо тільки потрібну кількість біт
+    message_bits = message_bits[:message_bits_needed]
+
+    # Конвертуємо в bytes
+    message = bytearray()
+    for i in range(0, len(message_bits), 8):
+        if i + 8 <= len(message_bits):
+            byte = int(message_bits[i:i+8], 2)
+            message.append(byte)
+
+    print(f"✅ Витягнуто {len(message)} байт")
+    return bytes(message)
+
+print("Randomized LSB функції готові!")
+</code></pre>
+
+            <h4>Порівняння Sequential vs Randomized LSB:</h4>
+            <pre class="python"><code># Порівняння безпечності Sequential та Randomized LSB
+print("="*60)
+print("ПОРІВНЯННЯ: Sequential LSB vs Randomized LSB")
+print("="*60)
+
+test_file = 'test_audio.wav'
+message = b"Секретне повідомлення" * 10  # ~200 байт
+key = 12345
+
+# 1. Sequential LSB
+print("\n--- Sequential LSB ---")
+audio_lsb_encode(test_file, message, 'seq_stego.wav', num_lsb=2)
+seq_samples, _, _, _ = read_wav('seq_stego.wav')
+orig_samples, _, _, _ = read_wav(test_file)
+
+# 2. Randomized LSB
+print("\n--- Randomized LSB ---")
+random_lsb_encode(test_file, message, 'rand_stego.wav', key, num_lsb=2)
+rand_samples, _, _, _ = read_wav('rand_stego.wav')
+
+# 3. Аналіз розподілу LSB
+seq_lsb = seq_samples & 0x03  # Останні 2 біти
+rand_lsb = rand_samples & 0x03
+orig_lsb = orig_samples & 0x03
+
+# Візуалізація
+fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+
+# Гістограми LSB
+axes[0, 0].hist(orig_lsb[:10000], bins=4, alpha=0.7, color='gray', edgecolor='black')
+axes[0, 0].set_title('Оригінал - LSB розподіл')
+axes[0, 0].set_xlabel('LSB значення')
+axes[0, 0].set_ylabel('Частота')
+axes[0, 0].grid(True, alpha=0.3)
+
+axes[0, 1].hist(seq_lsb[:10000], bins=4, alpha=0.7, color='red', edgecolor='black')
+axes[0, 1].set_title('Sequential LSB - розподіл')
+axes[0, 1].set_xlabel('LSB значення')
+axes[0, 1].set_ylabel('Частота')
+axes[0, 1].grid(True, alpha=0.3)
+
+axes[0, 2].hist(rand_lsb[:10000], bins=4, alpha=0.7, color='green', edgecolor='black')
+axes[0, 2].set_title('Randomized LSB - розподіл')
+axes[0, 2].set_xlabel('LSB значення')
+axes[0, 2].set_ylabel('Частота')
+axes[0, 2].grid(True, alpha=0.3)
+
+# Позиції змін
+orig_diff_seq = (seq_samples != orig_samples).astype(int)
+orig_diff_rand = (rand_samples != orig_samples).astype(int)
+
+axes[1, 0].plot(orig_diff_seq[:5000], linewidth=0.5)
+axes[1, 0].set_title('Sequential: Позиції змін (перші 5000)')
+axes[1, 0].set_xlabel('Індекс семплу')
+axes[1, 0].set_ylabel('Змінено (0/1)')
+axes[1, 0].grid(True, alpha=0.3)
+axes[1, 0].text(0.5, 0.9, '⚠️ Паттерн помітний',
+                transform=axes[1, 0].transAxes, ha='center', color='red', fontsize=10)
+
+axes[1, 1].plot(orig_diff_rand[:5000], linewidth=0.5, color='green')
+axes[1, 1].set_title('Randomized: Позиції змін (перші 5000)')
+axes[1, 1].set_xlabel('Індекс семплу')
+axes[1, 1].set_ylabel('Змінено (0/1)')
+axes[1, 1].grid(True, alpha=0.3)
+axes[1, 1].text(0.5, 0.9, '✅ Випадковий розподіл',
+                transform=axes[1, 1].transAxes, ha='center', color='green', fontsize=10)
+
+# Статистичний аналіз (Chi-square)
+from scipy.stats import chisquare
+
+# Chi-square для послідовних блоків
+def chi_square_blocks(samples, block_size=100):
+    """Обчислює chi-square для блоків"""
+    num_blocks = len(samples) // block_size
+    chi_values = []
+
+    for i in range(num_blocks):
+        block = samples[i*block_size:(i+1)*block_size]
+        lsb = block & 0x03
+        observed = np.bincount(lsb, minlength=4)
+        expected = np.full(4, block_size / 4)
+        chi2, _ = chisquare(observed, expected)
+        chi_values.append(chi2)
+
+    return chi_values
+
+seq_chi = chi_square_blocks(seq_samples)
+rand_chi = chi_square_blocks(rand_samples)
+
+axes[1, 2].plot(seq_chi[:50], marker='o', label='Sequential', color='red', alpha=0.6)
+axes[1, 2].plot(rand_chi[:50], marker='s', label='Randomized', color='green', alpha=0.6)
+axes[1, 2].set_title('Chi-square тест по блоках')
+axes[1, 2].set_xlabel('Номер блоку')
+axes[1, 2].set_ylabel('Chi-square значення')
+axes[1, 2].legend()
+axes[1, 2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('sequential_vs_randomized.png', dpi=150, bbox_inches='tight')
+print("\n📊 Графік збережено: sequential_vs_randomized.png")
+plt.show()
+
+# Висновки
+print("\n" + "="*60)
+print("📝 ВИСНОВКИ")
+print("="*60)
+print("Sequential LSB:")
+print("  ❌ Зміни в перших N семплах створюють помітний паттерн")
+print("  ❌ Chi-square тест виявляє аномалії в перших блоках")
+print("  ❌ Легко виявляється спеціалізованим стегоаналізом")
+
+print("\nRandomized LSB:")
+print("  ✅ Зміни рівномірно розподілені по всьому аудіо")
+print("  ✅ Chi-square значення однорідні для всіх блоків")
+print("  ✅ Складніше виявити без знання ключа")
+
+print("\nРекомендація: Використовуйте Randomized LSB для підвищення безпеки")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Sequential LSB: зміни концентровані на початку файлу</li>
+                    <li>Randomized LSB: зміни рівномірно розподілені</li>
+                    <li>Chi-square для Sequential: високі значення в перших блоках</li>
+                    <li>Chi-square для Randomized: однорідні значення по всіх блоках</li>
+                    <li>Обидва методи мають однаковий SNR та якість звуку</li>
+                    <li>Randomized LSB потребує правильного ключа для декодування</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 4 -->
+        <div class="task-box">
+            <h3><span class="step-number">4</span>Тестування стійкості до атак</h3>
+
+            <h4>Реалізація атак на стего-аудіо:</h4>
+            <pre class="python"><code>from scipy.signal import butter, filtfilt, resample
+
+def add_gaussian_noise(samples, snr_db):
+    """
+    Додає Gaussian шум до аудіо
+
+    Parameters:
+    -----------
+    samples : numpy array - оригінальні семпли
+    snr_db : float - бажаний SNR в децибелах
+
+    Returns:
+    --------
+    noisy_samples : numpy array - семпли з шумом
+
+    ВАЖЛИВО: Нижчий SNR = більше шуму
+    """
+    signal_power = np.mean(samples.astype(float) ** 2)
+    noise_power = signal_power / (10 ** (snr_db / 10))
+    noise = np.random.normal(0, np.sqrt(noise_power), len(samples))
+
+    noisy = samples.astype(float) + noise
+    noisy = np.clip(noisy, -32768, 32767).astype(np.int16)
+
+    print(f"  Додано Gaussian шум (SNR={snr_db} dB)")
+    return noisy
+
+def apply_lowpass(samples, cutoff_freq, sample_rate):
+    """
+    Застосовує low-pass фільтр (видаляє високі частоти)
+
+    Parameters:
+    -----------
+    samples : numpy array - семпли
+    cutoff_freq : float - частота зрізу в Hz
+    sample_rate : int - частота дискретизації
+
+    Returns:
+    --------
+    filtered_samples : numpy array - відфільтровані семпли
+    """
+    nyquist = sample_rate / 2
+    normal_cutoff = cutoff_freq / nyquist
+
+    # 4-й порядок Butterworth фільтр
+    b, a = butter(4, normal_cutoff, btype='low')
+    filtered = filtfilt(b, a, samples.astype(float))
+
+    filtered = np.clip(filtered, -32768, 32767).astype(np.int16)
+    print(f"  Застосовано low-pass фільтр (cutoff={cutoff_freq} Hz)")
+    return filtered
+
+def resample_audio(samples, original_rate, target_rate):
+    """
+    Змінює частоту дискретизації (resampling атака)
+
+    Parameters:
+    -----------
+    samples : numpy array - оригінальні семпли
+    original_rate : int - оригінальна частота (напр. 44100)
+    target_rate : int - цільова частота (напр. 22050)
+
+    Returns:
+    --------
+    resampled : numpy array - resampled семпли
+    """
+    # Downsampling та upsampling назад
+    num_samples = int(len(samples) * target_rate / original_rate)
+    downsampled = resample(samples.astype(float), num_samples)
+    upsampled = resample(downsampled, len(samples))
+
+    upsampled = np.clip(upsampled, -32768, 32767).astype(np.int16)
+    print(f"  Resampling: {original_rate} Hz → {target_rate} Hz → {original_rate} Hz")
+    return upsampled
+
+def amplify_audio(samples, factor):
+    """
+    Змінює амплітуду аудіо (amplification атака)
+
+    Parameters:
+    -----------
+    samples : numpy array - семпли
+    factor : float - множник амплітуди (напр. 0.5 = -6dB, 2.0 = +6dB)
+
+    Returns:
+    --------
+    amplified : numpy array - змінені семпли
+    """
+    amplified = samples.astype(float) * factor
+    amplified = np.clip(amplified, -32768, 32767).astype(np.int16)
+
+    db_change = 20 * np.log10(factor)
+    print(f"  Amplification: ×{factor} ({db_change:+.1f} dB)")
+    return amplified
+
+print("Функції атак готові!")
+</code></pre>
+
+            <h4>Комплексне тестування стійкості:</h4>
+            <pre class="python"><code># Тестування стійкості LSB до різних атак
+print("="*60)
+print("ТЕСТ СТІЙКОСТІ: Вплив атак на Audio LSB")
+print("="*60)
+
+test_file = 'test_audio.wav'
+original_message = b"Тестове повідомлення для перевірки стійкості до атак" * 2
+
+# Вбудовуємо повідомлення
+print("\n--- Вбудовування повідомлення ---")
+audio_lsb_encode(test_file, original_message, 'stego_robust.wav', num_lsb=2)
+orig_samples, sr, ch, w = read_wav(test_file)
+
+# Визначення атак
+attacks = [
+    ('Без атак', lambda x, sr: x),
+    ('Шум 40dB', lambda x, sr: add_gaussian_noise(x, 40)),
+    ('Шум 30dB', lambda x, sr: add_gaussian_noise(x, 30)),
+    ('Шум 20dB', lambda x, sr: add_gaussian_noise(x, 20)),
+    ('Low-pass 10kHz', lambda x, sr: apply_lowpass(x, 10000, sr)),
+    ('Low-pass 8kHz', lambda x, sr: apply_lowpass(x, 8000, sr)),
+    ('Low-pass 5kHz', lambda x, sr: apply_lowpass(x, 5000, sr)),
+    ('Resampling 22kHz', lambda x, sr: resample_audio(x, sr, sr//2)),
+    ('Amplify ×0.5', lambda x, sr: amplify_audio(x, 0.5)),
+    ('Amplify ×2.0', lambda x, sr: amplify_audio(x, 2.0)),
+]
+
+results = []
+
+for attack_name, attack_func in attacks:
+    print(f"\n{'='*50}")
+    print(f"Атака: {attack_name}")
+    print(f"{'='*50}")
+
+    # Читаємо стего
+    stego_samples, sr, ch, w = read_wav('stego_robust.wav')
+
+    # Застосовуємо атаку
+    attacked = attack_func(stego_samples, sr)
+
+    # Зберігаємо атаковане аудіо
+    write_wav('attacked_temp.wav', attacked, sr, ch, w)
+
+    # Спроба декодування
+    try:
+        decoded = audio_lsb_decode('attacked_temp.wav', num_lsb=2)
+
+        # Обчислення BER (Bit Error Rate)
+        if len(decoded) == len(original_message):
+            errors = sum(a != b for a, b in zip(original_message, decoded))
+            ber = errors / len(original_message)
+            status = "✅ OK" if ber == 0 else "⚠️ Partial" if ber < 0.5 else "❌ Failed"
+
+            print(f"  Декодовано: {len(decoded)} байт")
+            print(f"  Помилки: {errors} / {len(original_message)} байт")
+            print(f"  BER: {ber:.2%}")
+            print(f"  Статус: {status}")
+        else:
+            print(f"  ❌ Довжина не збігається: отримано {len(decoded)}, очікувано {len(original_message)}")
+            ber = 1.0
+            status = "❌ Failed"
+
+    except Exception as e:
+        print(f"  ❌ ПОМИЛКА декодування: {str(e)[:50]}")
+        ber = 1.0
+        status = "❌ Failed"
+
+    results.append({
+        'Attack': attack_name,
+        'BER': ber,
+        'Status': status
+    })
+
+# Виведення зведеної таблиці
+print("\n" + "="*60)
+print("ЗВЕДЕНА ТАБЛИЦЯ РЕЗУЛЬТАТІВ")
+print("="*60)
+print(f"{'Атака':<25} {'BER':<10} {'Статус':<15}")
+print("-"*60)
+
+for r in results:
+    print(f"{r['Attack']:<25} {r['BER']:<10.2%} {r['Status']:<15}")
+
+# Візуалізація результатів
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+# Графік 1: BER для кожної атаки
+attack_names = [r['Attack'] for r in results]
+bers = [r['BER'] for r in results]
+colors = ['green' if ber == 0 else 'orange' if ber < 0.5 else 'red' for ber in bers]
+
+ax1.barh(attack_names, bers, color=colors, alpha=0.7, edgecolor='black')
+ax1.set_xlabel('Bit Error Rate (BER)', fontsize=12)
+ax1.set_title('Стійкість LSB до різних атак', fontsize=14, fontweight='bold')
+ax1.axvline(x=0.05, color='orange', linestyle='--', alpha=0.5, label='Поріг прийнятності (5%)')
+ax1.axvline(x=0.5, color='red', linestyle='--', alpha=0.5, label='Критичний поріг (50%)')
+ax1.legend()
+ax1.grid(True, alpha=0.3, axis='x')
+
+# Графік 2: Категорії стійкості
+perfect = sum(1 for r in results if r['BER'] == 0)
+partial = sum(1 for r in results if 0 < r['BER'] < 0.5)
+failed = sum(1 for r in results if r['BER'] >= 0.5)
+
+categories = ['Відмінно\n(BER=0)', 'Частково\n(BER<50%)', 'Провал\n(BER≥50%)']
+counts = [perfect, partial, failed]
+colors_pie = ['#06A77D', '#F77F00', '#D62828']
+
+ax2.pie(counts, labels=categories, colors=colors_pie, autopct='%1.0f%%',
+        startangle=90, textprops={'fontsize': 12, 'weight': 'bold'})
+ax2.set_title('Розподіл результатів тестування', fontsize=14, fontweight='bold')
+
+plt.tight_layout()
+plt.savefig('robustness_test_results.png', dpi=150, bbox_inches='tight')
+print("\n📊 Графіки збережено: robustness_test_results.png")
+plt.show()
+
+# Висновки
+print("\n" + "="*60)
+print("📝 ВИСНОВКИ")
+print("="*60)
+print(f"✅ Стійкі атаки ({perfect}): BER = 0%")
+for r in results:
+    if r['BER'] == 0:
+        print(f"   - {r['Attack']}")
+
+print(f"\n⚠️ Частково стійкі ({partial}): 0% < BER < 50%")
+for r in results:
+    if 0 < r['BER'] < 0.5:
+        print(f"   - {r['Attack']}: BER = {r['BER']:.1%}")
+
+print(f"\n❌ Нестійкі атаки ({failed}): BER ≥ 50%")
+for r in results:
+    if r['BER'] >= 0.5:
+        print(f"   - {r['Attack']}: BER = {r['BER']:.1%}")
+
+print("\n📌 Загальний висновок:")
+print("  Audio LSB має низьку стійкість до:")
+print("  - Сильного шуму (SNR < 30 dB)")
+print("  - Агресивної фільтрації (< 8 kHz)")
+print("  - Resampling атак")
+print("  Для критичних застосувань потрібні robust методи!")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Без атак: BER = 0% (ідеальне відновлення)</li>
+                    <li>Легкий шум (40dB): BER < 5% (прийнятно)</li>
+                    <li>Середній шум (30dB): BER 10-30% (часткова деградація)</li>
+                    <li>Сильний шум (20dB): BER > 50% (повна втрата даних)</li>
+                    <li>Low-pass 10kHz: BER = 0% (не впливає на LSB)</li>
+                    <li>Low-pass 5-8kHz: BER 30-70% (суттєві втрати)</li>
+                    <li>Resampling: BER > 80% (критична деградація)</li>
+                    <li>Amplification: BER = 0% (не впливає на біти)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 5 - Додаткове -->
+        <div class="task-box">
+            <h3><span class="step-number">5</span>⭐ Додаткове: Adaptive Audio LSB</h3>
+
+            <h4>Концепція адаптивного методу:</h4>
+            <p>
+                <strong>Adaptive LSB</strong> динамічно адаптує кількість LSB біт на основі локальних характеристик аудіо.
+                У гучних частинах (висока RMS енергія) використовуємо більше біт, у тихих — менше.
+                Це забезпечує кращий компроміс між ємністю та перцептивною якістю.
+            </p>
+
+            <h4>Реалізація Adaptive LSB:</h4>
+            <pre class="python"><code>def adaptive_lsb_encode(audio_file, message, output_file, block_size=1000):
+    """
+    Адаптивне LSB вбудовування на основі RMS енергії блоків
+
+    Parameters:
+    -----------
+    audio_file : str - шлях до оригінального WAV
+    message : bytes - повідомлення для вбудовування
+    output_file : str - шлях для збереження стего
+    block_size : int - розмір блоку в семплах (типово 1000)
+
+    Returns:
+    --------
+    lsb_map : numpy array - карта використаних LSB біт для кожного блоку
+    embed_info : dict - інформація про вбудовування
+
+    Алгоритм:
+    1. Розділити аудіо на блоки
+    2. Обчислити RMS енергію кожного блоку
+    3. Визначити пороги (квартилі)
+    4. Призначити кількість LSB біт для кожного блоку:
+       - Низька енергія (Q1): 1 LSB
+       - Середня енергія (Q2): 2 LSB
+       - Висока енергія (Q3): 3 LSB
+       - Дуже висока (Q4): 4 LSB
+    5. Вбудовувати з адаптивною кількістю біт
+    """
+    # Читаємо аудіо
+    samples, sr, channels, width = read_wav(audio_file)
+    stego_samples = samples.copy().astype(np.int32)  # int32 для уникнення overflow
+
+    print(f"\n📊 Adaptive LSB Encoding:")
+    print(f"  Block size: {block_size} семплів")
+    print(f"  Повідомлення: {len(message)} байт")
+
+    # Розділення на блоки
+    num_blocks = len(samples) // block_size
+    usable_samples = num_blocks * block_size
+    blocks = samples[:usable_samples].reshape(num_blocks, block_size)
+
+    # Обчислення RMS для кожного блоку
+    rms_values = np.sqrt(np.mean(blocks.astype(float) ** 2, axis=1))
+
+    # Визначення порогів (квартилі: 25%, 50%, 75%)
+    q1, q2, q3 = np.percentile(rms_values, [25, 50, 75])
+
+    print(f"  RMS thresholds: Q1={q1:.1f}, Q2={q2:.1f}, Q3={q3:.1f}")
+
+    # Визначення num_lsb для кожного блоку
+    lsb_map = np.ones(num_blocks, dtype=int)
+    lsb_map[rms_values >= q1] = 2
+    lsb_map[rms_values >= q2] = 3
+    lsb_map[rms_values >= q3] = 4
+
+    # Статистика розподілу
+    print(f"  Розподіл блоків:")
+    for lsb in [1, 2, 3, 4]:
+        count = np.sum(lsb_map == lsb)
+        percent = (count / num_blocks) * 100
+        print(f"    {lsb} LSB: {count} блоків ({percent:.1f}%)")
+
+    # Обчислення загальної ємності
+    total_capacity = np.sum(lsb_map) * block_size
+    print(f"  Загальна ємність: {total_capacity // 8} байт")
+
+    # Конвертуємо повідомлення в біти
+    length_bits = format(len(message), '032b')
+    message_bits = ''.join([format(byte, '08b') for byte in message])
+
+    # Додаємо карту LSB (3 біти на блок)
+    map_bits = ''.join([format(lsb, '03b') for lsb in lsb_map])
+    full_message = length_bits + format(num_blocks, '016b') + map_bits + message_bits
+
+    if len(full_message) > total_capacity:
+        raise ValueError(f"Message too large! Need {len(full_message)}, capacity {total_capacity}")
+
+    # Вбудовування з адаптивною кількістю LSB
+    bit_idx = 0
+
+    for block_idx, num_lsb in enumerate(lsb_map):
+        start = block_idx * block_size
+        end = start + block_size
+        mask = ~((1 << num_lsb) - 1)  # Універсальна маска
+
+        for i in range(start, end):
+            if bit_idx >= len(full_message):
+                break
+
+            # Очищуємо та встановлюємо LSB
+            bits_to_embed = int(full_message[bit_idx:bit_idx+num_lsb].ljust(num_lsb, '0'), 2)
+            stego_samples[i] = (stego_samples[i] & mask) | bits_to_embed
+
+            bit_idx += num_lsb
+
+        if bit_idx >= len(full_message):
+            break
+
+    # Зберігаємо (конвертуємо назад в int16)
+    write_wav(output_file, stego_samples.astype(np.int16), sr, channels, width)
+
+    print(f"✅ Вбудовано {bit_idx} біт ({bit_idx // 8} байт)")
+
+    return lsb_map, {
+        'blocks_used': num_blocks,
+        'bits_embedded': bit_idx,
+        'avg_lsb': np.mean(lsb_map)
+    }
+
+print("Adaptive LSB функції готові!")
+</code></pre>
+
+            <h4>Порівняльний аналіз:</h4>
+            <pre class="python"><code># Порівняння Fixed LSB vs Adaptive LSB
+print("="*60)
+print("ПОРІВНЯННЯ: Fixed LSB vs Adaptive LSB")
+print("="*60)
+
+test_file = 'test_audio.wav'
+message = b"Тестове повідомлення для порівняння методів" * 5
+
+# 1. Fixed 2 LSB
+print("\n--- Fixed 2 LSB ---")
+audio_lsb_encode(test_file, message, 'fixed_2lsb.wav', num_lsb=2)
+orig_samples, sr, _, _ = read_wav(test_file)
+fixed_samples, _, _, _ = read_wav('fixed_2lsb.wav')
+snr_fixed = calculate_snr(orig_samples, fixed_samples)
+
+# 2. Adaptive LSB
+print("\n--- Adaptive LSB ---")
+lsb_map, info = adaptive_lsb_encode(test_file, message, 'adaptive.wav', block_size=1000)
+adaptive_samples, _, _, _ = read_wav('adaptive.wav')
+snr_adaptive = calculate_snr(orig_samples, adaptive_samples)
+
+# 3. Детальний аналіз
+print("\n" + "="*60)
+print("РЕЗУЛЬТАТИ ПОРІВНЯННЯ")
+print("="*60)
+
+print(f"\n📊 Fixed LSB (2 біти):")
+print(f"  SNR: {snr_fixed:.2f} dB")
+print(f"  Використано: 2 LSB у всіх семплах")
+print(f"  Ємність: {len(message)} байт")
+
+print(f"\n📊 Adaptive LSB:")
+print(f"  SNR: {snr_adaptive:.2f} dB")
+print(f"  Середня к-ть LSB: {info['avg_lsb']:.2f} біт")
+print(f"  Блоків: {info['blocks_used']}")
+print(f"  Ємність: {len(message)} байт")
+
+improvement = snr_adaptive - snr_fixed
+print(f"\n🎯 Покращення SNR: {improvement:+.2f} dB")
+
+if improvement > 0:
+    print(f"   ✅ Adaptive LSB має КРАЩУ якість на {improvement:.2f} dB!")
+else:
+    print(f"   ⚠️ Fixed LSB має кращу якість на {abs(improvement):.2f} dB")
+
+# 4. Візуалізація розподілу LSB
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+# Графік 1: RMS енергія та LSB карта
+block_size = 1000
+num_blocks = len(orig_samples) // block_size
+blocks = orig_samples[:num_blocks * block_size].reshape(num_blocks, block_size)
+rms_values = np.sqrt(np.mean(blocks.astype(float) ** 2, axis=1))
+
+axes[0, 0].plot(rms_values, label='RMS енергія', color='blue')
+axes[0, 0].set_title('RMS енергія блоків', fontweight='bold')
+axes[0, 0].set_xlabel('Номер блоку')
+axes[0, 0].set_ylabel('RMS амплітуда')
+axes[0, 0].grid(True, alpha=0.3)
+
+ax_twin = axes[0, 0].twinx()
+ax_twin.plot(lsb_map, label='LSB біти', color='red', alpha=0.6, linewidth=2)
+ax_twin.set_ylabel('К-ть LSB біт', color='red')
+ax_twin.tick_params(axis='y', labelcolor='red')
+ax_twin.set_ylim([0, 5])
+
+# Графік 2: Розподіл змін
+diff_fixed = np.abs(fixed_samples.astype(float) - orig_samples.astype(float))
+diff_adaptive = np.abs(adaptive_samples.astype(float) - orig_samples.astype(float))
+
+axes[0, 1].hist(diff_fixed[:50000], bins=30, alpha=0.5, label='Fixed 2 LSB', color='orange')
+axes[0, 1].hist(diff_adaptive[:50000], bins=30, alpha=0.5, label='Adaptive', color='green')
+axes[0, 1].set_title('Розподіл змін семплів', fontweight='bold')
+axes[0, 1].set_xlabel('Величина зміни')
+axes[0, 1].set_ylabel('Частота')
+axes[0, 1].legend()
+axes[0, 1].grid(True, alpha=0.3)
+
+# Графік 3: Waveform порівняння (перші 2 сек)
+samples_to_show = min(sr * 2, len(orig_samples))
+time = np.linspace(0, samples_to_show / sr, samples_to_show)
+
+axes[1, 0].plot(time, orig_samples[:samples_to_show], label='Оригінал', alpha=0.4)
+axes[1, 0].plot(time, fixed_samples[:samples_to_show], label='Fixed LSB', alpha=0.6)
+axes[1, 0].set_title('Waveform: Оригінал vs Fixed LSB', fontweight='bold')
+axes[1, 0].set_xlabel('Час (с)')
+axes[1, 0].set_ylabel('Амплітуда')
+axes[1, 0].legend()
+axes[1, 0].grid(True, alpha=0.3)
+
+axes[1, 1].plot(time, orig_samples[:samples_to_show], label='Оригінал', alpha=0.4)
+axes[1, 1].plot(time, adaptive_samples[:samples_to_show], label='Adaptive LSB', alpha=0.6)
+axes[1, 1].set_title('Waveform: Оригінал vs Adaptive LSB', fontweight='bold')
+axes[1, 1].set_xlabel('Час (с)')
+axes[1, 1].set_ylabel('Амплітуда')
+axes[1, 1].legend()
+axes[1, 1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('adaptive_vs_fixed_lsb.png', dpi=150, bbox_inches='tight')
+print("\n📊 Графіки збережено: adaptive_vs_fixed_lsb.png")
+plt.show()
+
+# Висновки
+print("\n" + "="*60)
+print("📝 ВИСНОВКИ")
+print("="*60)
+print("✅ Adaptive LSB переваги:")
+print("  - Автоматична адаптація до характеристик аудіо")
+print("  - Менше спотворень у тихих частинах")
+print("  - Краща перцептивна якість при тій самій ємності")
+print("  - Оптимальний розподіл модифікацій")
+
+print("\n⚠️ Недоліки:")
+print("  - Більша складність реалізації")
+print("  - Потрібно зберігати LSB карту (додаткові біти)")
+print("  - Повільніша обробка")
+
+print("\n🎯 Рекомендація:")
+print("  Adaptive LSB ідеальний для високоякісного аудіо з різноманітною")
+print("  динамікою (музика, мовлення з паузами). Fixed LSB достатньо для")
+print("  аудіо з однорідною динамікою.")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Adaptive LSB має SNR на 2-5 dB вище порівняно з Fixed LSB</li>
+                    <li>Розподіл LSB біт корелює з RMS енергією блоків</li>
+                    <li>Тихі частини: 1-2 LSB (мінімальні спотворення)</li>
+                    <li>Гучні частини: 3-4 LSB (максимальна ємність)</li>
+                    <li>Середня кількість LSB: ~2.5 біт (проти 2 у Fixed)</li>
+                    <li>Перцептивна якість: відчутно краща для уважного прослуховування</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Звітність -->
+    <section>
+        <h2>📋 Вимоги до звіту</h2>
+
+        <div class="submission-box">
+            <h3>Структура звіту:</h3>
+            <ol>
+                <li><strong>Титульна сторінка</strong>
+                    <ul>
+                        <li>Номер та назва лабораторної</li>
+                        <li>ПІБ, група, дата виконання</li>
+                    </ul>
+                </li>
+                <li><strong>Мета роботи</strong>
+                    <ul>
+                        <li>Коротко сформулюйте цілі</li>
+                    </ul>
+                </li>
+                <li><strong>Теоретична частина</strong>
+                    <ul>
+                        <li>Опис структури WAV файлів</li>
+                        <li>Принципи Audio LSB стеганографії</li>
+                        <li>Метрики якості аудіо (SNR)</li>
+                        <li>Власні пояснення, не копіюйте з інструкції</li>
+                    </ul>
+                </li>
+                <li><strong>Практична частина</strong>
+                    <ul>
+                        <li>Для кожного завдання:
+                            <ul>
+                                <li>Код реалізації (коментований)</li>
+                                <li>Приклади використання</li>
+                                <li>Результати тестів</li>
+                                <li>Скріншоти/графіки</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Результати експериментів</strong>
+                    <ul>
+                        <li>Таблиця: num_lsb × SNR × Capacity для різних аудіо</li>
+                        <li>Графіки залежності SNR від num_lsb</li>
+                        <li>Спектрограми оригіналу та стего</li>
+                        <li>Результати тестів стійкості (BER таблиця)</li>
+                    </ul>
+                </li>
+                <li><strong>Порівняльний аналіз</strong>
+                    <ul>
+                        <li>Sequential vs Randomized LSB</li>
+                        <li>Audio LSB vs Image LSB (якщо робили)</li>
+                        <li>Перцептивна якість: власні спостереження</li>
+                    </ul>
+                </li>
+                <li><strong>Висновки</strong>
+                    <ul>
+                        <li>Які методи найкращі для ємності?</li>
+                        <li>Які для непомітності?</li>
+                        <li>Чи можна використовувати LSB для критичних застосувань?</li>
+                        <li>Рекомендації щодо вибору num_lsb</li>
+                    </ul>
+                </li>
+                <li><strong>Додатки</strong>
+                    <ul>
+                        <li>Повний код (добре коментований)</li>
+                        <li>Посилання на GitHub репозиторій</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="submission-card">
+                <h3>🎯 Критерії оцінювання</h3>
+                <ul>
+                    <li>Коректна реалізація Audio LSB encoder/decoder (25%)</li>
+                    <li>Аналіз якості (SNR, спектрограми, експерименти) (25%)</li>
+                    <li>Randomized LSB з ключем (20%)</li>
+                    <li>Тестування стійкості до атак (20%)</li>
+                    <li>Додаткове завдання: Adaptive LSB (5%)</li>
+                    <li>Оформлення звіту та документація (5%)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="deadline-warning">
+            <strong>⏰ Термін здачі:</strong> Протягом двох тижнів після проведення лабораторної роботи.
+            Затримка здачі знижує оцінку на 10% за кожен тиждень.
+        </div>
+    </section>
+
+    <!-- Висновки -->
+    <section class="result-box">
+        <h2>🎓 Висновки</h2>
+        <p>
+            У цій лабораторній роботі ви освоїли аудіо LSB стеганографію:
+        </p>
+        <ul>
+            <li><strong>WAV формат</strong> — простий та ефективний контейнер для стеганографії з прямим доступом до семплів</li>
+            <li><strong>Audio LSB</strong> — має високу ємність та простоту реалізації, але низьку стійкість до компресії</li>
+            <li><strong>Перцептивна якість</strong> — людське вухо нечутливе до змін в LSB бітах при правильному виборі num_lsb (1-2)</li>
+            <li><strong>Randomization</strong> — покращує безпечність та ускладнює стегоаналіз</li>
+            <li><strong>Стійкість</strong> — LSB вразливий до MP3 компресії, шуму та фільтрації, для критичних застосувань потрібні robust методи</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Ключові висновки:</strong>
+            <ul>
+                <li>1-2 LSB біти: SNR > 40 dB, практично непомітні зміни</li>
+                <li>3-4 LSB біти: можливі артефакти у тихих частинах, потрібна adaptive техніка</li>
+                <li>Музика має вищу толерантність до LSB змін, ніж чиста мова</li>
+                <li>MP3 компресія (< 192 kbps) руйнує LSB дані майже повністю</li>
+                <li>Для практичних застосувань: random LSB + ECC + compression-resistant методи</li>
+                <li>Audio LSB легше реалізувати, ніж image LSB, але складніше забезпечити стійкість</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Корисні ресурси -->
+    <section>
+        <h2>📚 Корисні ресурси</h2>
+
+        <div class="resources-list">
+            <ul>
+                <li>📖 <a href="https://docs.python.org/3/library/wave.html">Python Wave Module - Official Docs</a></li>
+                <li>📄 <a href="https://librosa.org/">Librosa - Python library for audio analysis</a></li>
+                <li>🔧 <a href="https://en.wikipedia.org/wiki/WAV">WAV Format - Wikipedia</a></li>
+                <li>📊 <a href="#">Cvejic N., Seppanen T. "Increasing Robustness of LSB Audio Steganography" (2004)</a></li>
+                <li>🎓 <a href="#">Djebbar F. et al. "Comparative study of digital audio steganography techniques" (2012)</a></li>
+                <li>💻 <a href="https://github.com/topics/audio-steganography">GitHub: Audio Steganography Projects</a></li>
+                <li>🔬 <a href="#">Bender W. et al. "Techniques for data hiding" (1996) - Classic paper</a></li>
+                <li>🎵 <a href="https://freesound.org/">FreeSound - Free audio samples for testing</a></li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="lab-footer">
+    <div class="container">
+        <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../assets/js/lab-functions.js"></script>
+<script>
+    // Ініціалізація підсвітки коду
+    hljs.highlightAll();
+
+    // Функція перемикання вкладок
+    if (typeof switchTab === 'undefined') {
+        function switchTab(event, tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>

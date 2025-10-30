@@ -267,7 +267,7 @@
       "description": "Обробка WAV файлів, аудіо LSB embedding, перцептивний аналіз",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "completed",
       "topics": ["WAV формат", "Audio LSB", "Перцептивна якість"]
     },
     {
