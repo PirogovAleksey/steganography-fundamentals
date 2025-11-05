@@ -6,265 +6,171 @@
     <title>Розширені моделі ознак | Лекція 8.3</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
-
-    <style>
-        .algorithm-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .method-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 5px solid #667eea;
-        }
-
-        .advantage-list {
-            background: #dcfce7;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .disadvantage-list {
-            background: #fee2e2;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .formula-box {
-            background: #f8fafc;
-            border: 2px solid #cbd5e1;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            text-align: center;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.1rem;
-        }
-
-        .three-col-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .feature-card {
-            background: linear-gradient(145deg, #ffffff, #f3f4f6);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>🔬 Розширені моделі ознак</h1>
-                <div class="subtitle">
-                    Тема 3: SRM, SPAM та виявлення адаптивних методів
-                </div>
-            </div>
+    <div class="slide active title-slide">
+        <h1>🔬 Розширені моделі ознак</h1>
+        <div class="subtitle">
+            Тема 3: SRM, SPAM та виявлення адаптивних методів
         </div>
     </div>
 
     <!-- Слайд 2: Чому потрібні багаті моделі? -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🤔 Чому класичні методи не працюють?</h2>
+        <h2>🤔 Чому класичні методи не працюють?</h2>
 
-                <div class="disadvantage-list">
-                    <h3 style="color: #991b1b;">❌ Проблема з адаптивними методами</h3>
-                    <ul style="font-size: 1.1rem; line-height: 1.8;">
-                        <li><strong>  HUGO, WOW, S-UNIWARD:</strong> адаптуються до локальної складності</li>
-                        <li><strong>  Обходять статистичні тести:</strong> χ², RS не бачать аномалій</li>
-                        <li><strong>  Мінімізують distortion:</strong> оптимально вибирають де вбудовувати</li>
-                        <li><strong>  Не порушують прості статистики:</strong> гістограми виглядають нормально</li>
-                    </ul>
-                </div>
+        <div class="warning-box">
+            <h3>❌ Проблема з адаптивними методами</h3>
+            <ul>
+                <li><strong>HUGO, WOW, S-UNIWARD:</strong> адаптуються до локальної складності</li>
+                <li><strong>Обходять статистичні тести:</strong> χ², RS не бачать аномалій</li>
+                <li><strong>Мінімізують distortion:</strong> оптимально вибирають де вбудовувати</li>
+                <li><strong>Не порушують прості статистики:</strong> гістограми виглядають нормально</li>
+            </ul>
+        </div>
 
-                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <h3 style="color: #92400e;">🚀 Рішення: High-Dimensional Features</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
-                        Замість аналізу простих статистик (mean, variance, histogram),<br>
-                        використовувати <strong>тисячі ознак</strong>, які моделюють складні взаємозв'язки між пікселями
-                    </p>
-                </div>
+        <div class="info-box">
+            <h3>🚀 Рішення: High-Dimensional Features</h3>
+            <p>Замість аналізу простих статистик (mean, variance, histogram), використовувати <strong>тисячі ознак</strong>, які моделюють складні взаємозв'язки між пікселями</p>
+        </div>
 
-                <div class="algorithm-box">
-                    <h3 style="text-align: center; color: #667eea;">Філософія моделей розширених ознак</h3>
-                    <p style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0;">
-                        "Якщо не знаємо, що саме порушується — <strong>виміряємо все!</strong>"<br>
-                        Машинне навчання знайде важливі ознаки
-                    </p>
-                </div>
-            </div>
+        <div class="info-box">
+            <h3>Філософія моделей розширених ознак</h3>
+            <p>"Якщо не знаємо, що саме порушується — <strong>виміряємо все!</strong>"</p>
+            <p>Машинне навчання знайде важливі ознаки</p>
         </div>
     </div>
 
     <!-- Слайд 3: Еволюція моделей -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📈 Еволюція стегоаналітичних моделей</h2>
+        <h2>📈 Еволюція стегоаналітичних моделей</h2>
 
-                <div class="method-card">
-                    <h3 style="color: #667eea;">📅 Історичний огляд</h3>
-                    <ul style="font-size: 1.05rem; line-height: 1.8;">
-                        <li><strong>2001-2005:</strong> Статистичні тести (χ², RS) — 1-10 ознак</li>
-                        <li><strong>2007:</strong> SPAM (Pevný et al.) — 686 ознак</li>
-                        <li><strong>2010:</strong> PEV features — 548 ознак</li>
-                        <li><strong>2012:</strong> SRM (Fridrich, Kodovsky) — <strong>34,671 ознака</strong></li>
-                        <li><strong>2014+:</strong> maxSRMd2 — понад 100,000 ознак</li>
+        <div class="info-box">
+            <h3>📅 Історичний огляд</h3>
+            <ul>
+                <li><strong>2001-2005:</strong> Статистичні тести (χ², RS) — 1-10 ознак</li>
+                <li><strong>2007:</strong> SPAM (Pevný et al.) — 686 ознак</li>
+                <li><strong>2010:</strong> PEV features — 548 ознак</li>
+                <li><strong>2012:</strong> SRM (Fridrich, Kodovsky) — <strong>34,671 ознака</strong></li>
+                <li><strong>2014+:</strong> maxSRMd2 — понад 100,000 ознак</li>
+            </ul>
+        </div>
+
+        <div class="two-column">
+            <div class="column">
+                <div class="info-box">
+                    <h4>🎯 Low-dimensional</h4>
+                    <ul>
+                        <li>Швидко обчислюються</li>
+                        <li>Легко інтерпретувати</li>
+                        <li>Targeted detection</li>
+                        <li>❌ Адаптивні обходять</li>
                     </ul>
                 </div>
+            </div>
 
-                <div class="comparison-grid">
-                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #0369a1;">🎯 Low-dimensional</h4>
-                        <ul style="line-height: 1.8;">
-                            <li>Швидко обчислюються</li>
-                            <li>Легко інтерпретувати</li>
-                            <li>Targeted detection</li>
-                            <li>❌ Адаптивні обходять</li>
-                        </ul>
-                    </div>
-
-                    <div style="background: #ecfdf5; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #065f46;">🚀 High-dimensional</h4>
-                        <ul style="line-height: 1.8;">
-                            <li>Обчислювально складні</li>
-                            <li>Важко інтерпретувати</li>
-                            <li>Universal detection</li>
-                            <li>✅ Ловлять адаптивні</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="alert alert-warning">
-                    <strong>⚠️ Trade-off:</strong> Більше ознак = краща детекція, але повільніше обчислення
+            <div class="column">
+                <div class="success-box">
+                    <h4>🚀 High-dimensional</h4>
+                    <ul class="checklist">
+                        <li>Обчислювально складні</li>
+                        <li>Важко інтерпретувати</li>
+                        <li>Universal detection</li>
+                        <li>Ловлять адаптивні</li>
+                    </ul>
                 </div>
             </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Trade-off:</strong> Більше ознак = краща детекція, але повільніше обчислення
         </div>
     </div>
 
     <!-- Слайд 4: SPAM - основна ідея -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📊 SPAM (Subtractive Pixel Adjacency Matrix)</h2>
+        <h2>📊 SPAM (Subtractive Pixel Adjacency Matrix)</h2>
 
-                <div class="algorithm-box">
-                    <h3 style="text-align: center; color: #667eea;">Ідея методу (Pevný, Bas, Fridrich 2010)</h3>
-                    <p style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0;">
-                        Аналізувати <strong>різниці між сусідніми пікселями</strong> (noise residual)<br>
-                        Стеганографія порушує природні залежності в шумі
-                    </p>
-                </div>
+        <div class="info-box">
+            <h3>Ідея методу (Pevný, Bas, Fridrich 2010)</h3>
+            <p>Аналізувати <strong>різниці між сусідніми пікселями</strong> (noise residual)</p>
+            <p>Стеганографія порушує природні залежності в шумі</p>
+        </div>
 
-                <div class="method-card">
-                    <h3 style="color: #667eea;">🔢 Побудова SPAM features</h3>
-                    <ol style="font-size: 1.05rem; line-height: 1.8;">
-                        <li><strong>Обчислити різниці:</strong> d = I(i,j) - I(i,j+1) (горизонтальні сусіди)</li>
-                        <li><strong>Truncate:</strong> d ∈ [-T, T] (зазвичай T=3 або T=4)</li>
-                        <li><strong>Побудувати марковську матрицю:</strong> P(d<sub>i</sub>, d<sub>i+1</sub>)</li>
-                        <li><strong>Екстрагувати features:</strong> ймовірності переходів</li>
-                    </ol>
-                </div>
+        <div class="info-box">
+            <h3>🔢 Побудова SPAM features</h3>
+            <ol>
+                <li><strong>Обчислити різниці:</strong> d = I(i,j) - I(i,j+1) (горизонтальні сусіди)</li>
+                <li><strong>Truncate:</strong> d ∈ [-T, T] (зазвичай T=3 або T=4)</li>
+                <li><strong>Побудувати марковську матрицю:</strong> P(d<sub>i</sub>, d<sub>i+1</sub>)</li>
+                <li><strong>Екстрагувати features:</strong> ймовірності переходів</li>
+            </ol>
+        </div>
 
-                <div class="formula-box">
-                    <div style="font-size: 1.2rem; margin-bottom: 1rem;">
-                        SPAM<sub>T=3</sub> = марковська матриця 7×7 = 49 transitions
-                    </div>
-                    <p style="font-size: 0.95rem; color: #64748b;">
-                        Разом з горизонтальними, вертикальними, діагональними: 686 ознак
-                    </p>
-                </div>
-            </div>
+        <div class="code-block">
+            SPAM<sub>T=3</sub> = марковська матриця 7×7 = 49 transitions
+            <br><br>
+            Разом з горизонтальними, вертикальними, діагональними: 686 ознак
         </div>
     </div>
 
     <!-- Слайд 5: SPAM приклад -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 SPAM: Приклад обчислення</h2>
+        <h2>🎯 SPAM: Приклад обчислення</h2>
 
-                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <h4 style="color: #0369a1;">Крок 1: Різниці пікселів</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                        <div>
-                            <strong>Оригінал:</strong><br>
-                            <code style="font-size: 0.95rem;">
-                                100 102 101<br>
-                                103 104 102<br>
-                                101 103 105
-                            </code>
-                        </div>
-                        <div>
-                            <strong>Різниці (горизонтальні):</strong><br>
-                            <code style="font-size: 0.95rem;">
-                                -2  +1<br>
-                                -1  +2<br>
-                                -2  -2
-                            </code>
-                        </div>
-                    </div>
+        <div class="info-box">
+            <h4>Крок 1: Різниці пікселів</h4>
+            <div class="two-column">
+                <div class="column">
+                    <strong>Оригінал:</strong><br>
+                    <code>
+                        100 102 101<br>
+                        103 104 102<br>
+                        101 103 105
+                    </code>
                 </div>
-
-                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <h4 style="color: #92400e;">Крок 2: Марковський аналіз</h4>
-                    <p style="font-size: 1.05rem; line-height: 1.8;">
-                        Підраховуємо переходи: (-2→+1), (+1→-1), (-1→+2), ...<br>
-                        Кожна пара різниць (d<sub>i</sub>, d<sub>i+1</sub>) формує ознаку
-                    </p>
-                </div>
-
-                <div class="alert alert-info">
-                    <strong>💡 Чому це працює?</strong> Природні зображення мають специфічні патерни переходів у шумі. Стеганографія порушує ці патерни, навіть якщо адаптивно вбудовує
-                </div>
-
-                <div class="advantage-list">
-                    <strong>✅ Переваги SPAM:</strong>
-                    <ul>
-                        <li>Виявляє LSB matching (на відміну від χ²)</li>
-                        <li>Чутливий до адаптивних методів</li>
-                        <li>Відносно швидкий (686 ознак)</li>
-                        <li>Працює на різних типах зображень</li>
-                    </ul>
+                <div class="column">
+                    <strong>Різниці (горизонтальні):</strong><br>
+                    <code>
+                        -2  +1<br>
+                        -1  +2<br>
+                        -2  -2
+                    </code>
                 </div>
             </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Крок 2: Марковський аналіз</h4>
+            <p>Підраховуємо переходи: (-2→+1), (+1→-1), (-1→+2), ...</p>
+            <p>Кожна пара різниць (d<sub>i</sub>, d<sub>i+1</sub>) формує ознаку</p>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 Чому це працює?</strong> Природні зображення мають специфічні патерни переходів у шумі. Стеганографія порушує ці патерни, навіть якщо адаптивно вбудовує
+        </div>
+
+        <div class="success-box">
+            <strong>✅ Переваги SPAM:</strong>
+            <ul class="checklist">
+                <li>Виявляє LSB matching (на відміну від χ²)</li>
+                <li>Чутливий до адаптивних методів</li>
+                <li>Відносно швидкий (686 ознак)</li>
+                <li>Працює на різних типах зображень</li>
+            </ul>
         </div>
     </div>
 
     <!-- Слайд 6: SRM - ідея -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔬 SRM (Spatial Rich Model)</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Fridrich & Kodovsky (2012)</h3>
                     <p style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0;">
                         "Якщо 686 ознак добре, то <strong>34,671 ознака краще!</strong>"<br>
@@ -272,7 +178,7 @@
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">🎯 Філософія SRM</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         SRM використовує <strong>множину різних фільтрів</strong> для витягання noise residuals,<br>
@@ -280,44 +186,36 @@
                     </p>
                 </div>
 
-                <div class="three-col-grid">
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">🔧 High-pass filters</h4>
-                        <p style="text-align: center; font-size: 0.95rem;">
-                            1-го, 2-го, 3-го порядку<br>
-                            (KB kernel, KV kernel, ...)
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">📊 Co-occurrence</h4>
-                        <p style="text-align: center; font-size: 0.95rem;">
-                            Різні напрямки:<br>
-                            H, V, D, MD
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">🎨 Submodels</h4>
-                        <p style="text-align: center; font-size: 0.95rem;">
-                            SPAM, minmax, edge models<br>
-                            Всього 106 субмоделей
-                        </p>
-                    </div>
-                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <h4>🔧 High-pass filters</h4>
+                            <p>1-го, 2-го, 3-го порядку</p>
+                            <p>(KB kernel, KV kernel, ...)</p>
+                        </td>
+                        <td>
+                            <h4>📊 Co-occurrence</h4>
+                            <p>Різні напрямки:</p>
+                            <p>H, V, D, MD</p>
+                        </td>
+                        <td>
+                            <h4>🎨 Submodels</h4>
+                            <p>SPAM, minmax, edge models</p>
+                            <p>Всього 106 субмоделей</p>
+                        </td>
+                    </tr>
+                </table>
 
-                <div class="formula-box">
+                <div class="code-block">
                     <strong>Total SRM:</strong> 34,671 features = Σ (всі субмоделі)
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 7: SRM компоненти -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🧩 SRM: Компоненти моделі</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">1️⃣ Noise Residuals</h3>
                     <p style="font-size: 1.05rem; line-height: 1.8;">
                         Застосовуємо фільтри (kernels) для витягання високочастотного "шуму":
@@ -333,7 +231,7 @@
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">2️⃣ Quantization & Truncation</h3>
                     <p style="font-size: 1.05rem; line-height: 1.8;">
                         <strong>q</strong> = quantization level (зазвичай q=1 або q=1.5)<br>
@@ -342,21 +240,17 @@
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">3️⃣ Co-occurrence Matrices</h3>
                     <p style="font-size: 1.05rem; line-height: 1.8;">
                         Для кожного напрямку (H, V, D, MD) та зсуву d=1,2,3,4:<br>
                         Підраховуємо частоти пар (R<sub>i</sub>, R<sub>i+d</sub>)
                     </p>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 8: SRM субмоделі -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📦 SRM: 106 субмоделей</h2>
 
                 <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
@@ -369,7 +263,7 @@
                     </ul>
                 </div>
 
-                <div class="formula-box">
+                <div class="code-block">
                     <div style="font-size: 1.1rem; margin-bottom: 1rem;">
                         Приклад розрахунку для одного submodel:<br>
                         T=2, q=1, kernel=KB, direction=H, d=1
@@ -380,24 +274,20 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success">
+                <div class="success-box">
                     <strong>✅ Результат:</strong> Сумарно всі 106 субмоделей дають <strong>34,671 feature</strong>
                 </div>
 
-                <div class="alert alert-warning">
+                <div class="warning-box">
                     <strong>⚠️ Час обчислення:</strong> Екстракція SRM з одного зображення 512×512 займає ~2-5 секунд
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 9: Як SRM ловить HUGO/WOW -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🎯 Як SRM виявляє адаптивні методи?</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Ключ до успіху</h3>
                     <p style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0;">
                         Адаптивні методи (HUGO, WOW) мінімізують <strong>специфічні distortion функції</strong>,<br>
@@ -405,43 +295,43 @@
                     </p>
                 </div>
 
-                <div class="comparison-grid">
-                    <div style="background: #ecfdf5; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #065f46;">🎭 HUGO strategy</h4>
-                        <ul style="line-height: 1.8;">
-                            <li>Мінімізує SPAM-подібні ознаки</li>
-                            <li>Використовує SPAM σ для cost</li>
-                            <li>✅ Обходить SPAM детектори</li>
-                            <li>❌ SRM має інші ознаки!</li>
-                        </ul>
+                <div class="two-column">
+                    <div class="column">
+                        <div class="success-box">
+                            <h4>🎭 HUGO strategy</h4>
+                            <ul>
+                                <li>Мінімізує SPAM-подібні ознаки</li>
+                                <li>Використовує SPAM σ для cost</li>
+                                <li>✅ Обходить SPAM детектори</li>
+                                <li>❌ SRM має інші ознаки!</li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #991b1b;">🔬 SRM response</h4>
-                        <ul style="line-height: 1.8;">
-                            <li>106 різних субмоделей</li>
-                            <li>Min/Max, Edge, Square фільтри</li>
-                            <li>Різні масштаби (d=1,2,3,4)</li>
-                            <li>✅ Виявляє HUGO з 0.4 bpp</li>
-                        </ul>
+                    <div class="column">
+                        <div class="warning-box">
+                            <h4>🔬 SRM response</h4>
+                            <ul>
+                                <li>106 різних субмоделей</li>
+                                <li>Min/Max, Edge, Square фільтри</li>
+                                <li>Різні масштаби (d=1,2,3,4)</li>
+                                <li>✅ Виявляє HUGO з 0.4 bpp</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h3 style="color: #991b1b;">⚠️ "Arms race"</h3>
                     <p style="font-size: 1.05rem; line-height: 1.8;">
                         Після публікації SRM, нові адаптивні методи (S-UNIWARD, MiPOD) намагаються мінімізувати SRM features.<br>
                         Але SRM все одно залишається ефективним для більшості payload >0.2 bpp
                     </p>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 10: Порівняння моделей -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📊 Порівняння Rich Models</h2>
 
                 <div style="background: white; padding: 1.5rem; border-radius: 10px; border: 2px solid #e5e7eb; margin: 1.5rem 0;">
@@ -483,20 +373,16 @@
                     </table>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Практика:</strong> Зазвичай використовують <strong>SRM</strong> як компроміс між точністю та швидкістю
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 11: JPEG Rich Models -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📸 Rich Models для JPEG</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">JPEG Rich Models (J-SRM, DCTR)</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         SRM спочатку розроблявся для просторової області.<br>
@@ -504,51 +390,43 @@
                     </p>
                 </div>
 
-                <div class="three-col-grid">
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">📊 DCTR</h4>
-                        <p style="font-size: 0.95rem; line-height: 1.6;">
-                            DCT Residuals<br><br>
-                            Co-occurrence в<br>DCT домені<br><br>
-                            8,000+ features
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">🖼️ J-SRM</h4>
-                        <p style="font-size: 0.95rem; line-height: 1.6;">
-                            JPEG-SRM<br><br>
-                            Просторові + DCT ознаки<br><br>
-                            11,255 features
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">🔬 GFR</h4>
-                        <p style="font-size: 0.95rem; line-height: 1.6;">
-                            Gabor Filter Residuals<br><br>
-                            Текстурні ознаки<br><br>
-                            17,000 features
-                        </p>
-                    </div>
-                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <h4>📊 DCTR</h4>
+                            <p>DCT Residuals</p>
+                            <p>Co-occurrence в DCT домені</p>
+                            <p>8,000+ features</p>
+                        </td>
+                        <td>
+                            <h4>🖼️ J-SRM</h4>
+                            <p>JPEG-SRM</p>
+                            <p>Просторові + DCT ознаки</p>
+                            <p>11,255 features</p>
+                        </td>
+                        <td>
+                            <h4>🔬 GFR</h4>
+                            <p>Gabor Filter Residuals</p>
+                            <p>Текстурні ознаки</p>
+                            <p>17,000 features</p>
+                        </td>
+                    </tr>
+                </table>
 
-                <div class="alert alert-success">
+                <div class="success-box">
                     <strong>✅ Ефективність:</strong> DCTR + J-SRM успішно виявляють J-UNIWARD, UED та інші JPEG-адаптивні методи
                 </div>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <strong>⚠️ Виклик:</strong> JPEG double compression (повторне стиснення) ускладнює детектування
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 12: Feature dimensionality -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📏 Проблема розмірності (Curse of Dimensionality)</h2>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h3 style="color: #991b1b;">❌ Виклики high-dimensional моделей</h3>
                     <ul style="font-size: 1.1rem; line-height: 1.8;">
                         <li><strong>Час обчислення:</strong> 34,671 features × N зображень = повільно</li>
@@ -568,20 +446,16 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Практично:</strong> Ensemble Classifier (FLD) працює безпосередньо з 34k features без PCA
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 13: Обмеження Rich Models -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>⚠️ Обмеження Rich Models</h2>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h3 style="color: #991b1b;">❌ Що не можуть Rich Models?</h3>
                     <ul style="font-size: 1.1rem; line-height: 1.8;">
                         <li><strong>Дуже низький payload:</strong> <0.1 bpp важко виявити навіть з SRM</li>
@@ -613,20 +487,16 @@
                     </div>
                 </div>
 
-                <div class="alert alert-warning">
+                <div class="warning-box">
                     <strong>⚠️ Тренд:</strong> Перехід від handcrafted (SRM) до learned (CNN) features
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 14: Практичні результати -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📈 Практичні результати SRM</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Benchmark: BOSSbase dataset</h3>
                     <p style="font-size: 1.05rem; text-align: center; margin: 1rem 0;">
                         10,000 зображень 512×512, ніколи не стискані<br>
@@ -645,7 +515,7 @@
                     </ul>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <strong>✅ Висновки:</strong>
                     <ul>
                         <li>SRM ефективно виявляє всі відомі методи при payload ≥0.4 bpp</li>
@@ -654,50 +524,48 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-warning">
+                <div class="warning-box">
                     <strong>⚠️ Практично:</strong> При дуже низькому payload (<0.1 bpp) навіть SRM має ~55-60% accuracy (близько до випадкового вгадування)
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 15: Підсумки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📝 Підсумки теми</h2>
 
-                <div class="three-col-grid">
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">📊 SPAM</h4>
-                        <ul style="font-size: 0.95rem; line-height: 1.6;">
-                            <li>686 features</li>
-                            <li>Markov chains</li>
-                            <li>Швидкий</li>
-                            <li>Базовий метод</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">🔬 SRM</h4>
-                        <ul style="font-size: 0.95rem; line-height: 1.6;">
-                            <li>34,671 features</li>
-                            <li>106 submodels</li>
-                            <li>Найкращий</li>
-                            <li>State-of-the-art</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4 style="color: #667eea; text-align: center;">📸 JPEG</h4>
-                        <ul style="font-size: 0.95rem; line-height: 1.6;">
-                            <li>J-SRM, DCTR</li>
-                            <li>8k-17k features</li>
-                            <li>DCT domain</li>
-                            <li>J-UNIWARD detection</li>
-                        </ul>
-                    </div>
-                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <h4>📊 SPAM</h4>
+                            <ul>
+                                <li>686 features</li>
+                                <li>Markov chains</li>
+                                <li>Швидкий</li>
+                                <li>Базовий метод</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <h4>🔬 SRM</h4>
+                            <ul>
+                                <li>34,671 features</li>
+                                <li>106 submodels</li>
+                                <li>Найкращий</li>
+                                <li>State-of-the-art</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <h4>📸 JPEG</h4>
+                            <ul>
+                                <li>J-SRM, DCTR</li>
+                                <li>8k-17k features</li>
+                                <li>DCT domain</li>
+                                <li>J-UNIWARD detection</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
 
-                <div class="alert alert-success" style="margin-top: 2rem;">
+                <div class="success-box">
                     <h3 style="margin-bottom: 1rem;">✅ Що ми вивчили:</h3>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li>Філософію багатих моделей: "виміряємо все"</li>
@@ -708,27 +576,22 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>➡️ Далі:</strong> ML-класифікатори (Ensemble, CNN) та метрики оцінки стегоаналізу
                 </div>
-            </div>
-        </div>
     </div>
 
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 15</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 6.67%;"></div>
-</div>
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 15</div>
 
 <script>
     let currentSlide = 0;
@@ -737,29 +600,26 @@
 
     function showSlide(n) {
         slides.forEach(slide => slide.classList.remove('active'));
-
         if (n >= totalSlides) currentSlide = 0;
         if (n < 0) currentSlide = totalSlides - 1;
-
         slides[currentSlide].classList.add('active');
-
-        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
-
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
     }
 
     function nextSlide() {
-        currentSlide++;
-        showSlide(currentSlide);
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
     }
 
     function previousSlide() {
-        currentSlide--;
-        showSlide(currentSlide);
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
     }
 
     document.addEventListener('keydown', (e) => {

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лекція 9: Аудіо стеганографія - LSB, фазове кодування, розширення спектру, echo hiding">
+    <title>Лекція 9: Аудіо стеганографія | Основи стеганографії</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/modules.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../../module3/index.html">Модуль 3</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Лекція 9</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Lecture Hero -->
+<section class="lecture-hero">
+    <div class="container">
+        <div class="lecture-number-badge">Лекція 9</div>
+        <h1>Аудіо стеганографія</h1>
+        <p class="landing-subtitle">
+            Методи приховування інформації в аудіопотоках: LSB, фазове кодування, розширення спектру та echo hiding
+        </p>
+
+        <div class="lecture-meta">
+            <span class="lecture-meta-item">
+                ⏱️ 80 хвилин
+            </span>
+            <span class="lecture-meta-item">
+                📊 4 Теми
+            </span>
+            <span class="lecture-meta-item">
+                🎵 Аудіо методи
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+
+        <!-- Reading Material -->
+        <section style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="color: #0369a1; margin-bottom: 1rem;">📖 Матеріали для читання</h3>
+            <p style="margin-bottom: 1rem;">Детальний теоретичний конспект лекції з поясненнями, формулами та прикладами</p>
+            <a href="konspekt_9.html" class="btn btn-primary">Читати конспект лекції</a>
+        </section>
+
+        <!-- Learning Objectives -->
+        <section class="lecture-objectives">
+            <h3>🎯 Цілі лекції</h3>
+            <ul>
+                <li>Освоїти методи LSB стеганографії в аудіофайлах (WAV, MP3)</li>
+                <li>Вивчити техніки фазового кодування для приховування даних</li>
+                <li>Зрозуміти принципи розширення спектру в аудіостеганографії</li>
+                <li>Опанувати метод echo hiding та його параметри</li>
+                <li>Вміти оцінювати перцептивну якість і стійкість аудіометодів</li>
+            </ul>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section">
+            <h2 class="section-title">📚 Теми лекції</h2>
+
+            <div class="topics-grid">
+
+                <!-- Тема 1 -->
+                <a href="tema1_lsb_audio.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 1</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🎧 LSB методи в аудіо</h3>
+                    <p class="topic-description">
+                        Приховування у найменших значущих бітах аудіо: формати WAV/PCM, ємність, перцептивна якість
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Формати аудіо</span>
+                        <span class="subtopic-badge">LSB вбудовування</span>
+                        <span class="subtopic-badge">Перцептивна якість</span>
+                        <span class="subtopic-badge">Стійкість до атак</span>
+                    </div>
+                </a>
+
+                <!-- Тема 2 -->
+                <a href="tema2_phase_coding.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 2</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🌀 Фазове кодування</h3>
+                    <p class="topic-description">
+                        Модуляція фази аудіосигналу: FFT перетворення, фазові зсуви, синхронізація декодера
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">FFT та фаза</span>
+                        <span class="subtopic-badge">Фазова модуляція</span>
+                        <span class="subtopic-badge">Сегментація</span>
+                        <span class="subtopic-badge">Синхронізація</span>
+                    </div>
+                </a>
+
+                <!-- Тема 3 -->
+                <a href="tema3_spread_spectrum.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 3</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">📡 Розширення спектру</h3>
+                    <p class="topic-description">
+                        Методи розширення спектру в аудіо: псевдовипадкові послідовності, кореляційне декодування
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">DSSS в аудіо</span>
+                        <span class="subtopic-badge">ПВП генерація</span>
+                        <span class="subtopic-badge">Вбудовування</span>
+                        <span class="subtopic-badge">Виявлення</span>
+                    </div>
+                </a>
+
+                <!-- Тема 4 -->
+                <a href="tema4_echo_hiding.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 4</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🔊 Echo Hiding</h3>
+                    <p class="topic-description">
+                        Приховування через ехо-сигнали: параметри затримки, змішувач, кепстральний аналіз
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Параметри ехо</span>
+                        <span class="subtopic-badge">Кодування бітів</span>
+                        <span class="subtopic-badge">Кепстр</span>
+                        <span class="subtopic-badge">Стійкість</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="lecture-resources">
+            <h3>📚 Додаткові матеріали</h3>
+            <div class="resource-links">
+                <a href="#" class="resource-link">
+                    📖 Bender W. et al. "Techniques for Data Hiding"
+                </a>
+                <a href="#" class="resource-link">
+                    📄 Gruhl D. et al. "Echo Hiding"
+                </a>
+                <a href="#" class="resource-link">
+                    🔗 WAV формат та PCM кодування
+                </a>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="lecture-navigation">
+            <div class="lecture-nav-buttons">
+                <a href="../../module3/index.html" class="btn btn-outline">
+                    ← Назад до модуля 3
+                </a>
+                <a href="tema1_lsb_audio.html" class="btn btn-primary">
+                    Почати лекцію →
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content text-center">
+            <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра твердотільної електроніки та інформаційної безпеки</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

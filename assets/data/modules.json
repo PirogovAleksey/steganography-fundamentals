@@ -143,7 +143,16 @@
           "title": "Аудіо стеганографія",
           "description": "LSB, фазове кодування, розширення спектру",
           "duration": 80,
-          "status": "planned"
+          "topics": [
+            "LSB методи в аудіо",
+            "Фазове кодування",
+            "Розширення спектру",
+            "Echo hiding техніка"
+          ],
+          "status": "completed",
+          "slides": 40,
+          "hasPresentation": true,
+          "path": "lecture_1/index.html"
         },
         {
           "id": "3.2",

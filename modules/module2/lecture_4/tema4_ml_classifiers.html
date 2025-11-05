@@ -6,95 +6,25 @@
     <title>ML-класифікатори та метрики | Лекція 8.4</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
-
-    <style>
-        .algorithm-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .method-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 5px solid #667eea;
-        }
-
-        .advantage-list {
-            background: #dcfce7;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .disadvantage-list {
-            background: #fee2e2;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .formula-box {
-            background: #f8fafc;
-            border: 2px solid #cbd5e1;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            text-align: center;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.1rem;
-        }
-
-        .three-col-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .feature-card {
-            background: linear-gradient(145deg, #ffffff, #f3f4f6);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>🤖 ML-класифікатори та метрики</h1>
-                <div class="subtitle">
-                    Тема 4: Машинне навчання в стегоаналізі та оцінка ефективності
-                </div>
-            </div>
+    <div class="slide active title-slide">
+        <h1>🤖 ML-класифікатори та метрики</h1>
+        <div class="subtitle">
+            Тема 4: Машинне навчання в стегоаналізі та оцінка ефективності
         </div>
     </div>
 
     <!-- Слайд 2: Pipeline стегоаналізу -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔄 Pipeline сучасного стегоаналізу</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Повний процес виявлення</h3>
                     <div style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0; font-family: monospace; line-height: 2;">
                         Зображення → <strong style="color: #667eea;">Feature Extraction</strong> → <strong style="color: #10b981;">ML Classifier</strong> → Рішення
@@ -129,20 +59,16 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Ключ:</strong> Якість features визначає межу можливого, але classifier впливає на практичну ефективність
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 3: Ensemble Classifier -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🎯 Ensemble Classifier (FLD)</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">Fisher Linear Discriminant Ensemble</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         <strong>Де-факто стандарт</strong> для стегоаналізу з handcrafted features (SRM, SPAM)<br>
@@ -150,7 +76,7 @@
                     </p>
                 </div>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Основна ідея</h3>
                     <p style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0;">
                         Навчити багато <strong>простих лінійних класифікаторів</strong> (FLD)<br>
@@ -158,7 +84,7 @@
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">📋 Алгоритм Ensemble</h3>
                     <ol style="font-size: 1.05rem; line-height: 1.8;">
                         <li><strong>Random subsampling:</strong> вибрати випадково d_sub ознак (наприклад, d_sub = d/2)</li>
@@ -168,22 +94,18 @@
                     </ol>
                 </div>
 
-                <div class="formula-box">
+                <div class="code-block">
                     <div style="font-size: 1.2rem;">
                         P<sub>ensemble</sub>(stego | x) = (1/L) Σ P<sub>i</sub>(stego | x<sub>i</sub>)
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 4: Чому Ensemble працює? -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🎭 Чому Ensemble ефективний?</h2>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h3 style="color: #065f46;">✅ Переваги Ensemble</h3>
                     <ul style="font-size: 1.1rem; line-height: 1.8;">
                         <li><strong>Regularization:</strong> випадкове sampling запобігає overfitting</li>
@@ -214,17 +136,13 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success">
+                <div class="success-box">
                     <strong>🏆 Результат:</strong> Ensemble досягає ~95% accuracy на BOSS з SRM features (0.4 bpp HUGO)
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 5: Інші ML класифікатори -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔧 Інші традиційні класифікатори</h2>
 
                 <div class="three-col-grid">
@@ -260,20 +178,16 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Практика:</strong> Для стегоаналізу з SRM features стандартом є <strong>Ensemble Classifier</strong>. SVM може дати +1-2% accuracy, але набагато повільніший.
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 6: CNN-based Steganalysis -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🧠 CNN-based Стегоаналіз</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Deep Learning Revolution (2015+)</h3>
                     <p style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0;">
                         Замість handcrafted features (SRM), використати <strong>CNN</strong>,<br>
@@ -281,7 +195,7 @@
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">🔬 Ключові архітектури</h3>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li><strong>Qian et al. (2015):</strong> Gaussian-Neuron CNN — перша CNN для стегоаналізу</li>
@@ -313,17 +227,13 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 7: CNN архітектура -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🏗️ CNN архітектура для стегоаналізу</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">🎯 Типова структура (Ye-Net)</h3>
                     <div style="font-size: 1.05rem; line-height: 2; font-family: monospace; background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
                         Input (256×256×1)<br>
@@ -342,7 +252,7 @@
                     </div>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <strong>✅ Ключові техніки:</strong>
                     <ul>
                         <li><strong>Preprocessing:</strong> High-pass filters (SRM kernels) замість RGB</li>
@@ -352,17 +262,13 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-warning">
+                <div class="warning-box">
                     <strong>⚠️ Виклик:</strong> CNN потребує великих datasets (>10k зображень) і обчислювальних ресурсів (GPU)
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 8: SRM vs CNN порівняння -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>⚖️ SRM+Ensemble vs CNN</h2>
 
                 <div style="background: white; padding: 1.5rem; border-radius: 10px; border: 2px solid #e5e7eb; margin: 1.5rem 0;">
@@ -404,20 +310,16 @@
                     </table>
                 </div>
 
-                <div class="alert alert-success">
+                <div class="success-box">
                     <strong>🏆 Висновок:</strong> CNN дає +3-5% accuracy, але потребує значно більше ресурсів і даних. SRM+Ensemble залишається практичним стандартом.
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 9: Метрики оцінки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📊 Метрики оцінки стегоаналізу</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">🎯 Бінарна класифікація: Cover vs Stego</h3>
                     <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
                         <h4 style="color: #0369a1;">Confusion Matrix:</h4>
@@ -461,17 +363,13 @@
                         <p style="text-align: center; font-size: 0.95rem;">Повнота виявлення</p>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 10: ROC та AUC -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📈 ROC Curve та AUC</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">ROC (Receiver Operating Characteristic)</h3>
                     <p style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0;">
                         Графік залежності <strong>True Positive Rate</strong> від <strong>False Positive Rate</strong><br>
@@ -507,31 +405,27 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success">
+                <div class="success-box">
                     <strong>✅ Переваги AUC:</strong> Не залежить від вибору порогу, враховує всі можливі trade-offs між FPR/TPR
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Практика:</strong> Для стегоаналізу часто звітують <strong>P<sub>E</sub></strong> (probability of error) при рівних prior (50/50 cover/stego)
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 11: Probability of Error (PE) -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🎯 P<sub>E</sub> - Probability of Error</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Стандартна метрика в стегоаналізі</h3>
                     <p style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0;">
                         Ймовірність помилкової класифікації при <strong>рівних prior</strong> (50% cover, 50% stego)
                     </p>
                 </div>
 
-                <div class="formula-box">
+                <div class="code-block">
                     <div style="font-size: 1.3rem; margin-bottom: 1rem;">
                         P<sub>E</sub> = min<sub>P<sub>FA</sub></sub> (P<sub>FA</sub> + P<sub>MD</sub>) / 2
                     </div>
@@ -560,20 +454,16 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Зв'язок з AUC:</strong> P<sub>E</sub> ≈ 1 - AUC (приблизно, якщо ROC симетрична)
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 12: Security Evaluation -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔐 Security Evaluation Framework</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">Оцінка безпеки стегосистем</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         Не достатньо знати accuracy детектора — потрібно оцінити <strong>безпеку</strong> стегометоду
@@ -604,24 +494,20 @@
                     </div>
                 </div>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Порівняння методів</h3>
                     <p style="font-size: 1.05rem; text-align: center; margin: 1rem 0;">
                         Для порівняння стегометодів: виміряти P<sub>E</sub> при різних payload (0.1, 0.2, 0.4 bpp)<br>
                         <strong>Нижчий P<sub>E</sub></strong> при тому самому payload = безпечніший метод
                     </p>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 13: Практичні рекомендації -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🛠️ Практичні рекомендації</h2>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h3 style="color: #065f46;">✅ Best practices для дослідників</h3>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li><strong>Benchmark datasets:</strong> BOSSbase, BOWS2 для порівнянності результатів</li>
@@ -632,7 +518,7 @@
                     </ul>
                 </div>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h3 style="color: #991b1b;">⚠️ Типові помилки</h3>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li><strong>Data leakage:</strong> тренування і тест з одного джерела → завищена accuracy</li>
@@ -642,17 +528,13 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-warning">
+                <div class="warning-box">
                     <strong>⚠️ Reality check:</strong> Лабораторні результати (BOSSbase) часто не переносяться на реальні зображення з інтернету
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 14: Підсумки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📝 Підсумки теми</h2>
 
                 <div class="three-col-grid">
@@ -696,27 +578,22 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>🎓 Завершення лекції 8:</strong> Тепер ви знаєте повний цикл сучасного стегоаналізу — від візуальних методів до deep learning!
                 </div>
-            </div>
-        </div>
     </div>
 
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 14</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 7.14%;"></div>
-</div>
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 14</div>
 
 <script>
     let currentSlide = 0;
@@ -725,29 +602,26 @@
 
     function showSlide(n) {
         slides.forEach(slide => slide.classList.remove('active'));
-
         if (n >= totalSlides) currentSlide = 0;
         if (n < 0) currentSlide = totalSlides - 1;
-
         slides[currentSlide].classList.add('active');
-
-        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
-
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
     }
 
     function nextSlide() {
-        currentSlide++;
-        showSlide(currentSlide);
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
     }
 
     function previousSlide() {
-        currentSlide--;
-        showSlide(currentSlide);
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
     }
 
     document.addEventListener('keydown', (e) => {

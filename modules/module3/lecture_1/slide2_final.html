@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 2 - Final Version</title>
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+    <style>
+        /* Additional styles specific to this slide */
+        .intro-note {
+            background: #f8fafc;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .content-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .content-table td {
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            vertical-align: top;
+            background: white;
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .content-list li {
+            padding: 0.5rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .content-list li::before {
+            content: '• ';
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .highlight {
+            background: #fef08a;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .section-emoji {
+            font-size: 1.1rem;
+            margin-right: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+    <div class="slide active">
+        <h2>🌊 Вступ до аудіо стеганографії</h2>
+
+        <div class="intro-note">
+            <strong>💡 Ключова ідея:</strong> Аудіосигнали мають високу надмірність, що робить їх відмінними контейнерами для приховування інформації. Людське вухо значно менш чутливе до дрібних змін, ніж око до візуальних модифікацій.
+        </div>
+
+        <table class="content-table">
+            <tr>
+                <th><span class="section-emoji">📊</span> Цифровий звук</th>
+                <th><span class="section-emoji">🎵</span> Людське сприйняття</th>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="content-list">
+                        <li>Дискретизація в часі</li>
+                        <li>Квантування амплітуди</li>
+                        <li>Висока частота семплювання: <span class="highlight">44.1 kHz</span></li>
+                        <li>Глибина: <span class="highlight">16-24 біти</span> на семпл</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="content-list">
+                        <li>Чутливість: <span class="highlight">20 Hz - 20 kHz</span></li>
+                        <li>Маскування звуків</li>
+                        <li>Психоакустичні ефекти</li>
+                        <li>Толерантність до шуму</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

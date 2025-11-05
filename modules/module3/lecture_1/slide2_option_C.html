@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 2 - Option C (Hand-drawn Flat)</title>
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <style>
+        .hand-drawn-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hand-drawn-title h2 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hand-drawn-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #667eea;
+            border-radius: 2px;
+        }
+
+        .intro-box {
+            background: #fef5e7;
+            border: 3px dashed #f59e0b;
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .intro-box p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .content-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .card-box {
+            background: #fff;
+            border: 3px solid #2d3748;
+            border-radius: 25px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: visible;
+        }
+
+        .card-box.blue {
+            background: #e0f2fe;
+            border-color: #0284c7;
+        }
+
+        .card-box.green {
+            background: #d1fae5;
+            border-color: #059669;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+        .doodle-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .doodle-list li {
+            padding: 0.8rem 0;
+            padding-left: 2.5rem;
+            position: relative;
+            font-size: 1.1rem;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .doodle-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            font-size: 1.3rem;
+            top: 0.8rem;
+        }
+
+        .card-box.blue .doodle-list li::before {
+            color: #0284c7;
+        }
+
+        .card-box.green .doodle-list li::before {
+            color: #059669;
+        }
+
+        .highlight-text {
+            background: #fef08a;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+
+        /* Hand-drawn circle decoration - removed to prevent overlap */
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-content">
+                <div class="hand-drawn-title">
+                    <h2>🌊 Вступ до аудіо стеганографії</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        Аудіосигнали мають високу надмірність і є відмінними контейнерами для приховування інформації.<br>
+                        <strong>Людське вухо значно менш чутливе до змін, ніж око!</strong>
+                    </p>
+                </div>
+
+                <div class="content-row">
+                    <div class="card-box blue">
+                        <span class="card-icon">📊</span>
+                        <h3 class="card-title">Цифровий звук</h3>
+                        <ul class="doodle-list">
+                            <li>Дискретизація в часі</li>
+                            <li>Квантування амплітуди</li>
+                            <li>Висока частота: <span class="highlight-text">44.1 kHz</span></li>
+                            <li>Глибина: <span class="highlight-text">16-24 біти</span> на семпл</li>
+                        </ul>
+                    </div>
+
+                    <div class="card-box green">
+                        <span class="card-icon">🎵</span>
+                        <h3 class="card-title">Людське сприйняття</h3>
+                        <ul class="doodle-list">
+                            <li>Чутливість: <span class="highlight-text">20 Hz - 20 kHz</span></li>
+                            <li>Частотне маскування</li>
+                            <li>Психоакустичні ефекти</li>
+                            <li>Толерантність до шуму</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

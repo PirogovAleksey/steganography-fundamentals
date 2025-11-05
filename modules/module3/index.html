@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Модуль 3: Методи частотної області - приховування інформації після застосування перетворень">
-    <title>Модуль 3: Методи частотної області | Курс Кібербезпека</title>
+    <meta name="description" content="Модуль 3: Стеганографія аудіо та відео - приховування інформації в мультимедійних потоках">
+    <title>Модуль 3: Стеганографія аудіо та відео | Основи стеганографії</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="../../assets/css/base.css">
@@ -33,10 +33,10 @@
     <div class="container">
         <div class="module-hero-content">
             <h1 class="landing-title">
-                📊 Модуль 3: Методи частотної області
+                🎵 Модуль 3: Стеганографія аудіо та відео
             </h1>
             <p class="landing-subtitle">
-                Методи приховування інформації в частотній області після застосування перетворень
+                Приховування інформації в мультимедійних потоках
             </p>
 
         </div>
@@ -53,40 +53,14 @@
         <section class="learning-objectives">
             <h3>📚 Цілі навчання</h3>
             <ul>
-                <li>Зрозуміти принципи дискретного косинусного перетворення (DCT)</li>
-                <li>Освоїти JPEG стеганографію та алгоритми F5, OutGuess</li>
-                <li>Вивчити дискретне вейвлет-перетворення (DWT)</li>
-                <li>Зрозуміти дискретне перетворення Фур'є (DFT) та його застосування</li>
-                <li>Освоїти гібридні методи та SVD декомпозицію</li>
-                <li>Навчитися оцінювати стійкість до стиснення та атак</li>
+                <li>Освоїти методи аудіо стеганографії: LSB, фазове кодування, розширення спектру</li>
+                <li>Вивчити особливості стеганографії у відеопотоках</li>
+                <li>Зрозуміти принципи мережевої стеганографії та приховування в протоколах</li>
+                <li>Дослідити лінгвістичні методи текстової стеганографії</li>
+                <li>Навчитися оцінювати перцептивну якість та стійкість мультимедійних методів</li>
+                <li>Розробити практичні навички приховування даних у різних медіа-форматах</li>
             </ul>
         </section>
-
-        <!-- Mathematical Transforms Preview -->
-        <section class="transforms-preview">
-            <h3>🔢 Математичні перетворення модуля</h3>
-            <div class="transform-list">
-                <div class="transform-item">
-                    <span>∫</span> DCT - Дискретне косинусне
-                </div>
-                <div class="transform-item">
-                    <span>ψ</span> DWT - Вейвлет перетворення
-                </div>
-                <div class="transform-item">
-                    <span>ℱ</span> DFT - Перетворення Фур'є
-                </div>
-                <div class="transform-item">
-                    <span>Σ</span> SVD - Сингулярний розклад
-                </div>
-                <div class="transform-item">
-                    <span>★</span> Spread Spectrum
-                </div>
-                <div class="transform-item">
-                    <span>◈</span> Гібридні схеми
-                </div>
-            </div>
-        </section>
-
 
         <!-- Lectures Section -->
         <section class="lectures-section">
@@ -95,28 +69,26 @@
             <div class="lecture-grid">
 
                 <!-- Lecture 3.1 -->
-                <div class="lecture-card" onclick="alert('Лекція 3.1 буде доступна незабаром')">
+                <div class="lecture-card completed" onclick="window.location.href='lecture_1/index.html'">
                     <div class="lecture-header">
                         <span class="lecture-number">Лекція 3.1</span>
-                        <span class="lecture-status">📋</span>
+                        <span class="lecture-status">✅</span>
                     </div>
-                    <h3 class="lecture-title">DCT-базовані методи</h3>
+                    <h3 class="lecture-title">Аудіо стеганографія</h3>
                     <p class="lecture-description">
-                        Дискретне косинусне перетворення в стеганографії
+                        LSB, фазове кодування, розширення спектру
                     </p>
                     <div class="lecture-topics">
-                        <span class="topic-badge">Основи DCT перетворення</span>
-                        <span class="topic-badge">JPEG стеганографія</span>
-                        <span class="topic-badge">F5 та OutGuess алгоритми</span>
-                        <span class="topic-badge">Квантування коефіцієнтів</span>
+                        <span class="topic-badge">LSB методи в аудіо</span>
+                        <span class="topic-badge">Фазове кодування</span>
+                        <span class="topic-badge">Розширення спектру</span>
+                        <span class="topic-badge">Echo hiding техніка</span>
                     </div>
                     <div class="lecture-footer">
                         <span class="lecture-duration">
-                            ⏱️ 80 хвилин
+                            ⏱️ 80 хвилин • 📊 40 слайдів
                         </span>
-                        <button class="lecture-action disabled" disabled>
-                            Заплановано
-                        </button>
+                        <a href="lecture_1/index.html" class="lecture-action">Переглянути</a>
                     </div>
                 </div>
 
@@ -126,15 +98,11 @@
                         <span class="lecture-number">Лекція 3.2</span>
                         <span class="lecture-status">📋</span>
                     </div>
-                    <h3 class="lecture-title">DWT методи</h3>
+                    <h3 class="lecture-title">Відео стеганографія</h3>
                     <p class="lecture-description">
-                        Вейвлет перетворення для приховування даних
+                        Методи для відеопотоків
                     </p>
                     <div class="lecture-topics">
-                        <span class="topic-badge">Дискретне вейвлет перетворення</span>
-                        <span class="topic-badge">Вибір вейвлет-базису</span>
-                        <span class="topic-badge">Багаторівневе вбудовування</span>
-                        <span class="topic-badge">Стійкість до стиснення</span>
                     </div>
                     <div class="lecture-footer">
                         <span class="lecture-duration">
@@ -152,15 +120,11 @@
                         <span class="lecture-number">Лекція 3.3</span>
                         <span class="lecture-status">📋</span>
                     </div>
-                    <h3 class="lecture-title">DFT та FFT методи</h3>
+                    <h3 class="lecture-title">Мережева стеганографія</h3>
                     <p class="lecture-description">
-                        Перетворення Фур'є в стеганографії
+                        Приховування в мережевих протоколах
                     </p>
                     <div class="lecture-topics">
-                        <span class="topic-badge">Дискретне перетворення Фур'є</span>
-                        <span class="topic-badge">Фазове кодування</span>
-                        <span class="topic-badge">Амплітудна модуляція</span>
-                        <span class="topic-badge">Spread Spectrum методи</span>
                     </div>
                     <div class="lecture-footer">
                         <span class="lecture-duration">
@@ -178,15 +142,11 @@
                         <span class="lecture-number">Лекція 3.4</span>
                         <span class="lecture-status">📋</span>
                     </div>
-                    <h3 class="lecture-title">Гібридні методи</h3>
+                    <h3 class="lecture-title">Текстова стеганографія</h3>
                     <p class="lecture-description">
-                        Комбінування просторових та частотних методів
+                        Лінгвістичні методи приховування
                     </p>
                     <div class="lecture-topics">
-                        <span class="topic-badge">SVD декомпозиція</span>
-                        <span class="topic-badge">Комбіновані схеми</span>
-                        <span class="topic-badge">Багаторівневе приховування</span>
-                        <span class="topic-badge">Оптимізація стійкості</span>
                     </div>
                     <div class="lecture-footer">
                         <span class="lecture-duration">

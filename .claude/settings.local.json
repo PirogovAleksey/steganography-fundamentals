@@ -10,7 +10,11 @@
       "WebSearch",
       "Bash(awk:*)",
       "Bash(python3:*)",
-      "Bash(pip3 install:*)"
+      "Bash(pip3 install:*)",
+      "Bash(dir:*)",
+      "Bash(copy /b index.html +,,)",
+      "WebFetch(domain:www.freepik.com)",
+      "WebFetch(domain:opyrohov.github.io)"
     ],
     "deny": [],
     "ask": []

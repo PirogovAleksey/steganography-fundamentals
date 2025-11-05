@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 2 - Option A</title>
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <style>
+        .hero-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+
+        .feature-card.blue::before {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+
+        .feature-card.green::before {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-title {
+            color: #1e293b;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.7rem 0;
+            padding-left: 2rem;
+            position: relative;
+            font-size: 1.05rem;
+            color: #475569;
+        }
+
+        .feature-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .highlight-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="slides-page">
+
+<div class="slides-wrapper">
+    <div class="slide active">
+        <div class="slide-container">
+            <div class="slide-content">
+                <h2>🌊 Вступ до аудіо стеганографії</h2>
+
+                <div class="hero-text">
+                    <p style="font-size: 1.3rem; line-height: 1.8; margin: 0; text-align: center;">
+                        <strong>Аудіосигнали</strong> мають високу надмірність і є відмінними контейнерами для приховування інформації
+                    </p>
+                    <div class="highlight-badge" style="margin-top: 1rem; text-align: center; display: block;">
+                        Людське вухо значно менш чутливе до змін, ніж око
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card blue">
+                        <span class="feature-icon">📊</span>
+                        <h3 class="feature-title">Цифровий звук</h3>
+                        <ul class="feature-list">
+                            <li>Дискретизація в часі</li>
+                            <li>Квантування амплітуди</li>
+                            <li>Висока частота: <strong>44.1 kHz</strong></li>
+                            <li>Глибина: <strong>16-24 біти</strong> на семпл</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card green">
+                        <span class="feature-icon">🎵</span>
+                        <h3 class="feature-title">Людське сприйняття</h3>
+                        <ul class="feature-list">
+                            <li>Чутливість: <strong>20 Hz - 20 kHz</strong></li>
+                            <li>Частотне маскування</li>
+                            <li>Психоакустичні ефекти</li>
+                            <li>Толерантність до шуму</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
