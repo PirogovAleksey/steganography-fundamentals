@@ -6,74 +6,9 @@
     <title>HUGO - Highly Undetectable steGO | Лекція 7.1</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 
     <style>
-        .algorithm-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .comparison-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            border-top: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .method-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 5px solid #667eea;
-        }
-
-        .advantage-list {
-            background: #dcfce7;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .disadvantage-list {
-            background: #fee2e2;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .step-box {
-            background: #1f2937;
-            color: #e5e7eb;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-            font-family: monospace;
-        }
-
-        .formula-box {
-            background: #f8fafc;
-            border: 2px solid #cbd5e1;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            text-align: center;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.1rem;
-        }
-
         .three-col-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -89,26 +24,20 @@
         }
     </style>
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>🎭 HUGO - Highly Undetectable steGO</h1>
-                <div class="subtitle">
-                    Тема 1: Адаптивна стеганографія на основі локальної складності
-                </div>
-            </div>
+    <div class="slide active title-slide">
+        <h1>🎭 HUGO - Highly Undetectable steGO</h1>
+        <div class="subtitle">
+            Тема 1: Адаптивна стеганографія на основі локальної складності
         </div>
     </div>
 
     <!-- Слайд 2: Вступ -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔍 Проблема традиційних методів</h2>
 
                 <div style="background: #fef2f2; border-left: 5px solid #ef4444; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
@@ -130,17 +59,13 @@
                         <li>Мінімізують <strong>виявлюваність</strong></li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 3: Основна ідея HUGO -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>💡 Основна ідея HUGO</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Принцип роботи</h3>
                     <p style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0;">
                         HUGO використовує <strong>високорозмірні статистичні моделі</strong> зображення<br>
@@ -163,27 +88,23 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Ключове:</strong> HUGO не просто уникає гладких областей - він моделює статистичні властивості, які використовують детектори стегоаналізу
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 4: Аналіз локальної складності -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔬 Аналіз локальної складності</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">Що таке "складність" пікселя?</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         Складність визначається через <strong>непередбачуваність</strong> значення пікселя на основі його сусідів
                     </p>
                 </div>
 
-                <div class="comparison-grid">
+                <div class="two-column">
                     <div style="background: #eff6ff; padding: 1.5rem; border-radius: 10px;">
                         <h4 style="color: #1e40af;">🟦 Низька складність</h4>
                         <div style="background: #dbeafe; padding: 1rem; border-radius: 5px; margin: 1rem 0;">
@@ -208,49 +129,41 @@
                         <p>Піксель непередбачуваний<br>➡️ Зміна непомітна</p>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 5: Модель SPAM -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📊 Модель SPAM (Subtractive Pixel Adjacency Matrix)</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3>Як HUGO аналізує зображення?</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         Використовує модель <strong>SPAM</strong> - статистичний опис відносин між сусідніми пікселями
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h4>🧮 Обчислення різниці сусідів</h4>
-                    <div class="formula-box">
+                    <div class="code-block">
                         d<sub>h</sub>(i,j) = I(i,j) - I(i,j+1)  &nbsp;&nbsp;&nbsp; (горизонтальна різниця)<br>
                         d<sub>v</sub>(i,j) = I(i,j) - I(i+1,j)  &nbsp;&nbsp;&nbsp; (вертикальна різниця)
                     </div>
                 </div>
 
-                <div class="step-box">
+                <div class="code-block">
                     1. Обчислюємо різниці між сусідніми пікселями
                     2. Будуємо гістограму цих різниць
                     3. Гістограма характеризує текстуру зображення
                     4. Зміни в гістограмі = артефакти стеганографії
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     HUGO намагається мінімізувати зміни в цій гістограмі при вбудовуванні
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 6: Функція вартості -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>💰 Функція вартості (Cost Function)</h2>
 
                 <div style="background: #f0f9ff; padding: 2rem; border-radius: 10px; margin: 1.5rem 0;">
@@ -262,9 +175,9 @@
                     </p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h4>🔢 Обчислення вартості для пікселя</h4>
-                    <div class="formula-box">
+                    <div class="code-block">
                         ρ(i,j) = Σ |F(I) - F(I')|
                     </div>
                     <p style="text-align: center; font-size: 1.05rem; margin-top: 1rem;">
@@ -273,7 +186,7 @@
                     </p>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>✅ Властивості хорошої функції вартості:</h4>
                     <ul>
                         <li>Висока вартість для гладких областей</li>
@@ -281,17 +194,13 @@
                         <li>Враховує глобальну статистику зображення</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 7: STC кодування -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🎯 STC - Syndrome Trellis Codes</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center;">Проблема оптимального вбудовування</h3>
                     <p style="font-size: 1.1rem; text-align: center; margin: 1rem 0;">
                         Маємо: N пікселів з різними вартостями ρ<sub>1</sub>, ρ<sub>2</sub>, ..., ρ<sub>N</sub><br>
@@ -299,7 +208,7 @@
                     </p>
                 </div>
 
-                <div class="comparison-grid">
+                <div class="two-column">
                     <div style="background: #fef2f2; padding: 1.5rem; border-radius: 10px;">
                         <h4 style="color: #991b1b;">❌ Наївний підхід</h4>
                         <ul>
@@ -319,54 +228,46 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success">
+                <div class="success-box">
                     <strong>💡 Результат:</strong> STC дозволяє вбудувати дані з мінімальним впливом на виявлюваність
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 8: Алгоритм HUGO -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>⚙️ Алгоритм HUGO - покроково</h2>
 
-                <div class="step-box">
+                <div class="code-block">
                     <strong>Вхідні дані:</strong> зображення I, повідомлення M
                 </div>
 
-                <div class="method-card" style="background: #f9fafb;">
+                <div class="info-box" style="background: #f9fafb;">
                     <h4 style="color: #1e40af;">Крок 1: Обчислення ознак SPAM</h4>
                     <p>Розраховуємо початкову статистику зображення F(I)</p>
                 </div>
 
-                <div class="method-card" style="background: #f9fafb;">
+                <div class="info-box" style="background: #f9fafb;">
                     <h4 style="color: #1e40af;">Крок 2: Обчислення вартості</h4>
                     <p>Для кожного пікселя (i,j) обчислюємо ρ(i,j) - вартість його зміни</p>
                 </div>
 
-                <div class="method-card" style="background: #f9fafb;">
+                <div class="info-box" style="background: #f9fafb;">
                     <h4 style="color: #1e40af;">Крок 3: STC кодування</h4>
                     <p>Використовуємо STC для вбудовування M з мінімальною сумарною вартістю</p>
                 </div>
 
-                <div class="method-card" style="background: #f9fafb;">
+                <div class="info-box" style="background: #f9fafb;">
                     <h4 style="color: #1e40af;">Крок 4: Модифікація зображення</h4>
                     <p>Змінюємо відібрані пікселі, отримуємо стего-зображення I'</p>
                 </div>
 
-                <div class="step-box">
+                <div class="code-block">
                     <strong>Вихідні дані:</strong> стего-зображення I' з вбудованим M
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 9: Приклад роботи -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📸 Приклад: Карта вартості</h2>
 
                 <div style="background: #f8fafc; padding: 2rem; border-radius: 10px; margin: 1.5rem 0;">
@@ -393,7 +294,7 @@
                     </div>
                 </div>
 
-                <div class="comparison-grid">
+                <div class="two-column">
                     <div class="feature-card">
                         <h4 style="color: #ef4444;">🔴 Червоні зони</h4>
                         <p>Висока вартість (гладкі області) - уникати змін</p>
@@ -404,20 +305,16 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>Результат:</strong> Більшість змін відбувається в текстурованих областях, де вони непомітні
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 10: Переваги HUGO -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>✅ Переваги HUGO</h2>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>🛡️ Безпека</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li><strong>Висока стійкість</strong> до сучасних детекторів стегоаналізу</li>
@@ -426,7 +323,7 @@
                     </ul>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>🎯 Адаптивність</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li>Автоматично враховує особливості кожного зображення</li>
@@ -435,7 +332,7 @@
                     </ul>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>📊 Ефективність</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li>STC кодування забезпечує високу ємність</li>
@@ -443,17 +340,13 @@
                         <li>Баланс між ємністю та безпекою</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 11: Недоліки HUGO -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>⚠️ Недоліки та обмеження HUGO</h2>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h4>🐌 Обчислювальна складність</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li>Потребує обчислення SPAM-ознак для всіх пікселів</li>
@@ -462,7 +355,7 @@
                     </ul>
                 </div>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h4>🎨 Обмеження для зображень</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li>Працює тільки в просторовій області (не JPEG)</li>
@@ -471,7 +364,7 @@
                     </ul>
                 </div>
 
-                <div class="disadvantage-list">
+                <div class="warning-box">
                     <h4>🔧 Складність реалізації</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li>Потребує реалізації STC кодування</li>
@@ -479,14 +372,10 @@
                         <li>Складніший в налаштуванні параметрів</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 12: Порівняння з іншими методами -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📊 HUGO vs інші методи</h2>
 
                 <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 1.05rem;">
@@ -520,27 +409,23 @@
                     </tbody>
                 </table>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>Висновок:</strong> HUGO пропонує найкращу безпеку серед просторових методів, але за рахунок швидкості
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 13: Стійкість до стегоаналізу -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🛡️ Стійкість до стегоаналізу</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">Тестування на BOSS Competition</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         BOSS (Break Our Steganographic System) - міжнародне змагання з стегоаналізу, де HUGO показав найкращі результати
                     </p>
                 </div>
 
-                <div class="comparison-grid">
+                <div class="two-column">
                     <div class="feature-card">
                         <h4 style="color: #3b82f6;">📊 Проти ансамблевих класифікаторів</h4>
                         <p>Точність детектування:<br><strong>&lt; 60%</strong> при payload 0.4 bpp</p>
@@ -551,7 +436,7 @@
                     </div>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>✅ Чому HUGO важко виявити?</h4>
                     <ul>
                         <li>Мінімізує зміни в статистиці, яку аналізують детектори</li>
@@ -560,14 +445,10 @@
                         <li>Не створює характерних паттернів</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 14: Практичне застосування -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>🔧 Практичне застосування</h2>
 
                 <div class="three-col-grid">
@@ -585,7 +466,7 @@
                     </div>
                 </div>
 
-                <div class="method-card" style="margin-top: 2rem;">
+                <div class="info-box" style="margin-top: 2rem;">
                     <h4>📝 Рекомендації з використання</h4>
                     <ul style="font-size: 1.05rem; line-height: 1.8;">
                         <li><strong>Payload:</strong> оптимально 0.2-0.4 біт на піксель (bpp)</li>
@@ -594,21 +475,17 @@
                         <li><strong>Безпека:</strong> комбінуйте з шифруванням повідомлення</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 15: Підсумки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
                 <h2>📝 Підсумки</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center; color: #667eea;">Ключові висновки про HUGO</h3>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <ul style="font-size: 1.15rem; line-height: 2;">
                         <li><strong>Адаптивний підхід:</strong> аналізує складність кожної ділянки зображення</li>
                         <li><strong>SPAM модель:</strong> використовує статистику сусідніх пікселів</li>
@@ -621,24 +498,18 @@
                 <div class="alert alert-success" style="margin-top: 2rem;">
                     <strong>💡 Головне:</strong> HUGO - це прорив у стеганографії, що встановив новий стандарт для адаптивних методів. Його ідеї лягли в основу інших сучасних методів, таких як WOW та S-UNIWARD.
                 </div>
-            </div>
-        </div>
     </div>
 
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 15</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">←</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 7%;"></div>
-</div>
+<div id="slide-counter" class="slide-counter">1 / 15</div>
 
 <script>
     let currentSlide = 0;
@@ -647,29 +518,25 @@
 
     function showSlide(n) {
         slides.forEach(slide => slide.classList.remove('active'));
-
-        if (n >= totalSlides) currentSlide = 0;
-        if (n < 0) currentSlide = totalSlides - 1;
-
         slides[currentSlide].classList.add('active');
-
         document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
     }
 
     function nextSlide() {
-        currentSlide++;
-        showSlide(currentSlide);
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
     }
 
     function previousSlide() {
-        currentSlide--;
-        showSlide(currentSlide);
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
     }
 
     document.addEventListener('keydown', (e) => {
