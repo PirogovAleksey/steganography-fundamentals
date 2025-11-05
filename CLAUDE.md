@@ -56,34 +56,59 @@ Course
 
 ### Navigation & Slides
 
-**Two types of presentations exist**:
+**Current Standard**: Self-contained HTML presentations using the **new purple-themed system**.
 
-1. **JSON-based slides** (legacy): Uses `slides.json` + `slides.js` ES6 module
-2. **Self-contained HTML slides** (current standard): Each `tema{N}_*.html` has:
-   - Multiple `<div class="slide">` elements
-   - Inline navigation script at the bottom
-   - No external dependencies
+Each `tema{N}_*.html` presentation file must:
+- Link to the single stylesheet: `new_assets/presentation/css/styles.css`
+- Contain a `<div class="presentation">` wrapper
+- Have multiple `<div class="slide">` elements inside
+- Include inline navigation script at the bottom
+- Have navigation OUTSIDE the presentation wrapper
 
-**Self-contained slide template**:
+**Complete presentation file template**:
 ```html
-<div class="slides-wrapper">
-    <div class="slide active"><!-- First slide --></div>
-    <div class="slide"><!-- Second slide --></div>
-    <!-- ... more slides ... -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Title | Лекція X.Y</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>🎯 Topic Title</h1>
+        <div class="subtitle">
+            Subtitle or section description
+        </div>
+    </div>
+
+    <!-- Слайд 2: Content -->
+    <div class="slide">
+        <h2>Section Title</h2>
+        <p>Content here...</p>
+    </div>
+
+    <!-- More slides... -->
+
 </div>
 
-<!-- Navigation (required structure) -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 10</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
 </div>
 
-<!-- Progress Bar (required structure) -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 10%;"></div>
-</div>
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
 
 <script>
     let currentSlide = 0;
@@ -92,20 +117,31 @@ Course
 
     function showSlide(n) {
         slides.forEach(slide => slide.classList.remove('active'));
+
         if (n >= totalSlides) currentSlide = 0;
         if (n < 0) currentSlide = totalSlides - 1;
+
         slides[currentSlide].classList.add('active');
 
-        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
     }
 
-    function nextSlide() { currentSlide++; showSlide(currentSlide); }
-    function previousSlide() { currentSlide--; showSlide(currentSlide); }
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight') nextSlide();
@@ -115,9 +151,19 @@ Course
 
     showSlide(0);
 </script>
+
+</body>
+</html>
 ```
 
-**Critical**: Do NOT reference `slides-navigation.js` or any external navigation file - it doesn't exist. Always use inline scripts.
+**Critical rules**:
+- CSS path: Always `../../../new_assets/presentation/css/styles.css` (relative from tema file)
+- Navigation order: **Previous | Home | Next** (this exact order is required)
+- Navigation must be OUTSIDE `</div>` that closes `.presentation` wrapper
+- Slide counter must be a separate div AFTER navigation
+- All navigation is inline JavaScript - no external files
+- First slide must have `class="slide active title-slide"`
+- Never use old CSS paths like `assets/css/slides.css`
 
 ## Adding New Content
 
@@ -156,10 +202,12 @@ modules/module{N}/lecture_{N}/
    - Lecture meta information (duration, slides, status)
 
 4. **Each tema file** must:
-   - Include inline navigation script (see template above)
-   - Have proper slide structure with `<div class="slide">` elements
-   - First slide should have `class="slide active"`
-   - Use existing CSS classes from `slides.css`
+   - Link to `new_assets/presentation/css/styles.css` (see complete template above)
+   - Include inline navigation script at the bottom
+   - Have proper slide structure with `<div class="slide">` elements inside `<div class="presentation">`
+   - First slide should have `class="slide active title-slide"`
+   - Use available CSS classes documented in the CSS Architecture section
+   - Ensure all divs are properly closed (balanced HTML structure)
 
 5. **Update the module's static index.html** (e.g., `modules/module2/index.html`):
    - This is a STATIC file separate from modules.json
@@ -183,25 +231,70 @@ On the landing page:
 - Others show as grayed out with "Заплановано" badge
 - Module status is separate from lecture status
 
-## CSS Architecture (ITCSS)
+## CSS Architecture
 
-Files are loaded in order:
-1. `base.css` - Variables, resets, typography
-2. `layout.css` - Grid, containers, spacing
-3. `components.css` - Reusable UI components (cards, buttons, badges)
-4. `modules.css` - Module-specific styles
-5. `lectures.css` - Lecture page styles
-6. `slides.css` - Presentation slide styles
-7. `pages.css` - Page-specific overrides
+### Presentation Styles (Current System)
 
-Common utility classes in slides:
-- `.algorithm-box` - Algorithm explanations with gradient background
-- `.comparison-grid` - 2 or 3 column grid
-- `.method-card` - Method description card with left border
-- `.advantage-list` - Green background for advantages
-- `.disadvantage-list` - Red background for disadvantages
-- `.formula-box` - Centered formula with border
-- `.alert` - Info/success/warning message boxes
+**Location**: `new_assets/presentation/css/styles.css`
+
+This is a **single unified stylesheet** for all presentation slides with a purple gradient theme.
+
+**Color Scheme**:
+- Primary: `#667eea` (purple-blue)
+- Secondary: `#764ba2` (dark purple)
+- Background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
+- Success: `#10b981` (green)
+- Warning: `#f59e0b` (orange)
+- Danger: `#dc2626` (red)
+
+**Available CSS Classes**:
+
+#### Layout Classes
+- `.presentation` - Main wrapper (fullscreen, 100vw × 100vh)
+- `.slide` - Individual slide (white card, centered, max-width 1200px, 85vh height)
+- `.slide.active` - Currently visible slide (opacity: 1, z-index: 2)
+- `.title-slide` - First slide with special styling
+
+#### Navigation Classes
+- `.navigation` - Fixed bottom navigation container (centered)
+- `.nav-btn` - Navigation button (white with purple text, rounded)
+- `.slide-counter` - Fixed top-right counter display
+
+#### Content Classes
+- `.subtitle` - Subtitle text on title slides
+- `.code-block` - Code/monospace blocks with dark background
+- `.highlight` - Inline highlighted text with gradient background
+- `.two-column` - Two-column grid layout
+- `.column` - Individual column in grid
+
+#### Message Boxes
+- `.info-box` - Blue-bordered information box
+- `.success-box` - Green-bordered success message
+- `.warning-box` - Orange-bordered warning message
+
+#### Lists
+- `.checklist` - Styled list with checkmark bullets
+
+#### Inline Elements
+- `.emoji` - Styled emoji with consistent sizing
+
+**Important**:
+- Do NOT use inline styles for colors, margins, or layout
+- Prefer CSS classes over inline `style=""` attributes
+- Keep content semantic and let CSS handle presentation
+- All slides auto-scroll if content exceeds viewport height
+
+### Landing Page Styles (Legacy System)
+
+For the main landing page and module pages, the old ITCSS system is still used:
+1. `assets/css/base.css` - Variables, resets, typography
+2. `assets/css/layout.css` - Grid, containers, spacing
+3. `assets/css/components.css` - Cards, buttons, badges
+4. `assets/css/modules.css` - Module-specific styles
+5. `assets/css/lectures.css` - Lecture page styles
+6. `assets/css/pages.css` - Page overrides
+
+**Do not mix** the two CSS systems - presentations use only `new_assets/presentation/css/styles.css`.
 
 ## JavaScript Architecture
 
@@ -261,14 +354,100 @@ Lectures are rendered as cards by `landing.js`:
 6. Commit and push
 
 **Fixing navigation issues**:
-- Navigation MUST be inline (not external file)
-- Check button IDs: `prev-slide`, `next-slide`, `slide-counter`
-- Check div classes: `slide-navigation`, `slide-progress`, `slide-progress-bar`
+- Navigation MUST be inline JavaScript (no external files)
+- Verify CSS link: `../../../new_assets/presentation/css/styles.css`
+- Check button IDs: `prev-slide`, `next-slide`, `home-btn`
+- Check div classes: `.navigation`, `.nav-btn`, `.slide-counter`
+- **Navigation order**: Previous | Home | Next (exact order matters!)
+- Navigation must be OUTSIDE the `</div>` that closes `.presentation`
+- Verify all `<div>` tags are properly closed (balanced)
+- Common issue: Missing closing `</div>` tags in slides cause navigation to be hidden
 - Verify `showSlide(0)` is called on page load
 
 **Updating course metadata**:
 - Edit `assets/data/modules.json` only
 - No code changes needed - landing page loads dynamically
+
+## HTML Structure Best Practices
+
+### Proper Slide Structure
+
+Each slide MUST be properly closed before the next slide comment:
+
+```html
+<!-- Слайд 1: Титульний -->
+<div class="slide active title-slide">
+    <h1>Title</h1>
+    <div class="subtitle">
+        Subtitle text
+    </div>
+</div>
+
+<!-- Слайд 2: Next slide -->
+<div class="slide">
+    <h2>Content</h2>
+    <p>Text here</p>
+</div>
+```
+
+### Common HTML Mistakes to Avoid
+
+**❌ Missing closing divs**:
+```html
+<div class="slide">
+    <div class="info-box">
+        <p>Content</p>
+    <!-- Missing </div> for info-box
+</div>
+```
+
+**✅ Correct**:
+```html
+<div class="slide">
+    <div class="info-box">
+        <p>Content</p>
+    </div>
+</div>
+```
+
+**❌ Extra closing divs**:
+```html
+<div class="slide">
+    <p>Content</p>
+    </div>
+</div>
+</div>  <!-- Extra closing div -->
+```
+
+**❌ Navigation inside presentation wrapper**:
+```html
+<div class="presentation">
+    <div class="slide">...</div>
+
+    <!-- Navigation -->
+    <div class="navigation">...</div>  <!-- WRONG: Inside presentation -->
+</div>
+```
+
+**✅ Correct - Navigation outside**:
+```html
+<div class="presentation">
+    <div class="slide">...</div>
+</div>
+
+<!-- Navigation -->
+<div class="navigation">...</div>  <!-- CORRECT: Outside presentation -->
+```
+
+### Verifying HTML Structure
+
+To verify a presentation file has correct HTML structure:
+1. Check that CSS link points to `new_assets/presentation/css/styles.css`
+2. Count opening `<div>` tags vs closing `</div>` tags (must be equal)
+3. Verify navigation is AFTER the closing `</div>` of `.presentation`
+4. Verify button order: Previous | Home | Next
+5. Check that first slide has `class="slide active title-slide"`
+6. Ensure each slide is properly closed before next slide comment
 
 ## Important Notes
 
@@ -277,7 +456,10 @@ Lectures are rendered as cards by `landing.js`:
 - **No build tools**: No npm, webpack, babel, etc.
 - **Static hosting**: Designed for GitHub Pages
 - **Browser support**: Modern browsers with ES6 module support
-- **Slide navigation**: Always inline, never external file
+- **Presentation CSS**: Always use `new_assets/presentation/css/styles.css` (never old `assets/css/slides.css`)
+- **Slide navigation**: Always inline JavaScript, never external file
+- **Navigation structure**: Must be outside `.presentation` wrapper
+- **Button order**: Previous | Home | Next (this exact order is required)
 - **Single source of truth**: `modules.json` for all course structure (but see warning below)
 
 ### ⚠️ Architectural Inconsistency
