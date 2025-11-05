@@ -6,72 +6,23 @@
     <title>S-UNIWARD | Лекція 7.3</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
-
-    <style>
-        .algorithm-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .method-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 5px solid #667eea;
-        }
-
-        .advantage-list {
-            background: #dcfce7;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .formula-box {
-            background: #f8fafc;
-            border: 2px solid #cbd5e1;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            text-align: center;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>📐 S-UNIWARD</h1>
-                <div class="subtitle">
-                    Тема 3: Spatial Universal Wavelet Relative Distortion
-                </div>
-            </div>
+    <div class="slide active title-slide">
+        <h1>📐 S-UNIWARD</h1>
+        <div class="subtitle">
+            Тема 3: Spatial Universal Wavelet Relative Distortion
         </div>
     </div>
 
     <!-- Слайд 2: Вступ -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🌟 Універсальність S-UNIWARD</h2>
+<h2>🌟 Універсальність S-UNIWARD</h2>
 
                 <div style="background: #f0fdf4; border-left: 5px solid #10b981; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
                     <h3 style="color: #065f46;">Головна ідея</h3>
@@ -81,7 +32,7 @@
                     </p>
                 </div>
 
-                <div class="comparison-grid">
+                <div class="two-column">
                     <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
                         <h4 style="color: #92400e;">⚠️ HUGO і WOW</h4>
                         <p>Працюють тільки в просторовій області</p>
@@ -92,20 +43,16 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>💡 Універсальність:</strong> Одна і та ж сама функція вартості для spatial, JPEG, JPEG2000
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 3: Вейвлет-декомпозиція -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🌊 Багаторівнева вейвлет-декомпозиція</h2>
+<h2>🌊 Багаторівнева вейвлет-декомпозиція</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3>Декомпозиція на 3 рівні</h3>
                     <ul style="font-size: 1.1rem; line-height: 2;">
                         <li><strong>Рівень 1:</strong> Дрібні деталі (високі частоти)</li>
@@ -114,7 +61,7 @@
                     </ul>
                 </div>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h4>Субдіапазони на кожному рівні</h4>
                     <p style="text-align: center; font-size: 1.1rem;">
                         <strong>LH</strong> - Horizontal details<br>
@@ -126,47 +73,39 @@
                 <div class="alert alert-success">
                     Всього: 3 рівні × 3 субдіапазони = 9 фільтрів для аналізу!
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 4: Функція вартості -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💰 Обчислення відносного спотворення</h2>
+<h2>💰 Обчислення відносного спотворення</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3>Крок 1: Застосування вейвлет-фільтрів</h3>
-                    <div class="formula-box">
+                    <div class="code-block">
                         W<sub>i,j</sub><sup>k</sup> = |I * F<sup>k</sup>|<sub>i,j</sub>
                     </div>
                     <p style="text-align: center;">де k = 1...9 (індекс фільтра)</p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3>Крок 2: Стабілізація</h3>
-                    <div class="formula-box">
+                    <div class="code-block">
                         W̃<sub>i,j</sub><sup>k</sup> = W<sub>i,j</sub><sup>k</sup> / (σ<sup>k</sup> + C)
                     </div>
                     <p style="text-align: center;">C = 10<sup>-10</sup> (запобігає діленню на нуль)</p>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3>Крок 3: Агрегація</h3>
-                    <div class="formula-box">
+                    <div class="code-block">
                         ρ<sub>i,j</sub> = Σ<sub>k=1</sub><sup>9</sup> 1 / (|W̃<sub>i,j</sub><sup>k</sup>| + σ)
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 5: Алгоритм S-UNIWARD -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>⚙️ Алгоритм S-UNIWARD</h2>
+<h2>⚙️ Алгоритм S-UNIWARD</h2>
 
                 <div class="method-card" style="background: #f9fafb;">
                     <h4 style="color: #1e40af;">Крок 1: Вейвлет-декомпозиція</h4>
@@ -192,15 +131,11 @@
                     <h4 style="color: #1e40af;">Крок 5: STC + Вбудовування</h4>
                     <p>Використовуємо STC для оптимального вибору пікселів, модифікуємо зображення</p>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 6: Чому "Universal" -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🌍 Чому "Universal"?</h2>
+<h2>🌍 Чому "Universal"?</h2>
 
                 <div style="background: #f0fdf4; border-left: 5px solid #10b981; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
                     <h3 style="color: #065f46;">Ключова ідея універсальності</h3>
@@ -210,7 +145,7 @@
                     </p>
                 </div>
 
-                <div class="comparison-grid">
+                <div class="two-column">
                     <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
                         <h4 style="color: #92400e;">⚠️ HUGO, WOW</h4>
                         <p><strong>Spatial-only:</strong> Працюють тільки з пікселями у просторовій області</p>
@@ -221,7 +156,7 @@
                     </div>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>✅ Де можна застосувати:</h4>
                     <ul>
                         <li><strong>Spatial domain:</strong> прямо на пікселях (PNG, BMP)</li>
@@ -230,17 +165,13 @@
                         <li><strong>Інші трансформації:</strong> легко адаптується</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 7: Багаторівнева декомпозиція -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📊 Багаторівнева декомпозиція</h2>
+<h2>📊 Багаторівнева декомпозиція</h2>
 
-                <div class="algorithm-box">
+                <div class="info-box">
                     <h3 style="text-align: center;">Чому саме 3 рівні?</h3>
                     <p style="font-size: 1.1rem; text-align: center; margin: 1rem 0;">
                         Кожен рівень аналізує зображення на різних масштабах
@@ -262,7 +193,7 @@
                     </div>
                 </div>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h4>9 фільтрів = 3 рівні × 3 напрямки</h4>
                     <p>На кожному рівні аналізуємо:</p>
                     <ul>
@@ -272,20 +203,16 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-info">
+                <div class="info-box">
                     <strong>Результат:</strong> Всебічний аналіз текстури з урахуванням різних масштабів та напрямків
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 8: Стійкість до стегоаналізу -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🛡️ Стійкість S-UNIWARD</h2>
+<h2>🛡️ Стійкість S-UNIWARD</h2>
 
-                <div class="method-card">
+                <div class="info-box">
                     <h3 style="color: #667eea;">BOSS Competition Results</h3>
                     <p style="font-size: 1.1rem; line-height: 1.8;">
                         S-UNIWARD показав <strong>найкращі результати</strong> серед усіх методів на змаганні BOSS
@@ -318,7 +245,7 @@
                     </div>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>✅ Чому S-UNIWARD найбезпечніший?</h4>
                     <ul>
                         <li>Багаторівневий аналіз краще враховує складність зображення</li>
@@ -327,17 +254,13 @@
                         <li>Стійкість до різних типів детекторів (SVM, CNN, Ensemble)</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 9: Переваги -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>✅ Переваги S-UNIWARD</h2>
+<h2>✅ Переваги S-UNIWARD</h2>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>🌍 Універсальність</h4>
                     <ul>
                         <li>Працює в просторовій, DCT, вейвлет-областях</li>
@@ -346,7 +269,7 @@
                     </ul>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>🛡️ Безпека</h4>
                     <ul>
                         <li>Найкраща стійкість серед усіх методів</li>
@@ -355,7 +278,7 @@
                     </ul>
                 </div>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <h4>🎯 Адаптивність</h4>
                     <ul>
                         <li>Багаторівнева декомпозиція</li>
@@ -363,17 +286,13 @@
                         <li>Оптимальний розподіл змін</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 10: Підсумки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📝 Підсумки S-UNIWARD</h2>
+<h2>📝 Підсумки S-UNIWARD</h2>
 
-                <div class="advantage-list">
+                <div class="success-box">
                     <ul style="font-size: 1.15rem; line-height: 2;">
                         <li><strong>Універсальна функція спотворення</strong> для різних областей</li>
                         <li><strong>Багаторівнева вейвлет-декомпозиція</strong> (3 рівні, 9 фільтрів)</li>
@@ -393,17 +312,13 @@
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 10</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">←</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">→</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 10%;"></div>
-</div>
+<div id="slide-counter" class="slide-counter">1 / 10</div>
 
 <script>
     let currentSlide = 0;
@@ -412,29 +327,25 @@
 
     function showSlide(n) {
         slides.forEach(slide => slide.classList.remove('active'));
-
-        if (n >= totalSlides) currentSlide = 0;
-        if (n < 0) currentSlide = totalSlides - 1;
-
         slides[currentSlide].classList.add('active');
-
         document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
     }
 
     function nextSlide() {
-        currentSlide++;
-        showSlide(currentSlide);
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
     }
 
     function previousSlide() {
-        currentSlide--;
-        showSlide(currentSlide);
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
     }
 
     document.addEventListener('keydown', (e) => {
