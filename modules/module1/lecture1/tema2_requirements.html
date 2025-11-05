@@ -6,743 +6,549 @@
     <title>Вимоги до стегосистем | Лекція 1.3</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 
-    <style>
-        .requirements-triangle {
-            width: 400px;
-            height: 350px;
-            margin: 2rem auto;
-            position: relative;
-        }
-
-        .triangle-point {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .triangle-point:hover {
-            transform: scale(1.1);
-        }
-
-        .triangle-line {
-            position: absolute;
-            height: 3px;
-            background: #e5e7eb;
-            transform-origin: left center;
-        }
-
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .metric-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .metric-card h4 {
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
-
-        .requirement-levels {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .level-card {
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .level-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .compromise-diagram {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin: 2rem 0;
-            padding: 2rem;
-            background: #f9fafb;
-            border-radius: 15px;
-        }
-
-        .compromise-item {
-            text-align: center;
-            flex: 1;
-        }
-
-        .compromise-arrow {
-            font-size: 2rem;
-            color: #dc2626;
-            margin: 0 1rem;
-        }
-
-        .metrics-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin: 2rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .metrics-table th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 1rem;
-            text-align: left;
-        }
-
-        .metrics-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .metrics-table tr:nth-child(even) {
-            background: #f9fafb;
-        }
-
-        .application-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .application-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-top: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .formula-box {
-            background: #1f2937;
-            color: #e5e7eb;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            font-family: monospace;
-            font-size: 1.1rem;
-            text-align: center;
-        }
-    </style>
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>📋 Вимоги до стегосистем</h1>
+    <div class="slide active title-slide">
+        <h1>📋 Вимоги до стегосистем</h1>
             </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 2: Загальні принципи -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 Загальні принципи формування вимог</h2>
+        <h2>🎯 Загальні принципи формування вимог</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-                    <p style="font-size: 1.2rem; line-height: 1.8;">
-                        Розробка ефективної стеганографічної системи потребує чіткого визначення та балансування множини взаємопов'язаних вимог, які часто суперечать одна одній.
-                    </p>
-                </div>
-
-                <h3 style="color: #667eea; margin-top: 2rem;">Класифікація вимог:</h3>
-
-                <div class="requirement-levels">
-                    <div class="level-card" style="background: #dcfce7;">
-                        <h4 style="color: #10b981;">За критичністю</h4>
-                        <ul style="text-align: left;">
-                            <li>Обов'язкові</li>
-                            <li>Бажані</li>
-                            <li>Опціональні</li>
-                        </ul>
-                    </div>
-
-                    <div class="level-card" style="background: #dbeafe;">
-                        <h4 style="color: #3b82f6;">За областю</h4>
-                        <ul style="text-align: left;">
-                            <li>Безпека</li>
-                            <li>Продуктивність</li>
-                            <li>Зручність</li>
-                        </ul>
-                    </div>
-
-                    <div class="level-card" style="background: #fef3c7;">
-                        <h4 style="color: #f59e0b;">За оцінкою</h4>
-                        <ul style="text-align: left;">
-                            <li>Вимірювані</li>
-                            <li>Якісні</li>
-                            <li>Суб'єктивні</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <p style="font-size: 1.2rem; line-height: 1.8;">
+        Розробка ефективної стеганографічної системи потребує чіткого визначення та балансування множини взаємопов'язаних вимог, які часто суперечать одна одній.
+        </p>
         </div>
+
+        <h3 style="color: #667eea; margin-top: 2rem;">Класифікація вимог:</h3>
+
+        <div class="requirement-levels">
+        <div class="level-card" style="background: #dcfce7;">
+        <h4 style="color: #10b981;">За критичністю</h4>
+        <ul style="text-align: left;">
+        <li>Обов'язкові</li>
+        <li>Бажані</li>
+        <li>Опціональні</li>
+        </ul>
+        </div>
+
+        <div class="level-card" style="background: #dbeafe;">
+        <h4 style="color: #3b82f6;">За областю</h4>
+        <ul style="text-align: left;">
+        <li>Безпека</li>
+        <li>Продуктивність</li>
+        <li>Зручність</li>
+        </ul>
+        </div>
+
+        <div class="level-card" style="background: #fef3c7;">
+        <h4 style="color: #f59e0b;">За оцінкою</h4>
+        <ul style="text-align: left;">
+        <li>Вимірювані</li>
+        <li>Якісні</li>
+        <li>Суб'єктивні</li>
+        </ul>        </div>
     </div>
 
+    </div>
     <!-- Слайд 3: Непомітність -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>👁️ Непомітність (Imperceptibility)</h2>
+        <h2>👁️ Непомітність (Imperceptibility)</h2>
 
-                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <p><strong>Визначення:</strong> Здатність стегосистеми приховувати сам факт наявності секретного повідомлення так, що stego-object не відрізняється від оригінального cover-object.</p>
-                </div>
+        <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+        <p><strong>Визначення:</strong> Здатність стегосистеми приховувати сам факт наявності секретного повідомлення так, що stego-object не відрізняється від оригінального cover-object.</p>
+        </div>
 
-                <div class="metric-grid">
-                    <div class="metric-card">
-                        <h4>🎨 Перцептуальна непомітність</h4>
-                        <ul>
-                            <li>Візуально непомітні артефакти</li>
-                            <li>Природність звучання аудіо</li>
-                            <li>Недетектованість змін у тексті</li>
-                            <li>Суб'єктивні тести експертів</li>
-                        </ul>
-                    </div>
+        <div class="metric-grid">
+        <div class="metric-card">
+        <h4>🎨 Перцептуальна непомітність</h4>
+        <ul>
+        <li>Візуально непомітні артефакти</li>
+        <li>Природність звучання аудіо</li>
+        <li>Недетектованість змін у тексті</li>
+        <li>Суб'єктивні тести експертів</li>
+        </ul>
+        </div>
 
-                    <div class="metric-card">
-                        <h4>📊 Статистична непомітність</h4>
-                        <ul>
-                            <li>Збереження статистичних властивостей</li>
-                            <li>Мінімальні зміни розподілу</li>
-                            <li>Стійкість до статистичних тестів</li>
-                            <li>Математичний аналіз розподілів</li>
-                        </ul>
-                    </div>
+        <div class="metric-card">
+        <h4>📊 Статистична непомітність</h4>
+        <ul>
+        <li>Збереження статистичних властивостей</li>
+        <li>Мінімальні зміни розподілу</li>
+        <li>Стійкість до статистичних тестів</li>
+        <li>Математичний аналіз розподілів</li>
+        </ul>
+        </div>
 
-                    <div class="metric-card">
-                        <h4>🔗 Структурна непомітність</h4>
-                        <ul>
-                            <li>Збереження закономірностей</li>
-                            <li>Відсутність регулярних патернів</li>
-                            <li>Природність локальних кореляцій</li>
-                            <li>Аналіз локальних властивостей</li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="metric-card">
+        <h4>🔗 Структурна непомітність</h4>
+        <ul>
+        <li>Збереження закономірностей</li>
+        <li>Відсутність регулярних патернів</li>
+        <li>Природність локальних кореляцій</li>
+        <li>Аналіз локальних властивостей</li>
+        </ul>
+        </div>
+        </div>
 
-                <h3 style="color: #667eea; margin-top: 2rem;">Метрики оцінки непомітності:</h3>
+        <h3 style="color: #667eea; margin-top: 2rem;">Метрики оцінки непомітності:</h3>
 
-                <table class="metrics-table">
-                    <thead>
-                    <tr>
-                        <th>Метрика</th>
-                        <th>Опис</th>
-                        <th>Допустимі значення</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><strong>PSNR</strong></td>
-                        <td>Peak Signal-to-Noise Ratio</td>
-                        <td>≥ 30 дБ (зазвичай > 35 дБ)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>MSE</strong></td>
-                        <td>Mean Squared Error</td>
-                        <td>≤ заданого порогу</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SSIM</strong></td>
-                        <td>Structural Similarity Index</td>
-                        <td>> 0.98</td>
-                    </tr>
-                    <tr>
-                        <td><strong>LPIPS</strong></td>
-                        <td>Learned Perceptual Image Patch Similarity</td>
-                        <td>< 0.1</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <table class="metrics-table">
+        <thead>
+        <tr>
+        <th>Метрика</th>
+        <th>Опис</th>
+        <th>Допустимі значення</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>PSNR</strong></td>
+        <td>Peak Signal-to-Noise Ratio</td>
+        <td>≥ 30 дБ (зазвичай > 35 дБ)</td>
+        </tr>
+        <tr>
+        <td><strong>MSE</strong></td>
+        <td>Mean Squared Error</td>
+        <td>≤ заданого порогу</td>
+        </tr>
+        <tr>
+        <td><strong>SSIM</strong></td>
+        <td>Structural Similarity Index</td>
+        <td>> 0.98</td>
+        </tr>
+        <tr>
+        <td><strong>LPIPS</strong></td>
+        <td>Learned Perceptual Image Patch Similarity</td>
+        <td>< 0.1</td>
+        </tr>
+        </tbody>
+        </table>
             </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 4: Ємність -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💾 Ємність (Capacity/Payload)</h2>
+        <h2>💾 Ємність (Capacity/Payload)</h2>
 
-                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <p><strong>Визначення:</strong> Максимальна кількість секретної інформації, яка може бути прихована у контейнері заданого розміру без порушення вимог непомітності та стійкості.</p>
-                </div>
+        <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+        <p><strong>Визначення:</strong> Максимальна кількість секретної інформації, яка може бути прихована у контейнері заданого розміру без порушення вимог непомітності та стійкості.</p>
+        </div>
 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
-                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #10b981;">📐 Теоретична ємність</h4>
-                        <ul>
-                            <li>Максимум для ідеального алгоритму</li>
-                            <li>Інформаційно-теоретичні обмеження</li>
-                            <li>Ентропія та надлишковість</li>
-                            <li>Формула Шеннона</li>
-                        </ul>
-                    </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #10b981;">📐 Теоретична ємність</h4>
+        <ul>
+        <li>Максимум для ідеального алгоритму</li>
+        <li>Інформаційно-теоретичні обмеження</li>
+        <li>Ентропія та надлишковість</li>
+        <li>Формула Шеннона</li>
+        </ul>
+        </div>
 
-                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #3b82f6;">⚙️ Практична ємність</h4>
-                        <ul>
-                            <li>Реальна ємність алгоритму</li>
-                            <li>Обмеження безпеки</li>
-                            <li>Залежність від контейнера</li>
-                            <li>Менше теоретичної</li>
-                        </ul>
-                    </div>
+        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #3b82f6;">⚙️ Практична ємність</h4>
+        <ul>
+        <li>Реальна ємність алгоритму</li>
+        <li>Обмеження безпеки</li>
+        <li>Залежність від контейнера</li>
+        <li>Менше теоретичної</li>
+        </ul>
+        </div>
 
-                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #f59e0b;">✅ Ефективна ємність</h4>
-                        <ul>
-                            <li>З урахуванням кодування</li>
-                            <li>Службова інформація</li>
-                            <li>Завадостійке кодування</li>
-                            <li>Реальна корисна ємність</li>
-                        </ul>
-                    </div>
-                </div>
+        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #f59e0b;">✅ Ефективна ємність</h4>
+        <ul>
+        <li>З урахуванням кодування</li>
+        <li>Службова інформація</li>
+        <li>Завадостійке кодування</li>
+        <li>Реальна корисна ємність</li>
+        </ul>
+        </div>
+        </div>
 
-                <div class="formula-box">
-                    C_eff = C_theor × η_alg × (1 - ρ_service) × k_ecc
-                    <br><small>де η - ефективність алгоритму, ρ - службові дані, k - коефіцієнт ECC</small>
-                </div>
+        <div class="formula-box">
+        C_eff = C_theor × η_alg × (1 - ρ_service) × k_ecc
+        <br><small>де η - ефективність алгоритму, ρ - службові дані, k - коефіцієнт ECC</small>
+        </div>
 
-                <h3 style="color: #667eea; margin-top: 2rem;">Одиниці вимірювання:</h3>
-                <ul style="line-height: 1.8;">
-                    <li><strong>Абсолютна ємність:</strong> біти, байти, кілобайти, мегабайти</li>
-                    <li><strong>Відносна ємність:</strong> біт/піксель (bpp), біт/семпл, біт/символ</li>
-                    <li><strong>Відсоткова ємність:</strong> % від розміру контейнера</li>
-                </ul>
+        <h3 style="color: #667eea; margin-top: 2rem;">Одиниці вимірювання:</h3>
+        <ul style="line-height: 1.8;">
+        <li><strong>Абсолютна ємність:</strong> біти, байти, кілобайти, мегабайти</li>
+        <li><strong>Відносна ємність:</strong> біт/піксель (bpp), біт/семпл, біт/символ</li>
+        <li><strong>Відсоткова ємність:</strong> % від розміру контейнера</li>
+        </ul>
             </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 5: Стійкість -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💪 Стійкість (Robustness)</h2>
+        <h2>💪 Стійкість (Robustness)</h2>
 
-                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <p><strong>Визначення:</strong> Здатність стегосистеми зберігати приховану інформацію та можливість її коректного витягування після впливу різноманітних перетворень, атак та спотворень.</p>
-                </div>
-
-                <div class="metric-grid">
-                    <div class="metric-card" style="border-left-color: #10b981;">
-                        <h4 style="color: #10b981;">🔄 Ненавмисні перетворення</h4>
-                        <ul>
-                            <li>Стиснення JPEG, MP3</li>
-                            <li>Зміна масштабу, поворот</li>
-                            <li>Ресамплінг сигналів</li>
-                            <li>Фільтрація та згладжування</li>
-                        </ul>
-                    </div>
-
-                    <div class="metric-card" style="border-left-color: #dc2626;">
-                        <h4 style="color: #dc2626;">⚔️ Активні атаки</h4>
-                        <ul>
-                            <li>Цілеспрямоване видалення</li>
-                            <li>Додавання шуму</li>
-                            <li>Геометричні трансформації</li>
-                            <li>Комбіновані атаки</li>
-                        </ul>
-                    </div>
-
-                    <div class="metric-card" style="border-left-color: #f59e0b;">
-                        <h4 style="color: #f59e0b;">📊 Статистичні атаки</h4>
-                        <ul>
-                            <li>Аналіз гістограм</li>
-                            <li>Машинне навчання</li>
-                            <li>Кореляційний аналіз</li>
-                            <li>Стохастичні методи</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3 style="color: #667eea; margin-top: 2rem;">Класифікація за рівнем стійкості:</h3>
-
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
-                    <div style="background: #fee2e2; padding: 1rem; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #dc2626;">Крихка</h4>
-                        <p>Чутлива до будь-яких змін</p>
-                    </div>
-                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #f59e0b;">Напівкрихка</h4>
-                        <p>Стійка до певних операцій</p>
-                    </div>
-                    <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; text-align: center;">
-                        <h4 style="color: #10b981;">Стійка</h4>
-                        <p>Витримує широкий спектр атак</p>
-                    </div>
-                </div>
-            </div>
+        <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+        <p><strong>Визначення:</strong> Здатність стегосистеми зберігати приховану інформацію та можливість її коректного витягування після впливу різноманітних перетворень, атак та спотворень.</p>
         </div>
+
+        <div class="metric-grid">
+        <div class="metric-card" style="border-left-color: #10b981;">
+        <h4 style="color: #10b981;">🔄 Ненавмисні перетворення</h4>
+        <ul>
+        <li>Стиснення JPEG, MP3</li>
+        <li>Зміна масштабу, поворот</li>
+        <li>Ресамплінг сигналів</li>
+        <li>Фільтрація та згладжування</li>
+        </ul>
+        </div>
+
+        <div class="metric-card" style="border-left-color: #dc2626;">
+        <h4 style="color: #dc2626;">⚔️ Активні атаки</h4>
+        <ul>
+        <li>Цілеспрямоване видалення</li>
+        <li>Додавання шуму</li>
+        <li>Геометричні трансформації</li>
+        <li>Комбіновані атаки</li>
+        </ul>
+        </div>
+
+        <div class="metric-card" style="border-left-color: #f59e0b;">
+        <h4 style="color: #f59e0b;">📊 Статистичні атаки</h4>
+        <ul>
+        <li>Аналіз гістограм</li>
+        <li>Машинне навчання</li>
+        <li>Кореляційний аналіз</li>
+        <li>Стохастичні методи</li>
+        </ul>
+        </div>
+        </div>
+
+        <h3 style="color: #667eea; margin-top: 2rem;">Класифікація за рівнем стійкості:</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
+        <div style="background: #fee2e2; padding: 1rem; border-radius: 8px; text-align: center;">
+        <h4 style="color: #dc2626;">Крихка</h4>
+        <p>Чутлива до будь-яких змін</p>
+        </div>
+        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; text-align: center;">
+        <h4 style="color: #f59e0b;">Напівкрихка</h4>
+        <p>Стійка до певних операцій</p>
+        </div>
+        <div style="background: #dcfce7; padding: 1rem; border-radius: 8px; text-align: center;">
+        <h4 style="color: #10b981;">Стійка</h4>
+        <p>Витримує широкий спектр атак</p>        </div>
     </div>
 
+    </div>
     <!-- Слайд 6: Трикутник компромісів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>⚖️ Трикутник компромісів</h2>
+        <h2>⚖️ Трикутник компромісів</h2>
 
-                <div class="requirements-triangle">
-                    <!-- Вершини трикутника -->
-                    <div class="triangle-point" style="top: 0; left: 50%; transform: translateX(-50%); background: #667eea;">
-                        <span style="font-size: 1.5rem;">👁️</span>
-                        <span>Непомітність</span>
-                    </div>
-                    <div class="triangle-point" style="bottom: 0; left: 0; background: #10b981;">
-                        <span style="font-size: 1.5rem;">💾</span>
-                        <span>Ємність</span>
-                    </div>
-                    <div class="triangle-point" style="bottom: 0; right: 0; background: #f59e0b;">
-                        <span style="font-size: 1.5rem;">💪</span>
-                        <span>Стійкість</span>
-                    </div>
+        <div class="requirements-triangle">
+        <!-- Вершини трикутника -->
+        <div class="triangle-point" style="top: 0; left: 50%; transform: translateX(-50%); background: #667eea;">
+        <span style="font-size: 1.5rem;">👁️</span>
+        <span>Непомітність</span>
+        </div>
+        <div class="triangle-point" style="bottom: 0; left: 0; background: #10b981;">
+        <span style="font-size: 1.5rem;">💾</span>
+        <span>Ємність</span>
+        </div>
+        <div class="triangle-point" style="bottom: 0; right: 0; background: #f59e0b;">
+        <span style="font-size: 1.5rem;">💪</span>
+        <span>Стійкість</span>
+        </div>
 
-                    <!-- Лінії трикутника -->
-                    <svg style="position: absolute; width: 100%; height: 100%; pointer-events: none;">
-                        <line x1="200" y1="60" x2="60" y2="290" stroke="#e5e7eb" stroke-width="3"/>
-                        <line x1="200" y1="60" x2="340" y2="290" stroke="#e5e7eb" stroke-width="3"/>
-                        <line x1="60" y1="290" x2="340" y2="290" stroke="#e5e7eb" stroke-width="3"/>
-                    </svg>
-                </div>
+        <!-- Лінії трикутника -->
+        <svg style="position: absolute; width: 100%; height: 100%; pointer-events: none;">
+        <line x1="200" y1="60" x2="60" y2="290" stroke="#e5e7eb" stroke-width="3"/>
+        <line x1="200" y1="60" x2="340" y2="290" stroke="#e5e7eb" stroke-width="3"/>
+        <line x1="60" y1="290" x2="340" y2="290" stroke="#e5e7eb" stroke-width="3"/>
+        </svg>
+        </div>
 
-                <h3 style="color: #667eea; margin-top: 2rem;">Основні компроміси:</h3>
+        <h3 style="color: #667eea; margin-top: 2rem;">Основні компроміси:</h3>
 
-                <div class="compromise-diagram">
-                    <div class="compromise-item">
-                        <h4 style="color: #667eea;">👁️ Непомітність</h4>
-                    </div>
-                    <span class="compromise-arrow">⟷</span>
-                    <div class="compromise-item">
-                        <h4 style="color: #10b981;">💾 Ємність</h4>
-                    </div>
-                </div>
-                <p style="text-align: center; background: #f9fafb; padding: 1rem; border-radius: 8px;">
-                    Збільшення ємності призводить до більших модифікацій контейнера
-                </p>
+        <div class="compromise-diagram">
+        <div class="compromise-item">
+        <h4 style="color: #667eea;">👁️ Непомітність</h4>
+        </div>
+        <span class="compromise-arrow">⟷</span>
+        <div class="compromise-item">
+        <h4 style="color: #10b981;">💾 Ємність</h4>
+        </div>
+        </div>
+        <p style="text-align: center; background: #f9fafb; padding: 1rem; border-radius: 8px;">
+        Збільшення ємності призводить до більших модифікацій контейнера
+        </p>
 
-                <div class="compromise-diagram">
-                    <div class="compromise-item">
-                        <h4 style="color: #667eea;">👁️ Непомітність</h4>
-                    </div>
-                    <span class="compromise-arrow">⟷</span>
-                    <div class="compromise-item">
-                        <h4 style="color: #f59e0b;">💪 Стійкість</h4>
-                    </div>
-                </div>
-                <p style="text-align: center; background: #f9fafb; padding: 1rem; border-radius: 8px;">
-                    Стійкі алгоритми часто вносять більше змін у контейнер
-                </p>
+        <div class="compromise-diagram">
+        <div class="compromise-item">
+        <h4 style="color: #667eea;">👁️ Непомітність</h4>
+        </div>
+        <span class="compromise-arrow">⟷</span>
+        <div class="compromise-item">
+        <h4 style="color: #f59e0b;">💪 Стійкість</h4>
+        </div>
+        </div>
+        <p style="text-align: center; background: #f9fafb; padding: 1rem; border-radius: 8px;">
+        Стійкі алгоритми часто вносять більше змін у контейнер
+        </p>
 
-                <div class="compromise-diagram">
-                    <div class="compromise-item">
-                        <h4 style="color: #10b981;">💾 Ємність</h4>
-                    </div>
-                    <span class="compromise-arrow">⟷</span>
-                    <div class="compromise-item">
-                        <h4 style="color: #f59e0b;">💪 Стійкість</h4>
-                    </div>
-                </div>
-                <p style="text-align: center; background: #f9fafb; padding: 1rem; border-radius: 8px;">
-                    Завадостійке кодування зменшує корисну ємність
-                </p>
+        <div class="compromise-diagram">
+        <div class="compromise-item">
+        <h4 style="color: #10b981;">💾 Ємність</h4>
+        </div>
+        <span class="compromise-arrow">⟷</span>
+        <div class="compromise-item">
+        <h4 style="color: #f59e0b;">💪 Стійкість</h4>
+        </div>
+        </div>
+        <p style="text-align: center; background: #f9fafb; padding: 1rem; border-radius: 8px;">
+        Завадостійке кодування зменшує корисну ємність
+        </p>
             </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 7: Додаткові критерії якості -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>⚡ Додаткові критерії якості</h2>
+        <h2>⚡ Додаткові критерії якості</h2>
 
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #dc2626;">
-                        <h3 style="color: #dc2626;">🔐 Безпека (Security)</h3>
-                        <h4>Криптографічна безпека:</h4>
-                        <ul>
-                            <li>Стійкість до криптоаналізу</li>
-                            <li>Криптографічно стійкі ключі</li>
-                            <li>Конфіденційність, цілісність</li>
-                        </ul>
-                        <h4>Стеганографічна безпека:</h4>
-                        <ul>
-                            <li>Принцип Керкгоффса</li>
-                            <li>Стійкість до атак зі знанням</li>
-                            <li>Мінімізація витоків</li>
-                        </ul>
-                    </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #dc2626;">
+        <h3 style="color: #dc2626;">🔐 Безпека (Security)</h3>
+        <h4>Криптографічна безпека:</h4>
+        <ul>
+        <li>Стійкість до криптоаналізу</li>
+        <li>Криптографічно стійкі ключі</li>
+        <li>Конфіденційність, цілісність</li>
+        </ul>
+        <h4>Стеганографічна безпека:</h4>
+        <ul>
+        <li>Принцип Керкгоффса</li>
+        <li>Стійкість до атак зі знанням</li>
+        <li>Мінімізація витоків</li>
+        </ul>
+        </div>
 
-                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #3b82f6;">
-                        <h3 style="color: #3b82f6;">⚙️ Ефективність</h3>
-                        <h4>Швидкість обробки:</h4>
-                        <ul>
-                            <li>Час вбудовування/витягування</li>
-                            <li>Масштабованість</li>
-                            <li>Паралельна обробка</li>
-                        </ul>
-                        <h4>Споживання ресурсів:</h4>
-                        <ul>
-                            <li>Використання RAM</li>
-                            <li>Навантаження CPU</li>
-                            <li>Енергоспоживання</li>
-                        </ul>
-                    </div>
-                </div>
+        <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #3b82f6;">
+        <h3 style="color: #3b82f6;">⚙️ Ефективність</h3>
+        <h4>Швидкість обробки:</h4>
+        <ul>
+        <li>Час вбудовування/витягування</li>
+        <li>Масштабованість</li>
+        <li>Паралельна обробка</li>
+        </ul>
+        <h4>Споживання ресурсів:</h4>
+        <ul>
+        <li>Використання RAM</li>
+        <li>Навантаження CPU</li>
+        <li>Енергоспоживання</li>
+        </ul>
+        </div>
+        </div>
 
-                <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #10b981; margin-top: 1.5rem;">
-                    <h3 style="color: #10b981;">🎯 Зручність використання (Usability)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
-                        <div>
-                            <h4>Простота інтерфейсу</h4>
-                            <ul>
-                                <li>Інтуїтивний UI</li>
-                                <li>Мінімум налаштувань</li>
-                                <li>Автоматизація</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4>Гнучкість</h4>
-                            <ul>
-                                <li>Точне налаштування</li>
-                                <li>Профілі застосувань</li>
-                                <li>Адаптація до вимог</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4>Діагностика</h4>
-                            <ul>
-                                <li>Контроль якості</li>
-                                <li>Логування операцій</li>
-                                <li>Аналіз помилок</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #10b981; margin-top: 1.5rem;">
+        <h3 style="color: #10b981;">🎯 Зручність використання (Usability)</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+        <div>
+        <h4>Простота інтерфейсу</h4>
+        <ul>
+        <li>Інтуїтивний UI</li>
+        <li>Мінімум налаштувань</li>
+        <li>Автоматизація</li>
+        </ul>
+        </div>
+        <div>
+        <h4>Гнучкість</h4>
+        <ul>
+        <li>Точне налаштування</li>
+        <li>Профілі застосувань</li>
+        <li>Адаптація до вимог</li>
+        </ul>
+        </div>
+        <div>
+        <h4>Діагностика</h4>
+        <ul>
+        <li>Контроль якості</li>
+        <li>Логування операцій</li>
+        <li>Аналіз помилок</li>
+        </ul>            </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 8: Специфічні вимоги для різних застосувань -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 Специфічні вимоги для різних класів застосувань</h2>
+        <h2>🎯 Специфічні вимоги для різних класів застосувань</h2>
 
-                <div class="application-grid">
-                    <div class="application-card">
-                        <h3 style="color: #dc2626;">🎖️ Військові та розвідувальні системи</h3>
-                        <h4>Критичні вимоги:</h4>
-                        <ul>
-                            <li>Максимальна безпека та стійкість</li>
-                            <li>Протидія активному противнику</li>
-                            <li>Робота в обмежених каналах</li>
-                            <li>Захист від побічних витоків</li>
-                        </ul>
-                        <h4>Особливості:</h4>
-                        <ul>
-                            <li>Жорстка сертифікація</li>
-                            <li>Найвищий рівень криптозахисту</li>
-                            <li>Інтеграція з захищеними системами</li>
-                        </ul>
-                    </div>
-
-                    <div class="application-card">
-                        <h3 style="color: #3b82f6;">🏢 Корпоративні системи</h3>
-                        <h4>Критичні вимоги:</h4>
-                        <ul>
-                            <li>Інтеграція з ІТ-інфраструктурою</li>
-                            <li>Централізоване управління</li>
-                            <li>Масштабованість</li>
-                            <li>Простота адміністрування</li>
-                        </ul>
-                        <h4>Особливості:</h4>
-                        <ul>
-                            <li>Баланс безпеки та зручності</li>
-                            <li>Корпоративні політики</li>
-                            <li>Інтеграція з DLP системами</li>
-                        </ul>
-                    </div>
-
-                    <div class="application-card">
-                        <h3 style="color: #10b981;">👤 Персональні застосування</h3>
-                        <h4>Критичні вимоги:</h4>
-                        <ul>
-                            <li>Простота без спецзнань</li>
-                            <li>Висока продуктивність</li>
-                            <li>Мінімальні системні вимоги</li>
-                            <li>Інтуїтивний інтерфейс</li>
-                        </ul>
-                        <h4>Особливості:</h4>
-                        <ul>
-                            <li>Автоналаштування параметрів</li>
-                            <li>Інтеграція з популярними додатками</li>
-                            <li>Доступність для всіх</li>
-                        </ul>
-                    </div>
-
-                    <div class="application-card">
-                        <h3 style="color: #f59e0b;">⚡ Системи реального часу</h3>
-                        <h4>Критичні вимоги:</h4>
-                        <ul>
-                            <li>Мінімальна затримка</li>
-                            <li>Детермінована швидкість</li>
-                            <li>Потокова обробка</li>
-                            <li>Стабільна продуктивність</li>
-                        </ul>
-                        <h4>Особливості:</h4>
-                        <ul>
-                            <li>Оптимізація для швидкодії</li>
-                            <li>Апаратне прискорення</li>
-                            <li>Мінімізація використання ресурсів</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="application-grid">
+        <div class="application-card">
+        <h3 style="color: #dc2626;">🎖️ Військові та розвідувальні системи</h3>
+        <h4>Критичні вимоги:</h4>
+        <ul>
+        <li>Максимальна безпека та стійкість</li>
+        <li>Протидія активному противнику</li>
+        <li>Робота в обмежених каналах</li>
+        <li>Захист від побічних витоків</li>
+        </ul>
+        <h4>Особливості:</h4>
+        <ul>
+        <li>Жорстка сертифікація</li>
+        <li>Найвищий рівень криптозахисту</li>
+        <li>Інтеграція з захищеними системами</li>
+        </ul>
         </div>
+
+        <div class="application-card">
+        <h3 style="color: #3b82f6;">🏢 Корпоративні системи</h3>
+        <h4>Критичні вимоги:</h4>
+        <ul>
+        <li>Інтеграція з ІТ-інфраструктурою</li>
+        <li>Централізоване управління</li>
+        <li>Масштабованість</li>
+        <li>Простота адміністрування</li>
+        </ul>
+        <h4>Особливості:</h4>
+        <ul>
+        <li>Баланс безпеки та зручності</li>
+        <li>Корпоративні політики</li>
+        <li>Інтеграція з DLP системами</li>
+        </ul>
+        </div>
+
+        <div class="application-card">
+        <h3 style="color: #10b981;">👤 Персональні застосування</h3>
+        <h4>Критичні вимоги:</h4>
+        <ul>
+        <li>Простота без спецзнань</li>
+        <li>Висока продуктивність</li>
+        <li>Мінімальні системні вимоги</li>
+        <li>Інтуїтивний інтерфейс</li>
+        </ul>
+        <h4>Особливості:</h4>
+        <ul>
+        <li>Автоналаштування параметрів</li>
+        <li>Інтеграція з популярними додатками</li>
+        <li>Доступність для всіх</li>
+        </ul>
+        </div>
+
+        <div class="application-card">
+        <h3 style="color: #f59e0b;">⚡ Системи реального часу</h3>
+        <h4>Критичні вимоги:</h4>
+        <ul>
+        <li>Мінімальна затримка</li>
+        <li>Детермінована швидкість</li>
+        <li>Потокова обробка</li>
+        <li>Стабільна продуктивність</li>
+        </ul>
+        <h4>Особливості:</h4>
+        <ul>
+        <li>Оптимізація для швидкодії</li>
+        <li>Апаратне прискорення</li>
+        <li>Мінімізація використання ресурсів</li>
+        </ul>        </div>
     </div>
 
+    </div>
     <!-- Слайд 9: Методи оптимізації компромісів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🔧 Методи оптимізації компромісів</h2>
+        <h2>🔧 Методи оптимізації компромісів</h2>
 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem;">
-                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
-                        <h3 style="color: #10b981;">🎯 Адаптивні алгоритми</h3>
-                        <ul>
-                            <li>Аналіз локальних властивостей</li>
-                            <li>Вибіркове вбудовування</li>
-                            <li>Динамічне балансування</li>
-                            <li>Оптимізація під контент</li>
-                        </ul>
-                    </div>
-
-                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
-                        <h3 style="color: #3b82f6;">📚 Багатошарове кодування</h3>
-                        <ul>
-                            <li>Різні рівні стійкості</li>
-                            <li>Критичні дані з вищим захистом</li>
-                            <li>Менш важливі з вищою ємністю</li>
-                            <li>Ієрархічна структура</li>
-                        </ul>
-                    </div>
-
-                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
-                        <h3 style="color: #f59e0b;">🔀 Гібридні підходи</h3>
-                        <ul>
-                            <li>Комбінування алгоритмів</li>
-                            <li>Використання переваг методів</li>
-                            <li>Адаптація до сценаріїв</li>
-                            <li>Оптимальний баланс</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div style="background: #f9fafb; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
-                    <h3 style="color: #667eea; text-align: center;">Стратегія оптимізації</h3>
-                    <div class="formula-box">
-                        Q = α × Imperceptibility + β × Capacity + γ × Robustness
-                        <br>
-                        <small>де α + β + γ = 1, коефіцієнти визначаються пріоритетами</small>
-                    </div>
-                    <p style="text-align: center; margin-top: 1rem;">
-                        Оптимальне рішення залежить від конкретного сценарію застосування
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem;">
+        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #10b981;">🎯 Адаптивні алгоритми</h3>
+        <ul>
+        <li>Аналіз локальних властивостей</li>
+        <li>Вибіркове вбудовування</li>
+        <li>Динамічне балансування</li>
+        <li>Оптимізація під контент</li>
+        </ul>
+        
+        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #3b82f6;">📚 Багатошарове кодування</h3>
+        <ul>
+        <li>Різні рівні стійкості</li>
+        <li>Критичні дані з вищим захистом</li>
+        <li>Менш важливі з вищою ємністю</li>
+        <li>Ієрархічна структура</li>
+        </ul>
+        
+        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #f59e0b;">🔀 Гібридні підходи</h3>
+        <ul>
+        <li>Комбінування алгоритмів</li>
+        <li>Використання переваг методів</li>
+        <li>Адаптація до сценаріїв</li>
+        <li>Оптимальний баланс</li>
+        </ul>
+        
+        
+        <div style="background: #f9fafb; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+        <h3 style="color: #667eea; text-align: center;">Стратегія оптимізації</h3>
+        <div class="formula-box">
+        Q = α × Imperceptibility + β × Capacity + γ × Robustness
+        <br>
+        <small>де α + β + γ = 1, коефіцієнти визначаються пріоритетами</small>
+        
+        <p style="text-align: center; margin-top: 1rem;">
+        Оптимальне рішення залежить від конкретного сценарію застосування
+        </p>    
+    
     <!-- Слайд 10: Висновки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📌 Висновки</h2>
+        <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
-                    <h3>Ключові аспекти формування вимог:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
-                        <li>✓ Системний підхід до балансування основних вимог</li>
-                        <li>✓ Трикутник компромісів: непомітність - ємність - стійкість</li>
-                        <li>✓ Адаптивні алгоритми для динамічної оптимізації</li>
-                        <li>✓ Важливість додаткових критеріїв якості</li>
-                        <li>✓ Специфічні вимоги різних класів застосувань</li>
-                        <li>✓ Методи кількісної та якісної оцінки</li>
-                    </ul>
-                </div>
-
-                <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
-                    <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
-                        Правильне визначення та збалансування вимог є <strong>критично важливим</strong> для створення ефективних стеганографічних систем, що відповідають потребам конкретних застосувань та забезпечують необхідний рівень безпеки прихованої комунікації.
-                    </p>
-                </div>
-
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="tema1_architecture.html" class="btn btn-primary" style="margin: 0 0.5rem;">
-                        ← Архітектура стегосистем
-                    </a>
-                    <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
-                        🏠 До переліку тем
-                    </a>
-                    <a href="tema3_methodology.html" class="btn btn-primary" style="margin: 0 0.5rem;">
-                        Методологія проектування →
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+        <h3>Ключові аспекти формування вимог:</h3>
+        <ul style="line-height: 2; font-size: 1.1rem;">
+        <li>✓ Системний підхід до балансування основних вимог</li>
+        <li>✓ Трикутник компромісів: непомітність - ємність - стійкість</li>
+        <li>✓ Адаптивні алгоритми для динамічної оптимізації</li>
+        <li>✓ Важливість додаткових критеріїв якості</li>
+        <li>✓ Специфічні вимоги різних класів застосувань</li>
+        <li>✓ Методи кількісної та якісної оцінки</li>
+        </ul>
+        
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
+        <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
+        Правильне визначення та збалансування вимог є <strong>критично важливим</strong> для створення ефективних стеганографічних систем, що відповідають потребам конкретних застосувань та забезпечують необхідний рівень безпеки прихованої комунікації.
+        </p>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+        <a href="tema1_architecture.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+        ← Архітектура стегосистем
+        </a>
+        <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+        🏠 До переліку тем
+        </a>
+        <a href="tema3_methodology.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+        Методологія проектування →
+        </a>    
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 10</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 10%;"></div>
-</div>
+<div class="slide-counter">1 / XX</div>
 
 <script>
     let currentSlide = 0;
@@ -757,10 +563,7 @@
 
         slides[currentSlide].classList.add('active');
 
-        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;

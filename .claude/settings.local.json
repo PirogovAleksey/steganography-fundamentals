@@ -14,7 +14,10 @@
       "Bash(dir:*)",
       "Bash(copy /b index.html +,,)",
       "WebFetch(domain:www.freepik.com)",
-      "WebFetch(domain:opyrohov.github.io)"
+      "WebFetch(domain:opyrohov.github.io)",
+      "Bash(nul)",
+      "Bash(./fix_tema.sh:*)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

@@ -30,10 +30,10 @@ body {
    CSS CUSTOM PROPERTIES (DESIGN TOKENS)
    ---------------------------------------------------------------- */
 :root {
-    /* Colors - Banking Theme */
-    --color-primary: #1e40af;        /* Blue 700 */
-    --color-primary-light: #3b82f6;  /* Blue 500 */
-    --color-primary-dark: #1e3a8a;   /* Blue 800 */
+    /* Colors - Steganography Theme (Purple) */
+    --color-primary: #667eea;        /* Purple 500 - matches presentation slides */
+    --color-primary-light: #818cf8;  /* Purple 400 */
+    --color-primary-dark: #764ba2;   /* Purple 600 - matches presentation gradient */
 
     --color-secondary: #059669;      /* Emerald 600 - Banking Green */
     --color-accent: #dc2626;         /* Red 600 - Security Alerts */

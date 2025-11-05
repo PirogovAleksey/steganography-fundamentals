@@ -6,496 +6,396 @@
     <title>Статистичні межі виявлення | Лекція 1.4</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 
-    <style>
-        .roc-diagram {
-            width: 500px;
-            height: 400px;
-            margin: 2rem auto;
-            position: relative;
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .cachin-criterion {
-            background: linear-gradient(145deg, #ffffff, #f3f4f6);
-            border-left: 5px solid #dc2626;
-            padding: 2rem;
-            border-radius: 10px;
-            margin: 2rem 0;
-        }
-
-        .detection-matrix {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .detection-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .kl-divergence {
-            background: #1f2937;
-            color: #e5e7eb;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            text-align: center;
-        }
-
-        .paradox-box {
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
-            border: 2px solid #dc2626;
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-        }
-    </style>
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>📈 Статистичні межі виявлення</h1>
-                <div class="subtitle">
-                    Критерій Качина, ROC-аналіз та парадокс досконалої стеганографії
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="slide active title-slide">
+        <h1>📈 Статистичні межі виявлення</h1>
+        <div class="subtitle">
+        Критерій Качина, ROC-аналіз та парадокс досконалої стеганографії    </div>
 
+    </div>
     <!-- Слайд 2: Статистична модель виявлення -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📊 Статистична модель виявлення</h2>
+        <h2>📊 Статистична модель виявлення</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 1.5rem 0;">
-                    <h3>Задача бінарної класифікації:</h3>
-                    <div style="text-align: center; font-size: 1.3rem; margin: 1rem 0;">
-                        H₀: об'єкт є чистим контейнером<br>
-                        H₁: об'єкт містить приховані дані
-                    </div>
-                </div>
-
-                <h3 style="color: #667eea;">Типи помилок детектора:</h3>
-
-                <div class="detection-matrix">
-                    <div class="detection-card" style="border-top: 4px solid #dc2626;">
-                        <h4 style="color: #dc2626;">🚨 Помилка I роду (α)</h4>
-                        <p><strong>False Positive</strong></p>
-                        <p>Чистий контейнер класифіковано як стего</p>
-                        <div style="background: #fee2e2; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
-                            P(D=1 | H₀) = α
-                        </div>
-                    </div>
-
-                    <div class="detection-card" style="border-top: 4px solid #f59e0b;">
-                        <h4 style="color: #f59e0b;">⚠️ Помилка II роду (β)</h4>
-                        <p><strong>False Negative</strong></p>
-                        <p>Стего об'єкт класифіковано як чистий</p>
-                        <div style="background: #fef3c7; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
-                            P(D=0 | H₁) = β
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
-                    <h4 style="color: #10b981;">✅ Оптимальний детектор:</h4>
-                    <ul>
-                        <li>Мінімізує загальну ймовірність помилки: P_e = π₀α + π₁β</li>
-                        <li>Або максимізує AUC (Area Under ROC Curve)</li>
-                        <li>Використовує тест відношення правдоподібності</li>
-                    </ul>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 1.5rem 0;">
+        <h3>Задача бінарної класифікації:</h3>
+        <div style="text-align: center; font-size: 1.3rem; margin: 1rem 0;">
+        H₀: об'єкт є чистим контейнером<br>
+        H₁: об'єкт містить приховані дані
         </div>
-    </div>
+        </div>
 
+        <h3 style="color: #667eea;">Типи помилок детектора:</h3>
+
+        <div class="detection-matrix">
+        <div class="detection-card" style="border-top: 4px solid #dc2626;">
+        <h4 style="color: #dc2626;">🚨 Помилка I роду (α)</h4>
+        <p><strong>False Positive</strong></p>
+        <p>Чистий контейнер класифіковано як стего</p>
+        <div style="background: #fee2e2; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
+        P(D=1 | H₀) = α
+        </div>
+        </div>
+
+        <div class="detection-card" style="border-top: 4px solid #f59e0b;">
+        <h4 style="color: #f59e0b;">⚠️ Помилка II роду (β)</h4>
+        <p><strong>False Negative</strong></p>
+        <p>Стего об'єкт класифіковано як чистий</p>
+        <div style="background: #fef3c7; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
+        P(D=0 | H₁) = β
+        </div>
+        </div>
+        </div>
+
+        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+        <h4 style="color: #10b981;">✅ Оптимальний детектор:</h4>
+        <ul>
+        <li>Мінімізує загальну ймовірність помилки: P_e = π₀α + π₁β</li>
+        <li>Або максимізує AUC (Area Under ROC Curve)</li>
+        <li>Використовує тест відношення правдоподібності</li>
+        </ul>    </div>
+
+    </div>
     <!-- Слайд 3: Критерій Качина -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 Критерій Качина</h2>
+        <h2>🎯 Критерій Качина</h2>
 
-                <div class="cachin-criterion">
-                    <h3 style="color: #dc2626;">Визначення ε-безпечної стеганографії:</h3>
-                    <div class="formula-display" style="background: #dc2626; color: white;">
-                        D_KL(P_C || P_S) ≤ ε
-                    </div>
-                    <p>Стеганографічна система є <strong>ε-безпечною</strong>, якщо відносна ентропія (KL-дивергенція) між розподілами чистих контейнерів P_C та стего-об'єктів P_S не перевищує ε.</p>
-                </div>
-
-                <h3 style="color: #667eea;">Класифікація за рівнем безпеки:</h3>
-
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
-                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                        <h4 style="color: #10b981;">Досконала (ε = 0)</h4>
-                        <p>P_C ≡ P_S</p>
-                        <small>Неможливо розрізнити</small>
-                    </div>
-
-                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                        <h4 style="color: #3b82f6;">ε-безпечна</h4>
-                        <p>D_KL ≤ ε</p>
-                        <small>Обмежена можливість виявлення</small>
-                    </div>
-
-                    <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                        <h4 style="color: #dc2626;">Небезпечна</h4>
-                        <p>D_KL >> ε</p>
-                        <small>Легко виявляється</small>
-                    </div>
-                </div>
-
-                <div class="kl-divergence">
-                    <h4 style="color: #fbbf24;">KL-дивергенція (відносна ентропія):</h4>
-                    <div style="font-size: 1.3rem; margin: 1rem 0;">
-                        D_KL(P || Q) = Σ P(x) log(P(x)/Q(x))
-                    </div>
-                    <small>Асиметрична міра відстані між розподілами</small>
-                </div>
-            </div>
+        <div class="cachin-criterion">
+        <h3 style="color: #dc2626;">Визначення ε-безпечної стеганографії:</h3>
+        <div class="formula-display" style="background: #dc2626; color: white;">
+        D_KL(P_C || P_S) ≤ ε
         </div>
-    </div>
+        <p>Стеганографічна система є <strong>ε-безпечною</strong>, якщо відносна ентропія (KL-дивергенція) між розподілами чистих контейнерів P_C та стего-об'єктів P_S не перевищує ε.</p>
+        </div>
 
+        <h3 style="color: #667eea;">Класифікація за рівнем безпеки:</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; text-align: center;">
+        <h4 style="color: #10b981;">Досконала (ε = 0)</h4>
+        <p>P_C ≡ P_S</p>
+        <small>Неможливо розрізнити</small>
+        </div>
+
+        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px; text-align: center;">
+        <h4 style="color: #3b82f6;">ε-безпечна</h4>
+        <p>D_KL ≤ ε</p>
+        <small>Обмежена можливість виявлення</small>
+        </div>
+
+        <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px; text-align: center;">
+        <h4 style="color: #dc2626;">Небезпечна</h4>
+        <p>D_KL >> ε</p>
+        <small>Легко виявляється</small>
+        </div>
+        </div>
+
+        <div class="kl-divergence">
+        <h4 style="color: #fbbf24;">KL-дивергенція (відносна ентропія):</h4>
+        <div style="font-size: 1.3rem; margin: 1rem 0;">
+        D_KL(P || Q) = Σ P(x) log(P(x)/Q(x))
+        </div>
+        <small>Асиметрична міра відстані між розподілами</small>    </div>
+
+    </div>
     <!-- Слайд 4: ROC-криві -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📉 ROC-криві для стегоаналізу</h2>
+        <h2>📉 ROC-криві для стегоаналізу</h2>
 
-                <div class="roc-diagram">
-                    <svg width="100%" height="100%" viewBox="0 0 400 350">
-                        <!-- Осі -->
-                        <line x1="50" y1="300" x2="350" y2="300" stroke="#333" stroke-width="2"/>
-                        <line x1="50" y1="300" x2="50" y2="50" stroke="#333" stroke-width="2"/>
+        <div class="roc-diagram">
+        <svg width="100%" height="100%" viewBox="0 0 400 350">
+        <!-- Осі -->
+        <line x1="50" y1="300" x2="350" y2="300" stroke="#333" stroke-width="2"/>
+        <line x1="50" y1="300" x2="50" y2="50" stroke="#333" stroke-width="2"/>
 
-                        <!-- Діагональ -->
-                        <line x1="50" y1="300" x2="350" y2="50" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
+        <!-- Діагональ -->
+        <line x1="50" y1="300" x2="350" y2="50" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
 
-                        <!-- ROC криві -->
-                        <path d="M 50,300 Q 100,250 150,180 T 250,100 T 350,50"
-                              stroke="#10b981" stroke-width="3" fill="none"/>
-                        <path d="M 50,300 Q 120,220 200,150 T 350,80"
-                              stroke="#f59e0b" stroke-width="3" fill="none"/>
-                        <path d="M 50,300 Q 180,180 350,120"
-                              stroke="#dc2626" stroke-width="3" fill="none"/>
+        <!-- ROC криві -->
+        <path d="M 50,300 Q 100,250 150,180 T 250,100 T 350,50"
+        stroke="#10b981" stroke-width="3" fill="none"/>
+        <path d="M 50,300 Q 120,220 200,150 T 350,80"
+        stroke="#f59e0b" stroke-width="3" fill="none"/>
+        <path d="M 50,300 Q 180,180 350,120"
+        stroke="#dc2626" stroke-width="3" fill="none"/>
 
-                        <!-- Підписи -->
-                        <text x="200" y="330" text-anchor="middle" font-size="14">False Positive Rate (α)</text>
-                        <text x="25" y="175" text-anchor="middle" font-size="14" transform="rotate(-90 25 175)">True Positive Rate (1-β)</text>
+        <!-- Підписи -->
+        <text x="200" y="330" text-anchor="middle" font-size="14">False Positive Rate (α)</text>
+        <text x="25" y="175" text-anchor="middle" font-size="14" transform="rotate(-90 25 175)">True Positive Rate (1-β)</text>
 
-                        <!-- Легенда -->
-                        <rect x="250" y="220" width="15" height="3" fill="#10b981"/>
-                        <text x="270" y="225" font-size="12">Відмінний детектор</text>
+        <!-- Легенда -->
+        <rect x="250" y="220" width="15" height="3" fill="#10b981"/>
+        <text x="270" y="225" font-size="12">Відмінний детектор</text>
 
-                        <rect x="250" y="240" width="15" height="3" fill="#f59e0b"/>
-                        <text x="270" y="245" font-size="12">Хороший детектор</text>
+        <rect x="250" y="240" width="15" height="3" fill="#f59e0b"/>
+        <text x="270" y="245" font-size="12">Хороший детектор</text>
 
-                        <rect x="250" y="260" width="15" height="3" fill="#dc2626"/>
-                        <text x="270" y="265" font-size="12">Поганий детектор</text>
-                    </svg>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #1e40af;">📊 Характеристики ROC:</h4>
-                        <ul>
-                            <li><strong>AUC > 0.9</strong> - відмінне виявлення</li>
-                            <li><strong>AUC 0.7-0.9</strong> - хороше виявлення</li>
-                            <li><strong>AUC 0.5-0.7</strong> - слабке виявлення</li>
-                            <li><strong>AUC ≈ 0.5</strong> - випадкове вгадування</li>
-                        </ul>
-                    </div>
-
-                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #059669;">⚖️ Баланс помилок:</h4>
-                        <ul>
-                            <li>EER (Equal Error Rate) - точка де α = β</li>
-                            <li>Оптимальна робоча точка залежить від цілей</li>
-                            <li>Критичні системи: мінімізація β</li>
-                            <li>Масовий скринінг: мінімізація α</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <rect x="250" y="260" width="15" height="3" fill="#dc2626"/>
+        <text x="270" y="265" font-size="12">Поганий детектор</text>
+        </svg>
         </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #1e40af;">📊 Характеристики ROC:</h4>
+        <ul>
+        <li><strong>AUC > 0.9</strong> - відмінне виявлення</li>
+        <li><strong>AUC 0.7-0.9</strong> - хороше виявлення</li>
+        <li><strong>AUC 0.5-0.7</strong> - слабке виявлення</li>
+        <li><strong>AUC ≈ 0.5</strong> - випадкове вгадування</li>
+        </ul>
+        </div>
+
+        <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #059669;">⚖️ Баланс помилок:</h4>
+        <ul>
+        <li>EER (Equal Error Rate) - точка де α = β</li>
+        <li>Оптимальна робоча точка залежить від цілей</li>
+        <li>Критичні системи: мінімізація β</li>
+        <li>Масовий скринінг: мінімізація α</li>
+        </ul>        </div>
     </div>
 
+    </div>
     <!-- Слайд 5: Статистичні тести -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🧮 Статистичні тести виявлення</h2>
+        <h2>🧮 Статистичні тести виявлення</h2>
 
-                <table class="validation-matrix" style="width: 100%; margin: 1.5rem 0;">
-                    <thead>
-                    <tr>
-                        <th>Тест</th>
-                        <th>Принцип</th>
-                        <th>Ефективність</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><strong>Chi-square</strong></td>
-                        <td>Перевірка рівномірності розподілу LSB</td>
-                        <td>LSB: 95%, Адаптивні: 20%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>RS Analysis</strong></td>
-                        <td>Аналіз регулярних та сингулярних груп</td>
-                        <td>LSB: 90%, JPEG: 60%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Sample Pairs</strong></td>
-                        <td>Кореляція між сусідніми пікселями</td>
-                        <td>LSB: 85%, Палітрові: 70%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Wavelet Statistics</strong></td>
-                        <td>Аналіз статистик вейвлет-коефіцієнтів</td>
-                        <td>Універсальний: 70-80%</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <table class="validation-matrix" style="width: 100%; margin: 1.5rem 0;">
+        <thead>
+        <tr>
+        <th>Тест</th>
+        <th>Принцип</th>
+        <th>Ефективність</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Chi-square</strong></td>
+        <td>Перевірка рівномірності розподілу LSB</td>
+        <td>LSB: 95%, Адаптивні: 20%</td>
+        </tr>
+        <tr>
+        <td><strong>RS Analysis</strong></td>
+        <td>Аналіз регулярних та сингулярних груп</td>
+        <td>LSB: 90%, JPEG: 60%</td>
+        </tr>
+        <tr>
+        <td><strong>Sample Pairs</strong></td>
+        <td>Кореляція між сусідніми пікселями</td>
+        <td>LSB: 85%, Палітрові: 70%</td>
+        </tr>
+        <tr>
+        <td><strong>Wavelet Statistics</strong></td>
+        <td>Аналіз статистик вейвлет-коефіцієнтів</td>
+        <td>Універсальний: 70-80%</td>
+        </tr>
+        </tbody>
+        </table>
 
-                <h3 style="color: #667eea;">Обмеження статистичних тестів:</h3>
+        <h3 style="color: #667eea;">Обмеження статистичних тестів:</h3>
 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                    <div style="background: #fee2e2; padding: 1rem; border-radius: 8px;">
-                        <h4 style="color: #dc2626;">❌ Специфічність</h4>
-                        <p>Працюють тільки для певного типу стеганографії</p>
-                    </div>
-
-                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
-                        <h4 style="color: #f59e0b;">⚠️ Чутливість</h4>
-                        <p>Вимагають достатнього розміру вибірки</p>
-                    </div>
-
-                    <div style="background: #dbeafe; padding: 1rem; border-radius: 8px;">
-                        <h4 style="color: #3b82f6;">📊 Калібрування</h4>
-                        <p>Потребують налаштування порогів</p>
-                    </div>
-                </div>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+        <div style="background: #fee2e2; padding: 1rem; border-radius: 8px;">
+        <h4 style="color: #dc2626;">❌ Специфічність</h4>
+        <p>Працюють тільки для певного типу стеганографії</p>
         </div>
+
+        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+        <h4 style="color: #f59e0b;">⚠️ Чутливість</h4>
+        <p>Вимагають достатнього розміру вибірки</p>
+        </div>
+
+        <div style="background: #dbeafe; padding: 1rem; border-radius: 8px;">
+        <h4 style="color: #3b82f6;">📊 Калібрування</h4>
+        <p>Потребують налаштування порогів</p>        </div>
     </div>
 
+    </div>
     <!-- Слайд 6: Межі виявлення -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 Фундаментальні межі виявлення</h2>
+        <h2>🎯 Фундаментальні межі виявлення</h2>
 
-                <div style="background: #1f2937; color: #e5e7eb; padding: 2rem; border-radius: 10px; margin: 1.5rem 0;">
-                    <h3 style="color: #fbbf24;">Теорема Неймана-Пірсона:</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
-                        Для заданої ймовірності помилки першого роду α, оптимальний тест, що мінімізує β,
-                        базується на відношенні правдоподібності:
-                    </p>
-                    <div style="text-align: center; font-size: 1.3rem; margin: 1rem 0;">
-                        Λ(x) = P(x|H₁)/P(x|H₀) ≥ τ
-                    </div>
-                </div>
+        <div style="background: #1f2937; color: #e5e7eb; padding: 2rem; border-radius: 10px; margin: 1.5rem 0;">
+        <h3 style="color: #fbbf24;">Теорема Неймана-Пірсона:</h3>
+        <p style="font-size: 1.1rem; line-height: 1.8;">
+        Для заданої ймовірності помилки першого роду α, оптимальний тест, що мінімізує β,
+        базується на відношенні правдоподібності:
+        </p>
+        <div style="text-align: center; font-size: 1.3rem; margin: 1rem 0;">
+        Λ(x) = P(x|H₁)/P(x|H₀) ≥ τ
+        </div>
+        </div>
 
-                <h3 style="color: #667eea;">Межі продуктивності детектора:</h3>
+        <h3 style="color: #667eea;">Межі продуктивності детектора:</h3>
 
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #667eea;">📈 Верхня межа (ідеальний детектор)</h4>
-                        <ul>
-                            <li>Повне знання алгоритму</li>
-                            <li>Необмежені обчислювальні ресурси</li>
-                            <li>Доступ до оригіналу</li>
-                        </ul>
-                        <div style="background: #f0f9ff; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
-                            P_d ≤ 1 - exp(-nD(P_S||P_C))
-                        </div>
-                    </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #667eea;">📈 Верхня межа (ідеальний детектор)</h4>
+        <ul>
+        <li>Повне знання алгоритму</li>
+        <li>Необмежені обчислювальні ресурси</li>
+        <li>Доступ до оригіналу</li>
+        </ul>
+        <div style="background: #f0f9ff; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
+        P_d ≤ 1 - exp(-nD(P_S||P_C))
+        </div>
+        </div>
 
-                    <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #dc2626;">📉 Нижня межа (реальний детектор)</h4>
-                        <ul>
-                            <li>Обмежена вибірка</li>
-                            <li>Невідомий алгоритм</li>
-                            <li>Шум та спотворення</li>
-                        </ul>
-                        <div style="background: #fee2e2; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
-                            P_d ≥ 0.5 + O(√(D/n))
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #dc2626;">📉 Нижня межа (реальний детектор)</h4>
+        <ul>
+        <li>Обмежена вибірка</li>
+        <li>Невідомий алгоритм</li>
+        <li>Шум та спотворення</li>
+        </ul>
+        <div style="background: #fee2e2; padding: 0.5rem; border-radius: 5px; margin-top: 0.5rem;">
+        P_d ≥ 0.5 + O(√(D/n))            </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 7: Парадокс досконалої стеганографії -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🔮 Парадокс досконалої стеганографії</h2>
+        <h2>🔮 Парадокс досконалої стеганографії</h2>
 
-                <div class="paradox-box">
-                    <h3 style="color: #7f1d1d;">Формулювання парадоксу:</h3>
-                    <p style="font-size: 1.2rem; line-height: 1.8;">
-                        Якщо стеганографічна система є досконало безпечною (P_C ≡ P_S),
-                        то вона не може передавати інформацію, оскільки будь-яка модифікація
-                        контейнера змінює його статистичні властивості.
-                    </p>
-                </div>
-
-                <h3 style="color: #667eea;">Вирішення парадоксу:</h3>
-
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
-                    <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #10b981;">✅ Практичний підхід</h4>
-                        <ul>
-                            <li>Прийняти ε-безпеку замість досконалої</li>
-                            <li>Використовувати природну варіабельність</li>
-                            <li>Адаптивне вбудовування</li>
-                            <li>Моделювання статистик оригіналу</li>
-                        </ul>
-                    </div>
-
-                    <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #3b82f6;">🔄 Теоретичний підхід</h4>
-                        <ul>
-                            <li>Використання допоміжної інформації</li>
-                            <li>Синтез контейнерів</li>
-                            <li>Обмеження моделі наглядача</li>
-                            <li>Квантова стеганографія</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
-                    <h4 style="color: #92400e;">💡 Ключовий висновок:</h4>
-                    <p>Досконала безпека недосяжна, але ε-безпека з малим ε цілком практична при обмеженій ємності</p>
-                </div>
-            </div>
+        <div class="paradox-box">
+        <h3 style="color: #7f1d1d;">Формулювання парадоксу:</h3>
+        <p style="font-size: 1.2rem; line-height: 1.8;">
+        Якщо стеганографічна система є досконало безпечною (P_C ≡ P_S),
+        то вона не може передавати інформацію, оскільки будь-яка модифікація
+        контейнера змінює його статистичні властивості.
+        </p>
         </div>
-    </div>
 
+        <h3 style="color: #667eea;">Вирішення парадоксу:</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
+        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #10b981;">✅ Практичний підхід</h4>
+        <ul>
+        <li>Прийняти ε-безпеку замість досконалої</li>
+        <li>Використовувати природну варіабельність</li>
+        <li>Адаптивне вбудовування</li>
+        <li>Моделювання статистик оригіналу</li>
+        </ul>
+        </div>
+
+        <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #3b82f6;">🔄 Теоретичний підхід</h4>
+        <ul>
+        <li>Використання допоміжної інформації</li>
+        <li>Синтез контейнерів</li>
+        <li>Обмеження моделі наглядача</li>
+        <li>Квантова стеганографія</li>
+        </ul>
+        </div>
+        </div>
+
+        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+        <h4 style="color: #92400e;">💡 Ключовий висновок:</h4>
+        <p>Досконала безпека недосяжна, але ε-безпека з малим ε цілком практична при обмеженій ємності</p>    </div>
+
+    </div>
     <!-- Слайд 8: Практичні імплікації -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💡 Практичні імплікації статистичних меж</h2>
+        <h2>💡 Практичні імплікації статистичних меж</h2>
 
-                <h3 style="color: #667eea;">Рекомендації для розробників стегосистем:</h3>
+        <h3 style="color: #667eea;">Рекомендації для розробників стегосистем:</h3>
 
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #1e40af;">🛡️ Підвищення стійкості</h4>
-                        <ul>
-                            <li>Мінімізувати статистичні відхилення</li>
-                            <li>Використовувати < 1% ємності</li>
-                            <li>Моделювати природні розподіли</li>
-                            <li>Застосовувати синдромне кодування</li>
-                        </ul>
-                    </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #1e40af;">🛡️ Підвищення стійкості</h4>
+        <ul>
+        <li>Мінімізувати статистичні відхилення</li>
+        <li>Використовувати < 1% ємності</li>
+        <li>Моделювати природні розподіли</li>
+        <li>Застосовувати синдромне кодування</li>
+        </ul>
+        </div>
 
-                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #059669;">📊 Оцінка безпеки</h4>
-                        <ul>
-                            <li>Тестування проти відомих детекторів</li>
-                            <li>Обчислення KL-дивергенції</li>
-                            <li>ROC-аналіз власної системи</li>
-                            <li>Моніторинг статистичних аномалій</li>
-                        </ul>
-                    </div>
-                </div>
+        <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #059669;">📊 Оцінка безпеки</h4>
+        <ul>
+        <li>Тестування проти відомих детекторів</li>
+        <li>Обчислення KL-дивергенції</li>
+        <li>ROC-аналіз власної системи</li>
+        <li>Моніторинг статистичних аномалій</li>
+        </ul>
+        </div>
+        </div>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-top: 2rem;">
-                    <h3>📋 Чек-лист безпеки:</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
-                        <div>
-                            ☑️ D_KL < 0.01 для основних статистик<br>
-                            ☑️ Пройдено Chi-square тест<br>
-                            ☑️ Пройдено RS аналіз<br>
-                            ☑️ AUC детектора < 0.6
-                        </div>
-                        <div>
-                            ☑️ Ємність < 1% від контейнера<br>
-                            ☑️ Збережено гістограму<br>
-                            ☑️ Мінімальні зміни кореляцій<br>
-                            ☑️ Адаптивне вбудовування
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+        <h3>📋 Чек-лист безпеки:</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+        <div>
+        ☑️ D_KL < 0.01 для основних статистик<br>
+        ☑️ Пройдено Chi-square тест<br>
+        ☑️ Пройдено RS аналіз<br>
+        ☑️ AUC детектора < 0.6
+        </div>
+        <div>
+        ☑️ Ємність < 1% від контейнера<br>
+        ☑️ Збережено гістограму<br>
+        ☑️ Мінімальні зміни кореляцій<br>
+        ☑️ Адаптивне вбудовування            </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 9: Висновки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📌 Висновки</h2>
+        <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
-                    <h3>Ключові статистичні межі:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
-                        <li>✓ Критерій Качина визначає ε-безпеку через KL-дивергенцію</li>
-                        <li>✓ ROC-криві показують фундаментальний компроміс α vs β</li>
-                        <li>✓ Досконала безпека недосяжна - парадокс досконалої стеганографії</li>
-                        <li>✓ Практична межа: ε-безпека з ε < 0.01 при ємності < 1%</li>
-                        <li>✓ Статистичні тести мають обмежену ефективність</li>
-                    </ul>
-                </div>
-
-                <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
-                    <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
-                        <strong>Статистичні межі виявлення</strong> визначають фундаментальні обмеження на можливість
-                        приховування інформації без статистичного виявлення. Розуміння цих меж критичне для проектування
-                        стійких до виявлення стеганографічних систем.
-                    </p>
-                </div>
-
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="tema1_information_limits.html" class="btn btn-primary" style="margin: 0 0.5rem;">
-                        ← Інформаційні обмеження
-                    </a>
-                    <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
-                        🏠 До переліку тем
-                    </a>
-                    <a href="tema3_computational_limits.html" class="btn btn-primary" style="margin: 0 0.5rem;">
-                        Обчислювальні обмеження →
-                    </a>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+        <h3>Ключові статистичні межі:</h3>
+        <ul style="line-height: 2; font-size: 1.1rem;">
+        <li>✓ Критерій Качина визначає ε-безпеку через KL-дивергенцію</li>
+        <li>✓ ROC-криві показують фундаментальний компроміс α vs β</li>
+        <li>✓ Досконала безпека недосяжна - парадокс досконалої стеганографії</li>
+        <li>✓ Практична межа: ε-безпека з ε < 0.01 при ємності < 1%</li>
+        <li>✓ Статистичні тести мають обмежену ефективність</li>
+        </ul>
         </div>
-    </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
+        <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
+        <strong>Статистичні межі виявлення</strong> визначають фундаментальні обмеження на можливість
+        приховування інформації без статистичного виявлення. Розуміння цих меж критичне для проектування
+        стійких до виявлення стеганографічних систем.
+        </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+        <a href="tema1_information_limits.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+        ← Інформаційні обмеження
+        </a>
+        <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+        🏠 До переліку тем
+        </a>
+        <a href="tema3_computational_limits.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+        Обчислювальні обмеження →
+        </a>    </div>
+
+</div>
 
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 9</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 11.11%;"></div>
-</div>
+<div class="slide-counter">1 / XX</div>
 
 <script>
     let currentSlide = 0;
@@ -510,10 +410,7 @@
 
         slides[currentSlide].classList.add('active');
 
-        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;

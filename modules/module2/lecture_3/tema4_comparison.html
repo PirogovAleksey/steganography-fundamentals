@@ -6,8 +6,7 @@
     <title>Порівняльний аналіз адаптивних методів | Лекція 7.4</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 
     <style>
         .algorithm-box {
@@ -64,27 +63,21 @@
         }
     </style>
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>📊 Порівняльний аналіз адаптивних методів</h1>
-                <div class="subtitle">
-                    Тема 4: Оцінка та порівняння HUGO, WOW, S-UNIWARD
-                </div>
-            </div>
+    <div class="slide active title-slide">
+        <h1>📊 Порівняльний аналіз адаптивних методів</h1>
+        <div class="subtitle">
+            Тема 4: Оцінка та порівняння HUGO, WOW, S-UNIWARD
         </div>
     </div>
 
     <!-- Слайд 2: Огляд методів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎭 Три підходи до адаптивності</h2>
+        <h2>🎭 Три підходи до адаптивності</h2>
 
                 <div class="comparison-grid">
                     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px;">
@@ -115,18 +108,14 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
-                    Кожен метод використовує свій підхід до визначення "безпечних" місць для вбудовування
-                </div>
-            </div>
+        <div class="info-box">
+            Кожен метод використовує свій підхід до визначення "безпечних" місць для вбудовування
         </div>
     </div>
 
     <!-- Слайд 3: Порівняльна таблиця -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📋 Детальне порівняння</h2>
+        <h2>📋 Детальне порівняння</h2>
 
                 <table class="comparison-table">
                     <thead>
@@ -176,15 +165,11 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 4: Метрики безпеки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🛡️ Стійкість до стегоаналізу</h2>
+        <h2>🛡️ Стійкість до стегоаналізу</h2>
 
                 <div class="method-card">
                     <h3>Тестування на BOSS базі (10000 зображень)</h3>
@@ -217,18 +202,14 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success">
-                    <strong>💡 Довідка:</strong> 50% = випадковий вибір (не виявлено). Нижче = краще безпека!
-                </div>
-            </div>
+        <div class="success-box">
+            <strong>💡 Довідка:</strong> 50% = випадковий вибір (не виявлено). Нижче = краще безпека!
         </div>
     </div>
 
     <!-- Слайд 5: Швидкодія -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>⚡ Порівняння швидкодії</h2>
+        <h2>⚡ Порівняння швидкодії</h2>
 
                 <div class="method-card">
                     <h3>Час вбудовування (зображення 512×512, 0.4 bpp)</h3>
@@ -261,18 +242,14 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
-                    <strong>Висновок:</strong> WOW найшвидший, S-UNIWARD збалансований, HUGO найповільніший
-                </div>
-            </div>
+        <div class="info-box">
+            <strong>Висновок:</strong> WOW найшвидший, S-UNIWARD збалансований, HUGO найповільніший
         </div>
     </div>
 
     <!-- Слайд 6: Практичні рекомендації -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 Коли використовувати який метод?</h2>
+        <h2>🎯 Коли використовувати який метод?</h2>
 
                 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
                     <h3>🎭 Використовуйте HUGO, якщо:</h3>
@@ -303,15 +280,11 @@
                         <li>Це дослідницький або академічний проект</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 7: Еволюція методів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📈 Еволюція адаптивних методів</h2>
+        <h2>📈 Еволюція адаптивних методів</h2>
 
                 <div style="position: relative; padding: 2rem 0;">
                     <div style="border-left: 4px solid #667eea; padding-left: 2rem; margin: 2rem 0;">
@@ -337,18 +310,14 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info">
-                    <strong>💡 Тренд:</strong> Від простих до складних, від швидких до безпечних, від специфічних до універсальних
-                </div>
-            </div>
+        <div class="info-box">
+            <strong>💡 Тренд:</strong> Від простих до складних, від швидких до безпечних, від специфічних до універсальних
         </div>
     </div>
 
     <!-- Слайд 8: Майбутнє -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🚀 Сучасні тренди та майбутнє</h2>
+        <h2>🚀 Сучасні тренди та майбутнє</h2>
 
                 <div class="comparison-grid">
                     <div style="background: linear-gradient(145deg, #ffffff, #f3f4f6); padding: 1.5rem; border-radius: 10px; border: 2px solid #667eea;">
@@ -376,15 +345,11 @@
                         <li><strong>Privacy-preserving:</strong> захист приватності під час передачі</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 9: Практичні поради -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💡 Практичні поради</h2>
+        <h2>💡 Практичні поради</h2>
 
                 <div class="method-card">
                     <h4>✅ Найкращі практики</h4>
@@ -406,15 +371,11 @@
                         <li>Відсутність тестування на реальних даних</li>
                     </ul>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Слайд 10: Підсумки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📝 Загальні підсумки</h2>
+        <h2>📝 Загальні підсумки</h2>
 
                 <div class="algorithm-box">
                     <h3 style="text-align: center; color: #667eea;">Ключові висновки</h3>
@@ -431,27 +392,22 @@
                     </ul>
                 </div>
 
-                <div class="alert alert-success" style="margin-top: 2rem;">
-                    <strong>💡 Головне:</strong> Не існує "найкращого" методу - кожен оптимальний для своїх умов. Розумійте компроміси та вибирайте відповідно до ваших потреб!
-                </div>
-            </div>
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>💡 Головне:</strong> Не існує "найкращого" методу - кожен оптимальний для своїх умов. Розумійте компроміси та вибирайте відповідно до ваших потреб!
         </div>
     </div>
 
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 10</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 10%;"></div>
-</div>
+<!-- Slide Counter -->
+<div id="slide-counter" class="slide-counter">1 / 10</div>
 
 <script>
     let currentSlide = 0;
@@ -460,29 +416,25 @@
 
     function showSlide(n) {
         slides.forEach(slide => slide.classList.remove('active'));
-
-        if (n >= totalSlides) currentSlide = 0;
-        if (n < 0) currentSlide = totalSlides - 1;
-
         slides[currentSlide].classList.add('active');
-
         document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
     }
 
     function nextSlide() {
-        currentSlide++;
-        showSlide(currentSlide);
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
     }
 
     function previousSlide() {
-        currentSlide--;
-        showSlide(currentSlide);
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
     }
 
     document.addEventListener('keydown', (e) => {

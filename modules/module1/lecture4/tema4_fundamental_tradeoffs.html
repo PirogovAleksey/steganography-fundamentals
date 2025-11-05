@@ -5,911 +5,599 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фундаментальні компроміси стеганографії | Лекція 1.4</title>
 
-    <!-- Existing CSS -->
-    <link rel="stylesheet" href="../../../assets/css/base.css">
-    <link rel="stylesheet" href="../../../assets/css/slides.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
 
-    <style>
-        /* Custom styles for this presentation */
-        .triangle-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem auto;
-            position: relative;
-            height: 350px;
-        }
-
-        .triangle-svg {
-            width: 100%;
-            max-width: 500px;
-            height: 350px;
-        }
-
-        .compromise-slider {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-        }
-
-        .slider-group {
-            margin: 1.5rem 0;
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            outline: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .slider-capacity {
-            background: linear-gradient(to right, #e0e0e0, #667eea);
-        }
-
-        .slider-capacity::-webkit-slider-thumb {
-            background: #667eea;
-        }
-
-        .slider-imperceptibility {
-            background: linear-gradient(to right, #e0e0e0, #f093fb);
-        }
-
-        .slider-imperceptibility::-webkit-slider-thumb {
-            background: #f093fb;
-        }
-
-        .slider-robustness {
-            background: linear-gradient(to right, #e0e0e0, #4facfe);
-        }
-
-        .slider-robustness::-webkit-slider-thumb {
-            background: #4facfe;
-        }
-
-        .compromise-result {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: white;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .methods-comparison {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .method-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .method-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-
-        .method-header {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #f0f4f8;
-        }
-
-        .metric-bar {
-            display: flex;
-            align-items: center;
-            margin: 0.8rem 0;
-        }
-
-        .metric-label {
-            width: 130px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .metric-value {
-            flex: 1;
-            height: 18px;
-            background: #f0f4f8;
-            border-radius: 9px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .metric-fill {
-            height: 100%;
-            border-radius: 9px;
-            transition: width 0.6s ease;
-            position: relative;
-        }
-
-        .metric-fill::after {
-            content: attr(data-value);
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.75rem;
-            color: white;
-            font-weight: 600;
-        }
-
-        .fill-capacity {
-            background: linear-gradient(90deg, #667eea, #764ba2);
-        }
-
-        .fill-imperceptibility {
-            background: linear-gradient(90deg, #f093fb, #f5576c);
-        }
-
-        .fill-robustness {
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
-        }
-
-        .scenario-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .scenario-tab {
-            padding: 0.75rem 1.5rem;
-            background: transparent;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            color: #6c757d;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-        }
-
-        .scenario-tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-            background: linear-gradient(to bottom, transparent, rgba(102, 126, 234, 0.05));
-        }
-
-        .scenario-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .scenario-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .compromise-formula {
-            background: #1f2937;
-            color: #f3f4f6;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
-            margin: 1.5rem 0;
-        }
-
-        .triangle-point {
-            fill: white;
-            stroke: #667eea;
-            stroke-width: 3;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .triangle-point:hover {
-            r: 12;
-            fill: #667eea;
-        }
-
-        .balance-indicator {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .balance-item {
-            text-align: center;
-            padding: 1rem;
-            background: linear-gradient(145deg, #ffffff, #f3f4f6);
-            border-radius: 10px;
-        }
-
-        .balance-value {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
-
-        .balance-label {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-    </style>
 </head>
-<body class="slides-page">
+<body>
 
-<div class="slides-wrapper">
+<div class="presentation">
 
     <!-- Слайд 1: Титульний -->
-    <div class="slide active">
-        <div class="slide-container">
-            <div class="slide-title">
-                <h1>⚖️ Фундаментальні компроміси стеганографії</h1>
-                <div class="subtitle">
-                    Трикутник компромісів: ємність, непомітність, стійкість
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="slide active title-slide">
+        <h1>⚖️ Фундаментальні компроміси стеганографії</h1>
+        <div class="subtitle">
+        Трикутник компромісів: ємність, непомітність, стійкість    </div>
 
+    </div>
     <!-- Слайд 2: Трикутник компромісів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📐 Трикутник компромісів стеганографії</h2>
+        <h2>📐 Трикутник компромісів стеганографії</h2>
 
-                <div class="triangle-container">
-                    <svg class="triangle-svg" viewBox="0 0 500 350">
-                        <!-- Трикутник -->
-                        <polygon points="250,50 100,300 400,300"
-                                 fill="none"
-                                 stroke="#667eea"
-                                 stroke-width="3"/>
+        <div class="triangle-container">
+        <svg class="triangle-svg" viewBox="0 0 500 350">
+        <!-- Трикутник -->
+        <polygon points="250,50 100,300 400,300"
+        fill="none"
+        stroke="#667eea"
+        stroke-width="3"/>
 
-                        <!-- Внутрішні лінії -->
-                        <line x1="250" y1="50" x2="250" y2="300" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="5,5"/>
-                        <line x1="100" y1="300" x2="325" y2="175" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="5,5"/>
-                        <line x1="400" y1="300" x2="175" y2="175" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="5,5"/>
+        <!-- Внутрішні лінії -->
+        <line x1="250" y1="50" x2="250" y2="300" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="5,5"/>
+        <line x1="100" y1="300" x2="325" y2="175" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="5,5"/>
+        <line x1="400" y1="300" x2="175" y2="175" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="5,5"/>
 
-                        <!-- Вершини -->
-                        <circle cx="250" cy="50" r="8" class="triangle-point"/>
-                        <circle cx="100" cy="300" r="8" class="triangle-point"/>
-                        <circle cx="400" cy="300" r="8" class="triangle-point"/>
+        <!-- Вершини -->
+        <circle cx="250" cy="50" r="8" class="triangle-point"/>
+        <circle cx="100" cy="300" r="8" class="triangle-point"/>
+        <circle cx="400" cy="300" r="8" class="triangle-point"/>
 
-                        <!-- Підписи вершин -->
-                        <text x="250" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#667eea">
-                            Ємність (Capacity)
-                        </text>
-                        <text x="80" y="330" text-anchor="middle" font-size="18" font-weight="bold" fill="#f093fb">
-                            Непомітність
-                        </text>
-                        <text x="420" y="330" text-anchor="middle" font-size="18" font-weight="bold" fill="#4facfe">
-                            Стійкість
-                        </text>
+        <!-- Підписи вершин -->
+        <text x="250" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#667eea">
+        Ємність (Capacity)
+        </text>
+        <text x="80" y="330" text-anchor="middle" font-size="18" font-weight="bold" fill="#f093fb">
+        Непомітність
+        </text>
+        <text x="420" y="330" text-anchor="middle" font-size="18" font-weight="bold" fill="#4facfe">
+        Стійкість
+        </text>
 
-                        <!-- Центральна точка балансу -->
-                        <circle cx="250" cy="200" r="5" fill="#ff6b6b"/>
-                        <text x="250" y="190" text-anchor="middle" font-size="14" fill="#333">
-                            Оптимальний баланс
-                        </text>
-                    </svg>
-                </div>
-
-                <div class="compromise-formula">
-                    Capacity × Imperceptibility × Robustness = Constant
-                </div>
-
-                <p style="text-align: center; font-size: 1.1rem; color: #555; margin-top: 1.5rem;">
-                    Покращення одного параметра неминуче призводить до погіршення інших.
-                    Це фундаментальний закон стеганографії.
-                </p>
-            </div>
+        <!-- Центральна точка балансу -->
+        <circle cx="250" cy="200" r="5" fill="#ff6b6b"/>
+        <text x="250" y="190" text-anchor="middle" font-size="14" fill="#333">
+        Оптимальний баланс
+        </text>
+        </svg>
         </div>
+
+        <div class="compromise-formula">
+        Capacity × Imperceptibility × Robustness = Constant
+        </div>
+
+        <p style="text-align: center; font-size: 1.1rem; color: #555; margin-top: 1.5rem;">
+        Покращення одного параметра неминуче призводить до погіршення інших.
+        Це фундаментальний закон стеганографії.
+        </p>
     </div>
 
     <!-- Слайд 3: Ємність -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💾 Ємність (Capacity)</h2>
+        <h2>💾 Ємність (Capacity)</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                    <h3 style="color: white; border: none;">Визначення:</h3>
-                    <p style="font-size: 1.2rem;">
-                        Максимальний обсяг інформації, який можна приховати в контейнері без суттєвого погіршення якості або виявлення
-                    </p>
-                </div>
-
-                <h3>📊 Метрики вимірювання:</h3>
-                <div class="stat-item" style="margin: 1rem 0;">
-                    <h4>Абсолютна ємність</h4>
-                    <ul class="slide-list">
-                        <li><strong>Біти на контейнер:</strong> загальна кількість прихованих біт</li>
-                        <li><strong>Байти/Кілобайти:</strong> для великих повідомлень</li>
-                    </ul>
-                </div>
-
-                <div class="stat-item" style="margin: 1rem 0;">
-                    <h4>Відносна ємність</h4>
-                    <ul class="slide-list">
-                        <li><strong>bpp (bits per pixel):</strong> для зображень</li>
-                        <li><strong>bps (bits per sample):</strong> для аудіо</li>
-                        <li><strong>Embedding rate:</strong> % модифікованих елементів</li>
-                    </ul>
-                </div>
-
-                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin-top: 2rem;">
-                    <h4 style="color: #92400e;">⚠️ Практичні обмеження:</h4>
-                    <ul>
-                        <li>LSB: до 3 bpp (але легко виявляється)</li>
-                        <li>Адаптивні методи: 0.05-0.5 bpp (складніше виявити)</li>
-                        <li>Стеганографія з синдромним кодуванням: 0.01-0.1 bpp</li>
-                    </ul>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+        <h3 style="color: white; border: none;">Визначення:</h3>
+        <p style="font-size: 1.2rem;">
+        Максимальний обсяг інформації, який можна приховати в контейнері без суттєвого погіршення якості або виявлення
+        </p>
         </div>
-    </div>
 
+        <h3>📊 Метрики вимірювання:</h3>
+        <div class="stat-item" style="margin: 1rem 0;">
+        <h4>Абсолютна ємність</h4>
+        <ul class="slide-list">
+        <li><strong>Біти на контейнер:</strong> загальна кількість прихованих біт</li>
+        <li><strong>Байти/Кілобайти:</strong> для великих повідомлень</li>
+        </ul>
+        </div>
+
+        <div class="stat-item" style="margin: 1rem 0;">
+        <h4>Відносна ємність</h4>
+        <ul class="slide-list">
+        <li><strong>bpp (bits per pixel):</strong> для зображень</li>
+        <li><strong>bps (bits per sample):</strong> для аудіо</li>
+        <li><strong>Embedding rate:</strong> % модифікованих елементів</li>
+        </ul>
+        </div>
+
+        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px; margin-top: 2rem;">
+        <h4 style="color: #92400e;">⚠️ Практичні обмеження:</h4>
+        <ul>
+        <li>LSB: до 3 bpp (але легко виявляється)</li>
+        <li>Адаптивні методи: 0.05-0.5 bpp (складніше виявити)</li>
+        <li>Стеганографія з синдромним кодуванням: 0.01-0.1 bpp</li>
+        </ul>    </div>
+
+    </div>
     <!-- Слайд 4: Непомітність -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>👁️ Непомітність (Imperceptibility)</h2>
+        <h2>👁️ Непомітність (Imperceptibility)</h2>
 
-                <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                    <h3 style="color: white; border: none;">Визначення:</h3>
-                    <p style="font-size: 1.2rem;">
-                        Здатність системи приховувати факт наявності секретної інформації від візуального та статистичного виявлення
-                    </p>
-                </div>
-
-                <h3>🔍 Рівні непомітності:</h3>
-
-                <div class="methods-comparison">
-                    <div class="method-card">
-                        <div class="method-header">Візуальна непомітність</div>
-                        <ul>
-                            <li>PSNR > 40 dB</li>
-                            <li>SSIM > 0.98</li>
-                            <li>Відсутність видимих артефактів</li>
-                            <li>Збереження текстур</li>
-                        </ul>
-                    </div>
-
-                    <div class="method-card">
-                        <div class="method-header">Статистична непомітність</div>
-                        <ul>
-                            <li>Збереження гістограми</li>
-                            <li>Збереження кореляцій</li>
-                            <li>Chi-square тест: p > 0.05</li>
-                            <li>RS аналіз: негативний</li>
-                        </ul>
-                    </div>
-
-                    <div class="method-card">
-                        <div class="method-header">Структурна непомітність</div>
-                        <ul>
-                            <li>Збереження формату</li>
-                            <li>Коректні метадані</li>
-                            <li>Валідна структура файлу</li>
-                            <li>Природні розміри</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="compromise-formula">
-                    Imperceptibility = f(Visual_Quality, Statistical_Similarity, Format_Preservation)
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+        <h3 style="color: white; border: none;">Визначення:</h3>
+        <p style="font-size: 1.2rem;">
+        Здатність системи приховувати факт наявності секретної інформації від візуального та статистичного виявлення
+        </p>
         </div>
-    </div>
 
+        <h3>🔍 Рівні непомітності:</h3>
+
+        <div class="methods-comparison">
+        <div class="method-card">
+        <div class="method-header">Візуальна непомітність</div>
+        <ul>
+        <li>PSNR > 40 dB</li>
+        <li>SSIM > 0.98</li>
+        <li>Відсутність видимих артефактів</li>
+        <li>Збереження текстур</li>
+        </ul>
+        </div>
+
+        <div class="method-card">
+        <div class="method-header">Статистична непомітність</div>
+        <ul>
+        <li>Збереження гістограми</li>
+        <li>Збереження кореляцій</li>
+        <li>Chi-square тест: p > 0.05</li>
+        <li>RS аналіз: негативний</li>
+        </ul>
+        </div>
+
+        <div class="method-card">
+        <div class="method-header">Структурна непомітність</div>
+        <ul>
+        <li>Збереження формату</li>
+        <li>Коректні метадані</li>
+        <li>Валідна структура файлу</li>
+        <li>Природні розміри</li>
+        </ul>
+        </div>
+        </div>
+
+        <div class="compromise-formula">
+        Imperceptibility = f(Visual_Quality, Statistical_Similarity, Format_Preservation)    </div>
+
+    </div>
     <!-- Слайд 5: Стійкість -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🛡️ Стійкість (Robustness)</h2>
+        <h2>🛡️ Стійкість (Robustness)</h2>
 
-                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                    <h3 style="color: white; border: none;">Визначення:</h3>
-                    <p style="font-size: 1.2rem;">
-                        Здатність прихованої інформації залишатися неушкодженою після обробки контейнера або навмисних атак
-                    </p>
-                </div>
-
-                <h3>⚔️ Типи атак та стійкість:</h3>
-
-                <table style="width: 100%; margin: 1.5rem 0;">
-                    <thead>
-                    <tr>
-                        <th>Тип атаки</th>
-                        <th>Приклади</th>
-                        <th>Необхідна стійкість</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><strong>Пасивні</strong></td>
-                        <td>Стегоаналіз, статистичні тести</td>
-                        <td>Статистична непомітність</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Активні</strong></td>
-                        <td>Стиснення, фільтрація, обрізка</td>
-                        <td>Надлишкове кодування</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Деструктивні</strong></td>
-                        <td>Додавання шуму, зміна формату</td>
-                        <td>Корекція помилок</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Геометричні</strong></td>
-                        <td>Поворот, масштабування</td>
-                        <td>Синхронізація, маркери</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
-                    <h4 style="color: #166534;">✅ Методи підвищення стійкості:</h4>
-                    <ul>
-                        <li>Використання стійких доменів (DCT, DWT)</li>
-                        <li>Розподілене вбудовування з надлишковістю</li>
-                        <li>Коди корекції помилок (BCH, LDPC)</li>
-                        <li>Адаптивне вбудовування в робасні області</li>
-                    </ul>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+        <h3 style="color: white; border: none;">Визначення:</h3>
+        <p style="font-size: 1.2rem;">
+        Здатність прихованої інформації залишатися неушкодженою після обробки контейнера або навмисних атак
+        </p>
         </div>
-    </div>
 
+        <h3>⚔️ Типи атак та стійкість:</h3>
+
+        <table style="width: 100%; margin: 1.5rem 0;">
+        <thead>
+        <tr>
+        <th>Тип атаки</th>
+        <th>Приклади</th>
+        <th>Необхідна стійкість</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Пасивні</strong></td>
+        <td>Стегоаналіз, статистичні тести</td>
+        <td>Статистична непомітність</td>
+        </tr>
+        <tr>
+        <td><strong>Активні</strong></td>
+        <td>Стиснення, фільтрація, обрізка</td>
+        <td>Надлишкове кодування</td>
+        </tr>
+        <tr>
+        <td><strong>Деструктивні</strong></td>
+        <td>Додавання шуму, зміна формату</td>
+        <td>Корекція помилок</td>
+        </tr>
+        <tr>
+        <td><strong>Геометричні</strong></td>
+        <td>Поворот, масштабування</td>
+        <td>Синхронізація, маркери</td>
+        </tr>
+        </tbody>
+        </table>
+
+        <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+        <h4 style="color: #166534;">✅ Методи підвищення стійкості:</h4>
+        <ul>
+        <li>Використання стійких доменів (DCT, DWT)</li>
+        <li>Розподілене вбудовування з надлишковістю</li>
+        <li>Коди корекції помилок (BCH, LDPC)</li>
+        <li>Адаптивне вбудовування в робасні області</li>
+        </ul>    </div>
+
+    </div>
     <!-- Слайд 6: Інтерактивний дослідник компромісів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🔄 Дослідження компромісів</h2>
+        <h2>🔄 Дослідження компромісів</h2>
 
-                <div class="compromise-slider">
-                    <h3>Налаштуйте параметри:</h3>
+        <div class="compromise-slider">
+        <h3>Налаштуйте параметри:</h3>
 
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>💾 Ємність</span>
-                            <span id="capacity-value">50%</span>
-                        </div>
-                        <input type="range" class="slider-capacity" id="capacity-slider"
-                               min="0" max="100" value="50" oninput="updateCompromise()">
-                    </div>
+        <div class="slider-group">
+        <div class="slider-label">
+        <span>💾 Ємність</span>
+        <span id="capacity-value">50%</span>
+        </div>
+        <input type="range" class="slider-capacity" id="capacity-slider"
+        min="0" max="100" value="50" oninput="updateCompromise()">
+        </div>
 
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>👁️ Непомітність</span>
-                            <span id="imperceptibility-value">50%</span>
-                        </div>
-                        <input type="range" class="slider-imperceptibility" id="imperceptibility-slider"
-                               min="0" max="100" value="50" oninput="updateCompromise()">
-                    </div>
+        <div class="slider-group">
+        <div class="slider-label">
+        <span>👁️ Непомітність</span>
+        <span id="imperceptibility-value">50%</span>
+        </div>
+        <input type="range" class="slider-imperceptibility" id="imperceptibility-slider"
+        min="0" max="100" value="50" oninput="updateCompromise()">
+        </div>
 
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>🛡️ Стійкість</span>
-                            <span id="robustness-value">50%</span>
-                        </div>
-                        <input type="range" class="slider-robustness" id="robustness-slider"
-                               min="0" max="100" value="50" oninput="updateCompromise()">
-                    </div>
+        <div class="slider-group">
+        <div class="slider-label">
+        <span>🛡️ Стійкість</span>
+        <span id="robustness-value">50%</span>
+        </div>
+        <input type="range" class="slider-robustness" id="robustness-slider"
+        min="0" max="100" value="50" oninput="updateCompromise()">
+        </div>
 
-                    <div class="compromise-result" id="compromise-result">
-                        <h4>Результат аналізу:</h4>
-                        <p>Збалансована конфігурація для універсального застосування.</p>
-                    </div>
-                </div>
+        <div class="compromise-result" id="compromise-result">
+        <h4>Результат аналізу:</h4>
+        <p>Збалансована конфігурація для універсального застосування.</p>
+        </div>
+        </div>
 
-                <div class="balance-indicator">
-                    <div class="balance-item">
-                        <div class="balance-label">Загальний баланс</div>
-                        <div class="balance-value" id="balance-score" style="color: #667eea;">50</div>
-                    </div>
-                    <div class="balance-item">
-                        <div class="balance-label">Оптимальність</div>
-                        <div class="balance-value" id="optimality" style="color: #10b981;">Середня</div>
-                    </div>
-                    <div class="balance-item">
-                        <div class="balance-label">Застосування</div>
-                        <div class="balance-value" id="application" style="color: #f59e0b;">Універсальне</div>
-                    </div>
-                </div>
-            </div>
+        <div class="balance-indicator">
+        <div class="balance-item">
+        <div class="balance-label">Загальний баланс</div>
+        <div class="balance-value" id="balance-score" style="color: #667eea;">50</div>
+        </div>
+        <div class="balance-item">
+        <div class="balance-label">Оптимальність</div>
+        <div class="balance-value" id="optimality" style="color: #10b981;">Середня</div>
+        </div>
+        <div class="balance-item">
+        <div class="balance-label">Застосування</div>
+        <div class="balance-value" id="application" style="color: #f59e0b;">Універсальне            </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 7: Порівняння методів -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📊 Порівняння методів за компромісами</h2>
+        <h2>📊 Порівняння методів за компромісами</h2>
 
-                <div class="methods-comparison">
-                    <div class="method-card">
-                        <div class="method-header">LSB заміщення</div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Ємність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-capacity" style="width: 90%;" data-value="90%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Непомітність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-imperceptibility" style="width: 30%;" data-value="30%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Стійкість:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-robustness" style="width: 20%;" data-value="20%"></div>
-                            </div>
-                        </div>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                            ⚡ Висока ємність, але легко виявляється
-                        </p>
-                    </div>
-
-                    <div class="method-card">
-                        <div class="method-header">DCT домен (JPEG)</div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Ємність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-capacity" style="width: 40%;" data-value="40%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Непомітність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-imperceptibility" style="width: 70%;" data-value="70%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Стійкість:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-robustness" style="width: 80%;" data-value="80%"></div>
-                            </div>
-                        </div>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                            ⚖️ Збалансований підхід для JPEG
-                        </p>
-                    </div>
-
-                    <div class="method-card">
-                        <div class="method-header">Адаптивна стеганографія</div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Ємність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-capacity" style="width: 25%;" data-value="25%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Непомітність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-imperceptibility" style="width: 95%;" data-value="95%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Стійкість:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-robustness" style="width: 60%;" data-value="60%"></div>
-                            </div>
-                        </div>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                            🎯 Максимальна непомітність
-                        </p>
-                    </div>
-
-                    <div class="method-card">
-                        <div class="method-header">Spread Spectrum</div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Ємність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-capacity" style="width: 15%;" data-value="15%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Непомітність:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-imperceptibility" style="width: 60%;" data-value="60%"></div>
-                            </div>
-                        </div>
-                        <div class="metric-bar">
-                            <span class="metric-label">Стійкість:</span>
-                            <div class="metric-value">
-                                <div class="metric-fill fill-robustness" style="width: 95%;" data-value="95%"></div>
-                            </div>
-                        </div>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                            🛡️ Максимальна стійкість до атак
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div class="methods-comparison">
+        <div class="method-card">
+        <div class="method-header">LSB заміщення</div>
+        <div class="metric-bar">
+        <span class="metric-label">Ємність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-capacity" style="width: 90%;" data-value="90%"></div>
         </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Непомітність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-imperceptibility" style="width: 30%;" data-value="30%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Стійкість:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-robustness" style="width: 20%;" data-value="20%"></div>
+        </div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+        ⚡ Висока ємність, але легко виявляється
+        </p>
+        </div>
+
+        <div class="method-card">
+        <div class="method-header">DCT домен (JPEG)</div>
+        <div class="metric-bar">
+        <span class="metric-label">Ємність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-capacity" style="width: 40%;" data-value="40%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Непомітність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-imperceptibility" style="width: 70%;" data-value="70%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Стійкість:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-robustness" style="width: 80%;" data-value="80%"></div>
+        </div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+        ⚖️ Збалансований підхід для JPEG
+        </p>
+        </div>
+
+        <div class="method-card">
+        <div class="method-header">Адаптивна стеганографія</div>
+        <div class="metric-bar">
+        <span class="metric-label">Ємність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-capacity" style="width: 25%;" data-value="25%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Непомітність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-imperceptibility" style="width: 95%;" data-value="95%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Стійкість:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-robustness" style="width: 60%;" data-value="60%"></div>
+        </div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+        🎯 Максимальна непомітність
+        </p>
+        </div>
+
+        <div class="method-card">
+        <div class="method-header">Spread Spectrum</div>
+        <div class="metric-bar">
+        <span class="metric-label">Ємність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-capacity" style="width: 15%;" data-value="15%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Непомітність:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-imperceptibility" style="width: 60%;" data-value="60%"></div>
+        </div>
+        </div>
+        <div class="metric-bar">
+        <span class="metric-label">Стійкість:</span>
+        <div class="metric-value">
+        <div class="metric-fill fill-robustness" style="width: 95%;" data-value="95%"></div>
+        </div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+        🛡️ Максимальна стійкість до атак
+        </p>        </div>
     </div>
 
+    </div>
     <!-- Слайд 8: Сценарії застосування -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>🎯 Оптимізація під сценарії</h2>
+        <h2>🎯 Оптимізація під сценарії</h2>
 
-                <div class="scenario-tabs">
-                    <button class="scenario-tab active" onclick="showScenario('covert')">
-                        🕵️ Прихований канал
-                    </button>
-                    <button class="scenario-tab" onclick="showScenario('watermark')">
-                        © Водяні знаки
-                    </button>
-                    <button class="scenario-tab" onclick="showScenario('forensics')">
-                        🔍 Форензіка
-                    </button>
-                    <button class="scenario-tab" onclick="showScenario('capacity')">
-                        💾 Максимальна ємність
-                    </button>
-                </div>
-
-                <div id="covert" class="scenario-content active">
-                    <h3>🕵️ Прихований канал зв'язку</h3>
-                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
-                        <p><strong>Пріоритет:</strong> Непомітність > Стійкість > Ємність</p>
-                    </div>
-                    <ul class="slide-list">
-                        <li><strong>Ємність:</strong> 10-20% (низька, 0.01-0.1 bpp)</li>
-                        <li><strong>Непомітність:</strong> 90-95% (критично важлива)</li>
-                        <li><strong>Стійкість:</strong> 40-60% (помірна)</li>
-                    </ul>
-                    <div class="alert alert-info">
-                        Рекомендовані методи: HUGO, WOW, S-UNIWARD, синдромне кодування
-                    </div>
-                </div>
-
-                <div id="watermark" class="scenario-content">
-                    <h3>© Цифрові водяні знаки</h3>
-                    <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
-                        <p><strong>Пріоритет:</strong> Стійкість > Непомітність > Ємність</p>
-                    </div>
-                    <ul class="slide-list">
-                        <li><strong>Ємність:</strong> 5-10% (дуже низька)</li>
-                        <li><strong>Непомітність:</strong> 70-80% (важлива)</li>
-                        <li><strong>Стійкість:</strong> 90-95% (критична)</li>
-                    </ul>
-                    <div class="alert alert-success">
-                        Рекомендовані методи: Spread Spectrum, DCT/DWT домени, QIM
-                    </div>
-                </div>
-
-                <div id="forensics" class="scenario-content">
-                    <h3>🔍 Судова експертиза</h3>
-                    <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
-                        <p><strong>Пріоритет:</strong> Стійкість > Непомітність = Ємність</p>
-                    </div>
-                    <ul class="slide-list">
-                        <li><strong>Ємність:</strong> 30-40% (помірна)</li>
-                        <li><strong>Непомітність:</strong> 60-70% (достатня)</li>
-                        <li><strong>Стійкість:</strong> 80-90% (висока)</li>
-                    </ul>
-                    <div class="alert alert-warning">
-                        Рекомендовані методи: Хеш-функції, блокчейн-маркери, криптографічні підписи
-                    </div>
-                </div>
-
-                <div id="capacity" class="scenario-content">
-                    <h3>💾 Максимальна ємність</h3>
-                    <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
-                        <p><strong>Пріоритет:</strong> Ємність > Непомітність > Стійкість</p>
-                    </div>
-                    <ul class="slide-list">
-                        <li><strong>Ємність:</strong> 80-95% (максимальна, до 3 bpp)</li>
-                        <li><strong>Непомітність:</strong> 20-30% (низька)</li>
-                        <li><strong>Стійкість:</strong> 10-20% (мінімальна)</li>
-                    </ul>
-                    <div class="alert alert-error">
-                        Рекомендовані методи: LSB всіх площин, PVD, EMD
-                    </div>
-                </div>
-            </div>
+        <div class="scenario-tabs">
+        <button class="scenario-tab active" onclick="showScenario('covert')">
+        🕵️ Прихований канал
+        </button>
+        <button class="scenario-tab" onclick="showScenario('watermark')">
+        © Водяні знаки
+        </button>
+        <button class="scenario-tab" onclick="showScenario('forensics')">
+        🔍 Форензіка
+        </button>
+        <button class="scenario-tab" onclick="showScenario('capacity')">
+        💾 Максимальна ємність
+        </button>
         </div>
+
+        <div id="covert" class="scenario-content active">
+        <h3>🕵️ Прихований канал зв'язку</h3>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+        <p><strong>Пріоритет:</strong> Непомітність > Стійкість > Ємність</p>
+        </div>
+        <ul class="slide-list">
+        <li><strong>Ємність:</strong> 10-20% (низька, 0.01-0.1 bpp)</li>
+        <li><strong>Непомітність:</strong> 90-95% (критично важлива)</li>
+        <li><strong>Стійкість:</strong> 40-60% (помірна)</li>
+        </ul>
+        <div class="alert alert-info">
+        Рекомендовані методи: HUGO, WOW, S-UNIWARD, синдромне кодування
+        </div>
+        </div>
+
+        <div id="watermark" class="scenario-content">
+        <h3>© Цифрові водяні знаки</h3>
+        <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+        <p><strong>Пріоритет:</strong> Стійкість > Непомітність > Ємність</p>
+        </div>
+        <ul class="slide-list">
+        <li><strong>Ємність:</strong> 5-10% (дуже низька)</li>
+        <li><strong>Непомітність:</strong> 70-80% (важлива)</li>
+        <li><strong>Стійкість:</strong> 90-95% (критична)</li>
+        </ul>
+        <div class="alert alert-success">
+        Рекомендовані методи: Spread Spectrum, DCT/DWT домени, QIM
+        </div>
+        </div>
+
+        <div id="forensics" class="scenario-content">
+        <h3>🔍 Судова експертиза</h3>
+        <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+        <p><strong>Пріоритет:</strong> Стійкість > Непомітність = Ємність</p>
+        </div>
+        <ul class="slide-list">
+        <li><strong>Ємність:</strong> 30-40% (помірна)</li>
+        <li><strong>Непомітність:</strong> 60-70% (достатня)</li>
+        <li><strong>Стійкість:</strong> 80-90% (висока)</li>
+        </ul>
+        <div class="alert alert-warning">
+        Рекомендовані методи: Хеш-функції, блокчейн-маркери, криптографічні підписи
+        </div>
+        </div>
+
+        <div id="capacity" class="scenario-content">
+        <h3>💾 Максимальна ємність</h3>
+        <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+        <p><strong>Пріоритет:</strong> Ємність > Непомітність > Стійкість</p>
+        </div>
+        <ul class="slide-list">
+        <li><strong>Ємність:</strong> 80-95% (максимальна, до 3 bpp)</li>
+        <li><strong>Непомітність:</strong> 20-30% (низька)</li>
+        <li><strong>Стійкість:</strong> 10-20% (мінімальна)</li>
+        </ul>
+        <div class="alert alert-error">
+        Рекомендовані методи: LSB всіх площин, PVD, EMD        </div>
     </div>
 
+    </div>
     <!-- Слайд 9: Математичні моделі -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📐 Математичні моделі компромісів</h2>
+        <h2>📐 Математичні моделі компромісів</h2>
 
-                <div class="compromise-formula">
-                    Rate-Distortion-Robustness Trade-off:<br>
-                    R(D, S) ≤ I(X; Y|S) - I(X; Z|S)
-                </div>
-
-                <p style="text-align: center; margin: 1rem 0;">
-                    де R - ємність, D - спотворення, S - стійкість
-                </p>
-
-                <h3>📈 Функції компромісу:</h3>
-
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0;">
-                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #0369a1;">Лінійна модель:</h4>
-                        <code style="display: block; padding: 1rem; background: #1f2937; color: #f3f4f6; border-radius: 5px;">
-                            Q = αC + βI + γR<br>
-                            при α + β + γ = 1
-                        </code>
-                        <p style="margin-top: 1rem;">Проста, але неточна для екстремальних значень</p>
-                    </div>
-
-                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
-                        <h4 style="color: #14532d;">Мультиплікативна модель:</h4>
-                        <code style="display: block; padding: 1rem; background: #1f2937; color: #f3f4f6; border-radius: 5px;">
-                            Q = C^α × I^β × R^γ<br>
-                            α, β, γ ∈ [0, 1]
-                        </code>
-                        <p style="margin-top: 1rem;">Краще відображає реальні залежності</p>
-                    </div>
-                </div>
-
-                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
-                    <h4 style="color: #713f12;">⚠️ Обмеження Шеннона для стеганографії:</h4>
-                    <p>Максимальна ємність обмежена ентропією контейнера та вимогами непомітності:</p>
-                    <div style="text-align: center; font-family: monospace; margin: 1rem 0; font-size: 1.1rem;">
-                        C_max ≤ H(Cover) × (1 - D_threshold)
-                    </div>
-                </div>
-            </div>
+        <div class="compromise-formula">
+        Rate-Distortion-Robustness Trade-off:<br>
+        R(D, S) ≤ I(X; Y|S) - I(X; Z|S)
         </div>
+
+        <p style="text-align: center; margin: 1rem 0;">
+        де R - ємність, D - спотворення, S - стійкість
+        </p>
+
+        <h3>📈 Функції компромісу:</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0;">
+        <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #0369a1;">Лінійна модель:</h4>
+        <code style="display: block; padding: 1rem; background: #1f2937; color: #f3f4f6; border-radius: 5px;">
+        Q = αC + βI + γR<br>
+        при α + β + γ = 1
+        </code>
+        <p style="margin-top: 1rem;">Проста, але неточна для екстремальних значень</p>
+        </div>
+
+        <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #14532d;">Мультиплікативна модель:</h4>
+        <code style="display: block; padding: 1rem; background: #1f2937; color: #f3f4f6; border-radius: 5px;">
+        Q = C^α × I^β × R^γ<br>
+        α, β, γ ∈ [0, 1]
+        </code>
+        <p style="margin-top: 1rem;">Краще відображає реальні залежності</p>
+        </div>
+        </div>
+
+        <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+        <h4 style="color: #713f12;">⚠️ Обмеження Шеннона для стеганографії:</h4>
+        <p>Максимальна ємність обмежена ентропією контейнера та вимогами непомітності:</p>
+        <div style="text-align: center; font-family: monospace; margin: 1rem 0; font-size: 1.1rem;">
+        C_max ≤ H(Cover) × (1 - D_threshold)        </div>
     </div>
 
+    </div>
     <!-- Слайд 10: Практичні рекомендації -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>💡 Практичні рекомендації</h2>
+        <h2>💡 Практичні рекомендації</h2>
 
-                <h3>🎯 Вибір оптимального балансу:</h3>
+        <h3>🎯 Вибір оптимального балансу:</h3>
 
-                <table style="width: 100%; margin: 1.5rem 0;">
-                    <thead>
-                    <tr>
-                        <th>Застосування</th>
-                        <th>Ємність</th>
-                        <th>Непомітність</th>
-                        <th>Стійкість</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><strong>Секретний зв'язок</strong></td>
-                        <td>🔵⚪⚪⚪⚪</td>
-                        <td>🔵🔵🔵🔵🔵</td>
-                        <td>🔵🔵⚪⚪⚪</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Захист авторства</strong></td>
-                        <td>🔵⚪⚪⚪⚪</td>
-                        <td>🔵🔵🔵⚪⚪</td>
-                        <td>🔵🔵🔵🔵🔵</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Приховане сховище</strong></td>
-                        <td>🔵🔵🔵🔵⚪</td>
-                        <td>🔵🔵🔵⚪⚪</td>
-                        <td>🔵🔵⚪⚪⚪</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Тимчасові мітки</strong></td>
-                        <td>🔵🔵⚪⚪⚪</td>
-                        <td>🔵🔵⚪⚪⚪</td>
-                        <td>🔵🔵🔵🔵⚪</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <table style="width: 100%; margin: 1.5rem 0;">
+        <thead>
+        <tr>
+        <th>Застосування</th>
+        <th>Ємність</th>
+        <th>Непомітність</th>
+        <th>Стійкість</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Секретний зв'язок</strong></td>
+        <td>🔵⚪⚪⚪⚪</td>
+        <td>🔵🔵🔵🔵🔵</td>
+        <td>🔵🔵⚪⚪⚪</td>
+        </tr>
+        <tr>
+        <td><strong>Захист авторства</strong></td>
+        <td>🔵⚪⚪⚪⚪</td>
+        <td>🔵🔵🔵⚪⚪</td>
+        <td>🔵🔵🔵🔵🔵</td>
+        </tr>
+        <tr>
+        <td><strong>Приховане сховище</strong></td>
+        <td>🔵🔵🔵🔵⚪</td>
+        <td>🔵🔵🔵⚪⚪</td>
+        <td>🔵🔵⚪⚪⚪</td>
+        </tr>
+        <tr>
+        <td><strong>Тимчасові мітки</strong></td>
+        <td>🔵🔵⚪⚪⚪</td>
+        <td>🔵🔵⚪⚪⚪</td>
+        <td>🔵🔵🔵🔵⚪</td>
+        </tr>
+        </tbody>
+        </table>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-top: 2rem;">
-                    <h3 style="color: white;">📋 Чек-лист оптимізації:</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
-                        <div>
-                            ✅ Визначте пріоритетний параметр<br>
-                            ✅ Оцініть допустимі межі інших<br>
-                            ✅ Виберіть відповідний метод<br>
-                            ✅ Протестуйте на реальних даних
-                        </div>
-                        <div>
-                            ✅ Врахуйте канал передачі<br>
-                            ✅ Оцініть загрози виявлення<br>
-                            ✅ Підготуйте резервні варіанти<br>
-                            ✅ Документуйте обмеження
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+        <h3 style="color: white;">📋 Чек-лист оптимізації:</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+        <div>
+        ✅ Визначте пріоритетний параметр<br>
+        ✅ Оцініть допустимі межі інших<br>
+        ✅ Виберіть відповідний метод<br>
+        ✅ Протестуйте на реальних даних
+        </div>
+        <div>
+        ✅ Врахуйте канал передачі<br>
+        ✅ Оцініть загрози виявлення<br>
+        ✅ Підготуйте резервні варіанти<br>
+        ✅ Документуйте обмеження            </div>
         </div>
     </div>
 
+    </div>
     <!-- Слайд 11: Висновки -->
     <div class="slide">
-        <div class="slide-container">
-            <div class="slide-content">
-                <h2>📌 Висновки</h2>
+        <h2>📌 Висновки</h2>
 
-                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
-                    <h3 style="color: white;">Ключові принципи компромісів:</h3>
-                    <ul style="line-height: 2; font-size: 1.1rem;">
-                        <li>⚖️ Неможливо максимізувати всі три параметри одночасно</li>
-                        <li>📐 Трикутник компромісів - фундаментальний закон стеганографії</li>
-                        <li>🎯 Вибір балансу залежить від конкретного застосування</li>
-                        <li>📊 Кожен метод має свій профіль компромісів</li>
-                        <li>🔄 Адаптивні методи дозволяють динамічно змінювати баланс</li>
-                    </ul>
-                </div>
-
-                <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
-                    <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
-                        <strong>Мистецтво стеганографії</strong> полягає не в подоланні фундаментальних компромісів,
-                        а в їх оптимальному балансуванні для конкретної задачі. Розуміння цих обмежень -
-                        ключ до створення ефективних стеганографічних систем.
-                    </p>
-                </div>
-
-                <div style="text-align: center; margin-top: 2rem;">
-                    <button class="scenario-tab active" onclick="window.location.href='index.html'" style="padding: 1rem 2rem; font-size: 1.1rem;">
-                        🏠 Повернутися до головного меню
-                    </button>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px;">
+        <h3 style="color: white;">Ключові принципи компромісів:</h3>
+        <ul style="line-height: 2; font-size: 1.1rem;">
+        <li>⚖️ Неможливо максимізувати всі три параметри одночасно</li>
+        <li>📐 Трикутник компромісів - фундаментальний закон стеганографії</li>
+        <li>🎯 Вибір балансу залежить від конкретного застосування</li>
+        <li>📊 Кожен метод має свій профіль компромісів</li>
+        <li>🔄 Адаптивні методи дозволяють динамічно змінювати баланс</li>
+        </ul>
         </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px;">
+        <p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
+        <strong>Мистецтво стеганографії</strong> полягає не в подоланні фундаментальних компромісів,
+        а в їх оптимальному балансуванні для конкретної задачі. Розуміння цих обмежень -
+        ключ до створення ефективних стеганографічних систем.
+        </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+        <button class="scenario-tab active" onclick="window.location.href='index.html'" style="padding: 1rem 2rem; font-size: 1.1rem;">
+        🏠 Повернутися до головного меню
+        </button>
+    </div>
     </div>
 
 </div>
 
 <!-- Navigation -->
-<div class="slide-navigation">
-    <button id="prev-slide" class="slide-btn" onclick="previousSlide()">←</button>
-    <span id="slide-counter" class="slide-counter">1 / 11</span>
-    <button id="next-slide" class="slide-btn" onclick="nextSlide()">→</button>
-    <button id="home-btn" class="slide-btn" onclick="window.location.href='index.html'">🏠</button>
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
 </div>
 
-<!-- Progress Bar -->
-<div class="slide-progress">
-    <div class="slide-progress-bar" style="width: 9.09%;"></div>
-</div>
+<div class="slide-counter">1 / XX</div>
 
 <script>
     let currentSlide = 0;
@@ -924,10 +612,7 @@
 
         slides[currentSlide].classList.add('active');
 
-        document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-        const progress = ((currentSlide + 1) / totalSlides) * 100;
-        document.querySelector('.slide-progress-bar').style.width = `${progress}%`;
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
 
         document.getElementById('prev-slide').disabled = currentSlide === 0;
         document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
