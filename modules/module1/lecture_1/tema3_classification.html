@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Класифікація стеганографічних методів | Лекція 1.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>📋 Класифікація стеганографічних методів</h1>
+        <div class="subtitle">
+            Тема 3: Типи та категорії стеганографії
+        </div>
+    </div>
+
+    <!-- Слайд 2: Основні критерії класифікації -->
+    <div class="slide">
+        <h2>🗂️ Основні критерії класифікації</h2>
+
+        <div class="info-box">
+            <p style="font-size: 1.2rem; line-height: 1.8;">
+                Стеганографічні методи можна класифікувати за різними характеристиками та властивостями
+            </p>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <div style="background: linear-gradient(145deg, #f0f9ff, #e0f2fe); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                <h3 style="margin-top: 0;">1️⃣ За типом контейнера (носія)</h3>
+                <p>Який тип файлу використовується для приховування</p>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #ecfdf5, #d1fae5); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                <h3 style="margin-top: 0;">2️⃣ За доменом вбудовування</h3>
+                <p>В якому просторі відбувається модифікація даних</p>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #fef3c7, #fde68a); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                <h3 style="margin-top: 0;">3️⃣ За можливістю витягування</h3>
+                <p>Чи потрібен оригінальний контейнер для витягування</p>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #fef2f2, #fee2e2); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                <h3 style="margin-top: 0;">4️⃣ За адаптивністю</h3>
+                <p>Чи враховується складність контенту при вбудовуванні</p>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #fdf4ff, #fae8ff); padding: 1.5rem; border-radius: 10px;">
+                <h3 style="margin-top: 0;">5️⃣ За стійкістю до модифікацій</h3>
+                <p>Наскільки метод витримує зміни контейнера</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: За типом контейнера -->
+    <div class="slide">
+        <h2>🖼️ Класифікація за типом контейнера</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+
+            <div class="success-box">
+                <h3>📷 Зображення (Image)</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>BMP, PNG:</strong> без втрат</li>
+                    <li><strong>JPEG:</strong> зі стисненням</li>
+                    <li><strong>GIF:</strong> палітрові</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Переваги:</strong> велика ємність, візуальна непомітність</p>
+            </div>
+
+            <div class="info-box">
+                <h3>🎵 Аудіо (Audio)</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>WAV, FLAC:</strong> без втрат</li>
+                    <li><strong>MP3, AAC:</strong> зі стисненням</li>
+                    <li><strong>OGG:</strong> відкриті формати</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Переваги:</strong> стійкість до слухового аналізу</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>🎬 Відео (Video)</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>AVI, MP4:</strong> контейнери</li>
+                    <li><strong>H.264, HEVC:</strong> кодеки</li>
+                    <li><strong>Покадрове:</strong> кожен кадр окремо</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Переваги:</strong> максимальна ємність</p>
+            </div>
+
+            <div class="success-box">
+                <h3>📝 Текст (Text)</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Форматування:</strong> пробіли, відступи</li>
+                    <li><strong>Unicode:</strong> невидимі символи</li>
+                    <li><strong>Лінгвістичні:</strong> синоніми, структура</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Недоліки:</strong> мала ємність</p>
+            </div>
+
+        </div>
+
+        <div class="info-box" style="margin-top: 2rem;">
+            <h4>🌐 Інші носії:</h4>
+            <ul style="line-height: 1.8;">
+                <li><strong>Мережеві протоколи:</strong> TCP/IP headers, DNS, HTTP</li>
+                <li><strong>Файлова система:</strong> метадані, slack space</li>
+                <li><strong>Виконувані файли:</strong> EXE, DLL модифікації</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Слайд 4: За доменом вбудовування -->
+    <div class="slide">
+        <h2>🔬 Класифікація за доменом вбудовування</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>📊 Просторовий домен (Spatial)</h3>
+                <div class="success-box" style="margin-top: 1rem;">
+                    <h4>Характеристики:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Пряма модифікація пікселів/семплів</li>
+                        <li>Робота з сирими значеннями</li>
+                        <li>Проста реалізація</li>
+                        <li>Швидке вбудовування</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Методи:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>LSB:</strong> зміна найменших бітів</li>
+                        <li><strong>PVD:</strong> Pixel Value Differencing</li>
+                        <li><strong>EMD:</strong> Exploiting Modification Direction</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Приклад:</h4>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+Pixel RGB: (142, 87, 201)
+Binary: (10001110, 01010111, 11001001)
+
+Вбудовуємо біт "1" в LSB R:
+→ (10001111, 01010111, 11001001)
+→ (143, 87, 201)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3>📈 Частотний домен (Transform)</h3>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>Характеристики:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Модифікація коефіцієнтів перетворення</li>
+                        <li>Стійкість до стиснення</li>
+                        <li>Складніша реалізація</li>
+                        <li>Повільніше вбудовування</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Методи:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>DCT:</strong> Discrete Cosine Transform (JPEG)</li>
+                        <li><strong>DWT:</strong> Discrete Wavelet Transform</li>
+                        <li><strong>DFT:</strong> Discrete Fourier Transform</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Застосування:</h4>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+1. Перетворення: Image → DCT
+2. Модифікація середніх частот
+3. Зворотне: DCT → Stego Image
+
+Менші спотворення + стійкість
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>💡 Ключова відмінність:</strong> Частотні методи стійкіші до атак, але складніші в реалізації та мають меншу ємність
+        </div>
+    </div>
+
+    <!-- Слайд 5: За можливістю витягування -->
+    <div class="slide">
+        <h2>🔍 Класифікація за можливістю витягування</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>📄 З оригіналом (Non-blind)</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <h4>Характеристики:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Потрібен оригінальний контейнер</li>
+                        <li>Порівняння Original ↔ Stego</li>
+                        <li>Вища точність витягування</li>
+                        <li>Менше обмежень на методи</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Процес витягування:</h4>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+Message = Extract(Stego, Cover, Key)
+
+1. Порівняти Stego vs Cover
+2. Знайти різниці
+3. Декодувати різниці → Message
+                    </div>
+
+                    <h4 style="margin-top: 1.5rem;">Застосування:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Наукові експерименти</li>
+                        <li>Тестування алгоритмів</li>
+                        <li>Контрольовані середовища</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3>🔓 Без оригіналу (Blind)</h3>
+                <div class="success-box" style="margin-top: 1rem;">
+                    <h4>Характеристики:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Оригінал НЕ потрібен</li>
+                        <li>Тільки Stego + Key (опціонально)</li>
+                        <li>Більш практичний підхід</li>
+                        <li>Жорсткіші вимоги до алгоритму</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Процес витягування:</h4>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+Message = Extract(Stego, Key)
+
+1. Аналіз Stego контейнера
+2. Застосування алгоритму
+3. Декодування → Message
+                    </div>
+
+                    <h4 style="margin-top: 1.5rem;">Застосування:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>Більшість практичних систем</strong></li>
+                        <li>Реальна комунікація</li>
+                        <li>Водяні знаки (watermarks)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="warning-box" style="margin-top: 2rem;">
+            <strong>⚠️ Важливо:</strong> Blind методи - стандарт в реальних застосуваннях, оскільки передача оригінального контейнера окремо знижує безпеку
+        </div>
+    </div>
+
+    <!-- Слайд 6: За адаптивністю -->
+    <div class="slide">
+        <h2>🧠 Класифікація за адаптивністю</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>📌 Неадаптивні (Non-adaptive)</h3>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>Характеристики:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Фіксована стратегія вбудовування</li>
+                        <li>Не аналізують контент</li>
+                        <li>Однакове ставлення до всіх ділянок</li>
+                        <li>Проста реалізація</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Приклади:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>Простий LSB:</strong> послідовне вбудовування</li>
+                        <li><strong>Фіксовані позиції:</strong> кожен N-ий піксель</li>
+                        <li><strong>Рівномірний розподіл:</strong> по всьому контейнеру</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Проблема:</h4>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+Гладка ділянка неба (низька ентропія):
+  [100,100,100,100,101,100,100,...]
+
+Після LSB:
+  [101,101,100,101,100,101,100,...]
+
+→ Статистичні аномалії! ❌
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3>🎯 Адаптивні (Adaptive)</h3>
+                <div class="success-box" style="margin-top: 1rem;">
+                    <h4>Характеристики:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Аналіз складності контенту</li>
+                        <li>Вибіркове вбудовування</li>
+                        <li>Мінімізація спотворень</li>
+                        <li>Вища стійкість до стегоаналізу</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Приклади:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>HUGO:</strong> Highly Undetectable stGO</li>
+                        <li><strong>WOW:</strong> Wavelet Obtained Weights</li>
+                        <li><strong>S-UNIWARD:</strong> Spatial Universal Wavelet</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Принцип роботи:</h4>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+1. Аналіз контейнера:
+   - Текстуровані ділянки ✅
+   - Краї об'єктів ✅
+   - Гладкі поверхні ❌
+
+2. Вбудовування в складні ділянки
+3. Статистика залишається природною
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>📊 Статистика:</strong> Адаптивні методи на ~50-70% стійкіші до сучасних стегоаналізаторів порівняно з простим LSB
+        </div>
+    </div>
+
+    <!-- Слайд 7: За стійкістю -->
+    <div class="slide">
+        <h2>💪 Класифікація за стійкістю до модифікацій</h2>
+
+        <div style="margin-top: 2rem;">
+
+            <div class="warning-box" style="margin-bottom: 1.5rem;">
+                <h3>🥚 Fragile (Крихка)</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>Характеристики:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Руйнується при будь-якій зміні</li>
+                            <li>Навіть один біт → втрата даних</li>
+                            <li>Висока чутливість</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Застосування:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Виявлення підробок</li>
+                            <li>Контроль цілісності</li>
+                            <li>Аутентифікація</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="code-block" style="margin-top: 1rem;">
+<strong>Приклад:</strong> LSB в просторовому домені
+- JPEG стиснення → повна втрата даних
+- Зміна розміру → неможливо витягти
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-bottom: 1.5rem;">
+                <h3>⚖️ Semi-fragile (Напівкрихка)</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>Характеристики:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Витримує деякі операції</li>
+                            <li>Руйнується при інших</li>
+                            <li>Вибіркова стійкість</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Застосування:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Дозволена обробка</li>
+                            <li>Захист від фальсифікації</li>
+                            <li>Медичні зображення</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="code-block" style="margin-top: 1rem;">
+<strong>Приклад:</strong> DCT-based methods
+✅ Витримує: легке JPEG (Q>90)
+❌ Не витримує: сильне стиснення, обрізання
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>🛡️ Robust (Стійка)</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>Характеристики:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Витримує сильні модифікації</li>
+                            <li>Стійкість до атак</li>
+                            <li>Менша ємність</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Застосування:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Водяні знаки (watermarks)</li>
+                            <li>Захист авторських прав</li>
+                            <li>Broadcast monitoring</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="code-block" style="margin-top: 1rem;">
+<strong>Приклад:</strong> Spread Spectrum, DWT
+✅ Витримує: стиснення, resize, обрізання, шум, фільтри
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Слайд 8: Порівняльна таблиця -->
+    <div class="slide">
+        <h2>📊 Порівняльна таблиця класифікацій</h2>
+
+        <table style="margin-top: 2rem;">
+            <thead>
+                <tr>
+                    <th>Критерій</th>
+                    <th>Тип 1</th>
+                    <th>Тип 2</th>
+                    <th>Основна відмінність</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Контейнер</strong></td>
+                    <td>Image, Audio</td>
+                    <td>Video, Text</td>
+                    <td>Ємність vs Практичність</td>
+                </tr>
+                <tr>
+                    <td><strong>Домен</strong></td>
+                    <td>Spatial (швидко, просто)</td>
+                    <td>Transform (стійко, складно)</td>
+                    <td>Швидкість vs Стійкість</td>
+                </tr>
+                <tr>
+                    <td><strong>Витягування</strong></td>
+                    <td>Blind (практично)</td>
+                    <td>Non-blind (точно)</td>
+                    <td>Зручність vs Точність</td>
+                </tr>
+                <tr>
+                    <td><strong>Адаптивність</strong></td>
+                    <td>Non-adaptive (LSB)</td>
+                    <td>Adaptive (HUGO, WOW)</td>
+                    <td>Простота vs Безпека</td>
+                </tr>
+                <tr>
+                    <td><strong>Стійкість</strong></td>
+                    <td>Fragile (контроль)</td>
+                    <td>Robust (watermark)</td>
+                    <td>Ціль використання</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <h4>🎯 Вибір методу залежить від:</h4>
+            <div class="two-column" style="margin-top: 1rem;">
+                <div>
+                    <ul style="line-height: 1.8;">
+                        <li>Вимог до ємності</li>
+                        <li>Рівня безпеки</li>
+                        <li>Типу контейнера</li>
+                        <li>Обчислювальних ресурсів</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul style="line-height: 1.8;">
+                        <li>Можливих атак</li>
+                        <li>Швидкості роботи</li>
+                        <li>Вимог до непомітності</li>
+                        <li>Практичних обмежень</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Додаткові класифікації -->
+    <div class="slide">
+        <h2>🔍 Додаткові критерії класифікації</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+
+            <div class="info-box">
+                <h3>🔢 За кількістю бітів на елемент</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Low payload:</strong> < 0.5 bpp (безпечно)</li>
+                    <li><strong>Medium payload:</strong> 0.5-1 bpp</li>
+                    <li><strong>High payload:</strong> > 1 bpp (ризиковано)</li>
+                </ul>
+                <p style="margin-top: 1rem;">Чим менше, тим стійкіше до стегоаналізу</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>🔐 За використанням ключа</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Keyless:</strong> без ключа, менша безпека</li>
+                    <li><strong>Private key:</strong> симетричний ключ</li>
+                    <li><strong>Public key:</strong> асиметричне шифрування</li>
+                </ul>
+                <p style="margin-top: 1rem;">Ключ підвищує безпеку системи</p>
+            </div>
+
+            <div class="success-box">
+                <h3>📏 За типом модифікації</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Replacement:</strong> заміна значень (LSB)</li>
+                    <li><strong>Addition:</strong> додавання сигналу (SS)</li>
+                    <li><strong>Quantization:</strong> квантування коефіцієнтів</li>
+                </ul>
+                <p style="margin-top: 1rem;">Різні підходи до зміни даних</p>
+            </div>
+
+            <div class="info-box">
+                <h3>🎲 За використанням рандомізації</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Deterministic:</strong> фіксовані позиції</li>
+                    <li><strong>Random:</strong> PRNG для позицій</li>
+                    <li><strong>Pseudo-random:</strong> seed-based</li>
+                </ul>
+                <p style="margin-top: 1rem;">Рандомізація ускладнює виявлення</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>📊 За типом даних повідомлення</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Text:</strong> текстові повідомлення</li>
+                    <li><strong>Binary:</strong> файли, зображення</li>
+                    <li><strong>Encrypted:</strong> попередньо зашифровані</li>
+                </ul>
+                <p style="margin-top: 1rem;">Попередня обробка повідомлення</p>
+            </div>
+
+            <div class="success-box">
+                <h3>⚡ За швидкістю роботи</h3>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Real-time:</strong> миттєве вбудовування</li>
+                    <li><strong>Batch:</strong> пакетна обробка</li>
+                    <li><strong>Slow:</strong> складні обчислення (DWT, DFT)</li>
+                </ul>
+                <p style="margin-top: 1rem;">Баланс: швидкість vs якість</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Слайд 10: Практичні рекомендації -->
+    <div class="slide">
+        <h2>💡 Практичні рекомендації по вибору методу</h2>
+
+        <div style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-top: 2rem; margin-bottom: 2rem;">
+            <h3 style="color: white; text-align: center;">Дерево рішень</h3>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <div class="success-box" style="margin-bottom: 1.5rem;">
+                <h4>✅ Для прихованої комунікації (Steganography):</h4>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Носій:</strong> Зображення (PNG) або Аудіо (WAV)</li>
+                    <li><strong>Метод:</strong> Адаптивний (HUGO, WOW) з низьким payload (< 0.4 bpp)</li>
+                    <li><strong>Домен:</strong> Залежить від загроз (Spatial для швидкості, Transform для стійкості)</li>
+                    <li><strong>Витягування:</strong> Blind (без оригіналу)</li>
+                    <li><strong>Ключ:</strong> Обов'язково використовувати</li>
+                </ul>
+            </div>
+
+            <div class="warning-box" style="margin-bottom: 1.5rem;">
+                <h4>🔒 Для водяних знаків (Watermarking):</h4>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Носій:</strong> Будь-який медіа-файл</li>
+                    <li><strong>Метод:</strong> Robust (Spread Spectrum, DWT)</li>
+                    <li><strong>Домен:</strong> Transform domain (DCT, DWT)</li>
+                    <li><strong>Стійкість:</strong> Максимальна (витримувати атаки)</li>
+                    <li><strong>Ємність:</strong> Низька (достатньо ID або логотипу)</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>🛡️ Для контролю цілісності (Authentication):</h4>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li><strong>Носій:</strong> Зображення документів</li>
+                    <li><strong>Метод:</strong> Fragile або Semi-fragile</li>
+                    <li><strong>Домен:</strong> Spatial (для швидкого виявлення змін)</li>
+                    <li><strong>Дані:</strong> Hash оригіналу або контрольна сума</li>
+                    <li><strong>Детекція:</strong> Будь-яка модифікація → виявлення</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>

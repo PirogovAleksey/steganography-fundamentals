@@ -150,6 +150,28 @@ Each `tema{N}_*.html` presentation file must:
     });
 
     showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
 </script>
 
 </body>

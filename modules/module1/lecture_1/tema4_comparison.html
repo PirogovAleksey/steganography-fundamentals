@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стеганографія vs Криптографія | Лекція 1.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>🔐 Стеганографія vs Криптографія</h1>
+        <div class="subtitle">
+            Тема 4: Порівняння та поєднання підходів
+        </div>
+    </div>
+
+    <!-- Слайд 2: Основні відмінності -->
+    <div class="slide">
+        <h2>⚖️ Основні відмінності</h2>
+
+        <table style="margin-top: 2rem;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Критерій</th>
+                    <th style="width: 37.5%;">🔐 Криптографія</th>
+                    <th style="width: 37.5%;">🎭 Стеганографія</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Мета</strong></td>
+                    <td>Приховати <strong>зміст</strong> повідомлення</td>
+                    <td>Приховати <strong>існування</strong> повідомлення</td>
+                </tr>
+                <tr>
+                    <td><strong>Видимість</strong></td>
+                    <td>Всі бачать зашифроване повідомлення</td>
+                    <td>Ніхто не здогадується про повідомлення</td>
+                </tr>
+                <tr>
+                    <td><strong>Підозра</strong></td>
+                    <td>Привертає увагу (шифротекст очевидний)</td>
+                    <td>Не викликає підозр (виглядає звичайно)</td>
+                </tr>
+                <tr>
+                    <td><strong>Атака</strong></td>
+                    <td>Криптоаналіз (підбір ключа, зламування)</td>
+                    <td>Стегоаналіз (виявлення наявності даних)</td>
+                </tr>
+                <tr>
+                    <td><strong>Основа безпеки</strong></td>
+                    <td>Математична складність (RSA, AES)</td>
+                    <td>Непомітність, статистична схожість</td>
+                </tr>
+                <tr>
+                    <td><strong>Ємність</strong></td>
+                    <td>Необмежена (будь-який розмір)</td>
+                    <td>Обмежена розміром контейнера</td>
+                </tr>
+                <tr>
+                    <td><strong>Швидкість</strong></td>
+                    <td>Зазвичай швидко (апаратна підтримка)</td>
+                    <td>Залежить від методу та контейнера</td>
+                </tr>
+                <tr>
+                    <td><strong>Стандартизація</strong></td>
+                    <td>Широко стандартизована (AES, RSA)</td>
+                    <td>Менше стандартів, більше досліджень</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>💡 Ключова відмінність:</strong> Криптографія захищає від <em>прочитання</em>, стеганографія - від <em>виявлення</em>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Візуальне порівняння -->
+    <div class="slide">
+        <h2>👁️ Візуальне порівняння</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>🔐 Криптографія</h3>
+                <div style="background: linear-gradient(145deg, #fef2f2, #fee2e2); padding: 2rem; border-radius: 15px; margin-top: 1rem;">
+                    <h4 style="text-align: center; margin-bottom: 1.5rem;">Шифрування</h4>
+
+                    <div class="info-box">
+                        <h4>Оригінальне повідомлення:</h4>
+                        <p style="font-size: 1.1rem; margin-top: 0.5rem;">
+                            "Зустрічаємось завтра о 10:00"
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; font-size: 2rem; margin: 1rem 0;">
+                        ↓ AES шифрування ↓
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Зашифроване повідомлення:</h4>
+                        <div class="code-block" style="margin-top: 0.5rem;">
+7k8mQ2x9pL4vN6hR
+3fY8dW1bC5aZ7gT
+9sE2nM0pK4jH6uI
+                        </div>
+                    </div>
+
+                    <div class="warning-box" style="margin-top: 1.5rem; background: #fee2e2;">
+                        <strong>⚠️ Проблема:</strong>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li>Всі бачать незрозумілий текст</li>
+                            <li>Очевидно, що це шифрування</li>
+                            <li>Привертає увагу противника</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3>🎭 Стеганографія</h3>
+                <div style="background: linear-gradient(145deg, #ecfdf5, #d1fae5); padding: 2rem; border-radius: 15px; margin-top: 1rem;">
+                    <h4 style="text-align: center; margin-bottom: 1.5rem;">Приховування</h4>
+
+                    <div class="info-box">
+                        <h4>Оригінальне повідомлення:</h4>
+                        <p style="font-size: 1.1rem; margin-top: 0.5rem;">
+                            "Зустрічаємось завтра о 10:00"
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; font-size: 2rem; margin: 1rem 0;">
+                        ↓ Вбудовування в зображення ↓
+                    </div>
+
+                    <div class="success-box">
+                        <h4>Стегоконтейнер:</h4>
+                        <p style="margin-top: 0.5rem; font-size: 1.1rem;">
+                            🖼️ Фото котика (виглядає звичайно)
+                        </p>
+                        <p style="margin-top: 0.5rem; font-style: italic; color: #666;">
+                            Повідомлення приховане в LSB пікселів
+                        </p>
+                    </div>
+
+                    <div class="success-box" style="margin-top: 1.5rem; background: #d1fae5;">
+                        <strong>✅ Перевага:</strong>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li>Виглядає як звичайне фото</li>
+                            <li>Не викликає підозр</li>
+                            <li>Противник навіть не шукає</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Слайд 4: Коли використовувати -->
+    <div class="slide">
+        <h2>🎯 Коли використовувати кожен метод?</h2>
+
+        <div style="margin-top: 2rem;">
+
+            <div class="success-box" style="margin-bottom: 2rem;">
+                <h3>✅ Використовуйте КРИПТОГРАФІЮ, коли:</h3>
+                <ul style="line-height: 2; font-size: 1.1rem; margin-top: 1rem;">
+                    <li>📧 <strong>Email, месенджери:</strong> факт спілкування не є секретом</li>
+                    <li>🏦 <strong>Банківські операції:</strong> потрібен високий рівень математичної гарантії</li>
+                    <li>💾 <strong>Шифрування диска:</strong> всі знають, що дані зашифровані</li>
+                    <li>🌐 <strong>HTTPS:</strong> трафік має бути захищений, але це очевидно</li>
+                    <li>⚡ <strong>Швидкість критична:</strong> апаратне прискорення AES</li>
+                    <li>📜 <strong>Стандарти та сертифікація:</strong> потрібні перевірені алгоритми</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>🎭 Використовуйте СТЕГАНОГРАФІЮ, коли:</h3>
+                <ul style="line-height: 2; font-size: 1.1rem; margin-top: 1rem;">
+                    <li>🕵️ <strong>Цензура/спостереження:</strong> сам факт комунікації небезпечний</li>
+                    <li>🌍 <strong>Авторитарні режими:</strong> шифрування заборонене або підозріле</li>
+                    <li>🎯 <strong>Уникнення DPI:</strong> Deep Packet Inspection шукає зашифровані дані</li>
+                    <li>💼 <strong>Конфіденційність бізнесу:</strong> партнери не повинні знати про спілкування</li>
+                    <li>🎨 <strong>Водяні знаки:</strong> захист авторських прав на медіа</li>
+                    <li>🔒 <strong>Додатковий шар безпеки:</strong> encrypt + hide = подвійний захист</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Слайд 5: Моделі безпеки -->
+    <div class="slide">
+        <h2>🛡️ Моделі безпеки</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>🔐 Криптографія: Модель атакуючого</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <h4>Припущення:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Атакуючий <strong>бачить</strong> шифротекст</li>
+                        <li>Знає алгоритм шифрування</li>
+                        <li>Може мати пари відкритий/шифротекст</li>
+                        <li>НЕ знає ключ</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Мета атакуючого:</h4>
+                    <p style="line-height: 1.8; margin-top: 0.5rem;">
+                        Розшифрувати повідомлення або знайти ключ
+                    </p>
+
+                    <h4 style="margin-top: 1.5rem;">Захист:</h4>
+                    <p style="line-height: 1.8; margin-top: 0.5rem;">
+                        Математична складність зламування (наприклад, факторизація великих чисел для RSA)
+                    </p>
+                </div>
+
+                <div class="code-block" style="margin-top: 1rem;">
+<strong>Приклад атаки:</strong>
+Brute-force AES-256:
+2^256 можливих ключів
+≈ 10^77 комбінацій
+
+При 1 млрд ключів/сек:
+≈ 10^60 років 🤯
+                </div>
+            </div>
+
+            <div>
+                <h3>🎭 Стеганографія: Модель наглядача</h3>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>Припущення:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Наглядач бачить <strong>всі</strong> передані файли</li>
+                        <li>Знає можливі стего-методи</li>
+                        <li>Може мати чисті контейнери для порівняння</li>
+                        <li>НЕ знає стего-ключ (якщо є)</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Мета наглядача:</h4>
+                    <p style="line-height: 1.8; margin-top: 0.5rem;">
+                        <strong>Виявити</strong> наявність прихованих даних (не обов'язково прочитати)
+                    </p>
+
+                    <h4 style="margin-top: 1.5rem;">Захист:</h4>
+                    <p style="line-height: 1.8; margin-top: 0.5rem;">
+                        Статистична неможливість відрізнити stego від cover
+                    </p>
+                </div>
+
+                <div class="code-block" style="margin-top: 1rem;">
+<strong>Приклад виявлення:</strong>
+Chi-square тест для LSB:
+- Cover: random LSB розподіл
+- Stego: аномалії в LSB
+
+P-value < 0.05 → Підозра! 🚨
+                </div>
+            </div>
+
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>🔑 Ключова різниця:</strong> Криптографія - "не можуть прочитати", Стеганографія - "не знають про існування"
+        </div>
+    </div>
+
+    <!-- Слайд 6: Поєднання обох підходів -->
+    <div class="slide">
+        <h2>🤝 Поєднання криптографії та стеганографії</h2>
+
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 15px; margin-top: 2rem; margin-bottom: 2rem;">
+            <h3 style="color: white; text-align: center; margin-bottom: 1rem;">Defense in Depth (Захист в глибину)</h3>
+            <p style="text-align: center; font-size: 1.2rem; line-height: 1.8;">
+                Комбінація обох технологій створює <strong>подвійний захист</strong>: <br>
+                навіть якщо виявлено приховані дані, їх неможливо прочитати
+            </p>
+        </div>
+
+        <div style="background: white; border: 3px solid #667eea; border-radius: 15px; padding: 2rem; margin-top: 2rem;">
+            <h3 style="text-align: center; color: #667eea;">Схема: Encrypt-then-Embed</h3>
+
+            <div style="margin-top: 2rem; font-size: 1.1rem; line-height: 3; text-align: center;">
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                    📄 <strong>Plaintext</strong> (відкрите повідомлення)
+                </div>
+                <div style="font-size: 1.5rem; color: #667eea;">↓</div>
+                <div style="background: #fef3c7; padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                    🔐 <strong>Encryption (AES-256)</strong>
+                </div>
+                <div style="font-size: 1.5rem; color: #667eea;">↓</div>
+                <div style="background: #fee2e2; padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                    📜 <strong>Ciphertext</strong> (зашифрований текст)
+                </div>
+                <div style="font-size: 1.5rem; color: #667eea;">↓</div>
+                <div style="background: #ecfdf5; padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                    🎭 <strong>Steganography (LSB/HUGO/WOW)</strong>
+                </div>
+                <div style="font-size: 1.5rem; color: #667eea;">↓</div>
+                <div style="background: #d1fae5; padding: 1rem; border-radius: 10px; font-weight: bold;">
+                    🖼️ <strong>Stego-image</strong> (виглядає звичайно)
+                </div>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <h4>✅ Переваги комбінації:</h4>
+            <ul style="line-height: 1.8; font-size: 1.1rem; margin-top: 0.5rem;">
+                <li>Навіть якщо стеганографію виявлено → дані все одно зашифровані</li>
+                <li>Навіть якщо знають про шифрування → не знають де саме дані</li>
+                <li>Подвійний бар'єр для противника</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Історичний контекст -->
+    <div class="slide">
+        <h2>📜 Історичний контекст</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>🔐 Криптографія в історії</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <h4>Давні часи:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>Цезар (50 до н.е.):</strong> Зсув алфавіту</li>
+                        <li><strong>Середньовіччя:</strong> Моноалфавітні шифри</li>
+                        <li><strong>Vigenère (1553):</strong> Поліалфавітний шифр</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Сучасність:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>1977 RSA:</strong> Перший практичний асиметричний алгоритм</li>
+                        <li><strong>2000 AES:</strong> Новий стандарт шифрування</li>
+                        <li><strong>Квантова криптографія:</strong> Майбутнє</li>
+                    </ul>
+                </div>
+
+                <div class="success-box" style="margin-top: 1rem;">
+                    <strong>Загальне використання:</strong> Військові, дипломатія, комерція завжди використовували шифрування
+                </div>
+            </div>
+
+            <div>
+                <h3>🎭 Стеганографія в історії</h3>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>Давні часи:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>Греція (500 до н.е.):</strong> Восковані дощечки, татуювання</li>
+                        <li><strong>Рим (77 н.е.):</strong> Невидиме чорнило</li>
+                        <li><strong>1499:</strong> "Steganographia" Тритеміуса</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem;">Сучасність:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li><strong>1985+:</strong> Цифрова стеганографія (LSB)</li>
+                        <li><strong>2010+:</strong> Адаптивні методи (HUGO, WOW)</li>
+                        <li><strong>2020+:</strong> AI-based стеганографія (GANs)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box" style="margin-top: 1rem;">
+                    <strong>Нішове використання:</strong> Спецслужби, дисиденти, журналісти в умовах цензури
+                </div>
+            </div>
+
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>🕰️ Історична тенденція:</strong> Криптографія - mainstream технологія (SSL, VPN), Стеганографія - спеціалізований інструмент для особливих випадків
+        </div>
+    </div>
+
+    <!-- Слайд 8: Переваги та недоліки -->
+    <div class="slide">
+        <h2>⚖️ Переваги та недоліки</h2>
+
+        <div class="two-column" style="margin-top: 2rem;">
+
+            <div>
+                <h3>🔐 Криптографія</h3>
+
+                <div class="success-box" style="margin-top: 1rem;">
+                    <h4>✅ Переваги:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Математично доведена безпека</li>
+                        <li>Стандартизовані алгоритми (AES, RSA)</li>
+                        <li>Швидка робота (апаратна підтримка)</li>
+                        <li>Необмежена ємність</li>
+                        <li>Широке впровадження (HTTPS, VPN)</li>
+                        <li>Легка інтеграція в системи</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>❌ Недоліки:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Привертає увагу (очевидно зашифровано)</li>
+                        <li>Може бути заборонена законом</li>
+                        <li>DPI може блокувати зашифрований трафік</li>
+                        <li>Метадані залишаються видимими</li>
+                        <li>Факт комунікації не прихований</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3>🎭 Стеганографія</h3>
+
+                <div class="success-box" style="margin-top: 1rem;">
+                    <h4>✅ Переваги:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Повна непомітність комунікації</li>
+                        <li>Обходить цензуру</li>
+                        <li>Не привертає увагу противника</li>
+                        <li>Може поєднуватись з шифруванням</li>
+                        <li>Не потребує складної інфраструктури</li>
+                        <li>Важко законодавчо заборонити</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>❌ Недоліки:</h4>
+                    <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                        <li>Обмежена ємність контейнера</li>
+                        <li>Складність реалізації</li>
+                        <li>Вразливість до стегоаналізу</li>
+                        <li>Немає математичних гарантій</li>
+                        <li>Повільніше за криптографію</li>
+                        <li>Менше стандартизації</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Слайд 9: Практичні сценарії -->
+    <div class="slide">
+        <h2>🎯 Практичні сценарії використання</h2>
+
+        <div style="margin-top: 2rem;">
+
+            <div style="background: linear-gradient(145deg, #f0f9ff, #e0f2fe); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
+                <h3>📧 Сценарій 1: Email листування</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>🔐 Рішення: Криптографія (PGP/GPG)</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li><strong>Причина:</strong> Email вже привертає увагу</li>
+                            <li>Метадані (від/кому) все одно видимі</li>
+                            <li>Стандартні інструменти існують</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>❌ Чому НЕ стеганографія:</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li>Складно впроваджувати в текст</li>
+                            <li>Email формат обмежує контейнери</li>
+                            <li>Низька ємність</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #ecfdf5, #d1fae5); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
+                <h3>📸 Сценарій 2: Передача через соцмережі</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>🎭 Рішення: Стеганографія (в зображеннях)</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li><strong>Причина:</strong> Публічний канал</li>
+                            <li>Фото - звичайний контент</li>
+                            <li>Не викликає підозр</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>⚠️ Обмеження:</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li>Соцмережі стискають зображення</li>
+                            <li>Потрібні robust методи</li>
+                            <li>Мала ємність після стиснення</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #fef3c7, #fde68a); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
+                <h3>🌍 Сценарій 3: Цензурний режим</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>🤝 Рішення: Криптографія + Стеганографія</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li><strong>Причина:</strong> Максимальна безпека</li>
+                            <li>Спочатку шифруємо (AES)</li>
+                            <li>Потім ховаємо в аудіо/відео</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>✅ Результат:</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li>Навіть якщо виявлено → зашифровано</li>
+                            <li>Обхід DPI систем</li>
+                            <li>Подвійний захист</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #fef2f2, #fee2e2); padding: 1.5rem; border-radius: 15px;">
+                <h3>🎨 Сценарій 4: Захист авторських прав</h3>
+                <div class="two-column" style="margin-top: 1rem;">
+                    <div>
+                        <h4>🎭 Рішення: Robust стеганографія (watermark)</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li><strong>Причина:</strong> Потрібна стійкість</li>
+                            <li>Зображення будуть модифіковані</li>
+                            <li>ID автора має залишатись</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>❌ Чому НЕ криптографія:</h4>
+                        <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                            <li>Зображення має бути видимим</li>
+                            <li>Шифрування робить його непридатним</li>
+                            <li>Watermark - невидимий маркер</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 9</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>

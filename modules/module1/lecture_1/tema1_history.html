@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Історія стеганографії | Лекція 1.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>📜 Історія стеганографії</h1>
+        <div class="subtitle">
+            Тема 1: Від давніх часів до сучасності
+        </div>
+    </div>
+
+    <!-- Слайд 2: Що таке стеганографія? -->
+    <div class="slide">
+        <h2>🤔 Що таке стеганографія?</h2>
+
+        <div class="info-box">
+            <h3>Визначення</h3>
+            <p style="font-size: 1.2rem; line-height: 1.8;">
+                <strong>Стеганографія</strong> (від грец. στεγανός — "прихований" + γράφω — "пишу") —
+                це мистецтво та наука приховування самого факту існування повідомлення.
+            </p>
+        </div>
+
+        <div class="two-column" style="margin-top: 2rem;">
+            <div>
+                <h3>🔐 Криптографія</h3>
+                <ul style="line-height: 2;">
+                    <li>Приховує <strong>зміст</strong> повідомлення</li>
+                    <li>Факт передачі <strong>видимий</strong></li>
+                    <li>Повідомлення <strong>шифрується</strong></li>
+                    <li>Можна побачити, але не прочитати</li>
+                </ul>
+            </div>
+            <div>
+                <h3>🎭 Стеганографія</h3>
+                <ul style="line-height: 2;">
+                    <li>Приховує <strong>існування</strong> повідомлення</li>
+                    <li>Факт передачі <strong>непомітний</strong></li>
+                    <li>Повідомлення <strong>ховається</strong></li>
+                    <li>Не можна помітити наявність секрету</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Давня Греція -->
+    <div class="slide">
+        <h2>🏛️ Давня Греція (~500 до н.е.)</h2>
+
+        <div class="two-column">
+            <div>
+                <h3>📖 Геродот: Восковані дощечки</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <p style="line-height: 1.8;">
+                        <strong>Демарат</strong> попередив Спарту про вторгнення персів:
+                    </p>
+                    <ul style="margin-top: 1rem; font-size: 1.1rem;">
+                        <li>Зішкріб віск з двох дощечок</li>
+                        <li>Написав повідомлення на дереві</li>
+                        <li>Покрив воском знову</li>
+                        <li>Дощечки виглядали чистими</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h3>💈 Геродот: Татуювання</h3>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <p style="line-height: 1.8;">
+                        <strong>Гістіей</strong> відправив повідомлення рабу:
+                    </p>
+                    <ul style="margin-top: 1rem; font-size: 1.1rem;">
+                        <li>Поголив голову раба</li>
+                        <li>Витатуював повідомлення</li>
+                        <li>Чекав, поки волосся відросте</li>
+                        <li>Відправив раба як "посланця"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>✅ Принцип:</strong> Секретне повідомлення приховане в звичайному об'єкті
+        </div>
+    </div>
+
+    <!-- Слайд 4: Давній Рим -->
+    <div class="slide">
+        <h2>🏺 Давній Рим: Невидиме чорнило</h2>
+
+        <div class="info-box">
+            <h3>Pліній Старший (~77 н.е.)</h3>
+            <p style="font-size: 1.2rem; line-height: 1.8;">
+                Описав використання <strong>соку молочаю</strong> як невидимого чорнила:
+            </p>
+        </div>
+
+        <div style="background: linear-gradient(145deg, #f0f9ff, #e0f2fe); padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+            <h3 style="text-align: center; margin-bottom: 1.5rem;">🧪 Методи невидимого чорнила</h3>
+
+            <div class="two-column">
+                <div>
+                    <h4>📝 Органічні речовини:</h4>
+                    <ul style="line-height: 2; font-size: 1.1rem;">
+                        <li>🍋 Лимонний сік</li>
+                        <li>🥛 Молоко</li>
+                        <li>🍯 Мед розведений водою</li>
+                        <li>🧅 Цибулевий сік</li>
+                        <li>🍷 Вино (білі сорти)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>🔥 Проявлення:</h4>
+                    <ul style="line-height: 2; font-size: 1.1rem;">
+                        <li><strong>Нагрівання:</strong> Органіка темніє</li>
+                        <li><strong>Хімреакція:</strong> Змінюється колір</li>
+                        <li><strong>УФ-світло:</strong> Флуоресценція</li>
+                        <li><strong>Йод:</strong> Виявляє крохмаль</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>💡 Цікавий факт:</strong> Невидиме чорнило використовувалось аж до XX століття у військових операціях!
+        </div>
+    </div>
+
+    <!-- Слайд 5: Середньовіччя -->
+    <div class="slide">
+        <h2>🏰 Середньовіччя (V-XV ст.)</h2>
+
+        <div class="two-column">
+            <div>
+                <h3>📖 Йоганн Тритеміус (1462-1516)</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <p><strong>"Steganographia"</strong> (1499, опубл. 1606)</p>
+                    <ul style="margin-top: 1rem; line-height: 1.8;">
+                        <li>Перша книга про стеганографію</li>
+                        <li>3 томи, спочатку вважалась магічною</li>
+                        <li>Описувала методи приховування повідомлень</li>
+                        <li>Методи акростиха та нульового шифру</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h3>✍️ Методи середньовіччя</h3>
+                <div class="success-box" style="margin-top: 1rem;">
+                    <h4>Акростих:</h4>
+                    <p style="margin-top: 0.5rem;">Секрет у перших літерах рядків вірша</p>
+                    <div class="code-block" style="margin-top: 1rem;">
+<strong>С</strong>ьогодні сонце світить<br>
+<strong>Е</strong>нергія б'є через край<br>
+<strong>К</strong>ожен день приносить диво<br>
+<strong>Р</strong>адість наповнює нас<br>
+<strong>Е</strong>вропа далека, а ми тут<br>
+<strong>Т</strong>ихо йдемо вперед
+                    </div>
+                    <p style="margin-top: 1rem;">→ Приховане слово: <span class="highlight">СЕКРЕТ</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 2rem;">
+            <strong>⚠️ Заборона:</strong> Книга Тритеміуса була в індексі заборонених книг Католицької церкви через підозри в чорній магії!
+        </div>
+    </div>
+
+    <!-- Слайд 6: Ренесанс -->
+    <div class="slide">
+        <h2>🎨 Епоха Відродження (XV-XVII ст.)</h2>
+
+        <div class="info-box">
+            <h3>🔬 Джованні Порта (1535-1615)</h3>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                <strong>"De Furtivis Literarum Notis"</strong> (1563) - книга про таємне листування
+            </p>
+        </div>
+
+        <div style="background: linear-gradient(145deg, #fef3c7, #fde68a); padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+            <h3>🥚 Метод з вареним яйцем</h3>
+            <div class="two-column" style="margin-top: 1rem;">
+                <div>
+                    <h4>Приготування:</h4>
+                    <ol style="line-height: 2; font-size: 1.1rem;">
+                        <li>Зварити яйце</li>
+                        <li>Написати на шкаралупі чорнилом (суміш галуну і оцту)</li>
+                        <li>Чорнило просочується через пори</li>
+                        <li>Змити чорнило з шкаралупи</li>
+                    </ol>
+                </div>
+                <div>
+                    <h4>Читання:</h4>
+                    <ol style="line-height: 2; font-size: 1.1rem;">
+                        <li>Отримати "звичайне" яйце</li>
+                        <li>Почистити шкаралупу</li>
+                        <li>Побачити повідомлення на білку!</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>💡 Інновація:</strong> Це один з перших прикладів використання фізичних властивостей матеріалів для стеганографії!
+        </div>
+    </div>
+
+    <!-- Слайд 7: Війни XVIII-XIX століття -->
+    <div class="slide">
+        <h2>⚔️ Наполеонівські війни та Громадянська війна США</h2>
+
+        <div class="two-column">
+            <div>
+                <h3>🇫🇷 Наполеон Бонапарт</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <p><strong>Методи французького шпигунства:</strong></p>
+                    <ul style="line-height: 1.8; margin-top: 1rem;">
+                        <li>Невидиме чорнило в листах</li>
+                        <li>Мікроточки на кнопках одягу</li>
+                        <li>Повідомлення в підошвах взуття</li>
+                        <li>Секрети в книжкових палітурках</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h3>🇺🇸 Громадянська війна (1861-1865)</h3>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <p><strong>Конфедерати використовували:</strong></p>
+                    <ul style="line-height: 1.8; margin-top: 1rem;">
+                        <li>"Null cipher" - нульовий шифр</li>
+                        <li>Секрет у певних літерах тексту</li>
+                        <li>Повідомлення в газетних оголошеннях</li>
+                        <li>Коди в листах "про погоду"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block" style="margin-top: 2rem;">
+            <h4>Приклад нульового шифру:</h4>
+            <p style="margin-top: 1rem; line-height: 2;">
+                "<strong>F</strong>ishing <strong>r</strong>esh<strong>i</strong>ps here. Sen<strong>d</strong> me<strong>a</strong>ls toda<strong>y</strong>."<br>
+                → Читаємо кожну 1-шу літеру: <span class="highlight">FRIDAY</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Світові війни XX століття -->
+    <div class="slide">
+        <h2>💣 Світові війни (1914-1945)</h2>
+
+        <div style="background: linear-gradient(145deg, #fef2f2, #fee2e2); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+            <h3>🌍 Перша світова війна (1914-1918)</h3>
+            <div class="two-column" style="margin-top: 1rem;">
+                <div>
+                    <h4>🔬 Мікроточки:</h4>
+                    <p style="line-height: 1.8;">Німці розробили технологію фотографування документів до розміру <strong>крапки (1мм)</strong></p>
+                </div>
+                <div>
+                    <h4>🎵 Коди Морзе:</h4>
+                    <p style="line-height: 1.8;">Приховування в музичних нотах, ритмах радіопередач</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(145deg, #ecfdf5, #d1fae5); padding: 2rem; border-radius: 15px;">
+            <h3>🌍 Друга світова війна (1939-1945)</h3>
+
+            <div class="success-box" style="margin-top: 1rem;">
+                <h4>🇩🇪 Мікраточка Циммермана:</h4>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li>Цілі сторінки тексту → крапка розміром 0.3мм</li>
+                    <li>Ховалась в розділових знаках листів</li>
+                    <li>Потрібен мікроскоп для читання</li>
+                    <li>Використовувалась шпигунами Абверу</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="margin-top: 1.5rem;">
+                <h4>🇬🇧 Британський M16:</h4>
+                <ul style="line-height: 1.8; margin-top: 0.5rem;">
+                    <li>Невидиме чорнило з пірамідону (ліки від головного болю)</li>
+                    <li>Стеганографія в діловій кореспонденції</li>
+                    <li>Повідомлення в в'язаних візерунках светрів</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Цифрова ера (1980-2000) -->
+    <div class="slide">
+        <h2>💻 Цифрова революція (1980-2000)</h2>
+
+        <div class="info-box">
+            <h3>🖼️ Початок цифрової стеганографії</h3>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                З появою персональних комп'ютерів та цифрових зображень стеганографія перейшла в нову епоху
+            </p>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <div class="two-column">
+                <div>
+                    <h3>📅 1985-1990</h3>
+                    <div class="success-box" style="margin-top: 1rem;">
+                        <ul style="line-height: 1.8;">
+                            <li><strong>1985:</strong> Перші роботи про LSB</li>
+                            <li><strong>1987:</strong> Simmons - "Проблема ув'язнених"</li>
+                            <li><strong>1990:</strong> Термін "стеганографія" стає популярним</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>📅 1996-2000</h3>
+                    <div class="warning-box" style="margin-top: 1rem;">
+                        <ul style="line-height: 1.8;">
+                            <li><strong>1996:</strong> Перші стегодетектори (Chi-square)</li>
+                            <li><strong>1998:</strong> Провensen - теорія інформації</li>
+                            <li><strong>2000:</strong> Перші комерційні програми</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <h4>🎯 Ключові досягнення:</h4>
+            <ul style="line-height: 1.8; font-size: 1.1rem;">
+                <li>LSB (Least Significant Bit) - найпростіший метод</li>
+                <li>Стеганографія в аудіо (WAV, MP3)</li>
+                <li>Приховування в відео форматах</li>
+                <li>Перші наукові конференції (IH Workshop 1996)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Сучасність (2000-2024) -->
+    <div class="slide">
+        <h2>🚀 Сучасна стеганографія (2000-2024)</h2>
+
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+            <h3 style="color: white;">⚡ Революційні зміни</h3>
+            <p style="font-size: 1.2rem; line-height: 1.8; margin-top: 1rem;">
+                Машинне навчання, нейронні мережі та квантові технології змінили стеганографію назавжди
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h3>🧠 2010-2015: ML та AI</h3>
+                <div class="info-box" style="margin-top: 1rem;">
+                    <ul style="line-height: 1.8;">
+                        <li>Адаптивні методи (HUGO, WOW, S-UNIWARD)</li>
+                        <li>Машинне навчання для стегоаналізу</li>
+                        <li>Автоматична оптимізація вбудовування</li>
+                        <li>SRM (Spatial Rich Models) детектори</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h3>🤖 2016-2024: Deep Learning</h3>
+                <div class="success-box" style="margin-top: 1rem;">
+                    <ul style="line-height: 1.8;">
+                        <li><strong>GAN</strong> для генерації стего</li>
+                        <li><strong>CNN</strong> для детекції</li>
+                        <li><strong>Blockchain</strong> стеганографія</li>
+                        <li><strong>DeepFake</strong> стеганографія</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 2rem;">
+            <h4>⚠️ Сучасні виклики:</h4>
+            <p style="line-height: 1.8; margin-top: 0.5rem;">
+                Соціальні мережі змінюють/стискають зображення → руйнування стего-даних<br>
+                AI детектори стають дуже точними → потрібні нові методи<br>
+                Квантові комп'ютери → загроза всім існуючим методам
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Хронологія -->
+    <div class="slide">
+        <h2>📊 Хронологічна лінія розвитку</h2>
+
+        <div style="position: relative; padding: 2rem 0;">
+            <!-- Timeline -->
+            <div style="border-left: 4px solid #667eea; padding-left: 2rem; margin-left: 1rem;">
+
+                <div style="margin-bottom: 2rem; position: relative;">
+                    <div style="position: absolute; left: -2.5rem; width: 1.5rem; height: 1.5rem; background: #667eea; border-radius: 50%;"></div>
+                    <h4 style="color: #667eea;">~500 до н.е. - Давня Греція</h4>
+                    <p>Перші задокументовані методи (восковані дощечки, татуювання)</p>
+                </div>
+
+                <div style="margin-bottom: 2rem; position: relative;">
+                    <div style="position: absolute; left: -2.5rem; width: 1.5rem; height: 1.5rem; background: #764ba2; border-radius: 50%;"></div>
+                    <h4 style="color: #764ba2;">~77 н.е. - Давній Рим</h4>
+                    <p>Невидиме чорнило, складніші методи</p>
+                </div>
+
+                <div style="margin-bottom: 2rem; position: relative;">
+                    <div style="position: absolute; left: -2.5rem; width: 1.5rem; height: 1.5rem; background: #667eea; border-radius: 50%;"></div>
+                    <h4 style="color: #667eea;">1499 - Середньовіччя</h4>
+                    <p>Книга "Steganographia" Тритеміуса</p>
+                </div>
+
+                <div style="margin-bottom: 2rem; position: relative;">
+                    <div style="position: absolute; left: -2.5rem; width: 1.5rem; height: 1.5rem; background: #764ba2; border-radius: 50%;"></div>
+                    <h4 style="color: #764ba2;">1914-1945 - Світові війни</h4>
+                    <p>Мікроточки, військова стеганографія</p>
+                </div>
+
+                <div style="margin-bottom: 2rem; position: relative;">
+                    <div style="position: absolute; left: -2.5rem; width: 1.5rem; height: 1.5rem; background: #10b981; border-radius: 50%;"></div>
+                    <h4 style="color: #10b981;">1985-2000 - Цифрова ера</h4>
+                    <p>Перехід до цифрових носіїв, LSB методи</p>
+                </div>
+
+                <div style="margin-bottom: 0; position: relative;">
+                    <div style="position: absolute; left: -2.5rem; width: 1.5rem; height: 1.5rem; background: #f59e0b; border-radius: 50%;"></div>
+                    <h4 style="color: #f59e0b;">2000-2024 - AI/ML епоха</h4>
+                    <p>Нейронні мережі, адаптивні методи, GAN</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <strong>📈 Еволюція:</strong> Від фізичних методів → хімічних → цифрових → AI-керованих
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 11</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>
