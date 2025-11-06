@@ -832,13 +832,24 @@ def audio_lsb_decode(stego_file, num_lsb=1):
 print("Audio LSB функції готові!")
 </code></pre>
 
+            <div class="alert alert-info">
+                <h4>⚠️ Важливо: Робота з кириличним текстом</h4>
+                <p>Для коректної роботи з українським текстом використовуйте <code>.encode('utf-8')</code>:</p>
+                <pre class="python"><code># ✅ Правильно:
+message = "Секретне повідомлення".encode('utf-8')
+
+# ❌ Неправильно:
+message = b"Секретне повідомлення"  # SyntaxError!</code></pre>
+                <p>При витягуванні декодуйте назад: <code>text = extracted.decode('utf-8')</code></p>
+            </div>
+
             <h4>Тестування та демонстрація:</h4>
             <pre class="python"><code># Приклад 1: Базове вбудовування тексту
 print("="*60)
 print("ТЕСТ 1: Базове вбудовування")
 print("="*60)
 
-message = b"Секретне повідомлення в аудіо!"
+message = "Секретне повідомлення в аудіо!".encode('utf-8')
 print(f"Оригінальне повідомлення: {message.decode('utf-8')}")
 
 # Припускаємо, що у вас є файл 'test_audio.wav'
@@ -1087,7 +1098,7 @@ print("="*60)
 
 # Тестовий файл
 test_file = 'test_audio.wav'
-message = b"Тестове повідомлення для аналізу якості"
+message = "Тестове повідомлення для аналізу якості".encode('utf-8')
 
 results = []
 
@@ -1365,7 +1376,7 @@ print("ПОРІВНЯННЯ: Sequential LSB vs Randomized LSB")
 print("="*60)
 
 test_file = 'test_audio.wav'
-message = b"Секретне повідомлення" * 10  # ~200 байт
+message = ("Секретне повідомлення" * 10).encode('utf-8')  # ~200 байт
 key = 12345
 
 # 1. Sequential LSB
@@ -1601,7 +1612,7 @@ print("ТЕСТ СТІЙКОСТІ: Вплив атак на Audio LSB")
 print("="*60)
 
 test_file = 'test_audio.wav'
-original_message = b"Тестове повідомлення для перевірки стійкості до атак" * 2
+original_message = ("Тестове повідомлення для перевірки стійкості до атак" * 2).encode('utf-8')
 
 # Вбудовуємо повідомлення
 print("\n--- Вбудовування повідомлення ---")
@@ -1884,7 +1895,7 @@ print("ПОРІВНЯННЯ: Fixed LSB vs Adaptive LSB")
 print("="*60)
 
 test_file = 'test_audio.wav'
-message = b"Тестове повідомлення для порівняння методів" * 5
+message = ("Тестове повідомлення для порівняння методів" * 5).encode('utf-8')
 
 # 1. Fixed 2 LSB
 print("\n--- Fixed 2 LSB ---")
