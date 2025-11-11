@@ -95,7 +95,7 @@
           "duration": 80,
           "status": "completed",
           "hasPresentation": true,
-          "path": "lecture_2/index.html"
+          "path": "lecture_6/index.html"
         },
         {
           "id": "2.3",
@@ -111,7 +111,7 @@
           "status": "completed",
           "slides": 43,
           "hasPresentation": true,
-          "path": "lecture_3/index.html"
+          "path": "lecture_7/index.html"
         },
         {
           "id": "2.4",
@@ -127,7 +127,7 @@
           "status": "completed",
           "slides": 50,
           "hasPresentation": true,
-          "path": "lecture_4/index.html"
+          "path": "lecture_8/index.html"
         }
       ]
     },
@@ -152,14 +152,23 @@
           "status": "completed",
           "slides": 40,
           "hasPresentation": true,
-          "path": "lecture_1/index.html"
+          "path": "lecture_9/index.html"
         },
         {
           "id": "3.2",
           "title": "Відео стеганографія",
-          "description": "Методи для відеопотоків",
+          "description": "Методи для відеопотоків: просторові, темпоральні та стиснуті формати",
           "duration": 80,
-          "status": "planned"
+          "topics": [
+            "Основи відео стеганографії",
+            "Просторові методи вбудовування",
+            "Темпоральні методи",
+            "Стеганографія в стиснутому відео"
+          ],
+          "status": "completed",
+          "slides": 40,
+          "hasPresentation": true,
+          "path": "lecture_10/index.html"
         },
         {
           "id": "3.3",

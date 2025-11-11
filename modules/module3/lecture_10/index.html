@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лекція 10: Відео стеганографія - методи приховування інформації у відеопотоках">
+    <title>Лекція 10: Відео стеганографія | Основи стеганографії</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/modules.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../../module3/index.html">Модуль 3</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Лекція 10</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Lecture Hero -->
+<section class="lecture-hero">
+    <div class="container">
+        <div class="lecture-number-badge">Лекція 10</div>
+        <h1>Відео стеганографія</h1>
+        <p class="landing-subtitle">
+            Методи приховування інформації у відеопотоках та стиснутому відео
+        </p>
+
+        <div class="lecture-meta">
+            <span class="lecture-meta-item">
+                ⏱️ 80 хвилин
+            </span>
+            <span class="lecture-meta-item">
+                📊 4 Теми
+            </span>
+            <span class="lecture-meta-item">
+                🎬 Відео методи
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+
+        <!-- Reading Material -->
+        <section style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="color: #0369a1; margin-bottom: 1rem;">📖 Матеріали для читання</h3>
+            <p style="margin-bottom: 1rem;">Детальний теоретичний конспект лекції з поясненнями, формулами та прикладами</p>
+            <a href="konspekt_10.html" class="btn btn-primary">Читати конспект лекції</a>
+        </section>
+
+        <!-- Learning Objectives -->
+        <section class="lecture-objectives">
+            <h3>🎯 Цілі лекції</h3>
+            <ul>
+                <li>Вивчити особливості відео як контейнера для стеганографії</li>
+                <li>Освоїти просторові методи вбудовування у відеокадри</li>
+                <li>Зрозуміти темпоральні методи використання міжкадрової надмірності</li>
+                <li>Опанувати стеганографію у стиснутих відеоформатах (H.264, H.265)</li>
+                <li>Вміти оцінювати візуальну якість та стійкість відеометодів</li>
+            </ul>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section">
+            <h2 class="section-title">📚 Теми лекції</h2>
+
+            <div class="topics-grid">
+
+                <!-- Тема 1 -->
+                <a href="tema1_video_basics.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 1</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🎬 Основи відео стеганографії</h3>
+                    <p class="topic-description">
+                        Відео як контейнер: формати, кадри, надмірність, унікальні властивості для стеганографії
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Відео формати</span>
+                        <span class="subtopic-badge">Кадри та GOP</span>
+                        <span class="subtopic-badge">Надмірність</span>
+                        <span class="subtopic-badge">Властивості відео</span>
+                    </div>
+                </a>
+
+                <!-- Тема 2 -->
+                <a href="tema2_spatial_methods.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 2</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🖼️ Просторові методи</h3>
+                    <p class="topic-description">
+                        Вбудовування в окремі кадри: LSB, адаптивні методи, міжкадрова різниця
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">LSB в кадрах</span>
+                        <span class="subtopic-badge">Кадрова різниця</span>
+                        <span class="subtopic-badge">Адаптивні методи</span>
+                        <span class="subtopic-badge">Якість відео</span>
+                    </div>
+                </a>
+
+                <!-- Тема 3 -->
+                <a href="tema3_temporal_methods.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 3</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">⏱️ Темпоральні методи</h3>
+                    <p class="topic-description">
+                        Використання часової структури відео: векторів руху, GOP структури, міжкадрової кореляції
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Вектори руху</span>
+                        <span class="subtopic-badge">GOP структура</span>
+                        <span class="subtopic-badge">I/P/B кадри</span>
+                        <span class="subtopic-badge">Темпоральна кореляція</span>
+                    </div>
+                </a>
+
+                <!-- Тема 4 -->
+                <a href="tema4_compressed_video.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 4</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🗜️ Стиснуте відео</h3>
+                    <p class="topic-description">
+                        Стеганографія в H.264/H.265: DCT коефіцієнти, квантування, таблиці руху
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">H.264/H.265</span>
+                        <span class="subtopic-badge">DCT коефіцієнти</span>
+                        <span class="subtopic-badge">Квантування</span>
+                        <span class="subtopic-badge">Стійкість до стиснення</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="lecture-resources">
+            <h3>📚 Додаткові матеріали</h3>
+            <div class="resource-links">
+                <a href="#" class="resource-link">
+                    📖 Liu Y. et al. "Video Steganography: A Review"
+                </a>
+                <a href="#" class="resource-link">
+                    📄 Aly H. "Data Hiding in Motion Vectors of Compressed Video"
+                </a>
+                <a href="#" class="resource-link">
+                    🔗 H.264/H.265 стандарти стиснення відео
+                </a>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="lecture-navigation">
+            <div class="lecture-nav-buttons">
+                <a href="../../module3/index.html" class="btn btn-outline">
+                    ← Назад до модуля 3
+                </a>
+                <a href="tema1_video_basics.html" class="btn btn-primary">
+                    Почати лекцію →
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content text-center">
+            <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра твердотільної електроніки та інформаційної безпеки</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

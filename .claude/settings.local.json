@@ -17,7 +17,11 @@
       "WebFetch(domain:opyrohov.github.io)",
       "Bash(nul)",
       "Bash(./fix_tema.sh:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(ren:*)",
+      "Bash(ren lecture_3 lecture_7)",
+      "Bash(ren lecture_4 lecture_8)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
