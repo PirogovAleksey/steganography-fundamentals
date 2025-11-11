@@ -74,6 +74,11 @@ const STATUS_CONFIG = {
         class: 'badge-primary',
         icon: '✅'
     },
+    available: {
+        text: 'Доступно',
+        class: 'badge-outline',
+        icon: '🔓'
+    },
     planned: {
         text: 'Заплановано',
         class: 'badge-outline',
@@ -93,6 +98,7 @@ const STATUS_CONFIG = {
 const LECTURE_STATUS_ICONS = {
     completed: '✅',
     in_progress: '🔄',
+    available: '🔓',
     planned: '📋',
     active: '🟢'
 };

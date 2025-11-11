@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лабораторна робота №8: Echo hiding - стеганографія через приховування ехо">
+    <meta name="keywords" content="стеганографія, echo hiding, cepstrum, аудіо, стійкість до шуму">
+    <title>Лабораторна №8: Echo Hiding | Основи стеганографії</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/lab-universal.css">
+
+    <!-- Highlight.js для підсвітки коду -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="lab-header">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Головна</a>
+            <span class="separator">/</span>
+            <a href="../index.html">Лабораторні</a>
+            <span class="separator">/</span>
+            <span class="current">Лабораторна №8</span>
+        </nav>
+        <h1>🔊 Лабораторна робота №8</h1>
+        <p class="subtitle">
+            Echo Hiding: Echo generation, cepstrum аналіз, noise tolerance
+        </p>
+        <div class="tool-badges">
+            <span class="tool-badge">Python</span>
+            <span class="tool-badge">Wave</span>
+            <span class="tool-badge">NumPy</span>
+            <span class="tool-badge">SciPy</span>
+            <span class="tool-badge">Librosa</span>
+            <span class="tool-badge">Matplotlib</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+
+    <!-- Цілі роботи -->
+    <section class="task-box">
+        <h2>🎯 Цілі лабораторної роботи</h2>
+        <ul>
+            <li>Вивчити принципи Echo hiding стеганографії</li>
+            <li>Освоїти генерацію та детектування ехо-сигналів</li>
+            <li>Реалізувати encoder/decoder на основі ехо</li>
+            <li>Дослідити cepstrum аналіз для виявлення ехо</li>
+            <li>Провести тестування стійкості до шуму</li>
+        </ul>
+    </section>
+
+    <!-- Теоретична частина -->
+    <section>
+        <h2>📚 Теоретична частина</h2>
+
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="switchTab(event, 'echo-hiding')">
+                    🔊 Echo Hiding
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'cepstrum-analysis')">
+                    📊 Cepstrum аналіз
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'noise-resistance')">
+                    🛡️ Стійкість до шуму
+                </button>
+                <button class="tab-button" onclick="switchTab(event, 'comparison')">
+                    🚀 Порівняння методів
+                </button>
+            </div>
+
+            <!-- Echo Hiding -->
+            <div class="tab-content active" id="echo-hiding">
+                <h3>Echo Hiding: Приховування через ехо</h3>
+
+                <div class="detection-method">
+                    <h4>🔊 Що таке Echo Hiding?</h4>
+                    <p>
+                        <strong>Echo hiding</strong> — це метод аудіо стеганографії, який вбудовує інформацію шляхом додавання короткого затриманого ехо (delayed echo) до оригінального аудіо сигналу. Ехо настільки коротке (0.5-2 мс) та тихе, що людське вухо не може його розрізнити від оригінального звуку.
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Математична модель:</strong><br><br>
+                        y_stego(t) = y_original(t) + α × y_original(t - d)<br><br>
+
+                        Де:<br>
+                        • y_original(t) — оригінальний аудіо сигнал<br>
+                        • d — затримка ехо (delay) в мілісекундах<br>
+                        • α — амплітуда ехо (зазвичай 0.1-0.5)<br>
+                        • y_stego(t) — результуючий стего-сигнал з ехо<br><br>
+
+                        Для бінарного кодування використовують ДВІ різні затримки:<br>
+                        • d₀ (наприклад, 0.5 мс) — для біта "0"<br>
+                        • d₁ (наприклад, 1.0 мс) — для біта "1"
+                    </div>
+
+                    <h4>🎯 Принцип роботи</h4>
+                    <p>
+                        Кодування біта відбувається через вибір затримки ехо:
+                    </p>
+                    <ul>
+                        <li><strong>Біт "0":</strong> додається ехо з короткою затримкою (d₀ = 0.5-0.8 мс)</li>
+                        <li><strong>Біт "1":</strong> додається ехо з довшою затримкою (d₁ = 1.0-1.5 мс)</li>
+                        <li><strong>Амплітуда:</strong> α = 0.1-0.5 (10-50% від оригіналу)</li>
+                        <li><strong>Сегментація:</strong> аудіо ділиться на сегменти, кожен кодує 1 біт</li>
+                    </ul>
+
+                    <div class="formula-box">
+                        <strong>Чому це працює?</strong><br><br>
+                        Людське вухо не може розрізнити окремі звуки ближче ніж ~10 мс:<br>
+                        • Затримка 0.5-2 мс << 10 мс (поріг роздільності)<br>
+                        • Ехо сприймається як частина оригінального звуку<br>
+                        • Навіть при 30-50% амплітуді ехо залишається непомітним<br><br>
+
+                        Але алгоритмічно:<br>
+                        • Cepstrum аналіз виявляє періодичність ехо<br>
+                        • Автокореляція виявляє пік на затримці d<br>
+                        • Затримка d вказує на значення біта (0 або 1)
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📐 Параметри Echo Hiding</h4>
+                    <p><strong>1. Delay (Затримка)</strong></p>
+                    <ul>
+                        <li><strong>Діапазон:</strong> 0.5-2 мс (типово)</li>
+                        <li><strong>Для "0":</strong> 0.5-0.8 мс (d₀)</li>
+                        <li><strong>Для "1":</strong> 1.0-1.5 мс (d₁)</li>
+                        <li><strong>Вибір:</strong> різниця d₁ - d₀ має бути достатньою для надійного детектування</li>
+                    </ul>
+
+                    <p><strong>2. Amplitude (Амплітуда)</strong></p>
+                    <ul>
+                        <li><strong>Діапазон:</strong> α = 0.1-0.5 (10-50%)</li>
+                        <li><strong>Компроміс:</strong> більше α = краще детектування, але гірша непомітність</li>
+                        <li><strong>Рекомендація:</strong> α = 0.3-0.4 для балансу</li>
+                    </ul>
+
+                    <p><strong>3. Segment Size (Розмір сегменту)</strong></p>
+                    <ul>
+                        <li><strong>Типово:</strong> 1024-8192 семпли (23-186 мс при 44.1 kHz)</li>
+                        <li><strong>Менший сегмент:</strong> вища ємність, але гірше детектування</li>
+                        <li><strong>Більший сегмент:</strong> краще детектування, але нижча ємність</li>
+                    </ul>
+
+                    <div class="formula-box">
+                        <strong>Обчислення параметрів:</strong><br><br>
+                        Для sample rate = 44100 Hz:<br>
+                        • d₀ = 0.5 мс → delay₀ = 0.0005 × 44100 = 22 семпли<br>
+                        • d₁ = 1.0 мс → delay₁ = 0.001 × 44100 = 44 семпли<br><br>
+
+                        Ємність:<br>
+                        • Segment size = 4096 семплів<br>
+                        • Duration = 60 секунд<br>
+                        • Total segments = (44100 × 60) / 4096 ≈ 646 сегментів<br>
+                        • Capacity = 646 біт ≈ 80 байт/хвилина<br><br>
+
+                        Набагато менше ніж LSB, але значно стійкіше!
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>💻 Генерація ехо в Python</h4>
+                    <pre><code class="language-python">import numpy as np
+import wave
+
+def add_echo(audio_samples, delay_samples, amplitude):
+    """
+    Додає ехо до аудіо сигналу
+
+    Args:
+        audio_samples: numpy array з аудіо семплами
+        delay_samples: затримка ехо в семплах
+        amplitude: амплітуда ехо (0.0-1.0)
+
+    Returns:
+        stego_samples: аудіо з доданим ехо
+    """
+    # Створюємо затриману копію
+    delayed = np.zeros_like(audio_samples)
+    delayed[delay_samples:] = audio_samples[:-delay_samples]
+
+    # Додаємо ехо з амплітудою
+    stego = audio_samples + amplitude * delayed
+
+    # Нормалізація для уникнення clipping
+    max_val = np.max(np.abs(stego))
+    if max_val > 32767:  # Для 16-bit аудіо
+        stego = stego * (32767 / max_val)
+
+    return stego.astype(np.int16)
+
+# Приклад використання
+samples, sr = read_wav('audio.wav')
+
+# Біт 0: короткое ехо (0.5 мс)
+delay_0 = int(0.0005 * sr)  # 22 семпли при 44.1 kHz
+stego_0 = add_echo(samples, delay_0, amplitude=0.3)
+
+# Біт 1: довше ехо (1.0 мс)
+delay_1 = int(0.001 * sr)  # 44 семпли при 44.1 kHz
+stego_1 = add_echo(samples, delay_1, amplitude=0.3)</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🎯 Переваги та недоліки</h4>
+                    <p><strong>Переваги:</strong></p>
+                    <ul>
+                        <li>Відмінна непомітність (ехо не чути людиною)</li>
+                        <li>Стійкість до MP3 компресії та фільтрації</li>
+                        <li>Стійкість до перезаписування та передискретизації</li>
+                        <li>Працює з будь-яким типом аудіо (музика, мова)</li>
+                    </ul>
+
+                    <p><strong>Недоліки:</strong></p>
+                    <ul>
+                        <li>Дуже низька ємність (десятки байт на хвилину)</li>
+                        <li>Складніша реалізація порівняно з LSB</li>
+                        <li>Потребує cepstrum аналізу для декодування</li>
+                        <li>Чутливість до часових перетворень (time stretching)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Cepstrum аналіз -->
+            <div class="tab-content" id="cepstrum-analysis">
+                <h3>Cepstrum аналіз для детектування ехо</h3>
+
+                <div class="detection-method">
+                    <h4>📊 Що таке Cepstrum?</h4>
+                    <p>
+                        <strong>Cepstrum (кепстр)</strong> — це результат застосування inverse Fourier transform до логарифму спектру сигналу. Назва "cepstrum" є анаграмою слова "spectrum" і підкреслює, що це "спектр спектру".
+                    </p>
+
+                    <div class="formula-box">
+                        <strong>Визначення Cepstrum:</strong><br><br>
+                        C(τ) = IFFT(log(|FFT(x(t))|²))<br><br>
+
+                        Де:<br>
+                        • x(t) — аудіо сигнал<br>
+                        • FFT — швидке перетворення Фур'є<br>
+                        • log — натуральний логарифм<br>
+                        • IFFT — обернене FFT<br>
+                        • τ (тау) — quefrency (аналог частоти в cepstral domain)<br><br>
+
+                        Quefrency вимірюється в одиницях часу (семпли або мс)<br>
+                        і відповідає періодичності в спектрі.
+                    </div>
+
+                    <h4>🔍 Чому Cepstrum виявляє ехо?</h4>
+                    <p>
+                        Коли в сигналі присутнє ехо, спектр стає періодичним:
+                    </p>
+                    <div class="formula-box">
+                        <strong>Сигнал з ехо:</strong><br><br>
+                        y(t) = x(t) + α·x(t - d)<br><br>
+
+                        Спектр:<br>
+                        Y(f) = X(f) × (1 + α·e^(-j2πfd))<br><br>
+
+                        Амплітудний спектр:<br>
+                        |Y(f)| = |X(f)| × |1 + α·e^(-j2πfd)|<br><br>
+
+                        Цей вираз періодичний з періодом 1/d!<br>
+                        Cepstrum виявляє цю періодичність як ПІК на quefrency = d.
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>💻 Обчислення Cepstrum в Python</h4>
+                    <pre><code class="language-python">import numpy as np
+from scipy.fftpack import fft, ifft
+
+def compute_cepstrum(audio_segment):
+    """
+    Обчислює real cepstrum аудіо сегменту
+
+    Args:
+        audio_segment: numpy array з аудіо семплами
+
+    Returns:
+        cepstrum: real cepstrum сегменту
+        quefrency: відповідні quefrency значення
+    """
+    # 1. Застосовуємо FFT
+    spectrum = fft(audio_segment)
+
+    # 2. Обчислюємо log magnitude spectrum
+    # Додаємо невелике значення для уникнення log(0)
+    log_spectrum = np.log(np.abs(spectrum) + 1e-10)
+
+    # 3. Застосовуємо inverse FFT
+    cepstrum = np.real(ifft(log_spectrum))
+
+    # 4. Беремо тільки першу половину (real cepstrum симетричний)
+    n = len(cepstrum) // 2
+    cepstrum = cepstrum[:n]
+
+    # Quefrency в семплах
+    quefrency = np.arange(n)
+
+    return cepstrum, quefrency
+
+def detect_echo_delay(audio_segment, sample_rate,
+                      min_delay_ms=0.3, max_delay_ms=2.0):
+    """
+    Детектує затримку ехо через cepstrum аналіз
+
+    Args:
+        audio_segment: аудіо сегмент для аналізу
+        sample_rate: частота дискретизації
+        min_delay_ms: мінімальна очікувана затримка (мс)
+        max_delay_ms: максимальна очікувана затримка (мс)
+
+    Returns:
+        delay_samples: затримка в семплах
+        peak_value: висота піку в cepstrum
+    """
+    # Обчислюємо cepstrum
+    cepstrum, quefrency = compute_cepstrum(audio_segment)
+
+    # Конвертуємо мс в семпли
+    min_delay_samples = int(min_delay_ms * sample_rate / 1000)
+    max_delay_samples = int(max_delay_ms * sample_rate / 1000)
+
+    # Шукаємо максимальний пік у заданому діапазоні
+    search_range = cepstrum[min_delay_samples:max_delay_samples]
+
+    if len(search_range) == 0:
+        return 0, 0.0
+
+    # Знаходимо максимум
+    peak_idx = np.argmax(search_range)
+    delay_samples = min_delay_samples + peak_idx
+    peak_value = search_range[peak_idx]
+
+    return delay_samples, peak_value
+
+# Приклад використання
+segment = stego_audio[0:4096]  # Перший сегмент
+delay, peak = detect_echo_delay(segment, sample_rate=44100)
+
+print(f"Виявлена затримка: {delay} семплів")
+print(f"= {delay / 44100 * 1000:.2f} мс")
+print(f"Висота піку: {peak:.4f}")</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📈 Візуалізація Cepstrum</h4>
+                    <pre><code class="language-python">import matplotlib.pyplot as plt
+
+def plot_cepstrum_analysis(audio_segment, sample_rate,
+                           d0_ms=0.5, d1_ms=1.0):
+    """
+    Візуалізує cepstrum з виділенням очікуваних затримок
+    """
+    # Обчислюємо cepstrum
+    cepstrum, quefrency = compute_cepstrum(audio_segment)
+
+    # Конвертуємо quefrency в мілісекунди
+    quefrency_ms = quefrency / sample_rate * 1000
+
+    # Створюємо графік
+    plt.figure(figsize=(12, 6))
+
+    # Cepstrum
+    plt.plot(quefrency_ms, cepstrum, linewidth=1.5)
+    plt.xlabel('Quefrency (мс)', fontsize=12)
+    plt.ylabel('Amplitude', fontsize=12)
+    plt.title('Cepstrum аналіз аудіо сегменту', fontsize=14, fontweight='bold')
+    plt.grid(True, alpha=0.3)
+
+    # Вертикальні лінії для очікуваних затримок
+    plt.axvline(x=d0_ms, color='blue', linestyle='--',
+                label=f'Очікуване d₀ = {d0_ms} мс', alpha=0.7)
+    plt.axvline(x=d1_ms, color='red', linestyle='--',
+                label=f'Очікуване d₁ = {d1_ms} мс', alpha=0.7)
+
+    # Обмежуємо діапазон для кращої візуалізації
+    plt.xlim([0, 3.0])
+    plt.legend()
+
+    plt.tight_layout()
+    plt.savefig('cepstrum_analysis.png', dpi=150)
+    plt.show()
+
+# Приклад
+plot_cepstrum_analysis(segment, sample_rate=44100)</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🎯 Декодування біта через Cepstrum</h4>
+                    <pre><code class="language-python">def decode_bit_from_cepstrum(segment, sample_rate,
+                                d0_ms=0.5, d1_ms=1.0, threshold=0.01):
+    """
+    Декодує біт з аудіо сегменту через cepstrum аналіз
+
+    Args:
+        segment: аудіо сегмент
+        sample_rate: частота дискретизації
+        d0_ms: затримка для біта 0
+        d1_ms: затримка для біта 1
+        threshold: поріг для детектування піку
+
+    Returns:
+        bit: 0 або 1, або None якщо не виявлено ехо
+    """
+    # Обчислюємо cepstrum
+    cepstrum, _ = compute_cepstrum(segment)
+
+    # Конвертуємо затримки в семпли
+    d0_samples = int(d0_ms * sample_rate / 1000)
+    d1_samples = int(d1_ms * sample_rate / 1000)
+
+    # Перевіряємо висоту піків
+    peak_0 = cepstrum[d0_samples] if d0_samples < len(cepstrum) else 0
+    peak_1 = cepstrum[d1_samples] if d1_samples < len(cepstrum) else 0
+
+    # Порівнюємо піки
+    max_peak = max(peak_0, peak_1)
+
+    if max_peak < threshold:
+        return None  # Ехо не виявлено
+
+    # Повертаємо біт відповідно до вищого піку
+    return 0 if peak_0 > peak_1 else 1</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔬 Альтернативний метод: Автокореляція</h4>
+                    <p>
+                        Окрім cepstrum, можна використовувати автокореляцію для виявлення ехо:
+                    </p>
+                    <pre><code class="language-python">def detect_echo_autocorr(segment, sample_rate,
+                          min_delay_ms=0.3, max_delay_ms=2.0):
+    """
+    Детектує ехо через автокореляцію
+
+    Автокореляція показує схожість сигналу з його затриманою версією
+    """
+    # Обчислюємо автокореляцію
+    autocorr = np.correlate(segment, segment, mode='full')
+    autocorr = autocorr[len(autocorr)//2:]  # Тільки позитивні затримки
+
+    # Діапазон пошуку
+    min_delay = int(min_delay_ms * sample_rate / 1000)
+    max_delay = int(max_delay_ms * sample_rate / 1000)
+
+    # Шукаємо пік
+    search_range = autocorr[min_delay:max_delay]
+    peak_idx = np.argmax(search_range)
+    delay = min_delay + peak_idx
+
+    return delay, search_range[peak_idx]</code></pre>
+                </div>
+            </div>
+
+            <!-- Стійкість до шуму -->
+            <div class="tab-content" id="noise-resistance">
+                <h3>Стійкість Echo Hiding до шуму</h3>
+
+                <div class="detection-method">
+                    <h4>🛡️ Чому Echo Hiding стійкий?</h4>
+                    <p>
+                        Echo hiding має кращу стійкість порівняно з LSB методами завдяки:
+                    </p>
+                    <ul>
+                        <li><strong>Розподілена інформація:</strong> біт закодований у структурі сигналу, не в окремих семплах</li>
+                        <li><strong>Cepstral domain:</strong> ехо проявляється в cepstrum, який менш чутливий до локальних змін</li>
+                        <li><strong>Перцептивна непомітність:</strong> ехо природно сприймається як частина аудіо</li>
+                        <li><strong>MP3 стійкість:</strong> компресія зберігає відносні амплітуди, тому ехо залишається</li>
+                    </ul>
+
+                    <div class="formula-box">
+                        <strong>Типи атак та стійкість:</strong><br><br>
+
+                        <strong>Високо стійкі:</strong><br>
+                        • MP3 компресія (до 128 kbps)<br>
+                        • Білий шум (SNR > 20 dB)<br>
+                        • Equalizing (еквалізація)<br>
+                        • D/A та A/D конвертація<br>
+                        • Resampling (передискретизація)<br><br>
+
+                        <strong>Середня стійкість:</strong><br>
+                        • Сильний шум (SNR < 20 dB)<br>
+                        • Фільтрація (high-pass/low-pass)<br>
+                        • Динамічна компресія<br><br>
+
+                        <strong>Вразливий до:</strong><br>
+                        • Time stretching (розтягування часу)<br>
+                        • Pitch shifting (зміна висоти тону)<br>
+                        • Реверс (reverse)<br>
+                        • Сильне обрізання (cropping)
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔊 Додавання шуму для тестування</h4>
+                    <pre><code class="language-python">def add_noise(audio, snr_db):
+    """
+    Додає білий гаусів шум до аудіо з заданим SNR
+
+    Args:
+        audio: numpy array з аудіо семплами
+        snr_db: бажаний SNR в децибелах
+
+    Returns:
+        noisy_audio: аудіо з шумом
+    """
+    # Потужність сигналу
+    signal_power = np.mean(audio ** 2)
+
+    # Необхідна потужність шуму
+    snr_linear = 10 ** (snr_db / 10)
+    noise_power = signal_power / snr_linear
+
+    # Генеруємо гаусів шум
+    noise = np.random.normal(0, np.sqrt(noise_power), len(audio))
+
+    # Додаємо шум
+    noisy = audio + noise
+
+    # Нормалізація для 16-bit
+    noisy = np.clip(noisy, -32768, 32767)
+
+    return noisy.astype(np.int16)
+
+# Приклад: різні рівні SNR
+snr_levels = [40, 30, 20, 10]  # dB
+
+for snr in snr_levels:
+    noisy = add_noise(stego_audio, snr)
+    write_wav(f'stego_snr{snr}db.wav', noisy, sr, channels, width)
+    print(f"Створено стего з SNR = {snr} dB")</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🧪 MP3 компресія</h4>
+                    <pre><code class="language-python">import subprocess
+
+def compress_to_mp3(wav_file, mp3_file, bitrate='128k'):
+    """
+    Компресує WAV в MP3 використовуючи ffmpeg
+
+    Args:
+        wav_file: шлях до WAV файлу
+        mp3_file: шлях для збереження MP3
+        bitrate: бітрейт MP3 (64k, 128k, 192k, 320k)
+
+    ВАЖЛИВО: Потребує встановленого ffmpeg
+    """
+    command = [
+        'ffmpeg', '-i', wav_file,
+        '-codec:a', 'libmp3lame',
+        '-b:a', bitrate,
+        mp3_file,
+        '-y'  # Перезаписати якщо існує
+    ]
+
+    try:
+        subprocess.run(command, check=True,
+                      capture_output=True, text=True)
+        print(f"✅ MP3 компресія: {bitrate} → {mp3_file}")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Помилка компресії: {e}")
+        return False
+
+def mp3_to_wav(mp3_file, wav_file):
+    """
+    Конвертує MP3 назад у WAV для аналізу
+    """
+    command = [
+        'ffmpeg', '-i', mp3_file,
+        '-ar', '44100',  # Sample rate
+        '-ac', '2',      # Channels
+        wav_file,
+        '-y'
+    ]
+
+    try:
+        subprocess.run(command, check=True,
+                      capture_output=True, text=True)
+        print(f"✅ Конвертовано назад: {wav_file}")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Помилка конвертації: {e}")
+        return False
+
+# Тестування різних бітрейтів MP3
+bitrates = ['64k', '128k', '192k', '320k']
+
+for br in bitrates:
+    mp3_file = f'stego_{br}.mp3'
+    wav_back = f'stego_{br}_back.wav'
+
+    # WAV → MP3 → WAV
+    if compress_to_mp3('stego.wav', mp3_file, br):
+        mp3_to_wav(mp3_file, wav_back)
+
+        # Тестуємо декодування
+        success = test_decode(wav_back)
+        print(f"Битрейт {br}: {'✅ OK' if success else '❌ FAIL'}")</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📊 Метрики стійкості</h4>
+                    <pre><code class="language-python">def calculate_ber(original_bits, decoded_bits):
+    """
+    Обчислює Bit Error Rate (BER)
+
+    Args:
+        original_bits: оригінальні біти (list або str)
+        decoded_bits: декодовані біти (list або str)
+
+    Returns:
+        ber: частка помилкових біт (0.0-1.0)
+    """
+    if len(original_bits) != len(decoded_bits):
+        # Якщо довжини не співпадають, підрахуємо тільки до меншої
+        min_len = min(len(original_bits), len(decoded_bits))
+        original_bits = original_bits[:min_len]
+        decoded_bits = decoded_bits[:min_len]
+
+    errors = sum(1 for a, b in zip(original_bits, decoded_bits) if a != b)
+    ber = errors / len(original_bits)
+
+    return ber
+
+def robustness_report(original_message, attacks):
+    """
+    Створює звіт про стійкість до атак
+
+    Args:
+        original_message: оригінальне повідомлення (bytes)
+        attacks: dict з назвами атак та декодованими повідомленнями
+    """
+    print("\n" + "="*60)
+    print("ЗВІТ ПРО СТІЙКІСТЬ ECHO HIDING")
+    print("="*60)
+    print(f"Оригінальне повідомлення: {original_message.decode('utf-8', errors='ignore')}")
+    print(f"Довжина: {len(original_message)} байт = {len(original_message)*8} біт")
+    print("-"*60)
+
+    # Конвертуємо в біти
+    orig_bits = ''.join([format(b, '08b') for b in original_message])
+
+    results = []
+    for attack_name, decoded_msg in attacks.items():
+        if decoded_msg is None:
+            ber = 1.0
+            status = "❌ FAIL (не вдалося декодувати)"
+        else:
+            # Конвертуємо декодоване повідомлення в біти
+            decoded_bits = ''.join([format(b, '08b') for b in decoded_msg])
+            ber = calculate_ber(orig_bits, decoded_bits)
+
+            if ber == 0:
+                status = "✅ OK (без помилок)"
+            elif ber < 0.1:
+                status = f"⚠️ OK (BER={ber:.2%})"
+            else:
+                status = f"❌ FAIL (BER={ber:.2%})"
+
+        results.append({
+            'attack': attack_name,
+            'ber': ber,
+            'status': status
+        })
+
+        print(f"{attack_name:<30} {status}")
+
+    print("-"*60)
+
+    # Середній BER
+    avg_ber = np.mean([r['ber'] for r in results])
+    success_rate = sum(1 for r in results if r['ber'] < 0.1) / len(results)
+
+    print(f"Середній BER: {avg_ber:.2%}")
+    print(f"Success rate: {success_rate:.1%}")
+    print("="*60)
+
+    return results</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔧 Методи підвищення стійкості</h4>
+                    <ul>
+                        <li><strong>Error Correction Codes (ECC):</strong> Reed-Solomon або Hamming коди для корекції помилок</li>
+                        <li><strong>Збільшення амплітуди:</strong> α = 0.4-0.5 замість 0.3</li>
+                        <li><strong>Більші сегменти:</strong> 8192 замість 4096 семплів</li>
+                        <li><strong>Повторення:</strong> кодувати кожен біт в декількох сегментах</li>
+                        <li><strong>Адаптивні параметри:</strong> підбір d₀, d₁ залежно від контенту</li>
+                        <li><strong>Preamble:</strong> додавання синхронізаційної послідовності</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Порівняння методів -->
+            <div class="tab-content" id="comparison">
+                <h3>Порівняння Echo Hiding з іншими методами</h3>
+
+                <div class="detection-method">
+                    <h4>📊 Порівняльна таблиця</h4>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: var(--color-primary); color: white;">
+                                <th style="padding: 12px; border: 1px solid #ddd;">Метод</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Ємність</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Непомітність</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Стійкість до MP3</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Стійкість до шуму</th>
+                                <th style="padding: 12px; border: 1px solid #ddd;">Складність</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>LSB</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Дуже висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Хороша</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">❌ Дуже низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">❌ Низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Проста</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Phase Coding</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Дуже низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Відмінна</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">⚠️ Середня</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">⚠️ Середня</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Середня</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Echo Hiding</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Відмінна</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">✅ Висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">✅ Висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Середня</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Spread Spectrum</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Дуже низька</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Відмінна</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">✅ Дуже висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">✅ Дуже висока</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Складна</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="margin-top: 15px;"><strong>Висновок:</strong> Echo hiding є оптимальним вибором коли потрібна стійкість до компресії та шуму, а низька ємність є прийнятною. Для високої ємності краще використовувати LSB у несжатих форматах.</p>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🎯 Echo Hiding vs LSB</h4>
+                    <div class="formula-box">
+                        <strong>Коли використовувати Echo Hiding:</strong><br>
+                        ✅ Аудіо буде компресуватись в MP3/AAC<br>
+                        ✅ Можливе додавання шуму або фільтрація<br>
+                        ✅ Потрібна висока безпека (важко виявити)<br>
+                        ✅ Невеликий обсяг даних (до 1 KB на хвилину)<br><br>
+
+                        <strong>Коли використовувати LSB:</strong><br>
+                        ✅ Аудіо залишається у WAV форматі<br>
+                        ✅ Немає обробки/компресії<br>
+                        ✅ Потрібна висока ємність (десятки KB на хвилину)<br>
+                        ✅ Простота реалізації важливіша за стійкість
+                    </div>
+                </div>
+
+                <div class="detection-method">
+                    <h4>📈 Кількісне порівняння</h4>
+                    <pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Дані для порівняння (для 1 хвилини аудіо)
+methods = ['LSB\n(1-bit)', 'LSB\n(2-bit)', 'Phase\nCoding', 'Echo\nHiding', 'Spread\nSpectrum']
+
+# Ємність (байти на хвилину)
+capacity = [661500, 1323000, 100, 80, 50]
+
+# Стійкість до MP3 (умовна оцінка 0-10)
+mp3_robustness = [1, 0.5, 5, 8, 9]
+
+# Непомітність (умовна оцінка 0-10)
+imperceptibility = [7, 6, 9, 9.5, 9.5]
+
+# Створюємо порівняльні графіки
+fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+
+# 1. Ємність (логарифмічна шкала)
+axes[0].bar(methods, capacity, color=['#3498db', '#2980b9', '#9b59b6', '#e74c3c', '#e67e22'], alpha=0.8)
+axes[0].set_yscale('log')
+axes[0].set_ylabel('Ємність (байти/хвилина)', fontsize=11)
+axes[0].set_title('Ємність методів', fontsize=13, fontweight='bold')
+axes[0].grid(True, alpha=0.3, axis='y')
+
+# 2. Стійкість до MP3
+axes[1].bar(methods, mp3_robustness, color=['#3498db', '#2980b9', '#9b59b6', '#e74c3c', '#e67e22'], alpha=0.8)
+axes[1].set_ylabel('Стійкість до MP3 (0-10)', fontsize=11)
+axes[1].set_title('Стійкість до MP3 компресії', fontsize=13, fontweight='bold')
+axes[1].set_ylim([0, 10])
+axes[1].grid(True, alpha=0.3, axis='y')
+
+# 3. Непомітність
+axes[2].bar(methods, imperceptibility, color=['#3498db', '#2980b9', '#9b59b6', '#e74c3c', '#e67e22'], alpha=0.8)
+axes[2].set_ylabel('Непомітність (0-10)', fontsize=11)
+axes[2].set_title('Перцептивна непомітність', fontsize=13, fontweight='bold')
+axes[2].set_ylim([0, 10])
+axes[2].grid(True, alpha=0.3, axis='y')
+
+plt.tight_layout()
+plt.savefig('methods_comparison.png', dpi=150, bbox_inches='tight')
+print("📊 Графік збережено: methods_comparison.png")
+plt.show()</code></pre>
+                </div>
+
+                <div class="detection-method">
+                    <h4>🔬 Сценарії використання</h4>
+                    <p><strong>Echo Hiding ідеально підходить для:</strong></p>
+                    <ul>
+                        <li>Водяні знаки (watermarking) в музиці та аудіокнигах</li>
+                        <li>Передача коротких повідомлень через радіо/стримінг</li>
+                        <li>Аутентифікація та підтвердження авторства</li>
+                        <li>Канал зв'язку в умовах шумного середовища</li>
+                        <li>Приховане передавання ключів шифрування</li>
+                    </ul>
+
+                    <p><strong>Echo Hiding НЕ підходить для:</strong></p>
+                    <ul>
+                        <li>Передача великих файлів (використовуйте LSB у WAV)</li>
+                        <li>Реал-тайм обробка (висока обчислювальна складність)</li>
+                        <li>Аудіо з сильною обробкою (time stretching, pitch shift)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Практичні завдання -->
+    <section>
+        <h2>💻 Практичні завдання</h2>
+
+        <!-- Завдання 1 -->
+        <div class="task-box">
+            <h3><span class="step-number">1</span>Базовий Echo Encoder</h3>
+
+            <h4>Встановлення бібліотек:</h4>
+            <pre class="python"><code># Встановлення необхідних бібліотек
+# В терміналі:
+# pip install numpy scipy librosa matplotlib
+
+import wave
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.fftpack import fft, ifft
+
+# Перевірка версій
+print("NumPy версія:", np.__version__)
+print("✅ Бібліотеки успішно імпортовані!")
+</code></pre>
+
+            <h4>Базові функції для роботи з WAV:</h4>
+            <pre class="python"><code>def read_wav(filename):
+    """
+    Читання WAV файлу
+
+    Returns:
+        samples: numpy array з аудіо семплами (int16)
+        params: кортеж (sample_rate, n_channels, sample_width)
+    """
+    with wave.open(filename, 'rb') as wav:
+        n_channels = wav.getnchannels()
+        sample_width = wav.getsampwidth()
+        framerate = wav.getframerate()
+        n_frames = wav.getnframes()
+
+        audio_data = wav.readframes(n_frames)
+
+        # Конвертація в numpy array (16-bit signed)
+        samples = np.frombuffer(audio_data, dtype=np.int16)
+
+    print(f"📂 Завантажено: {filename}")
+    print(f"   {n_channels} канал(ів), {sample_width*8}-bit, {framerate} Hz")
+    print(f"   Тривалість: {n_frames/framerate:.2f} сек, {len(samples)} семплів")
+
+    return samples, (framerate, n_channels, sample_width)
+
+def write_wav(filename, samples, params):
+    """
+    Запис WAV файлу
+
+    Args:
+        samples: numpy array з аудіо семплами
+        params: (sample_rate, n_channels, sample_width)
+    """
+    framerate, n_channels, sample_width = params
+
+    with wave.open(filename, 'wb') as wav:
+        wav.setnchannels(n_channels)
+        wav.setsampwidth(sample_width)
+        wav.setframerate(framerate)
+        wav.writeframes(samples.tobytes())
+
+    print(f"✅ Збережено: {filename}")
+
+print("Функції для роботи з WAV готові!")
+</code></pre>
+
+            <h4>Реалізація генерації ехо:</h4>
+            <pre class="python"><code>def add_echo(audio_samples, delay_ms, amplitude, sample_rate):
+    """
+    Додає ехо до аудіо сигналу
+
+    Args:
+        audio_samples: numpy array з аудіо семплами (int16)
+        delay_ms: затримка ехо в мілісекундах (float)
+        amplitude: амплітуда ехо (0.0-1.0)
+        sample_rate: частота дискретизації (Hz)
+
+    Returns:
+        stego_samples: аудіо з доданим ехо (int16)
+    """
+    # Конвертуємо затримку з мс в семпли
+    delay_samples = int(delay_ms * sample_rate / 1000)
+
+    print(f"🔊 Додавання ехо:")
+    print(f"   Затримка: {delay_ms} мс = {delay_samples} семплів")
+    print(f"   Амплітуда: {amplitude}")
+
+    # Працюємо з float для точності
+    audio_float = audio_samples.astype(np.float32)
+
+    # Створюємо затриману копію
+    delayed = np.zeros_like(audio_float)
+    delayed[delay_samples:] = audio_float[:-delay_samples]
+
+    # Додаємо ехо
+    stego_float = audio_float + amplitude * delayed
+
+    # Нормалізація для уникнення clipping
+    max_val = np.max(np.abs(stego_float))
+    if max_val > 32767:
+        print(f"   ⚠️ Нормалізація (max={max_val:.0f})")
+        stego_float = stego_float * (32767 / max_val)
+
+    # Конвертуємо назад в int16
+    stego_samples = np.clip(stego_float, -32768, 32767).astype(np.int16)
+
+    return stego_samples
+
+def encode_bit_echo(audio_samples, bit, sample_rate,
+                    d0_ms=0.5, d1_ms=1.0, amplitude=0.3):
+    """
+    Кодує один біт через ехо
+
+    Args:
+        audio_samples: аудіо сегмент
+        bit: 0 або 1
+        sample_rate: частота дискретизації
+        d0_ms: затримка для біта 0
+        d1_ms: затримка для біта 1
+        amplitude: амплітуда ехо
+
+    Returns:
+        stego_segment: сегмент з закодованим бітом
+    """
+    delay = d0_ms if bit == 0 else d1_ms
+    stego = add_echo(audio_samples, delay, amplitude, sample_rate)
+    return stego
+
+# Тестування на простому сигналі
+print("\n" + "="*60)
+print("ТЕСТ: Генерація ехо")
+print("="*60)
+
+# Створюємо тестовий синусоїдальний сигнал
+sample_rate = 44100
+duration = 0.1  # 100 мс
+t = np.linspace(0, duration, int(sample_rate * duration))
+frequency = 440  # Ля (A4)
+test_signal = (np.sin(2 * np.pi * frequency * t) * 16000).astype(np.int16)
+
+# Додаємо ехо для біта 0 та біта 1
+echo_0 = encode_bit_echo(test_signal, 0, sample_rate, d0_ms=0.5, d1_ms=1.0)
+echo_1 = encode_bit_echo(test_signal, 1, sample_rate, d0_ms=0.5, d1_ms=1.0)
+
+print("\n✅ Тест завершено: ехо успішно згенеровано для обох бітів")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Функція add_echo успішно додає затримане ехо до сигналу</li>
+                    <li>Амплітуда стего-сигналу збільшується, але не виходить за межі 16-bit діапазону</li>
+                    <li>Різні біти (0 і 1) мають різні затримки ехо</li>
+                    <li>Аудіо з ехо звучить практично так само, як оригінал</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 2 -->
+        <div class="task-box">
+            <h3><span class="step-number">2</span>Echo Decoder через Cepstrum</h3>
+
+            <h4>Обчислення Cepstrum:</h4>
+            <pre class="python"><code>def compute_cepstrum(audio_segment):
+    """
+    Обчислює real cepstrum аудіо сегменту
+
+    Args:
+        audio_segment: numpy array з аудіо семплами
+
+    Returns:
+        cepstrum: real cepstrum
+        quefrency: відповідні quefrency значення (в семплах)
+    """
+    # 1. Застосовуємо FFT
+    spectrum = fft(audio_segment)
+
+    # 2. Обчислюємо log magnitude spectrum
+    # Додаємо epsilon для уникнення log(0)
+    log_spectrum = np.log(np.abs(spectrum) + 1e-10)
+
+    # 3. Застосовуємо inverse FFT
+    cepstrum = np.real(ifft(log_spectrum))
+
+    # 4. Беремо тільки першу половину (real cepstrum симетричний)
+    n = len(cepstrum) // 2
+    cepstrum = cepstrum[:n]
+
+    # Quefrency в семплах
+    quefrency = np.arange(n)
+
+    return cepstrum, quefrency
+
+def detect_echo_delay(audio_segment, sample_rate,
+                      min_delay_ms=0.3, max_delay_ms=2.0):
+    """
+    Детектує затримку ехо через cepstrum аналіз
+
+    Args:
+        audio_segment: аудіо сегмент для аналізу
+        sample_rate: частота дискретизації
+        min_delay_ms: мінімальна очікувана затримка
+        max_delay_ms: максимальна очікувана затримка
+
+    Returns:
+        delay_samples: виявлена затримка в семплах
+        peak_value: висота піку в cepstrum
+        delay_ms: затримка в мілісекундах
+    """
+    # Обчислюємо cepstrum
+    cepstrum, quefrency = compute_cepstrum(audio_segment)
+
+    # Конвертуємо мс в семпли
+    min_delay_samples = int(min_delay_ms * sample_rate / 1000)
+    max_delay_samples = int(max_delay_ms * sample_rate / 1000)
+
+    # Обмежуємо діапазон пошуку
+    max_delay_samples = min(max_delay_samples, len(cepstrum) - 1)
+
+    if min_delay_samples >= max_delay_samples:
+        return 0, 0.0, 0.0
+
+    # Шукаємо максимальний пік у заданому діапазоні
+    search_range = cepstrum[min_delay_samples:max_delay_samples]
+
+    if len(search_range) == 0:
+        return 0, 0.0, 0.0
+
+    # Знаходимо максимум
+    peak_idx = np.argmax(search_range)
+    delay_samples = min_delay_samples + peak_idx
+    peak_value = search_range[peak_idx]
+    delay_ms = delay_samples * 1000 / sample_rate
+
+    return delay_samples, peak_value, delay_ms
+
+print("Функції cepstrum аналізу готові!")
+</code></pre>
+
+            <h4>Декодування біта:</h4>
+            <pre class="python"><code>def decode_bit_cepstrum(segment, sample_rate,
+                        d0_ms=0.5, d1_ms=1.0, threshold=0.001):
+    """
+    Декодує біт з аудіо сегменту через cepstrum аналіз
+
+    Args:
+        segment: аудіо сегмент
+        sample_rate: частота дискретизації
+        d0_ms: очікувана затримка для біта 0
+        d1_ms: очікувана затримка для біта 1
+        threshold: поріг для детектування піку
+
+    Returns:
+        bit: 0 або 1
+        confidence: впевненість (різниця між піками)
+    """
+    # Обчислюємо cepstrum
+    cepstrum, _ = compute_cepstrum(segment)
+
+    # Конвертуємо затримки в семпли
+    d0_samples = int(d0_ms * sample_rate / 1000)
+    d1_samples = int(d1_ms * sample_rate / 1000)
+
+    # Отримуємо значення cepstrum на очікуваних затримках
+    # Усереднюємо по невеликому вікну для стійкості
+    window = 3
+
+    peak_0 = 0.0
+    if d0_samples - window >= 0 and d0_samples + window < len(cepstrum):
+        peak_0 = np.mean(cepstrum[d0_samples - window : d0_samples + window + 1])
+
+    peak_1 = 0.0
+    if d1_samples - window >= 0 and d1_samples + window < len(cepstrum):
+        peak_1 = np.mean(cepstrum[d1_samples - window : d1_samples + window + 1])
+
+    # Визначаємо біт за вищим піком
+    if peak_0 > peak_1:
+        bit = 0
+        confidence = peak_0 - peak_1
+    else:
+        bit = 1
+        confidence = peak_1 - peak_0
+
+    return bit, confidence
+
+# Тестування декодування
+print("\n" + "="*60)
+print("ТЕСТ: Декодування через Cepstrum")
+print("="*60)
+
+# Використовуємо згенеровані раніше сигнали
+decoded_0, conf_0 = decode_bit_cepstrum(echo_0, sample_rate, d0_ms=0.5, d1_ms=1.0)
+decoded_1, conf_1 = decode_bit_cepstrum(echo_1, sample_rate, d0_ms=0.5, d1_ms=1.0)
+
+print(f"Сегмент з ехо для біта 0:")
+print(f"  Декодований біт: {decoded_0} {'✅' if decoded_0 == 0 else '❌'}")
+print(f"  Впевненість: {conf_0:.6f}")
+
+print(f"\nСегмент з ехо для біта 1:")
+print(f"  Декодований біт: {decoded_1} {'✅' if decoded_1 == 1 else '❌'}")
+print(f"  Впевненість: {conf_1:.6f}")
+</code></pre>
+
+            <h4>Візуалізація Cepstrum:</h4>
+            <pre class="python"><code>def plot_cepstrum_comparison(segment_0, segment_1, sample_rate,
+                              d0_ms=0.5, d1_ms=1.0):
+    """
+    Візуалізує порівняння cepstrum для двох бітів
+    """
+    # Обчислюємо cepstrum для обох сегментів
+    cep_0, qf_0 = compute_cepstrum(segment_0)
+    cep_1, qf_1 = compute_cepstrum(segment_1)
+
+    # Конвертуємо quefrency в мілісекунди
+    qf_0_ms = qf_0 * 1000 / sample_rate
+    qf_1_ms = qf_1 * 1000 / sample_rate
+
+    # Створюємо графік
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
+
+    # Cepstrum для біта 0
+    ax1.plot(qf_0_ms, cep_0, linewidth=1.5, color='blue')
+    ax1.axvline(x=d0_ms, color='blue', linestyle='--',
+                label=f'Очікуване d₀ = {d0_ms} мс', linewidth=2)
+    ax1.axvline(x=d1_ms, color='red', linestyle='--',
+                label=f'Очікуване d₁ = {d1_ms} мс', alpha=0.5)
+    ax1.set_xlabel('Quefrency (мс)', fontsize=11)
+    ax1.set_ylabel('Amplitude', fontsize=11)
+    ax1.set_title('Cepstrum для біта 0 (коротке ехо)', fontsize=13, fontweight='bold')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+    ax1.set_xlim([0, 3.0])
+
+    # Cepstrum для біта 1
+    ax2.plot(qf_1_ms, cep_1, linewidth=1.5, color='red')
+    ax2.axvline(x=d0_ms, color='blue', linestyle='--',
+                label=f'Очікуване d₀ = {d0_ms} мс', alpha=0.5)
+    ax2.axvline(x=d1_ms, color='red', linestyle='--',
+                label=f'Очікуване d₁ = {d1_ms} мс', linewidth=2)
+    ax2.set_xlabel('Quefrency (мс)', fontsize=11)
+    ax2.set_ylabel('Amplitude', fontsize=11)
+    ax2.set_title('Cepstrum для біта 1 (довше ехо)', fontsize=13, fontweight='bold')
+    ax2.grid(True, alpha=0.3)
+    ax2.legend()
+    ax2.set_xlim([0, 3.0])
+
+    plt.tight_layout()
+    plt.savefig('cepstrum_comparison.png', dpi=150, bbox_inches='tight')
+    print("📊 Графік збережено: cepstrum_comparison.png")
+    plt.show()
+
+# Візуалізація
+plot_cepstrum_comparison(echo_0, echo_1, sample_rate, d0_ms=0.5, d1_ms=1.0)
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Cepstrum чітко показує пік на затримці ехо</li>
+                    <li>Для біта 0: пік на ~0.5 мс вищий за пік на ~1.0 мс</li>
+                    <li>Для біта 1: пік на ~1.0 мс вищий за пік на ~0.5 мс</li>
+                    <li>Декодування правильно визначає біти з високою впевненістю</li>
+                    <li>Графіки наочно демонструють різницю між двома затримками</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 3 -->
+        <div class="task-box">
+            <h3><span class="step-number">3</span>Приховування повідомлень</h3>
+
+            <h4>Encoder для тексту:</h4>
+            <pre class="python"><code>def echo_hide_message(audio_file, message, output_file,
+                      segment_size=4096, d0_ms=0.5, d1_ms=1.0, amplitude=0.35):
+    """
+    Приховує текстове повідомлення в аудіо через echo hiding
+
+    Args:
+        audio_file: шлях до оригінального WAV файлу
+        message: текстове повідомлення (str або bytes)
+        output_file: шлях для збереження стего-аудіо
+        segment_size: розмір сегменту в семплах
+        d0_ms: затримка для біта 0
+        d1_ms: затримка для біта 1
+        amplitude: амплітуда ехо (0.0-1.0)
+
+    Returns:
+        stats: словник зі статистикою вбудовування
+    """
+    # Читаємо аудіо
+    samples, params = read_wav(audio_file)
+    sample_rate, n_channels, sample_width = params
+
+    # Конвертуємо повідомлення в bytes якщо потрібно
+    if isinstance(message, str):
+        message_bytes = message.encode('utf-8')
+    else:
+        message_bytes = message
+
+    # Конвертуємо в біти
+    message_bits = ''.join([format(byte, '08b') for byte in message_bytes])
+
+    print("\n" + "="*60)
+    print("ECHO HIDING ENCODING")
+    print("="*60)
+    print(f"📝 Повідомлення: '{message}'" if isinstance(message, str) else f"📝 Повідомлення: {len(message_bytes)} байт")
+    print(f"   Довжина: {len(message_bytes)} байт = {len(message_bits)} біт")
+    print(f"📊 Параметри:")
+    print(f"   Розмір сегменту: {segment_size} семплів")
+    print(f"   d₀ (біт 0): {d0_ms} мс")
+    print(f"   d₁ (біт 1): {d1_ms} мс")
+    print(f"   Амплітуда ехо: {amplitude}")
+
+    # Обчислюємо кількість сегментів
+    num_segments = len(samples) // segment_size
+
+    # Перевірка ємності
+    if len(message_bits) > num_segments:
+        raise ValueError(f"Повідомлення завелике! Макс {num_segments} біт, потрібно {len(message_bits)}")
+
+    print(f"   Доступно сегментів: {num_segments}")
+    print(f"   Потрібно сегментів: {len(message_bits)}")
+    print(f"   Використання: {len(message_bits)/num_segments*100:.1f}%")
+
+    # Створюємо копію для стего
+    stego = samples.copy()
+
+    # Вбудовування: кожен сегмент кодує 1 біт
+    for i, bit_char in enumerate(message_bits):
+        bit = int(bit_char)
+
+        # Витягуємо сегмент
+        start = i * segment_size
+        end = start + segment_size
+        segment = samples[start:end]
+
+        # Кодуємо біт через ехо
+        stego_segment = encode_bit_echo(segment, bit, sample_rate,
+                                        d0_ms, d1_ms, amplitude)
+
+        # Записуємо назад
+        stego[start:end] = stego_segment
+
+        if (i + 1) % 100 == 0:
+            print(f"   Прогрес: {i+1}/{len(message_bits)} біт")
+
+    # Зберігаємо стего-аудіо
+    write_wav(output_file, stego, params)
+
+    # Обчислюємо SNR
+    signal_power = np.mean(samples.astype(np.float64) ** 2)
+    noise = stego.astype(np.float64) - samples.astype(np.float64)
+    noise_power = np.mean(noise ** 2)
+
+    snr = 10 * np.log10(signal_power / noise_power) if noise_power > 0 else float('inf')
+
+    print(f"\n📈 Результати:")
+    print(f"   SNR: {snr:.2f} dB")
+    print(f"   Вбудовано: {len(message_bits)} біт у {len(message_bits)} сегментів")
+    print("="*60)
+
+    stats = {
+        'message_length': len(message_bytes),
+        'bits_embedded': len(message_bits),
+        'segments_used': len(message_bits),
+        'total_segments': num_segments,
+        'snr': snr,
+        'segment_size': segment_size
+    }
+
+    return stats
+
+# Тестування на реальному файлі
+print("\nТЕСТ на реальному аудіо файлі:")
+print("(Переконайтеся, що у вас є файл 'test_audio.wav')")
+
+# Приклад використання:
+# message = "Hello Echo Hiding!"
+# stats = echo_hide_message('test_audio.wav', message, 'stego_echo.wav')
+</code></pre>
+
+            <h4>Decoder для тексту:</h4>
+            <pre class="python"><code>def echo_extract_message(stego_file, message_length_bits,
+                         segment_size=4096, d0_ms=0.5, d1_ms=1.0):
+    """
+    Витягує повідомлення з стего-аудіо
+
+    Args:
+        stego_file: шлях до стего-аудіо файлу
+        message_length_bits: довжина повідомлення в бітах
+        segment_size: розмір сегменту (має бути той самий!)
+        d0_ms: затримка для біта 0
+        d1_ms: затримка для біта 1
+
+    Returns:
+        message: витягнуте повідомлення (bytes)
+        stats: статистика декодування
+    """
+    # Читаємо стего-аудіо
+    samples, params = read_wav(stego_file)
+    sample_rate, _, _ = params
+
+    print("\n" + "="*60)
+    print("ECHO HIDING DECODING")
+    print("="*60)
+    print(f"📂 Файл: {stego_file}")
+    print(f"📊 Параметри:")
+    print(f"   Розмір сегменту: {segment_size} семплів")
+    print(f"   Біт для витягування: {message_length_bits}")
+    print(f"   d₀ (біт 0): {d0_ms} мс")
+    print(f"   d₁ (біт 1): {d1_ms} мс")
+
+    # Витягуємо біти
+    decoded_bits = []
+    confidences = []
+
+    for i in range(message_length_bits):
+        # Витягуємо сегмент
+        start = i * segment_size
+        end = start + segment_size
+
+        if end > len(samples):
+            print(f"⚠️ Недостатньо даних на позиції {i}")
+            break
+
+        segment = samples[start:end]
+
+        # Декодуємо біт
+        bit, confidence = decode_bit_cepstrum(segment, sample_rate,
+                                              d0_ms, d1_ms)
+        decoded_bits.append(str(bit))
+        confidences.append(confidence)
+
+        if (i + 1) % 100 == 0:
+            print(f"   Прогрес: {i+1}/{message_length_bits} біт")
+
+    # Конвертуємо біти в bytes
+    bits_str = ''.join(decoded_bits)
+    message_bytes = bytearray()
+
+    for i in range(0, len(bits_str), 8):
+        byte_str = bits_str[i:i+8]
+        if len(byte_str) == 8:
+            message_bytes.append(int(byte_str, 2))
+
+    message = bytes(message_bytes)
+
+    # Статистика
+    avg_confidence = np.mean(confidences)
+    min_confidence = np.min(confidences)
+
+    print(f"\n📈 Результати:")
+    print(f"   Витягнуто: {len(decoded_bits)} біт = {len(message_bytes)} байт")
+    print(f"   Середня впевненість: {avg_confidence:.6f}")
+    print(f"   Мінімальна впевненість: {min_confidence:.6f}")
+    print(f"   Повідомлення: '{message.decode('utf-8', errors='ignore')}'")
+    print("="*60)
+
+    stats = {
+        'bits_extracted': len(decoded_bits),
+        'bytes_extracted': len(message_bytes),
+        'avg_confidence': avg_confidence,
+        'min_confidence': min_confidence,
+        'confidences': confidences
+    }
+
+    return message, stats
+
+# Тестування декодування
+# Приклад:
+# message_bits = len("Hello Echo Hiding!".encode('utf-8')) * 8
+# extracted, stats = echo_extract_message('stego_echo.wav', message_bits)
+</code></pre>
+
+            <h4>Повний цикл encode-decode:</h4>
+            <pre class="python"><code># Повний приклад encode → decode
+print("\n" + "="*60)
+print("ПОВНИЙ ЦИКЛ: ENCODE → DECODE")
+print("="*60)
+
+# Параметри
+test_message = "Стеганографія працює! 🔒"
+test_audio = 'test_audio.wav'  # Має бути ваш тестовий файл
+stego_output = 'stego_echo_test.wav'
+
+# 1. Encoding
+print("\n1️⃣ ENCODING:")
+encode_stats = echo_hide_message(test_audio, test_message, stego_output,
+                                  segment_size=4096,
+                                  d0_ms=0.5, d1_ms=1.0,
+                                  amplitude=0.35)
+
+# 2. Decoding
+print("\n2️⃣ DECODING:")
+message_bits = len(test_message.encode('utf-8')) * 8
+decoded_message, decode_stats = echo_extract_message(stego_output, message_bits,
+                                                       segment_size=4096,
+                                                       d0_ms=0.5, d1_ms=1.0)
+
+# 3. Перевірка
+print("\n3️⃣ ПЕРЕВІРКА:")
+original_bytes = test_message.encode('utf-8')
+match = (original_bytes == decoded_message)
+
+print(f"Оригінал:  '{test_message}'")
+print(f"Декодоване: '{decoded_message.decode('utf-8', errors='ignore')}'")
+print(f"Співпадає: {'✅ ТАК' if match else '❌ НІ'}")
+
+if not match:
+    # Підрахунок помилок
+    errors = sum(1 for a, b in zip(original_bytes, decoded_message) if a != b)
+    print(f"Помилок: {errors}/{len(original_bytes)} байт ({errors/len(original_bytes)*100:.1f}%)")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li>Повідомлення успішно вбудовується в аудіо файл</li>
+                    <li>SNR > 30 dB (хороша якість, зміни непомітні)</li>
+                    <li>Декодування відновлює оригінальне повідомлення без помилок</li>
+                    <li>Середня впевненість декодування > 0.001</li>
+                    <li>Стего-аудіо звучить практично ідентично до оригіналу</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 4 -->
+        <div class="task-box">
+            <h3><span class="step-number">4</span>Тестування стійкості</h3>
+
+            <h4>Функції для атак:</h4>
+            <pre class="python"><code>def add_gaussian_noise(audio, snr_db):
+    """
+    Додає білий гаусів шум з заданим SNR
+    """
+    signal_power = np.mean(audio.astype(np.float64) ** 2)
+    snr_linear = 10 ** (snr_db / 10)
+    noise_power = signal_power / snr_linear
+
+    noise = np.random.normal(0, np.sqrt(noise_power), len(audio))
+    noisy = audio.astype(np.float64) + noise
+    noisy = np.clip(noisy, -32768, 32767)
+
+    return noisy.astype(np.int16)
+
+def apply_lowpass_filter(audio, cutoff_freq, sample_rate):
+    """
+    Застосовує low-pass фільтр
+    """
+    from scipy.signal import butter, lfilter
+
+    nyquist = sample_rate / 2
+    normal_cutoff = cutoff_freq / nyquist
+    b, a = butter(5, normal_cutoff, btype='low', analog=False)
+    filtered = lfilter(b, a, audio)
+
+    return filtered.astype(np.int16)
+
+def resample_audio(audio, original_rate, new_rate):
+    """
+    Передискретизація (resampling)
+    """
+    from scipy.signal import resample
+
+    num_samples = int(len(audio) * new_rate / original_rate)
+    resampled = resample(audio, num_samples)
+    resampled = np.clip(resampled, -32768, 32767)
+
+    return resampled.astype(np.int16), new_rate
+
+print("Функції атак готові!")
+</code></pre>
+
+            <h4>Тестовий фреймворк:</h4>
+            <pre class="python"><code>def test_robustness(original_audio_file, stego_file, original_message,
+                    segment_size=4096, d0_ms=0.5, d1_ms=1.0):
+    """
+    Тестує стійкість echo hiding до різних атак
+
+    Args:
+        original_audio_file: оригінальне аудіо
+        stego_file: стего-аудіо
+        original_message: оригінальне повідомлення (str або bytes)
+        segment_size: розмір сегменту
+        d0_ms, d1_ms: затримки ехо
+
+    Returns:
+        results: dict з результатами тестів
+    """
+    # Читаємо стего
+    stego_samples, params = read_wav(stego_file)
+    sample_rate, n_channels, sample_width = params
+
+    if isinstance(original_message, str):
+        original_bytes = original_message.encode('utf-8')
+    else:
+        original_bytes = original_message
+
+    message_bits = len(original_bytes) * 8
+
+    print("\n" + "="*60)
+    print("ТЕСТУВАННЯ СТІЙКОСТІ ECHO HIDING")
+    print("="*60)
+
+    results = {}
+
+    # Тест 1: Без атак (baseline)
+    print("\n1️⃣ Baseline (без атак):")
+    try:
+        decoded, stats = echo_extract_message(stego_file, message_bits,
+                                              segment_size, d0_ms, d1_ms)
+        match = (decoded == original_bytes)
+        results['Baseline'] = {
+            'success': match,
+            'decoded': decoded,
+            'confidence': stats['avg_confidence']
+        }
+        print(f"   Результат: {'✅ OK' if match else '❌ FAIL'}")
+    except Exception as e:
+        results['Baseline'] = {'success': False, 'error': str(e)}
+        print(f"   Результат: ❌ ERROR - {e}")
+
+    # Тест 2: Білий шум (різні рівні)
+    for snr in [40, 30, 25, 20, 15]:
+        test_name = f'Noise SNR={snr}dB'
+        print(f"\n2️⃣ {test_name}:")
+
+        try:
+            noisy = add_gaussian_noise(stego_samples, snr)
+            temp_file = f'temp_noise_{snr}.wav'
+            write_wav(temp_file, noisy, params)
+
+            decoded, stats = echo_extract_message(temp_file, message_bits,
+                                                  segment_size, d0_ms, d1_ms)
+            match = (decoded == original_bytes)
+
+            results[test_name] = {
+                'success': match,
+                'decoded': decoded,
+                'confidence': stats['avg_confidence']
+            }
+            print(f"   Результат: {'✅ OK' if match else '❌ FAIL'}")
+
+            import os
+            os.remove(temp_file)
+        except Exception as e:
+            results[test_name] = {'success': False, 'error': str(e)}
+            print(f"   Результат: ❌ ERROR - {e}")
+
+    # Тест 3: Low-pass фільтрація
+    for cutoff in [10000, 8000, 5000]:
+        test_name = f'Lowpass {cutoff}Hz'
+        print(f"\n3️⃣ {test_name}:")
+
+        try:
+            filtered = apply_lowpass_filter(stego_samples, cutoff, sample_rate)
+            temp_file = f'temp_filter_{cutoff}.wav'
+            write_wav(temp_file, filtered, params)
+
+            decoded, stats = echo_extract_message(temp_file, message_bits,
+                                                  segment_size, d0_ms, d1_ms)
+            match = (decoded == original_bytes)
+
+            results[test_name] = {
+                'success': match,
+                'decoded': decoded,
+                'confidence': stats['avg_confidence']
+            }
+            print(f"   Результат: {'✅ OK' if match else '❌ FAIL'}")
+
+            import os
+            os.remove(temp_file)
+        except Exception as e:
+            results[test_name] = {'success': False, 'error': str(e)}
+            print(f"   Результат: ❌ ERROR - {e}")
+
+    # Тест 4: Resampling
+    for new_rate in [22050, 16000]:
+        test_name = f'Resample {new_rate}Hz'
+        print(f"\n4️⃣ {test_name}:")
+
+        try:
+            resampled, new_sr = resample_audio(stego_samples, sample_rate, new_rate)
+
+            # Передискретизуємо назад до оригінальної частоти
+            back_resampled, _ = resample_audio(resampled, new_rate, sample_rate)
+
+            temp_file = f'temp_resample_{new_rate}.wav'
+            write_wav(temp_file, back_resampled, params)
+
+            decoded, stats = echo_extract_message(temp_file, message_bits,
+                                                  segment_size, d0_ms, d1_ms)
+            match = (decoded == original_bytes)
+
+            results[test_name] = {
+                'success': match,
+                'decoded': decoded,
+                'confidence': stats['avg_confidence']
+            }
+            print(f"   Результат: {'✅ OK' if match else '❌ FAIL'}")
+
+            import os
+            os.remove(temp_file)
+        except Exception as e:
+            results[test_name] = {'success': False, 'error': str(e)}
+            print(f"   Результат: ❌ ERROR - {e}")
+
+    # Підсумок
+    print("\n" + "="*60)
+    print("ПІДСУМОК ТЕСТІВ")
+    print("="*60)
+
+    total_tests = len(results)
+    successful = sum(1 for r in results.values() if r.get('success', False))
+
+    print(f"Всього тестів: {total_tests}")
+    print(f"Успішних: {successful} ({successful/total_tests*100:.1f}%)")
+    print(f"Невдалих: {total_tests - successful}")
+    print("="*60)
+
+    return results
+
+# Запуск тестування
+# Приклад:
+# results = test_robustness('test_audio.wav', 'stego_echo.wav',
+#                          "Test message", segment_size=4096)
+</code></pre>
+
+            <h4>Візуалізація результатів:</h4>
+            <pre class="python"><code>def plot_robustness_results(results):
+    """
+    Візуалізує результати тестування стійкості
+    """
+    # Підготовка даних
+    test_names = list(results.keys())
+    successes = [1 if r.get('success', False) else 0 for r in results.values()]
+    confidences = [r.get('confidence', 0) for r in results.values()]
+
+    # Створюємо графік
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
+
+    # 1. Success/Fail
+    colors = ['green' if s else 'red' for s in successes]
+    ax1.bar(range(len(test_names)), successes, color=colors, alpha=0.7, edgecolor='black')
+    ax1.set_xticks(range(len(test_names)))
+    ax1.set_xticklabels(test_names, rotation=45, ha='right')
+    ax1.set_ylabel('Success (1) / Fail (0)', fontsize=11)
+    ax1.set_title('Результати тестів стійкості', fontsize=13, fontweight='bold')
+    ax1.set_ylim([0, 1.2])
+    ax1.grid(True, alpha=0.3, axis='y')
+
+    # Додаємо текст на стовпці
+    for i, (name, success) in enumerate(zip(test_names, successes)):
+        label = '✅ OK' if success else '❌ FAIL'
+        ax1.text(i, success + 0.05, label, ha='center', fontsize=9, fontweight='bold')
+
+    # 2. Confidence
+    ax2.bar(range(len(test_names)), confidences, color='blue', alpha=0.7, edgecolor='black')
+    ax2.set_xticks(range(len(test_names)))
+    ax2.set_xticklabels(test_names, rotation=45, ha='right')
+    ax2.set_ylabel('Середня впевненість', fontsize=11)
+    ax2.set_title('Впевненість декодування', fontsize=13, fontweight='bold')
+    ax2.grid(True, alpha=0.3, axis='y')
+
+    plt.tight_layout()
+    plt.savefig('robustness_results.png', dpi=150, bbox_inches='tight')
+    print("📊 Графік збережено: robustness_results.png")
+    plt.show()
+
+# Приклад використання:
+# plot_robustness_results(results)
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li><strong>Baseline:</strong> 100% успіх (без атак)</li>
+                    <li><strong>Шум SNR≥25dB:</strong> 100% успіх (стійкий до помірного шуму)</li>
+                    <li><strong>Шум SNR<20dB:</strong> можливі помилки (потрібна ECC)</li>
+                    <li><strong>Low-pass 10kHz/8kHz:</strong> 100% успіх (високі частоти не критичні)</li>
+                    <li><strong>Low-pass 5kHz:</strong> можливі помилки (залежить від d₀ та d₁)</li>
+                    <li><strong>Resampling:</strong> 80-100% успіх (достатньо стійкий)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Завдання 5 -->
+        <div class="task-box">
+            <h3><span class="step-number">5</span>Оптимізація параметрів</h3>
+
+            <h4>Підбір оптимальних затримок:</h4>
+            <pre class="python"><code>def find_optimal_delays(audio_segment, sample_rate,
+                        delay_range=(0.3, 2.0), num_tests=20):
+    """
+    Шукає оптимальні затримки d0 та d1 для максимальної роздільності
+
+    Args:
+        audio_segment: тестовий аудіо сегмент
+        sample_rate: частота дискретизації
+        delay_range: діапазон затримок (мс)
+        num_tests: кількість тестових комбінацій
+
+    Returns:
+        best_d0, best_d1: оптимальні затримки
+        separability: матриця роздільності
+    """
+    print("\n" + "="*60)
+    print("ПОШУК ОПТИМАЛЬНИХ ЗАТРИМОК")
+    print("="*60)
+
+    min_delay, max_delay = delay_range
+    delays = np.linspace(min_delay, max_delay, num_tests)
+
+    # Матриця для збереження роздільності
+    separability = np.zeros((num_tests, num_tests))
+
+    # Амплітуда для тестів
+    test_amplitude = 0.35
+
+    for i, d0 in enumerate(delays):
+        for j, d1 in enumerate(delays):
+            if d1 <= d0:
+                continue  # d1 має бути > d0
+
+            # Генеруємо ехо для обох бітів
+            echo_0 = add_echo(audio_segment, d0, test_amplitude, sample_rate)
+            echo_1 = add_echo(audio_segment, d1, test_amplitude, sample_rate)
+
+            # Декодуємо
+            bit_0, conf_0 = decode_bit_cepstrum(echo_0, sample_rate, d0, d1)
+            bit_1, conf_1 = decode_bit_cepstrum(echo_1, sample_rate, d0, d1)
+
+            # Роздільність = мінімальна впевненість
+            # (обидва біти мають бути правильно декодовані)
+            if bit_0 == 0 and bit_1 == 1:
+                separability[i, j] = min(conf_0, conf_1)
+            else:
+                separability[i, j] = -1  # Помилка декодування
+
+    # Знаходимо найкращу комбінацію
+    best_idx = np.unravel_index(np.argmax(separability), separability.shape)
+    best_d0 = delays[best_idx[0]]
+    best_d1 = delays[best_idx[1]]
+    best_sep = separability[best_idx]
+
+    print(f"\n📊 Результати:")
+    print(f"   Оптимальна d₀: {best_d0:.3f} мс")
+    print(f"   Оптимальна d₁: {best_d1:.3f} мс")
+    print(f"   Різниця: {best_d1 - best_d0:.3f} мс")
+    print(f"   Роздільність: {best_sep:.6f}")
+    print("="*60)
+
+    # Візуалізація
+    plt.figure(figsize=(10, 8))
+    plt.imshow(separability, cmap='RdYlGn', aspect='auto', origin='lower',
+               extent=[min_delay, max_delay, min_delay, max_delay])
+    plt.colorbar(label='Роздільність')
+    plt.xlabel('d₁ (мс)', fontsize=12)
+    plt.ylabel('d₀ (мс)', fontsize=12)
+    plt.title('Матриця роздільності затримок', fontsize=14, fontweight='bold')
+
+    # Позначаємо оптимум
+    plt.plot(best_d1, best_d0, 'r*', markersize=20, label='Оптимум')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.savefig('delay_optimization.png', dpi=150, bbox_inches='tight')
+    print("📊 Графік збережено: delay_optimization.png")
+    plt.show()
+
+    return best_d0, best_d1, separability
+
+# Тестування
+# test_segment = samples[0:4096]  # Перший сегмент
+# best_d0, best_d1, sep_matrix = find_optimal_delays(test_segment, sample_rate=44100)
+</code></pre>
+
+            <h4>Оптимізація амплітуди:</h4>
+            <pre class="python"><code>def optimize_amplitude(audio_file, message, segment_size=4096,
+                       d0_ms=0.5, d1_ms=1.0, amplitude_range=(0.1, 0.6),
+                       num_tests=10):
+    """
+    Знаходить оптимальну амплітуду ехо для балансу якості та стійкості
+
+    Args:
+        audio_file: тестовий аудіо файл
+        message: тестове повідомлення
+        segment_size: розмір сегменту
+        d0_ms, d1_ms: затримки
+        amplitude_range: діапазон амплітуд для тестування
+        num_tests: кількість тестів
+
+    Returns:
+        optimal_amplitude: оптимальна амплітуда
+        results: результати всіх тестів
+    """
+    print("\n" + "="*60)
+    print("ОПТИМІЗАЦІЯ АМПЛІТУДИ ЕХО")
+    print("="*60)
+
+    amplitudes = np.linspace(amplitude_range[0], amplitude_range[1], num_tests)
+    results = []
+
+    for amp in amplitudes:
+        print(f"\n🔊 Тестування амплітуди α = {amp:.2f}:")
+
+        # Encoding
+        stego_file = f'temp_stego_amp_{amp:.2f}.wav'
+        try:
+            enc_stats = echo_hide_message(audio_file, message, stego_file,
+                                          segment_size, d0_ms, d1_ms, amp)
+
+            # Decoding
+            message_bits = len(message.encode('utf-8')) * 8
+            decoded, dec_stats = echo_extract_message(stego_file, message_bits,
+                                                      segment_size, d0_ms, d1_ms)
+
+            # Перевірка
+            success = (decoded == message.encode('utf-8'))
+
+            result = {
+                'amplitude': amp,
+                'snr': enc_stats['snr'],
+                'success': success,
+                'confidence': dec_stats['avg_confidence'],
+                'min_confidence': dec_stats['min_confidence']
+            }
+
+            results.append(result)
+
+            print(f"   SNR: {enc_stats['snr']:.2f} dB")
+            print(f"   Декодування: {'✅ OK' if success else '❌ FAIL'}")
+            print(f"   Впевненість: {dec_stats['avg_confidence']:.6f}")
+
+            # Видаляємо тимчасовий файл
+            import os
+            os.remove(stego_file)
+
+        except Exception as e:
+            print(f"   ❌ ERROR: {e}")
+            results.append({
+                'amplitude': amp,
+                'snr': 0,
+                'success': False,
+                'confidence': 0,
+                'min_confidence': 0
+            })
+
+    # Аналіз результатів
+    print("\n" + "="*60)
+    print("АНАЛІЗ РЕЗУЛЬТАТІВ")
+    print("="*60)
+
+    # Знаходимо оптимум: максимальна впевненість при SNR > 30 dB
+    valid_results = [r for r in results if r['success'] and r['snr'] > 30]
+
+    if valid_results:
+        # Сортуємо за впевненістю
+        valid_results.sort(key=lambda x: x['confidence'], reverse=True)
+        optimal = valid_results[0]
+
+        print(f"✅ Оптимальна амплітуда: {optimal['amplitude']:.2f}")
+        print(f"   SNR: {optimal['snr']:.2f} dB")
+        print(f"   Впевненість: {optimal['confidence']:.6f}")
+    else:
+        print("⚠️ Не знайдено оптимальної амплітуди з SNR > 30 dB")
+        optimal = max(results, key=lambda x: x['confidence'])
+        print(f"Найкраща амплітуда: {optimal['amplitude']:.2f}")
+        print(f"   SNR: {optimal['snr']:.2f} dB")
+
+    # Візуалізація
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+    amps = [r['amplitude'] for r in results]
+    snrs = [r['snr'] for r in results]
+    confs = [r['confidence'] for r in results]
+
+    # SNR vs Amplitude
+    ax1.plot(amps, snrs, marker='o', linewidth=2, markersize=8, color='blue')
+    ax1.axhline(y=30, color='green', linestyle='--', alpha=0.5, label='Поріг якості (30 dB)')
+    ax1.axvline(x=optimal['amplitude'], color='red', linestyle='--', alpha=0.5, label='Оптимум')
+    ax1.set_xlabel('Амплітуда ехо (α)', fontsize=12)
+    ax1.set_ylabel('SNR (dB)', fontsize=12)
+    ax1.set_title('Якість vs Амплітуда', fontsize=13, fontweight='bold')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+
+    # Confidence vs Amplitude
+    ax2.plot(amps, confs, marker='o', linewidth=2, markersize=8, color='orange')
+    ax2.axvline(x=optimal['amplitude'], color='red', linestyle='--', alpha=0.5, label='Оптимум')
+    ax2.set_xlabel('Амплітуда ехо (α)', fontsize=12)
+    ax2.set_ylabel('Впевненість декодування', fontsize=12)
+    ax2.set_title('Впевненість vs Амплітуда', fontsize=13, fontweight='bold')
+    ax2.grid(True, alpha=0.3)
+    ax2.legend()
+
+    plt.tight_layout()
+    plt.savefig('amplitude_optimization.png', dpi=150, bbox_inches='tight')
+    print("\n📊 Графік збережено: amplitude_optimization.png")
+    plt.show()
+
+    return optimal['amplitude'], results
+
+# Приклад:
+# optimal_amp, amp_results = optimize_amplitude('test_audio.wav', "Test message")
+</code></pre>
+
+            <h4>Порівняння різних конфігурацій:</h4>
+            <pre class="python"><code>def compare_configurations(audio_file, message):
+    """
+    Порівнює різні конфігурації echo hiding
+    """
+    print("\n" + "="*60)
+    print("ПОРІВНЯННЯ КОНФІГУРАЦІЙ")
+    print("="*60)
+
+    configs = [
+        {'name': 'Стандартна', 'd0': 0.5, 'd1': 1.0, 'amp': 0.3, 'seg': 4096},
+        {'name': 'Висока якість', 'd0': 0.5, 'd1': 1.0, 'amp': 0.2, 'seg': 4096},
+        {'name': 'Висока стійкість', 'd0': 0.5, 'd1': 1.0, 'amp': 0.5, 'seg': 8192},
+        {'name': 'Висока ємність', 'd0': 0.4, 'd1': 0.8, 'amp': 0.35, 'seg': 2048},
+        {'name': 'Збалансована', 'd0': 0.6, 'd1': 1.2, 'amp': 0.35, 'seg': 4096},
+    ]
+
+    results = []
+
+    for config in configs:
+        print(f"\n📋 Конфігурація: {config['name']}")
+        print(f"   d₀={config['d0']} мс, d₁={config['d1']} мс")
+        print(f"   α={config['amp']}, segment={config['seg']}")
+
+        try:
+            # Encoding
+            stego_file = f"temp_{config['name'].replace(' ', '_')}.wav"
+            enc_stats = echo_hide_message(audio_file, message, stego_file,
+                                          config['seg'], config['d0'],
+                                          config['d1'], config['amp'])
+
+            # Decoding
+            msg_bits = len(message.encode('utf-8')) * 8
+            decoded, dec_stats = echo_extract_message(stego_file, msg_bits,
+                                                      config['seg'],
+                                                      config['d0'], config['d1'])
+
+            success = (decoded == message.encode('utf-8'))
+
+            result = {
+                'name': config['name'],
+                'snr': enc_stats['snr'],
+                'capacity': enc_stats['total_segments'],
+                'success': success,
+                'confidence': dec_stats['avg_confidence']
+            }
+
+            results.append(result)
+
+            print(f"   ✅ SNR: {enc_stats['snr']:.2f} dB")
+            print(f"   {'✅' if success else '❌'} Декодування: {success}")
+
+            import os
+            os.remove(stego_file)
+
+        except Exception as e:
+            print(f"   ❌ ERROR: {e}")
+
+    # Таблиця результатів
+    print("\n" + "="*60)
+    print("ЗВЕДЕНА ТАБЛИЦЯ")
+    print("="*60)
+    print(f"{'Конфігурація':<20} {'SNR (dB)':<12} {'Ємність':<12} {'Успіх':<10} {'Впевненість'}")
+    print("-"*60)
+
+    for r in results:
+        success_str = "✅ ТАК" if r['success'] else "❌ НІ"
+        print(f"{r['name']:<20} {r['snr']:<12.2f} {r['capacity']:<12} {success_str:<10} {r['confidence']:.6f}")
+
+    print("="*60)
+
+    # Рекомендація
+    best = max([r for r in results if r['success']],
+               key=lambda x: (x['snr'] > 35, x['confidence']))
+
+    print(f"\n💡 Рекомендована конфігурація: {best['name']}")
+    print(f"   Баланс між якістю (SNR={best['snr']:.1f} dB) та впевненістю")
+
+    return results
+
+# Приклад:
+# config_results = compare_configurations('test_audio.wav', "Test configuration")
+</code></pre>
+
+            <div class="result-box">
+                <h4>✅ Очікувані результати:</h4>
+                <ul>
+                    <li><strong>Затримки:</strong> оптимальні d₀=0.5-0.7 мс, d₁=1.0-1.3 мс (різниця ~0.5 мс)</li>
+                    <li><strong>Амплітуда:</strong> оптимальна α=0.3-0.4 (баланс SNR>30dB та впевненість>0.001)</li>
+                    <li><strong>Розмір сегменту:</strong> 4096-8192 семплів (компроміс ємність/стійкість)</li>
+                    <li><strong>Висновок:</strong> збалансована конфігурація дає SNR~35dB та 100% успіх декодування</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контрольні питання -->
+    <section>
+        <h2>❓ Контрольні питання</h2>
+
+        <div class="question-box">
+            <h3>Питання для самоперевірки:</h3>
+            <ol>
+                <li>Поясніть принцип роботи echo hiding. Чому людина не чує додане ехо?</li>
+                <li>Що таке cepstrum і як він використовується для детектування ехо?</li>
+                <li>Чим відрізняється quefrency від frequency?</li>
+                <li>Як кодуються біти 0 та 1 в echo hiding? Яку роль грає затримка?</li>
+                <li>Чому echo hiding має низьку ємність порівняно з LSB?</li>
+                <li>Яка різниця між cepstrum аналізом та автокореляцією для детектування ехо?</li>
+                <li>Чому echo hiding стійкий до MP3 компресії, а LSB ні?</li>
+                <li>Які фактори впливають на вибір оптимальних затримок d₀ та d₁?</li>
+                <li>Як амплітуда ехо (α) впливає на SNR та стійкість до шуму?</li>
+                <li>В яких сценаріях echo hiding кращий за LSB, а в яких навпаки?</li>
+                <li>Що таке "роздільність" (separability) затримок і чому вона важлива?</li>
+                <li>Як можна підвищити ємність echo hiding без втрати стійкості?</li>
+                <li>Поясніть, чому echo hiding вразливий до time stretching.</li>
+                <li>Які методи корекції помилок можна застосувати для покращення BER?</li>
+                <li>Порівняйте обчислювальну складність LSB та echo hiding методів.</li>
+            </ol>
+        </div>
+
+        <div class="task-box">
+            <h3>🎓 Завдання для звіту</h3>
+            <div class="checklist">
+                <ul>
+                    <li>✅ Реалізувати базовий echo encoder/decoder (завдання 1-2)</li>
+                    <li>✅ Успішно приховати та витягти текстове повідомлення (завдання 3)</li>
+                    <li>✅ Провести тестування стійкості до шуму, фільтрації, resampling (завдання 4)</li>
+                    <li>✅ Знайти оптимальні параметри (d₀, d₁, α) для вашого тестового аудіо (завдання 5)</li>
+                    <li>✅ Створити звіт з графіками cepstrum аналізу</li>
+                    <li>✅ Порівняти echo hiding з LSB методом</li>
+                    <li>✅ Дослідити вплив MP3 компресії (якщо є ffmpeg)</li>
+                    <li>✅ Проаналізувати trade-off між якістю, ємністю та стійкістю</li>
+                    <li>✅ Відповісти на контрольні питання</li>
+                    <li>✅ Зробити висновки про застосовність echo hiding</li>
+                </ul>
+            </div>
+
+            <h3>🎯 Критерії оцінювання</h3>
+            <ul>
+                <li>Коректна реалізація echo encoder/decoder з cepstrum аналізом (30%)</li>
+                <li>Успішне приховування та витягування повідомлень (20%)</li>
+                <li>Тестування стійкості до атак (шум, фільтрація, resampling) (20%)</li>
+                <li>Оптимізація параметрів (затримки, амплітуда) (15%)</li>
+                <li>Порівняльний аналіз з LSB методом (10%)</li>
+                <li>Оформлення звіту, графіки та документація (5%)</li>
+            </ul>
+        </div>
+
+        <div class="deadline-warning">
+            <strong>⏰ Термін здачі:</strong> Протягом двох тижнів після проведення лабораторної роботи.
+            Затримка здачі знижує оцінку на 10% за кожен тиждень.
+        </div>
+    </section>
+
+    <!-- Висновки -->
+    <section class="result-box">
+        <h2>🎓 Висновки</h2>
+        <p>
+            У цій лабораторній роботі ви освоїли echo hiding стеганографію:
+        </p>
+        <ul>
+            <li><strong>Echo hiding</strong> — вбудовує інформацію через додавання короткого затриманого ехо, яке не чує людина</li>
+            <li><strong>Cepstrum аналіз</strong> — потужний інструмент для виявлення періодичності в спектрі та детектування ехо</li>
+            <li><strong>Бінарне кодування</strong> — біти кодуються через різні затримки ехо (d₀ для 0, d₁ для 1)</li>
+            <li><strong>Висока стійкість</strong> — echo hiding стійкий до MP3 компресії, шуму та фільтрації, на відміну від LSB</li>
+            <li><strong>Низька ємність</strong> — компроміс за стійкість: лише десятки-сотні байт на хвилину</li>
+            <li><strong>Оптимізація параметрів</strong> — правильний підбір затримок та амплітуди критичний для балансу якості та стійкості</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Ключові висновки:</strong>
+            <ul>
+                <li>Оптимальні затримки: d₀=0.5-0.7 мс, d₁=1.0-1.3 мс (різниця ~0.5 мс)</li>
+                <li>Оптимальна амплітуда: α=0.3-0.4 (SNR>30dB, хороша непомітність)</li>
+                <li>Розмір сегменту: 4096-8192 семплів (компроміс між ємністю та стійкістю)</li>
+                <li>Echo hiding стійкий до MP3 компресії до 128 kbps</li>
+                <li>Шум з SNR>25dB не впливає на декодування</li>
+                <li>Вразливий до time stretching та pitch shifting</li>
+                <li>Для критичних застосувань: додати ECC та preamble для синхронізації</li>
+                <li>Застосування: водяні знаки, аутентифікація, приховане передавання коротких ключів</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Корисні ресурси -->
+    <section>
+        <h2>📚 Корисні ресурси</h2>
+
+        <div class="resources-list">
+            <ul>
+                <li>📄 <a href="#">Gruhl D. et al. "Echo Hiding" (1996) - Original paper on echo hiding</a></li>
+                <li>📖 <a href="#">Oh H. et al. "Improved Echo-Hiding Technique Using Efficient Energy" (2009)</a></li>
+                <li>🔬 <a href="#">Bogert B. et al. "The quefrency analysis of time series for echoes" (1963) - Cepstrum theory</a></li>
+                <li>📊 <a href="https://docs.scipy.org/doc/scipy/reference/fftpack.html">SciPy FFT Pack - Documentation</a></li>
+                <li>💻 <a href="https://librosa.org/">Librosa - Audio analysis in Python</a></li>
+                <li>📖 <a href="#">Kim H. "Echo-Hiding Based Audio Watermarking" (2005)</a></li>
+                <li>🎓 <a href="#">Bender W. et al. "Techniques for data hiding" (1996) - Classic survey paper</a></li>
+                <li>🔧 <a href="#">Dittmann J. "Digital Audio Watermarking using Cepstral Features" (2000)</a></li>
+                <li>📚 <a href="https://en.wikipedia.org/wiki/Cepstrum">Cepstrum - Wikipedia</a></li>
+                <li>🎵 <a href="https://freesound.org/">FreeSound - Free audio samples for testing</a></li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="lab-footer">
+    <div class="container">
+        <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../assets/js/lab-functions.js"></script>
+<script>
+    // Ініціалізація підсвітки коду
+    hljs.highlightAll();
+
+    // Функція перемикання вкладок
+    if (typeof switchTab === 'undefined') {
+        function switchTab(event, tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>

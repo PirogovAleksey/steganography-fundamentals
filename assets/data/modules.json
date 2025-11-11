@@ -39,7 +39,7 @@
             "Ентропія та надлишковість",
             "Статистичні характеристики"
           ],
-          "status": "planned",
+          "status": "available",
           "slides": 35,
           "hasPresentation": false
         },
@@ -86,7 +86,7 @@
           "title": "LSB стеганографія",
           "description": "Метод найменшого значущого біта",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         },
         {
           "id": "2.2",
@@ -175,14 +175,14 @@
           "title": "Мережева стеганографія",
           "description": "Приховування в мережевих протоколах",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         },
         {
           "id": "3.4",
           "title": "Текстова стеганографія",
           "description": "Лінгвістичні методи приховування",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         }
       ]
     },
@@ -191,35 +191,35 @@
       "title": "Сучасні методи та застосування",
       "emoji": "🚀",
       "description": "Машинне навчання, практичні застосування, майбутнє стеганографії",
-      "status": "planned",
+      "status": "available",
       "lectures": [
         {
           "id": "4.1",
           "title": "Машинне навчання в стеганографії",
           "description": "GAN, нейронні мережі",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         },
         {
           "id": "4.2",
           "title": "Цифрові водяні знаки",
           "description": "Захист авторських прав",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         },
         {
           "id": "4.3",
           "title": "Практичні застосування",
           "description": "Реальні кейси використання",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         },
         {
           "id": "4.4",
           "title": "Майбутнє стеганографії",
           "description": "Тренди та перспективи розвитку",
           "duration": 80,
-          "status": "planned"
+          "status": "available"
         }
       ]
     }
@@ -231,7 +231,7 @@
       "description": "Текстова стеганографія, перший досвід з LSB, візуальний аналіз",
       "type": "introduction",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "available",
       "topics": ["Текстова стеганографія", "Базовий LSB", "Візуальний аналіз"]
     },
     {
@@ -240,7 +240,7 @@
       "description": "Базовий LSB кодувальник, покращений LSB з ключем, метрики якості",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "available",
       "topics": ["LSB encoder/decoder", "Key-based LSB", "PSNR, SSIM метрики"]
     },
     {
@@ -294,7 +294,7 @@
       "description": "Echo generation, cepstrum аналіз, noise tolerance",
       "type": "programming",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "completed",
       "topics": ["Echo parameters", "Cepstral domain", "Noise resistance"]
     },
     {
@@ -303,7 +303,7 @@
       "description": "Autoencoder для стеганографії, neural network training, порівняння методів",
       "type": "advanced",
       "estimatedTime": 150,
-      "status": "planned",
+      "status": "available",
       "topics": ["Autoencoders", "Training process", "Performance metrics"]
     },
     {
@@ -312,7 +312,7 @@
       "description": "Texture аналіз, UNIWARD implementation, security evaluation",
       "type": "advanced",
       "estimatedTime": 150,
-      "status": "planned",
+      "status": "available",
       "topics": ["Texture complexity", "UNIWARD", "Security metrics"]
     },
     {
@@ -321,7 +321,7 @@
       "description": "Digital watermarking, covert communication, IoT застосування",
       "type": "practical",
       "estimatedTime": 120,
-      "status": "planned",
+      "status": "available",
       "topics": ["Watermarking", "Covert channels", "IoT security"]
     },
     {
