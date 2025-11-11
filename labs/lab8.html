@@ -372,9 +372,9 @@ def plot_cepstrum_analysis(audio_segment, sample_rate,
 
     # Cepstrum
     plt.plot(quefrency_ms, cepstrum, linewidth=1.5)
-    plt.xlabel('Quefrency (мс)', fontsize=12)
+    plt.xlabel('Quefrency (ms)', fontsize=12)
     plt.ylabel('Amplitude', fontsize=12)
-    plt.title('Cepstrum аналіз аудіо сегменту', fontsize=14, fontweight='bold')
+    plt.title('Cepstrum Analysis of Audio Segment', fontsize=14, fontweight='bold')
     plt.grid(True, alpha=0.3)
 
     # Вертикальні лінії для очікуваних затримок
@@ -1805,13 +1805,13 @@ print("Функції атак готові!")
     plt.figure(figsize=(10, 8))
     plt.imshow(separability, cmap='RdYlGn', aspect='auto', origin='lower',
                extent=[min_delay, max_delay, min_delay, max_delay])
-    plt.colorbar(label='Роздільність')
-    plt.xlabel('d₁ (мс)', fontsize=12)
-    plt.ylabel('d₀ (мс)', fontsize=12)
-    plt.title('Матриця роздільності затримок', fontsize=14, fontweight='bold')
+    plt.colorbar(label='Separability')
+    plt.xlabel('d₁ (ms)', fontsize=12)
+    plt.ylabel('d₀ (ms)', fontsize=12)
+    plt.title('Delay Separability Matrix', fontsize=14, fontweight='bold')
 
     # Позначаємо оптимум
-    plt.plot(best_d1, best_d0, 'r*', markersize=20, label='Оптимум')
+    plt.plot(best_d1, best_d0, 'r*', markersize=20, label='Optimum')
     plt.legend()
 
     plt.tight_layout()
@@ -1966,11 +1966,11 @@ print("Функції атак готові!")
     print("="*60)
 
     configs = [
-        {'name': 'Стандартна', 'd0': 0.5, 'd1': 1.0, 'amp': 0.3, 'seg': 4096},
-        {'name': 'Висока якість', 'd0': 0.5, 'd1': 1.0, 'amp': 0.2, 'seg': 4096},
-        {'name': 'Висока стійкість', 'd0': 0.5, 'd1': 1.0, 'amp': 0.5, 'seg': 8192},
-        {'name': 'Висока ємність', 'd0': 0.4, 'd1': 0.8, 'amp': 0.35, 'seg': 2048},
-        {'name': 'Збалансована', 'd0': 0.6, 'd1': 1.2, 'amp': 0.35, 'seg': 4096},
+        {'name': 'Standard', 'd0': 0.5, 'd1': 1.0, 'amp': 0.3, 'seg': 4096},
+        {'name': 'High Quality', 'd0': 0.5, 'd1': 1.0, 'amp': 0.2, 'seg': 4096},
+        {'name': 'High Robustness', 'd0': 0.5, 'd1': 1.0, 'amp': 0.5, 'seg': 8192},
+        {'name': 'High Capacity', 'd0': 0.4, 'd1': 0.8, 'amp': 0.35, 'seg': 2048},
+        {'name': 'Balanced', 'd0': 0.6, 'd1': 1.2, 'amp': 0.35, 'seg': 4096},
     ]
 
     results = []
