@@ -148,7 +148,7 @@ for i in range(3, 16):
 
         <div class="code-block">Квантований_DCT = round(DCT / QP)
 
-QP (Quantization Parameter): 0-51
+QP (Quantization Parameter - параметр квантування): 0-51
 - Низький QP (0-20): Висока якість, великий файл
 - Середній QP (20-35): Нормальна якість
 - Високий QP (35-51): Низька якість, малий файл</div>
@@ -175,15 +175,15 @@ else:
     <div class="slide">
         <h2>🎯 Motion Vectors у H.264</h2>
 
-        <h3>Особливості MV в H.264</h3>
+        <h3>Особливості MV (векторів руху) в H.264</h3>
         <ul>
             <li>Точність до 1/4 пікселя (субпіксельна)</li>
             <li>Множинні MV для одного макроблоку (4-16 векторів)</li>
             <li>Передбачення MV з сусідніх блоків</li>
         </ul>
 
-        <h3>Різниця векторів (MVD)</h3>
-        <p>H.264 кодує не самі MV, а <strong>різницю з передбаченням</strong> (Motion Vector Difference).</p>
+        <h3>Різниця векторів (MVD - Motion Vector Difference)</h3>
+        <p>H.264 кодує не самі MV, а <strong>різницю з передбаченням</strong>.</p>
 
         <div class="code-block">MVD = MV_actual - MV_predicted
 
@@ -220,12 +220,12 @@ MV_actual = MVD_x + MV_predicted</div>
             </tr>
             <tr>
                 <td><strong>CAVLC</strong></td>
-                <td>Context-Adaptive Variable Length Coding<br>Простіший, швидший</td>
+                <td>Context-Adaptive Variable Length Coding<br>(Контекстно-адаптивне кодування змінної довжини)<br>Простіший, швидший</td>
                 <td>⚠️ Обмежені можливості</td>
             </tr>
             <tr>
                 <td><strong>CABAC</strong></td>
-                <td>Context-Adaptive Binary Arithmetic Coding<br>Ефективніший (~10-15% краще)</td>
+                <td>Context-Adaptive Binary Arithmetic Coding<br>(Контекстно-адаптивне бінарне арифметичне кодування)<br>Ефективніший (~10-15% краще)</td>
                 <td>✅ Більше параметрів для модифікації</td>
             </tr>
         </table>
@@ -249,13 +249,13 @@ MV_actual = MVD_x + MV_predicted</div>
 
         <h3>Структура H.264 бітстріму</h3>
         <div class="code-block">Бітстрім H.264:
-├── NAL Units (Network Abstraction Layer)
-│   ├── SPS (Sequence Parameter Set)
-│   ├── PPS (Picture Parameter Set)
-│   ├── IDR кадри
+├── NAL Units (мережевий рівень абстракції)
+│   ├── SPS (набір параметрів послідовності)
+│   ├── PPS (набір параметрів зображення)
+│   ├── IDR кадри (миттєве оновлення декодера)
 │   ├── P/B кадри
-│   └── SEI (Supplemental Enhancement Information)
-└── Slice data</div>
+│   └── SEI (додаткова інформація для покращення)
+└── Slice data (дані зрізу)</div>
 
         <h3>Точки вбудовування</h3>
         <table>
@@ -596,9 +596,9 @@ for (int i = 3; i < 16; i++) {
 
 <!-- Navigation -->
 <div class="navigation">
-    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Previous</button>
-    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
-    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Next →</button>
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Попередній</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Головна</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Наступний →</button>
 </div>
 
 <!-- Slide Counter -->
