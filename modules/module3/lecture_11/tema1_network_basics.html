@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основи мережевої стеганографії | Лекція 11.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>🌐 Основи мережевої стеганографії</h1>
+        <div class="subtitle">
+            Тема 1: Приховані канали в мережевих комунікаціях
+        </div>
+    </div>
+
+    <!-- Слайд 2: Вступ -->
+    <div class="slide">
+        <h2>🔒 Що таке мережева стеганографія?</h2>
+
+        <div class="info-box">
+            <strong>💡 Визначення:</strong> Мережева стеганографія (Network Steganography) — це приховування інформації в мережевому трафіку шляхом модифікації протоколів, часових характеристик або структури пакетів.
+        </div>
+
+        <h3>Ключові відмінності від традиційної стеганографії:</h3>
+        <ul>
+            <li><strong>Контейнер:</strong> мережевий трафік замість файлів</li>
+            <li><strong>Передача:</strong> в реальному часі через мережу</li>
+            <li><strong>Виявлення:</strong> потребує аналізу трафіку</li>
+            <li><strong>Ємність:</strong> залежить від пропускної здатності</li>
+        </ul>
+
+        <div class="success-box">
+            <strong>Переваги:</strong> Дані не зберігаються на диску, важко виявити без моніторингу мережі в реальному часі.
+        </div>
+    </div>
+
+    <!-- Слайд 3: Приховані канали -->
+    <div class="slide">
+        <h2>📡 Концепція прихованих каналів (Covert Channels)</h2>
+
+        <div class="info-box">
+            <strong>Визначення:</strong> Прихований канал — це комунікаційний шлях, який використовує механізми, не призначені для передачі інформації.
+        </div>
+
+        <h3>Два основні типи:</h3>
+
+        <div class="two-column">
+            <div class="column">
+                <h4>1. Storage Channels</h4>
+                <p>Використовують поля даних для зберігання інформації</p>
+                <ul>
+                    <li>Невикористані біти заголовків</li>
+                    <li>Зарезервовані поля</li>
+                    <li>Payload модифікації</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>2. Timing Channels</h4>
+                <p>Кодують дані через часові характеристики</p>
+                <ul>
+                    <li>Затримки між пакетами</li>
+                    <li>Порядок пакетів</li>
+                    <li>Частота передачі</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Історія:</strong> Концепція описана Лампсоном у 1973 році в контексті безпеки операційних систем.
+        </div>
+    </div>
+
+    <!-- Слайд 4: Модель OSI -->
+    <div class="slide">
+        <h2>🏗️ Модель OSI та можливості стеганографії</h2>
+
+        <table>
+            <tr>
+                <th>Рівень</th>
+                <th>Назва</th>
+                <th>Стеганографічні можливості</th>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Application</td>
+                <td>HTTP headers, DNS queries, SMTP</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Presentation</td>
+                <td>Шифрування, стиснення даних</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Session</td>
+                <td>Управління сесіями</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Transport</td>
+                <td><span class="highlight">TCP/UDP headers, sequence numbers</span></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Network</td>
+                <td><span class="highlight">IP headers, TTL, ID fields</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Data Link</td>
+                <td>MAC addresses, Ethernet frames</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Physical</td>
+                <td>Timing, signal modulation</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 Найпопулярніші:</strong> Рівні 3-4 (IP, TCP/UDP) та 7 (HTTP, DNS) — найчастіше використовуються для мережевої стеганографії.
+        </div>
+    </div>
+
+    <!-- Слайд 5: Класифікація методів -->
+    <div class="slide">
+        <h2>📊 Класифікація методів мережевої стеганографії</h2>
+
+        <h3>За типом модифікації:</h3>
+
+        <div class="two-column">
+            <div class="column">
+                <h4>1. Modify</h4>
+                <ul>
+                    <li>Зміна існуючих полів</li>
+                    <li>TTL, ID, Reserved bits</li>
+                    <li>Sequence numbers</li>
+                </ul>
+
+                <h4>2. Add</h4>
+                <ul>
+                    <li>Додавання нових даних</li>
+                    <li>Padding, options</li>
+                    <li>Extra headers</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>3. Timing</h4>
+                <ul>
+                    <li>Модуляція затримок</li>
+                    <li>Inter-packet delays</li>
+                    <li>Burst patterns</li>
+                </ul>
+
+                <h4>4. Behavioral</h4>
+                <ul>
+                    <li>Порядок пакетів</li>
+                    <li>Retransmissions</li>
+                    <li>Protocol anomalies</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Структура IP заголовка -->
+    <div class="slide">
+        <h2>📦 Структура IP заголовка</h2>
+
+        <div class="code-block">0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Version|  IHL  |    DSCP   |ECN|         Total Length          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Identification        |Flags|    Fragment Offset      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Time to Live |    Protocol   |       Header Checksum         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Source Address                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Destination Address                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</div>
+
+        <h3>Поля для стеганографії:</h3>
+        <ul>
+            <li><span class="highlight">Identification (16 біт)</span> — унікальний ID пакета</li>
+            <li><span class="highlight">TTL (8 біт)</span> — час життя пакета</li>
+            <li><span class="highlight">DSCP/ECN (8 біт)</span> — QoS поля</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 7: TCP заголовок -->
+    <div class="slide">
+        <h2>🔗 Структура TCP заголовка</h2>
+
+        <div class="code-block">0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Acknowledgment Number                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Offset| Res |N|C|E|U|A|P|R|S|F|           Window              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Checksum            |       Urgent Pointer          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</div>
+
+        <h3>Поля для стеганографії:</h3>
+        <ul>
+            <li><span class="highlight">Sequence Number (32 біт)</span> — ISN modulation</li>
+            <li><span class="highlight">Reserved bits (4 біт)</span> — зарезервовані поля</li>
+            <li><span class="highlight">Urgent Pointer (16 біт)</span> — рідко використовується</li>
+            <li><span class="highlight">Options</span> — TCP timestamps, NOP padding</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 8: Ємність каналів -->
+    <div class="slide">
+        <h2>📊 Ємність прихованих каналів</h2>
+
+        <table>
+            <tr>
+                <th>Метод</th>
+                <th>Поле/Механізм</th>
+                <th>Біт на пакет</th>
+                <th>Ємність (при 100 pps)</th>
+            </tr>
+            <tr>
+                <td>IP ID</td>
+                <td>Identification field</td>
+                <td>16</td>
+                <td><span class="highlight">200 байт/сек</span></td>
+            </tr>
+            <tr>
+                <td>IP TTL</td>
+                <td>Time to Live</td>
+                <td>1-3</td>
+                <td>12-37 байт/сек</td>
+            </tr>
+            <tr>
+                <td>TCP ISN</td>
+                <td>Initial Seq Number</td>
+                <td>32</td>
+                <td><span class="highlight">400 байт/сек</span></td>
+            </tr>
+            <tr>
+                <td>TCP Timestamp</td>
+                <td>Options field</td>
+                <td>32</td>
+                <td>400 байт/сек</td>
+            </tr>
+            <tr>
+                <td>DNS Query</td>
+                <td>Domain name</td>
+                <td>~200</td>
+                <td><span class="highlight">~2.5 КБ/сек</span></td>
+            </tr>
+            <tr>
+                <td>HTTP Header</td>
+                <td>Custom headers</td>
+                <td>Variable</td>
+                <td>До 10+ КБ/сек</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 Примітка:</strong> pps = packets per second. Реальна ємність залежить від інтенсивності трафіку та методу кодування.
+        </div>
+    </div>
+
+    <!-- Слайд 9: Переваги мережевої стеганографії -->
+    <div class="slide">
+        <h2>✅ Переваги мережевої стеганографії</h2>
+
+        <div class="two-column">
+            <div class="column">
+                <h3>Технічні переваги</h3>
+                <ul class="checklist">
+                    <li>Не залишає слідів на диску</li>
+                    <li>Передача в реальному часі</li>
+                    <li>Інтеграція з легітимним трафіком</li>
+                    <li>Важко відрізнити від нормального трафіку</li>
+                    <li>Масштабованість</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Практичні переваги</h3>
+                <ul class="checklist">
+                    <li>Обхід файрволів</li>
+                    <li>Обхід DLP систем</li>
+                    <li>Анонімність комунікації</li>
+                    <li>Плausible deniability</li>
+                    <li>Робота через NAT/проксі</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <strong>Головна перевага:</strong> Мережева стеганографія дозволяє приховати сам факт існування прихованого каналу серед мільйонів легітимних пакетів.
+        </div>
+    </div>
+
+    <!-- Слайд 10: Недоліки та обмеження -->
+    <div class="slide">
+        <h2>⚠️ Недоліки та обмеження</h2>
+
+        <h3>1. Технічні обмеження</h3>
+        <ul>
+            <li><strong>Низька ємність:</strong> біти на пакет vs кілобайти у зображеннях</li>
+            <li><strong>Втрата пакетів:</strong> UDP не гарантує доставку</li>
+            <li><strong>Перевпорядкування:</strong> пакети можуть приходити не по порядку</li>
+            <li><strong>Модифікація маршрутизаторами:</strong> TTL, checksum, NAT</li>
+        </ul>
+
+        <h3>2. Виявлення</h3>
+        <ul>
+            <li><strong>Deep Packet Inspection:</strong> аналіз заголовків</li>
+            <li><strong>Аномалії трафіку:</strong> незвичні патерни</li>
+            <li><strong>Статистичний аналіз:</strong> розподіл полів</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>Критичне обмеження:</strong> Потрібна синхронізація між відправником і отримувачем, та спільний секрет для декодування.
+        </div>
+    </div>
+
+    <!-- Слайд 11: Застосування -->
+    <div class="slide">
+        <h2>💼 Практичні застосування</h2>
+
+        <h3>Легітимні застосування:</h3>
+        <ul class="checklist">
+            <li><strong>Захист приватності:</strong> обхід цензури в авторитарних країнах</li>
+            <li><strong>Журналістика:</strong> захист джерел інформації</li>
+            <li><strong>Корпоративна безпека:</strong> тестування на проникнення</li>
+            <li><strong>Військові комунікації:</strong> стійкий зв'язок</li>
+            <li><strong>Digital watermarking:</strong> трасування витоків</li>
+        </ul>
+
+        <h3>Зловмисні застосування:</h3>
+        <ul>
+            <li><strong>Malware C&C:</strong> управління ботнетами</li>
+            <li><strong>Data exfiltration:</strong> крадіжка даних</li>
+            <li><strong>Backdoors:</strong> приховані канали доступу</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>💡 Важливо:</strong> Розуміння методів допомагає як для захисту, так і для виявлення атак.
+        </div>
+    </div>
+
+    <!-- Слайд 12: Історичні приклади -->
+    <div class="slide">
+        <h2>📜 Історичні приклади та інциденти</h2>
+
+        <h3>1. NSTX (2000)</h3>
+        <p>Один з перших публічних інструментів DNS tunneling для обходу платних Wi-Fi мереж.</p>
+
+        <h3>2. Loki (1996)</h3>
+        <p>Класичний прихований канал через ICMP Echo (ping). Дані в payload ICMP пакетів.</p>
+
+        <h3>3. Covert_TCP (1996)</h3>
+        <p>Демонстрація прихованих каналів у TCP/IP заголовках (IP ID, TCP Seq).</p>
+
+        <h3>4. APT атаки</h3>
+        <p>Багато Advanced Persistent Threats використовують DNS tunneling для C&C комунікації через корпоративні файрволи.</p>
+
+        <div class="warning-box">
+            <strong>Реальність:</strong> DNS tunneling використовується у ~10% APT атак для обходу мережевих засобів захисту.
+        </div>
+    </div>
+
+    <!-- Слайд 13: Порівняння з іншими методами -->
+    <div class="slide">
+        <h2>⚖️ Порівняння методів стеганографії</h2>
+
+        <table>
+            <tr>
+                <th>Критерій</th>
+                <th>Зображення</th>
+                <th>Аудіо/Відео</th>
+                <th>Мережа</th>
+            </tr>
+            <tr>
+                <td><strong>Ємність</strong></td>
+                <td>Висока<br>(КБ-МБ)</td>
+                <td>Дуже висока<br>(МБ)</td>
+                <td>Низька<br>(біт/пакет)</td>
+            </tr>
+            <tr>
+                <td><strong>Швидкість</strong></td>
+                <td>Офлайн</td>
+                <td>Офлайн</td>
+                <td><span class="highlight">Реальний час</span></td>
+            </tr>
+            <tr>
+                <td><strong>Сліди</strong></td>
+                <td>Файл на диску</td>
+                <td>Файл на диску</td>
+                <td><span class="highlight">Немає</span></td>
+            </tr>
+            <tr>
+                <td><strong>Виявлення</strong></td>
+                <td>Стегоаналіз</td>
+                <td>Стегоаналіз</td>
+                <td>Traffic analysis</td>
+            </tr>
+            <tr>
+                <td><strong>Складність</strong></td>
+                <td>Низька</td>
+                <td>Середня</td>
+                <td>Висока</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 14: Висновки -->
+    <div class="slide">
+        <h2>📌 Висновки</h2>
+
+        <h3>Ключові ідеї:</h3>
+        <ul class="checklist">
+            <li>Мережева стеганографія приховує дані в мережевому трафіку</li>
+            <li>Два типи: storage channels та timing channels</li>
+            <li>Можливості на всіх рівнях моделі OSI</li>
+            <li>Низька ємність компенсується непомітністю</li>
+            <li>Не залишає слідів на диску</li>
+            <li>Важливо для атак і захисту</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Наступна тема:</strong> Протокольні методи — детальний розгляд TCP/IP, DNS, HTTP стеганографії.
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                🏠 До переліку тем
+            </a>
+            <a href="tema2_protocol_methods.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                Далі: Протокольні методи →
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Попередній</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Головна</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Наступний →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 14</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>

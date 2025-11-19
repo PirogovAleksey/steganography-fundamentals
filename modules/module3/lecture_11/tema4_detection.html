@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виявлення та протидія | Лекція 11.4</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>🔍 Виявлення та протидія</h1>
+        <div class="subtitle">
+            Тема 4: Методи детекції мережевої стеганографії
+        </div>
+    </div>
+
+    <!-- Слайд 2: Огляд проблеми -->
+    <div class="slide">
+        <h2>🎯 Проблема виявлення</h2>
+
+        <div class="info-box">
+            <strong>Виклик:</strong> Мережева стеганографія маскується під легітимний трафік. Як відрізнити стеганографічний пакет від звичайного?
+        </div>
+
+        <h3>Підходи до виявлення:</h3>
+
+        <div class="two-column">
+            <div class="column">
+                <h4>1. Rule-based</h4>
+                <ul>
+                    <li>Відомі сигнатури інструментів</li>
+                    <li>Аномальні значення полів</li>
+                    <li>Заборонені комбінації</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>2. Statistical</h4>
+                <ul>
+                    <li>Аналіз розподілів</li>
+                    <li>Кореляційний аналіз</li>
+                    <li>Machine Learning</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>Складність:</strong> Більшість методів дають false positives на легітимному трафіку з незвичними характеристиками.
+        </div>
+    </div>
+
+    <!-- Слайд 3: Header Analysis -->
+    <div class="slide">
+        <h2>📋 Аналіз заголовків пакетів</h2>
+
+        <h3>1. IP Header Anomalies</h3>
+        <div class="code-block">// Перевірки IP заголовка
+- TTL: чи відповідає типовим значенням для ОС?
+  (Windows: 128, Linux: 64, Cisco: 255)
+- ID: чи послідовні? чи випадкові?
+- DSCP/ECN: чи використовуються коректно?
+- Options: чи є незвичні опції?</div>
+
+        <h3>2. TCP Header Anomalies</h3>
+        <div class="code-block">// Перевірки TCP заголовка
+- Reserved bits: мають бути 0
+- Urgent pointer: рідко != 0
+- Window size: чи реалістичний?
+- Options: чи валідні timestamps?</div>
+
+        <h3>3. Protocol Compliance</h3>
+        <ul>
+            <li>Чи відповідає RFC специфікації?</li>
+            <li>Чи є неочікувані комбінації прапорців?</li>
+            <li>Чи коректна послідовність станів?</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 4: Statistical Analysis -->
+    <div class="slide">
+        <h2>📊 Статистичний аналіз трафіку</h2>
+
+        <h3>1. Розподіл значень полів</h3>
+        <div class="code-block">// IP ID distribution
+Легітимний: послідовний або випадковий рівномірний
+Стего: може мати незвичний розподіл (encoded data)
+
+// Chi-square test
+χ² = Σ (observed - expected)² / expected
+Якщо χ² > threshold → підозріло</div>
+
+        <h3>2. Ентропія</h3>
+        <div class="code-block">H = -Σ p(x) * log₂(p(x))
+
+// Приховані дані зазвичай мають високу ентропію
+H(random) ≈ 8 біт/байт
+H(text) ≈ 4-5 біт/байт
+H(encoded_data) ≈ 7-8 біт/байт</div>
+
+        <h3>3. Autocorrelation</h3>
+        <p>Перевірка кореляції між послідовними значеннями полів. Стеганографічні дані зазвичай некорельовані.</p>
+    </div>
+
+    <!-- Слайд 5: DNS Tunnel Detection -->
+    <div class="slide">
+        <h2>🌐 Виявлення DNS Tunneling</h2>
+
+        <div class="info-box">
+            <strong>Ознаки DNS tunneling:</strong>
+        </div>
+
+        <h3>1. Payload Analysis</h3>
+        <ul>
+            <li><strong>Довжина запитів:</strong> > 50 символів підозріло</li>
+            <li><strong>Ентропія subdomain:</strong> Base32/64 має високу ентропію</li>
+            <li><strong>Кількість міток:</strong> багато рівнів (a.b.c.d.e.domain.com)</li>
+        </ul>
+
+        <h3>2. Behavioral Analysis</h3>
+        <ul>
+            <li><strong>Query volume:</strong> аномально багато запитів до одного домену</li>
+            <li><strong>TXT queries:</strong> незвично багато TXT запитів</li>
+            <li><strong>Response size:</strong> великі відповіді</li>
+            <li><strong>NXDomain:</strong> багато невдалих запитів</li>
+        </ul>
+
+        <h3>Інструменти:</h3>
+        <div class="code-block">// Zeek (Bro) script для DNS tunnel detection
+event dns_request(c: connection, msg: dns_msg) {
+    if (|msg$query| > 52)
+        NOTICE("Long DNS query - possible tunnel");
+}</div>
+    </div>
+
+    <!-- Слайд 6: Timing Analysis -->
+    <div class="slide">
+        <h2>⏱️ Виявлення часових каналів</h2>
+
+        <h3>1. IPD Distribution Analysis</h3>
+        <div class="code-block">// Нормальний трафік
+- Логнормальний або експоненціальний розподіл
+- Плавні переходи
+
+// Timing channel
+- Бімодальний розподіл (два піки)
+- Різкі границі між класами</div>
+
+        <h3>2. Regularity Detection</h3>
+        <ul>
+            <li><strong>Variance:</strong> занадто стабільні інтервали підозрілі</li>
+            <li><strong>Periodicity:</strong> FFT для виявлення регулярних патернів</li>
+            <li><strong>Autocorrelation:</strong> штучні патерни мають характерні піки</li>
+        </ul>
+
+        <h3>3. Kolmogorov-Smirnov Test</h3>
+        <div class="code-block">// Порівняння з еталонним розподілом
+D = max|F_observed(x) - F_reference(x)|
+if D > critical_value:
+    "Трафік відрізняється від нормального"</div>
+    </div>
+
+    <!-- Слайд 7: Machine Learning -->
+    <div class="slide">
+        <h2>🤖 Machine Learning для детекції</h2>
+
+        <h3>Популярні підходи:</h3>
+
+        <table>
+            <tr>
+                <th>Метод</th>
+                <th>Переваги</th>
+                <th>Недоліки</th>
+            </tr>
+            <tr>
+                <td>Random Forest</td>
+                <td>Точний, інтерпретований</td>
+                <td>Потребує features</td>
+            </tr>
+            <tr>
+                <td>SVM</td>
+                <td>Добрий для малих даних</td>
+                <td>Масштабування</td>
+            </tr>
+            <tr>
+                <td>LSTM</td>
+                <td>Часові патерни</td>
+                <td>Багато даних</td>
+            </tr>
+            <tr>
+                <td>Autoencoder</td>
+                <td>Anomaly detection</td>
+                <td>False positives</td>
+            </tr>
+        </table>
+
+        <h3>Типові features:</h3>
+        <ul>
+            <li>Статистики полів (mean, std, entropy)</li>
+            <li>Packet timing features</li>
+            <li>Flow-level features (duration, bytes, packets)</li>
+            <li>Protocol-specific features</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 8: Traffic Normalization -->
+    <div class="slide">
+        <h2>🔧 Traffic Normalization</h2>
+
+        <div class="info-box">
+            <strong>Ідея:</strong> Замість виявлення — знищення прихованих каналів шляхом нормалізації трафіку.
+        </div>
+
+        <h3>Методи нормалізації:</h3>
+
+        <h4>1. Header Scrubbing</h4>
+        <div class="code-block">// Перезапис підозрілих полів
+packet.ip_id = random()
+packet.ip_ttl = normalize_ttl(packet)
+packet.tcp_timestamp = regenerate_timestamp()</div>
+
+        <h4>2. Timing Normalization</h4>
+        <div class="code-block">// Буферизація та відправка з фіксованим інтервалом
+buffer_packet(packet)
+every INTERVAL:
+    send_buffered_packets()</div>
+
+        <h4>3. Protocol Enforcement</h4>
+        <ul>
+            <li>Strict RFC compliance</li>
+            <li>Removal of optional fields</li>
+            <li>Regeneration of checksums</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>Недолік:</strong> Може впливати на легітимну функціональність та продуктивність.
+        </div>
+    </div>
+
+    <!-- Слайд 9: Active Wardens -->
+    <div class="slide">
+        <h2>🛡️ Active Wardens</h2>
+
+        <div class="info-box">
+            <strong>Active Warden:</strong> Мережевий пристрій, що активно модифікує трафік для знищення прихованих каналів.
+        </div>
+
+        <h3>Архітектура:</h3>
+        <div class="code-block">Internet ─── [Active Warden] ─── Internal Network
+                      │
+            ┌─────────┼─────────┐
+            │         │         │
+         Detect   Normalize   Log</div>
+
+        <h3>Можливості:</h3>
+        <ul class="checklist">
+            <li>Перезапис IP ID, TTL, TCP options</li>
+            <li>Нормалізація timing (packet shaping)</li>
+            <li>Видалення невідомих protocol options</li>
+            <li>DNS response filtering</li>
+            <li>HTTP header sanitization</li>
+        </ul>
+
+        <h3>Приклади:</h3>
+        <ul>
+            <li><strong>Norm:</strong> TCP normalizer для FreeBSD</li>
+            <li><strong>Traffic shapers:</strong> tc (Linux), pf (BSD)</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 10: Practical Tools -->
+    <div class="slide">
+        <h2>🛠️ Практичні інструменти</h2>
+
+        <h3>Network Monitoring</h3>
+        <table>
+            <tr>
+                <th>Інструмент</th>
+                <th>Призначення</th>
+            </tr>
+            <tr>
+                <td><strong>Wireshark</strong></td>
+                <td>Аналіз пакетів, статистика</td>
+            </tr>
+            <tr>
+                <td><strong>Zeek (Bro)</strong></td>
+                <td>Network security monitoring</td>
+            </tr>
+            <tr>
+                <td><strong>Suricata</strong></td>
+                <td>IDS/IPS з правилами</td>
+            </tr>
+            <tr>
+                <td><strong>tcpdump</strong></td>
+                <td>Захоплення трафіку</td>
+            </tr>
+        </table>
+
+        <h3>Specialized Tools</h3>
+        <ul>
+            <li><strong>dnstop:</strong> моніторинг DNS трафіку</li>
+            <li><strong>passivedns:</strong> логування DNS</li>
+            <li><strong>NetworkMiner:</strong> network forensics</li>
+            <li><strong>Argus:</strong> flow analysis</li>
+        </ul>
+
+        <h3>Suricata Rule Example:</h3>
+        <div class="code-block">alert dns any any -> any any (msg:"Possible DNS Tunnel";
+    dns_query; content:"."; offset:50; sid:1000001;)</div>
+    </div>
+
+    <!-- Слайд 11: Defense Strategies -->
+    <div class="slide">
+        <h2>🏰 Стратегії захисту</h2>
+
+        <h3>1. Prevention (Запобігання)</h3>
+        <ul>
+            <li>Strict firewall rules</li>
+            <li>Whitelist allowed protocols</li>
+            <li>Block unnecessary ICMP</li>
+            <li>DNS filtering/proxy</li>
+        </ul>
+
+        <h3>2. Detection (Виявлення)</h3>
+        <ul>
+            <li>IDS/IPS rules</li>
+            <li>Anomaly detection</li>
+            <li>Behavioral analysis</li>
+            <li>Regular traffic audits</li>
+        </ul>
+
+        <h3>3. Response (Реагування)</h3>
+        <ul>
+            <li>Automated blocking</li>
+            <li>Alert and investigate</li>
+            <li>Traffic normalization</li>
+            <li>Incident response procedures</li>
+        </ul>
+
+        <div class="success-box">
+            <strong>Defense in Depth:</strong> Комбінація всіх трьох стратегій забезпечує найкращий захист.
+        </div>
+    </div>
+
+    <!-- Слайд 12: Limitations -->
+    <div class="slide">
+        <h2>⚠️ Обмеження методів виявлення</h2>
+
+        <h3>1. False Positives</h3>
+        <p>Легітимний трафік може мати "підозрілі" характеристики:</p>
+        <ul>
+            <li>VPN та tunneling protocols</li>
+            <li>CDN та cloud services</li>
+            <li>IoT devices з нестандартною поведінкою</li>
+        </ul>
+
+        <h3>2. Evasion Techniques</h3>
+        <ul>
+            <li><strong>Mimicry:</strong> імітація легітимного трафіку</li>
+            <li><strong>Encryption:</strong> HTTPS приховує payload</li>
+            <li><strong>Low bandwidth:</strong> дуже повільна передача</li>
+            <li><strong>Polymorphism:</strong> зміна методів</li>
+        </ul>
+
+        <h3>3. Resource Constraints</h3>
+        <ul>
+            <li>Real-time analysis складна при високих швидкостях</li>
+            <li>Зберігання даних для ретроспективного аналізу</li>
+            <li>ML моделі потребують постійного оновлення</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 13: Best Practices -->
+    <div class="slide">
+        <h2>✅ Best Practices</h2>
+
+        <h3>Для захисту мережі:</h3>
+        <ul class="checklist">
+            <li>Моніторинг DNS трафіку (об'єм, ентропія, типи)</li>
+            <li>Baseline нормальної поведінки мережі</li>
+            <li>Обмеження ICMP до необхідного мінімуму</li>
+            <li>Інспекція HTTPS через SSL/TLS proxy</li>
+            <li>Сегментація мережі</li>
+            <li>Регулярний аудит firewall rules</li>
+        </ul>
+
+        <h3>Для дослідників:</h3>
+        <ul class="checklist">
+            <li>Тестування на реалістичному трафіку</li>
+            <li>Оцінка false positive rate</li>
+            <li>Документування обмежень</li>
+            <li>Етичні міркування</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 14: Висновки -->
+    <div class="slide">
+        <h2>📌 Висновки</h2>
+
+        <h3>Ключові ідеї:</h3>
+        <ul class="checklist">
+            <li>Виявлення базується на аномаліях та статистиці</li>
+            <li>DNS tunneling детектується за ентропією та об'ємом</li>
+            <li>Timing channels виявляються аналізом розподілів IPD</li>
+            <li>Machine Learning покращує точність детекції</li>
+            <li>Traffic normalization знищує канали без детекції</li>
+            <li>Defense in Depth — найкраща стратегія</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Підсумок лекції:</strong> Мережева стеганографія — потужний інструмент як для атак, так і для захисту приватності. Розуміння методів допомагає будувати кращий захист.
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="tema3_timing_channels.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                ← Часові канали
+            </a>
+            <a href="index.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                🏠 До переліку тем
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Попередній</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Головна</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Наступний →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 14</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>

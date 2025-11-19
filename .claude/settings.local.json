@@ -21,7 +21,8 @@
       "Bash(ren:*)",
       "Bash(ren lecture_3 lecture_7)",
       "Bash(ren lecture_4 lecture_8)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

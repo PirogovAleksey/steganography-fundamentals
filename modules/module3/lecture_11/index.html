@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лекція 11: Мережева стеганографія - приховування інформації в мережевих протоколах">
+    <title>Лекція 11: Мережева стеганографія | Основи стеганографії</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/modules.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../../module3/index.html">Модуль 3</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Лекція 11</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Lecture Hero -->
+<section class="lecture-hero">
+    <div class="container">
+        <div class="lecture-number-badge">Лекція 11</div>
+        <h1>Мережева стеганографія</h1>
+        <p class="landing-subtitle">
+            Приховування інформації в мережевих протоколах та комунікаціях
+        </p>
+
+        <div class="lecture-meta">
+            <span class="lecture-meta-item">
+                ⏱️ 80 хвилин
+            </span>
+            <span class="lecture-meta-item">
+                📊 4 Теми
+            </span>
+            <span class="lecture-meta-item">
+                🌐 Мережеві методи
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+
+        <!-- Reading Material -->
+        <section style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="color: #0369a1; margin-bottom: 1rem;">📖 Матеріали для читання</h3>
+            <p style="margin-bottom: 1rem;">Детальний теоретичний конспект лекції з поясненнями, формулами та прикладами</p>
+            <a href="konspekt_11.html" class="btn btn-primary">Читати конспект лекції</a>
+        </section>
+
+        <!-- Learning Objectives -->
+        <section class="lecture-objectives">
+            <h3>🎯 Цілі лекції</h3>
+            <ul>
+                <li>Зрозуміти концепцію прихованих каналів у мережевих комунікаціях</li>
+                <li>Вивчити методи вбудовування даних у протоколи TCP/IP, DNS, HTTP</li>
+                <li>Освоїти часові методи стеганографії (timing channels)</li>
+                <li>Ознайомитися з методами виявлення мережевої стеганографії</li>
+                <li>Розглянути практичні застосування та інструменти</li>
+            </ul>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section">
+            <h2 class="section-title">📚 Теми лекції</h2>
+
+            <div class="topics-grid">
+
+                <!-- Тема 1 -->
+                <a href="tema1_network_basics.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 1</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🌐 Основи мережевої стеганографії</h3>
+                    <p class="topic-description">
+                        Приховані канали, класифікація методів, модель OSI та можливості для стеганографії
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Covert channels</span>
+                        <span class="subtopic-badge">Модель OSI</span>
+                        <span class="subtopic-badge">Класифікація</span>
+                        <span class="subtopic-badge">Ємність каналів</span>
+                    </div>
+                </a>
+
+                <!-- Тема 2 -->
+                <a href="tema2_protocol_methods.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 2</span>
+                        <span class="topic-duration">⏱️ 25 хв</span>
+                    </div>
+                    <h3 class="topic-title">📡 Протокольні методи</h3>
+                    <p class="topic-description">
+                        Вбудовування в заголовки TCP/IP, DNS tunneling, HTTP стеганографія, ICMP методи
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">TCP/IP headers</span>
+                        <span class="subtopic-badge">DNS tunneling</span>
+                        <span class="subtopic-badge">HTTP методи</span>
+                        <span class="subtopic-badge">ICMP канали</span>
+                    </div>
+                </a>
+
+                <!-- Тема 3 -->
+                <a href="tema3_timing_channels.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 3</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">⏱️ Часові канали</h3>
+                    <p class="topic-description">
+                        Модуляція затримок пакетів, IPD кодування, джиттер та синхронізація
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">IPD модуляція</span>
+                        <span class="subtopic-badge">Timing patterns</span>
+                        <span class="subtopic-badge">Джиттер</span>
+                        <span class="subtopic-badge">Синхронізація</span>
+                    </div>
+                </a>
+
+                <!-- Тема 4 -->
+                <a href="tema4_detection.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 4</span>
+                        <span class="topic-duration">⏱️ 15 хв</span>
+                    </div>
+                    <h3 class="topic-title">🔍 Виявлення та протидія</h3>
+                    <p class="topic-description">
+                        Методи детекції, статистичний аналіз трафіку, нормалізація та практичні інструменти
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Traffic analysis</span>
+                        <span class="subtopic-badge">Anomaly detection</span>
+                        <span class="subtopic-badge">Нормалізація</span>
+                        <span class="subtopic-badge">Інструменти</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="lecture-resources">
+            <h3>📚 Додаткові матеріали</h3>
+            <div class="resource-links">
+                <a href="#" class="resource-link">
+                    📖 Wendzel S. et al. "A Survey on Information Hiding in Network Protocols"
+                </a>
+                <a href="#" class="resource-link">
+                    📄 Mazurczyk W. "Network Steganography: Opportunities, Challenges, and Future Directions"
+                </a>
+                <a href="#" class="resource-link">
+                    🔗 RFC документація TCP/IP, DNS, HTTP протоколів
+                </a>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="lecture-navigation">
+            <div class="lecture-nav-buttons">
+                <a href="../../module3/index.html" class="btn btn-outline">
+                    ← Назад до модуля 3
+                </a>
+                <a href="tema1_network_basics.html" class="btn btn-primary">
+                    Почати лекцію →
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content text-center">
+            <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра твердотільної електроніки та інформаційної безпеки</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Часові канали | Лекція 11.3</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>⏱️ Часові канали</h1>
+        <div class="subtitle">
+            Тема 3: Модуляція затримок пакетів для стеганографії
+        </div>
+    </div>
+
+    <!-- Слайд 2: Концепція -->
+    <div class="slide">
+        <h2>🕐 Концепція часових каналів</h2>
+
+        <div class="info-box">
+            <strong>💡 Визначення:</strong> Timing Channel — це прихований канал, що кодує інформацію через часові характеристики передачі: затримки між пакетами, порядок відправки, частоту.
+        </div>
+
+        <h3>Головна ідея:</h3>
+        <p>Замість модифікації вмісту пакетів, ми модифікуємо <span class="highlight">коли</span> пакети відправляються.</p>
+
+        <div class="two-column">
+            <div class="column">
+                <h4>Storage Channels</h4>
+                <ul>
+                    <li>Модифікують дані</li>
+                    <li>Залишають сліди в пакетах</li>
+                    <li>Виявляються DPI</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>Timing Channels</h4>
+                <ul>
+                    <li>Модифікують час</li>
+                    <li>Пакети виглядають нормально</li>
+                    <li>Важче виявити</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <strong>Перевага:</strong> Deep Packet Inspection не бачить змін — пакети повністю легітимні!
+        </div>
+    </div>
+
+    <!-- Слайд 3: IPD модуляція -->
+    <div class="slide">
+        <h2>📊 Inter-Packet Delay (IPD) модуляція</h2>
+
+        <div class="info-box">
+            <strong>IPD:</strong> Час між відправкою послідовних пакетів.
+        </div>
+
+        <h3>Базовий метод (On-Off Keying):</h3>
+        <div class="code-block">// Бінарне кодування через затримку
+if (bit == 1):
+    delay = LONG_DELAY    // наприклад, 100 мс
+else:
+    delay = SHORT_DELAY   // наприклад, 10 мс
+
+sleep(delay)
+send_packet()</div>
+
+        <h3>Приклад передачі "101":</h3>
+        <div class="code-block">Пакет 1 ──[100ms]── Пакет 2 ──[10ms]── Пакет 3 ──[100ms]── Пакет 4
+           bit=1              bit=0              bit=1</div>
+
+        <h3>Характеристики:</h3>
+        <ul>
+            <li><strong>Ємність:</strong> 1 біт на інтервал</li>
+            <li><strong>Швидкість:</strong> ~10-100 біт/сек</li>
+            <li><strong>Надійність:</strong> залежить від джиттеру мережі</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 4: Методи кодування -->
+    <div class="slide">
+        <h2>🔢 Методи кодування IPD</h2>
+
+        <h3>1. Binary Encoding</h3>
+        <div class="code-block">0 → затримка < threshold
+1 → затримка >= threshold</div>
+
+        <h3>2. Multi-level Encoding</h3>
+        <div class="code-block">00 → 10ms
+01 → 30ms
+10 → 50ms
+11 → 70ms
+// 2 біти на інтервал</div>
+
+        <h3>3. Differential Encoding</h3>
+        <div class="code-block">0 → затримка[i] < затримка[i-1]
+1 → затримка[i] >= затримка[i-1]
+// Стійкіший до постійних затримок</div>
+
+        <h3>4. Packet Ordering</h3>
+        <div class="code-block">// Порядок пакетів кодує дані
+Порядок [1,2,3,4] → 00
+Порядок [1,3,2,4] → 01
+// log2(n!) біт на n пакетів</div>
+    </div>
+
+    <!-- Слайд 5: JitterBug -->
+    <div class="slide">
+        <h2>🐛 JitterBug Attack</h2>
+
+        <div class="info-box">
+            <strong>Концепція:</strong> Додавання мінімальних затримок до легітимного інтерактивного трафіку (SSH, Telnet) для передачі даних.
+        </div>
+
+        <h3>Принцип роботи:</h3>
+        <div class="code-block">// Для кожного вихідного пакета:
+current_time = now()
+target_time = round_to_window(current_time)
+
+if (bit == 1):
+    target_time += small_offset  // +5ms
+
+wait_until(target_time)
+forward_packet()</div>
+
+        <h3>Характеристики:</h3>
+        <ul>
+            <li><strong>Затримка:</strong> 0-20 мс (в межах нормального джиттеру)</li>
+            <li><strong>Ємність:</strong> ~1 біт на пакет користувача</li>
+            <li><strong>Непомітність:</strong> дуже висока</li>
+            <li><strong>Вимоги:</strong> доступ до мережевого шляху (MITM)</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Застосування:</strong> Keylogger може передавати натиснення клавіш через JitterBug без додаткового трафіку.
+        </div>
+    </div>
+
+    <!-- Слайд 6: Time-Replay -->
+    <div class="slide">
+        <h2>🔄 Time-Replay Covert Channel</h2>
+
+        <div class="info-box">
+            <strong>Ідея:</strong> Відправник модулює час, отримувач "відтворює" патерн на власних пакетах для підтвердження.
+        </div>
+
+        <h3>Протокол:</h3>
+        <div class="code-block">// Відправник (Alice)
+1. Генерує IPD патерн з даними
+2. Відправляє пакети з модульованими затримками
+
+// Отримувач (Bob)
+1. Вимірює IPD вхідних пакетів
+2. Декодує дані
+3. "Відтворює" патерн у своїх відповідях (ACK)
+
+// Зовнішній спостерігач
+Бачить симетричні затримки — виглядає як RTT кореляція</div>
+
+        <h3>Переваги:</h3>
+        <ul class="checklist">
+            <li>Двосторонній прихований канал</li>
+            <li>Важко відрізнити від нормальної мережевої поведінки</li>
+            <li>Не потребує модифікації пакетів</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 7: Проблема джиттеру -->
+    <div class="slide">
+        <h2>📉 Проблема мережевого джиттеру</h2>
+
+        <div class="warning-box">
+            <strong>Джиттер:</strong> Варіація затримки пакетів у мережі. Головний ворог timing channels!
+        </div>
+
+        <h3>Джерела джиттеру:</h3>
+        <ul>
+            <li><strong>Черги маршрутизаторів:</strong> варіація 1-50 мс</li>
+            <li><strong>Конкуренція за канал:</strong> Wi-Fi, shared links</li>
+            <li><strong>Операційна система:</strong> scheduling, interrupts</li>
+            <li><strong>Мережеве обладнання:</strong> буферизація, QoS</li>
+        </ul>
+
+        <h3>Типові значення:</h3>
+        <table>
+            <tr>
+                <th>Мережа</th>
+                <th>Середній джиттер</th>
+            </tr>
+            <tr>
+                <td>LAN (Ethernet)</td>
+                <td>< 1 мс</td>
+            </tr>
+            <tr>
+                <td>Wi-Fi</td>
+                <td>5-20 мс</td>
+            </tr>
+            <tr>
+                <td>Internet</td>
+                <td>10-100 мс</td>
+            </tr>
+            <tr>
+                <td>Satellite</td>
+                <td>50-500 мс</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 8: Боротьба з джиттером -->
+    <div class="slide">
+        <h2>🛡️ Методи боротьби з джиттером</h2>
+
+        <h3>1. Збільшення інтервалів</h3>
+        <div class="code-block">// Якщо джиттер ~20 мс
+SHORT_DELAY = 50ms   // >> джиттер
+LONG_DELAY = 150ms
+
+// Чіткіше розділення, менше помилок</div>
+
+        <h3>2. Усереднення</h3>
+        <div class="code-block">// Кілька пакетів на біт
+bit = 1 → send N packets with LONG_DELAY
+bit = 0 → send N packets with SHORT_DELAY
+
+// Отримувач усереднює IPD</div>
+
+        <h3>3. Error Correction</h3>
+        <ul>
+            <li>Forward Error Correction (FEC)</li>
+            <li>Hamming codes</li>
+            <li>Reed-Solomon</li>
+        </ul>
+
+        <h3>4. Синхронізація</h3>
+        <ul>
+            <li>NTP для синхронізації годинників</li>
+            <li>Preamble послідовності для калібрування</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 9: Model-based Timing -->
+    <div class="slide">
+        <h2>📈 Model-based Timing Channels</h2>
+
+        <div class="info-box">
+            <strong>Ідея:</strong> Імітувати статистичні властивості легітимного трафіку для підвищення непомітності.
+        </div>
+
+        <h3>Підхід:</h3>
+        <div class="code-block">1. Аналіз легітимного трафіку
+   - Розподіл IPD (часто логнормальний)
+   - Автокореляція
+   - Burst patterns
+
+2. Генерація стеганографічного трафіку
+   - Затримки відповідають розподілу
+   - Біти кодуються в квантилях
+
+3. Приклад:
+   IPD < median → bit 0
+   IPD >= median → bit 1</div>
+
+        <h3>Переваги:</h3>
+        <ul class="checklist">
+            <li>Статистично невідрізнений від нормального трафіку</li>
+            <li>Проходить тести на випадковість</li>
+            <li>Адаптується до різних типів трафіку</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 10: TCP-specific Timing -->
+    <div class="slide">
+        <h2>🔗 TCP-специфічні часові канали</h2>
+
+        <h3>1. Retransmission-based</h3>
+        <div class="code-block">// Штучні ретрансміси кодують біти
+bit = 1 → trigger retransmission (drop ACK)
+bit = 0 → normal transmission
+
+// Виявлення: аномальний % ретрансмісій</div>
+
+        <h3>2. Window Size Timing</h3>
+        <div class="code-block">// Модуляція швидкості через advertised window
+large_window → fast transmission → bit 1
+small_window → slow transmission → bit 0</div>
+
+        <h3>3. ACK Timing</h3>
+        <div class="code-block">// Затримка ACK пакетів
+delayed_ACK → bit 1
+immediate_ACK → bit 0
+
+// Ємність: 1 біт на ACK</div>
+
+        <div class="warning-box">
+            <strong>Обмеження:</strong> TCP timing channels впливають на продуктивність з'єднання.
+        </div>
+    </div>
+
+    <!-- Слайд 11: Packet Ordering -->
+    <div class="slide">
+        <h2>🔀 Packet Ordering Channels</h2>
+
+        <div class="info-box">
+            <strong>Концепція:</strong> Кодування даних через порядок прибуття пакетів.
+        </div>
+
+        <h3>Математика:</h3>
+        <div class="code-block">n пакетів можна впорядкувати n! способами
+Ємність = log₂(n!) біт
+
+Приклади:
+4 пакети → log₂(24) ≈ 4.58 біт
+8 пакетів → log₂(40320) ≈ 15.3 біт</div>
+
+        <h3>Реалізація:</h3>
+        <div class="code-block">// Відправник
+message_bits = 13  // потрібно закодувати
+permutation = decode_lehmer(message_bits, 4)
+send_packets_in_order(permutation)
+
+// Отримувач
+arrival_order = observe_packet_order()
+message_bits = encode_lehmer(arrival_order)</div>
+
+        <h3>Обмеження:</h3>
+        <ul>
+            <li>Мережа може змінити порядок</li>
+            <li>Потрібні sequence numbers для відновлення</li>
+            <li>UDP краще підходить ніж TCP</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 12: Burst Patterns -->
+    <div class="slide">
+        <h2>💥 Burst Pattern Encoding</h2>
+
+        <div class="info-box">
+            <strong>Ідея:</strong> Кодування через патерни сплесків (bursts) активності.
+        </div>
+
+        <h3>Метод:</h3>
+        <div class="code-block">// Визначаємо патерни
+BURST_SHORT = 3 packets
+BURST_LONG = 7 packets
+PAUSE = 100ms
+
+// Кодування
+bit 0: [SHORT_BURST][PAUSE]
+bit 1: [LONG_BURST][PAUSE]
+
+// Приклад "101":
+|||......|||||||......|||......
+ 0        1           0</div>
+
+        <h3>Переваги:</h3>
+        <ul class="checklist">
+            <li>Стійкий до джиттеру окремих пакетів</li>
+            <li>Легше детектувати burst ніж окремий пакет</li>
+            <li>Природно для багатьох протоколів</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 13: Ємність та швидкість -->
+    <div class="slide">
+        <h2>📊 Ємність часових каналів</h2>
+
+        <table>
+            <tr>
+                <th>Метод</th>
+                <th>Біт/подію</th>
+                <th>Типова швидкість</th>
+                <th>Надійність</th>
+            </tr>
+            <tr>
+                <td>Binary IPD</td>
+                <td>1</td>
+                <td>10-100 bps</td>
+                <td>Середня</td>
+            </tr>
+            <tr>
+                <td>Multi-level IPD</td>
+                <td>2-4</td>
+                <td>20-200 bps</td>
+                <td>Низька</td>
+            </tr>
+            <tr>
+                <td>Packet Ordering</td>
+                <td>log₂(n!)</td>
+                <td>50-500 bps</td>
+                <td>Середня</td>
+            </tr>
+            <tr>
+                <td>JitterBug</td>
+                <td>1</td>
+                <td>~10 bps</td>
+                <td>Висока</td>
+            </tr>
+            <tr>
+                <td>Burst Patterns</td>
+                <td>1-2</td>
+                <td>5-50 bps</td>
+                <td>Висока</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 Компроміс:</strong> Вища ємність = нижча надійність. Вибір залежить від умов мережі та вимог.
+        </div>
+    </div>
+
+    <!-- Слайд 14: Висновки -->
+    <div class="slide">
+        <h2>📌 Висновки</h2>
+
+        <h3>Ключові ідеї:</h3>
+        <ul class="checklist">
+            <li>Timing channels кодують дані через час, не вміст</li>
+            <li>IPD модуляція — основний метод</li>
+            <li>Джиттер мережі — головна проблема</li>
+            <li>Model-based методи імітують легітимний трафік</li>
+            <li>Packet ordering дає високу ємність</li>
+            <li>Burst patterns стійкі до варіацій</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>Важливо:</strong> Часові канали повільні (біти/сек), але дуже важко виявити без спеціалізованого аналізу.
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="tema2_protocol_methods.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                ← Протокольні методи
+            </a>
+            <a href="tema4_detection.html" class="btn btn-primary" style="margin: 0 0.5rem;">
+                Далі: Виявлення та протидія →
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Попередній</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Головна</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Наступний →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 14</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+
+    // Auto-detect and add scroll indicators to slides with scrollable content
+    function addScrollIndicators() {
+        slides.forEach(slide => {
+            // Check if slide content exceeds viewport height
+            const isScrollable = slide.scrollHeight > slide.clientHeight;
+
+            if (isScrollable) {
+                // Check if indicator already exists
+                if (!slide.querySelector('.scroll-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator visible';
+                    indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    slide.appendChild(indicator);
+                }
+            }
+        });
+    }
+
+    // Run on load and resize
+    addScrollIndicators();
+    window.addEventListener('resize', addScrollIndicators);
+</script>
+
+</body>
+</html>
