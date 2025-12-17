@@ -54,16 +54,16 @@
 
         <div class="two-column">
             <div class="column">
-                <h4>1. Storage Channels</h4>
+                <h4>1. Канали зберігання (Storage Channels)</h4>
                 <p>Використовують поля даних для зберігання інформації</p>
                 <ul>
                     <li>Невикористані біти заголовків</li>
                     <li>Зарезервовані поля</li>
-                    <li>Payload модифікації</li>
+                    <li>Модифікації корисного навантаження (payload)</li>
                 </ul>
             </div>
             <div class="column">
-                <h4>2. Timing Channels</h4>
+                <h4>2. Часові канали (Timing Channels)</h4>
                 <p>Кодують дані через часові характеристики</p>
                 <ul>
                     <li>Затримки між пакетами</li>
@@ -191,8 +191,8 @@
         <h3>Поля для стеганографії:</h3>
         <ul>
             <li><span class="highlight">Identification (16 біт)</span> — унікальний ID пакета</li>
-            <li><span class="highlight">TTL (8 біт)</span> — час життя пакета</li>
-            <li><span class="highlight">DSCP/ECN (8 біт)</span> — QoS поля</li>
+            <li><span class="highlight">TTL (Time To Live, 8 біт)</span> — час життя пакета</li>
+            <li><span class="highlight">DSCP/ECN (8 біт)</span> — поля якості обслуговування (QoS)</li>
         </ul>
     </div>
 
@@ -216,10 +216,10 @@
 
         <h3>Поля для стеганографії:</h3>
         <ul>
-            <li><span class="highlight">Sequence Number (32 біт)</span> — ISN modulation</li>
+            <li><span class="highlight">Sequence Number (32 біт)</span> — номер послідовності (ISN при з'єднанні)</li>
             <li><span class="highlight">Reserved bits (4 біт)</span> — зарезервовані поля</li>
             <li><span class="highlight">Urgent Pointer (16 біт)</span> — рідко використовується</li>
-            <li><span class="highlight">Options</span> — TCP timestamps, NOP padding</li>
+            <li><span class="highlight">Options (опції)</span> — TCP timestamps (мітки часу), NOP padding</li>
         </ul>
     </div>
 
@@ -296,10 +296,10 @@
                 <h3>Практичні переваги</h3>
                 <ul class="checklist">
                     <li>Обхід файрволів</li>
-                    <li>Обхід DLP систем</li>
+                    <li>Обхід DLP систем (запобігання витоку даних)</li>
                     <li>Анонімність комунікації</li>
                     <li>Правдоподібне заперечення (plausible deniability)</li>
-                    <li>Робота через NAT/проксі</li>
+                    <li>Робота через NAT (трансляцію адрес)/проксі</li>
                 </ul>
             </div>
         </div>
@@ -323,7 +323,7 @@
 
         <h3>2. Виявлення</h3>
         <ul>
-            <li><strong>Deep Packet Inspection:</strong> аналіз заголовків</li>
+            <li><strong>Глибока інспекція пакетів (DPI):</strong> аналіз заголовків</li>
             <li><strong>Аномалії трафіку:</strong> незвичні патерни</li>
             <li><strong>Статистичний аналіз:</strong> розподіл полів</li>
         </ul>
@@ -366,7 +366,7 @@
         <p>Один з перших публічних інструментів DNS tunneling для обходу платних Wi-Fi мереж.</p>
 
         <h3>2. Loki (1996)</h3>
-        <p>Класичний прихований канал через ICMP Echo (ping). Дані в payload ICMP пакетів.</p>
+        <p>Класичний прихований канал через ICMP Echo (ping). Дані в корисному навантаженні (payload) ICMP пакетів.</p>
 
         <h3>3. Covert_TCP (1996)</h3>
         <p>Демонстрація прихованих каналів у TCP/IP заголовках (IP ID, TCP Seq).</p>
