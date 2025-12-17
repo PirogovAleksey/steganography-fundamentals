@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Питання на залік з курсу Основи стеганографії">
+    <title>Питання на залік | Основи стеганографії</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+
+    <style>
+        .exam-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .exam-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .exam-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .exam-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .exam-stat {
+            background: rgba(255,255,255,0.15);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .exam-stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .exam-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .exam-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .module-section {
+            margin-bottom: 3rem;
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .module-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .module-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .questions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.2s ease;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .question-item:hover {
+            background: #f0f4ff;
+            border-left-color: #764ba2;
+            transform: translateX(5px);
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            flex: 1;
+            line-height: 1.6;
+            color: #1e293b;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: background 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        @media print {
+            .exam-hero {
+                padding: 1rem 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .back-link, .print-btn {
+                display: none;
+            }
+            .question-item {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .module-section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .exam-hero h1 {
+                font-size: 1.8rem;
+            }
+            .exam-stats {
+                gap: 1rem;
+            }
+            .exam-stat {
+                padding: 0.75rem 1rem;
+            }
+            .exam-content {
+                padding: 1rem;
+            }
+            .print-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="exam-hero">
+    <div class="container">
+        <a href="index.html" class="back-link">← Повернутися на головну</a>
+        <h1>📝 Питання на залік</h1>
+        <p>Основи стеганографії | Модулі 1-3</p>
+
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="exam-content">
+
+    <ol class="questions-list">
+            <li class="question-item">
+                <span class="question-number">1</span>
+                <span class="question-text">Дайте визначення стеганографії та поясніть, чим вона відрізняється від криптографії.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">2</span>
+                <span class="question-text">Назвіть основні компоненти стеганографічної системи (контейнер, секретне повідомлення, стего-об'єкт, ключ) та опишіть їх функції.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">3</span>
+                <span class="question-text">Опишіть модель "ув'язнених" (Prisoners' Problem) Сіммонса та її значення для стеганографії.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">4</span>
+                <span class="question-text">Наведіть приклади історичних методів стеганографії (невидимі чорнила, мікроточки, акростих).</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">5</span>
+                <span class="question-text">Поясніть різницю між симетричною та асиметричною стеганографією.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">6</span>
+                <span class="question-text">Що таке ємність стеганографічного каналу та від чого вона залежить?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">7</span>
+                <span class="question-text">Опишіть "трикутник компромісів" у стеганографії: ємність, непомітність, стійкість.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">8</span>
+                <span class="question-text">Що таке ентропія в контексті стеганографії та як вона пов'язана з безпекою системи?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">9</span>
+                <span class="question-text">Назвіть основні класи стеганографічних методів за типом контейнера.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">10</span>
+                <span class="question-text">Які вимоги висуваються до якісної стеганографічної системи?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">11</span>
+                <span class="question-text">Поясніть принцип Керкгоффса в контексті стеганографії.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">12</span>
+                <span class="question-text">Що таке перцептивна прозорість (невидимість для сприйняття) у стеганографії?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">13</span>
+                <span class="question-text">Опишіть відмінності між активними та пасивними атаками на стеганографічну систему.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">14</span>
+                <span class="question-text">Поясніть поняття правдоподібного заперечення у стеганографії.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">15</span>
+                <span class="question-text">Опишіть принцип роботи LSB-стеганографії для зображень та її основні переваги і недоліки.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">16</span>
+                <span class="question-text">Чому LSB-заміна легше виявляється порівняно з LSB-узгодженням (matching)?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">17</span>
+                <span class="question-text">Поясніть суть методу Chi-square (χ²) для виявлення LSB-стеганографії.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">18</span>
+                <span class="question-text">Що таке RS-аналіз та які групи пікселів він класифікує (Regular, Singular, Unusable)?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">19</span>
+                <span class="question-text">Опишіть структуру JPEG-формату та роль DCT у стисненні зображень.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">20</span>
+                <span class="question-text">Поясніть, чому квантування DCT-коефіцієнтів є ідеальним місцем для вбудовування даних.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">21</span>
+                <span class="question-text">Опишіть принцип роботи методу JSteg та його основну вразливість.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">22</span>
+                <span class="question-text">Яким чином метод OutGuess протидіє статистичному виявленню?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">23</span>
+                <span class="question-text">Поясніть дві ключові інновації методу F5: зменшення значень та матричне кодування.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">24</span>
+                <span class="question-text">Що таке адаптивна стеганографія та чому вона ефективніша за неадаптивну?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">25</span>
+                <span class="question-text">Опишіть принцип роботи методу HUGO та його функцію вартості.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">26</span>
+                <span class="question-text">Що таке STC (Syndrome-Trellis Codes) та яку роль вони відіграють в адаптивній стеганографії?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">27</span>
+                <span class="question-text">Чим відрізняються специфічний та універсальний (сліпий) стегоаналіз?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">28</span>
+                <span class="question-text">Опишіть три основні моделі атак стегоаналізу: лише контейнер, відомий контейнер, відоме повідомлення.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">29</span>
+                <span class="question-text">Як працює метод Sample Pair Analysis для виявлення LSB-стеганографії?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">30</span>
+                <span class="question-text">Поясніть роль машинного навчання в сучасному стегоаналізі та опишіть особливості SRM та SPAM.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">31</span>
+                <span class="question-text">Опишіть особливості аудіо як контейнера для стеганографії та психоакустичні принципи маскування.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">32</span>
+                <span class="question-text">Яка структура WAV-файлу та як обчислюється ємність LSB-методу для аудіо?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">33</span>
+                <span class="question-text">Назвіть переваги та недоліки LSB-стеганографії в аудіо порівняно із зображеннями.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">34</span>
+                <span class="question-text">Чому LSB-стеганографія в аудіо не витримує MP3-кодування?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">35</span>
+                <span class="question-text">Опишіть унікальні властивості відео як стеганографічного контейнера (просторова, темпоральна, спектральна надмірність).</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">36</span>
+                <span class="question-text">Поясніть відмінності між I, P та B кадрами у відео та їхній стеганографічний потенціал.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">37</span>
+                <span class="question-text">Чому колірний простір YUV є кращим для відео-стеганографії, ніж RGB?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">38</span>
+                <span class="question-text">Що таке мережева стеганографія та чим вона відрізняється від традиційної?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">39</span>
+                <span class="question-text">Опишіть два типи прихованих каналів: канали зберігання (storage) та часові канали (timing).</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">40</span>
+                <span class="question-text">Які поля IP та TCP заголовків найчастіше використовуються для мережевої стеганографії?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">41</span>
+                <span class="question-text">Поясніть принцип фазового кодування в аудіо та чому людське вухо нечутливе до змін фази.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">42</span>
+                <span class="question-text">Опишіть роль перетворення Фур'є (FFT) у методі фазового кодування.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">43</span>
+                <span class="question-text">Що таке метод розширення спектру (Spread Spectrum) та які його основні переваги?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">44</span>
+                <span class="question-text">Поясніть роль псевдовипадкових послідовностей (ПВП) у методі Spread Spectrum.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">45</span>
+                <span class="question-text">Як відбувається кореляційне декодування у методі розширення спектру?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">46</span>
+                <span class="question-text">Опишіть принцип роботи методу WOW та його відмінності від HUGO.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">47</span>
+                <span class="question-text">Яку роль відіграють директивні фільтри (горизонтальний, вертикальний, діагональний) у методі WOW?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">48</span>
+                <span class="question-text">Порівняйте ємність та стійкість методів LSB, фазового кодування та Spread Spectrum для аудіо.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">49</span>
+                <span class="question-text">Що таке віконні функції (Хеммінга, Ганна) та навіщо вони використовуються у фазовому кодуванні?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">50</span>
+                <span class="question-text">Поясніть проблему синхронізації у методах фазового кодування та Spread Spectrum.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">51</span>
+                <span class="question-text">Що таке модель SPAM та як вона використовується в адаптивній стеганографії?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">52</span>
+                <span class="question-text">Опишіть метод калібрування для виявлення стеганографії в JPEG-зображеннях.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">53</span>
+                <span class="question-text">Чому коефіцієнти 0 та ±1 не використовуються для вбудовування в методі JSteg?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">54</span>
+                <span class="question-text">Що таке зигзагоподібне сканування DCT-коефіцієнтів та яка його роль у JPEG?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">55</span>
+                <span class="question-text">Поясніть поняття частотного та часового маскування в психоакустиці.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">56</span>
+                <span class="question-text">Як обчислюється SNR (співвідношення сигнал/шум) та яке його значення для оцінки якості стеганографії?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">57</span>
+                <span class="question-text">Опишіть структуру GOP (Group of Pictures) у відео та її значення для стеганографії.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">58</span>
+                <span class="question-text">Що таке DNS-тунелювання та як воно використовується для прихованої передачі даних?</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">59</span>
+                <span class="question-text">Поясніть різницю між просторовою та частотною областю в контексті стеганографії зображень.</span>
+            </li>
+            <li class="question-item">
+                <span class="question-number">60</span>
+                <span class="question-text">Які метрики використовуються для оцінки якості відео після стеганографічного вбудовування (PSNR, SSIM, VMAF)?</span>
+            </li>
+    </ol>
+
+</main>
+
+<!-- Print Button -->
+<button class="print-btn" onclick="window.print()">
+    🖨️ Друкувати
+</button>
+
+</body>
+</html>
