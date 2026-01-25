@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конспект: Текстова стеганографія | Лекція 12</title>
+
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/konspekt.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 2px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .comparison-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        .method-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border: 1px solid #667eea40;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="konspekt-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../../../index.html">🏠 Головна</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="../index.html">Модуль 3</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="index.html">Лекція 12</a>
+            <span class="breadcrumb-separator">›</span>
+            <span>Конспект</span>
+        </div>
+
+        <h1 class="konspekt-title">📝 Текстова стеганографія</h1>
+        <p class="konspekt-subtitle">Лінгвістичні методи приховування інформації</p>
+
+        <div class="konspekt-meta">
+            <span>📖 Час читання: ~25 хвилин</span>
+            <span>📊 4 розділи</span>
+        </div>
+    </div>
+</header>
+
+<!-- Reading Progress Bar -->
+<div class="reading-progress-container">
+    <div class="reading-progress-bar" id="readingProgress"></div>
+</div>
+
+<!-- Main Content -->
+<main class="konspekt-content">
+    <div class="container">
+        <div class="konspekt-layout">
+
+            <!-- Sidebar Navigation -->
+            <aside class="konspekt-sidebar">
+                <nav class="section-nav">
+                    <h4>📑 Зміст</h4>
+                    <ul>
+                        <li><a href="#intro" class="active">Вступ</a></li>
+                        <li><a href="#historical">Історичні методи</a></li>
+                        <li><a href="#format-methods">Форматні методи</a></li>
+                        <li><a href="#unicode">Unicode стеганографія</a></li>
+                        <li><a href="#html-methods">HTML/CSS методи</a></li>
+                        <li><a href="#linguistic">Лінгвістичні методи</a></li>
+                        <li><a href="#neural">Нейронні мережі</a></li>
+                        <li><a href="#steganalysis">Стегоаналіз</a></li>
+                        <li><a href="#tools">Інструменти</a></li>
+                        <li><a href="#summary">Підсумок</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Text -->
+            <article class="konspekt-text">
+
+                <!-- Вступ -->
+                <section id="intro" class="konspekt-section">
+                    <h2>Вступ до текстової стеганографії</h2>
+
+                    <div class="info-box">
+                        <h4>Визначення</h4>
+                        <p><strong>Текстова стеганографія</strong> — це форма прихованої комунікації, яка приховує секретну інформацію в тексті природної мови, роблячи існування прихованого повідомлення невиявленим для сторонніх спостерігачів.</p>
+                    </div>
+
+                    <h3>Особливості та виклики</h3>
+
+                    <p>Текстова стеганографія є найскладнішим видом стеганографії через особливості текстових даних:</p>
+
+                    <div class="comparison-table-container">
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Аспект</th>
+                                <th>Зображення</th>
+                                <th>Аудіо</th>
+                                <th>Текст</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Надлишковість</strong></td>
+                                <td>Висока (LSB)</td>
+                                <td>Середня</td>
+                                <td>Дуже низька</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ємність</strong></td>
+                                <td>~1 біт/піксель</td>
+                                <td>Варіює</td>
+                                <td>~0.5-2 біт/речення</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Детекція</strong></td>
+                                <td>Статистичний аналіз</td>
+                                <td>Спектральний аналіз</td>
+                                <td>Лінгвістичний аналіз</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Робастність</strong></td>
+                                <td>Помірна</td>
+                                <td>Добра</td>
+                                <td>Низька-середня</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Ключовий виклик</h4>
+                        <p>Текстові файли містять мінімальну надлишкову інформацію для приховування секретних даних. Модифікації легше виявляються людиною, а зміни повинні зберігати семантичну та синтаксичну коректність.</p>
+                    </div>
+                </section>
+
+                <!-- Історичні методи -->
+                <section id="historical" class="konspekt-section">
+                    <h2>Історичні методи</h2>
+
+                    <h3>Null Cipher (Нуль-шифр)</h3>
+
+                    <p><strong>Null cipher</strong> — це стародавня форма стеганографії, де відкритий текст змішаний з нешифрованим матеріалом. Читач повинен відкинути певні символи, щоб виявити повідомлення.</p>
+
+                    <div class="method-card">
+                        <h4>Приклад з Першої світової війни</h4>
+                        <div class="code-block">
+"PRESIDENT'S EMBARGO RULING SHOULD HAVE IMMEDIATE NOTICE."
+Перші літери: P-E-R-S-H-I-N-G (Генерал Pershing)</div>
+
+                        <h4>Типи правил null cipher:</h4>
+                        <ul>
+                            <li>Перша літера кожного слова</li>
+                            <li>Остання літера кожного слова</li>
+                            <li>Кожна n-та літера</li>
+                            <li>Перша літера кожного другого слова</li>
+                        </ul>
+                    </div>
+
+                    <h3>Акростих</h3>
+
+                    <p><strong>Акростих</strong> — розширена форма null cipher, де повідомлення приховано в перших літерах (або інших позиціях) рядків вірша чи тексту.</p>
+
+                    <div class="info-box">
+                        <h4>Історичне використання</h4>
+                        <ul>
+                            <li>Таємні образи могутніх осіб</li>
+                            <li>Кодування повідомлень у опублікованих творах</li>
+                            <li>Релігійні та містичні тексти</li>
+                        </ul>
+                    </div>
+
+                    <h3>Шифр Бекона (1605)</h3>
+
+                    <p><strong>Білітеральний шифр Френсіса Бекона</strong> — один з найраніших систематичних стеганографічних методів.</p>
+
+                    <div class="method-card">
+                        <h4>Таблиця кодування</h4>
+                        <div class="code-block">
+A = AAAAA    N = ABBAB
+B = AAAAB    O = ABBBA
+C = AAABA    P = ABBBB
+D = AAABB    Q = BAAAA
+E = AABAA    R = BAAAB
+...</div>
+
+                        <h4>Стеганографічна реалізація:</h4>
+                        <ul>
+                            <li>Використовуються два шрифти (наприклад, звичайний та курсив)</li>
+                            <li>Звичайний = A, Курсив = B</li>
+                            <li>Кожна літера потребує 5 символів cover-тексту</li>
+                        </ul>
+                    </div>
+
+                    <div class="formula-box">
+                        Довжина cover-тексту = Довжина повідомлення × 5
+                    </div>
+                </section>
+
+                <!-- Форматні методи -->
+                <section id="format-methods" class="konspekt-section">
+                    <h2>Форматні методи</h2>
+
+                    <h3>Маніпуляція пробілами (Whitespace)</h3>
+
+                    <p>Найпоширеніший підхід використовує комбінації пробілів та табуляцій для кодування бінарних даних:</p>
+
+                    <div class="method-card">
+                        <h4>Базове кодування</h4>
+                        <div class="code-block">
+Пробіл = 0
+Табуляція = 1
+
+Приклад: "Hello World" + приховане "A" (ASCII 65 = 01000001)
+"Hello[space][tab][space][space][space][space][space][tab]World"</div>
+                    </div>
+
+                    <h4>Інструмент SNOW</h4>
+                    <p><strong>SNOW</strong> — популярний інструмент whitespace стеганографії:</p>
+                    <ul>
+                        <li>Додає послідовності до 7 пробілів з табуляціями в кінці рядків</li>
+                        <li>Зазвичай дозволяє зберігати 3 біти на 8 колонок</li>
+                        <li>Підтримує ICE шифрування для додаткової безпеки</li>
+                    </ul>
+
+                    <h4>Маніпуляція закінченнями рядків</h4>
+                    <p>Різні операційні системи використовують різні закінчення рядків:</p>
+
+                    <div class="code-block">
+Windows: \r\n (CR+LF)
+Unix/Linux: \n (LF)
+Classic Mac: \r (CR)</div>
+
+                    <p>Змішуючи їх, можна кодувати бінарні дані (2 біти на рядок).</p>
+
+                    <div class="warning-box">
+                        <h4>Вразливості whitespace методів</h4>
+                        <ul>
+                            <li>Текстові редактори можуть нормалізувати пробіли</li>
+                            <li>Copy-paste часто видаляє trailing spaces</li>
+                            <li>Email системи можуть переформатувати текст</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Unicode стеганографія -->
+                <section id="unicode" class="konspekt-section">
+                    <h2>Unicode стеганографія</h2>
+
+                    <h3>Zero-Width символи</h3>
+
+                    <p>Unicode містить кілька символів нульової ширини, які невидимі при відображенні:</p>
+
+                    <div class="comparison-table-container">
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Символ</th>
+                                <th>Unicode</th>
+                                <th>Назва</th>
+                                <th>Ширина</th>
+                            </tr>
+                            <tr>
+                                <td>ZWSP</td>
+                                <td>U+200B</td>
+                                <td>Zero Width Space</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>ZWNJ</td>
+                                <td>U+200C</td>
+                                <td>Zero Width Non-Joiner</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>ZWJ</td>
+                                <td>U+200D</td>
+                                <td>Zero Width Joiner</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>WJ</td>
+                                <td>U+2060</td>
+                                <td>Word Joiner</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>FEFF</td>
+                                <td>U+FEFF</td>
+                                <td>Zero Width No-Break Space</td>
+                                <td>0</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>Алгоритм кодування</h3>
+
+                    <div class="method-card">
+                        <h4>Просте 2-символьне кодування (1 біт на символ)</h4>
+                        <div class="code-block">
+def encode_binary(message, cover_text):
+    binary = ''.join(format(ord(c), '08b') for c in message)
+    encoded = ""
+    for bit in binary:
+        if bit == '0':
+            encoded += '\u200B'  # ZWSP
+        else:
+            encoded += '\u200C'  # ZWNJ
+    # Вставляємо в середину cover-тексту
+    mid = len(cover_text) // 2
+    return cover_text[:mid] + encoded + cover_text[mid:]</div>
+                    </div>
+
+                    <div class="formula-box">
+                        Ємність (біти) = len(cover_text) × біти_на_позицію
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Переваги Unicode методів</h4>
+                        <ul>
+                            <li>Повністю невидимі для людини</li>
+                            <li>Текст виглядає абсолютно нормально</li>
+                            <li>Проста реалізація</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Обмеження</h4>
+                        <ul>
+                            <li>Деякі платформи видаляють zero-width символи</li>
+                            <li>Можуть бути виявлені аналізом символів</li>
+                            <li>Не підходять для критичних застосувань без шифрування</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- HTML/CSS методи -->
+                <section id="html-methods" class="konspekt-section">
+                    <h2>HTML/CSS стеганографія</h2>
+
+                    <h3>Маніпуляція регістром тегів</h3>
+
+                    <p>HTML теги нечутливі до регістру, що дозволяє бінарне кодування:</p>
+
+                    <div class="code-block">
+&lt;!-- Оригінал --&gt;
+&lt;HTML&gt;&lt;BODY&gt;&lt;P&gt;Text&lt;/P&gt;&lt;/BODY&gt;&lt;/HTML&gt;
+
+&lt;!-- З прихованим "10" --&gt;
+&lt;html&gt;&lt;BODY&gt;&lt;P&gt;Text&lt;/P&gt;&lt;/BODY&gt;&lt;/html&gt;
+lowercase = 0, uppercase = 1</div>
+
+                    <h3>Перестановка атрибутів</h3>
+
+                    <p>HTML атрибути можуть з'являтися в будь-якому порядку:</p>
+
+                    <div class="code-block">
+&lt;!-- Прихований біт 0 --&gt;
+&lt;img src="image.jpg" alt="photo" width="100"&gt;
+
+&lt;!-- Прихований біт 1 (атрибути переставлені) --&gt;
+&lt;img alt="photo" src="image.jpg" width="100"&gt;</div>
+
+                    <p><strong>Ємність:</strong> 1 біт на тег з 2+ атрибутами, що можна переставляти.</p>
+
+                    <h3>CSS-based приховування</h3>
+
+                    <div class="code-block">
+/* Приховані дані в порядку властивостей або значеннях */
+.class {
+    color: #000001;     /* Останній біт кодує дані */
+    margin: 10px 10px;  /* Надлишкові значення для приховування */
+}</div>
+
+                    <div class="highlight-box">
+                        <h4>Переваги HTML методів</h4>
+                        <p>HTML стеганографія має перевагу збереження при передачі через web, оскільки браузери нормалізують багато аспектів HTML, але зберігають структуру.</p>
+                    </div>
+                </section>
+
+                <!-- Лінгвістичні методи -->
+                <section id="linguistic" class="konspekt-section">
+                    <h2>Лінгвістичні методи</h2>
+
+                    <h3>Заміна синонімів</h3>
+
+                    <p><strong>Принцип:</strong> Заміна слів семантично еквівалентними синонімами для кодування бітів.</p>
+
+                    <div class="method-card">
+                        <h4>Приклади пар слів (1 біт кожна)</h4>
+                        <div class="code-block">
+big / large → 0/1
+small / tiny → 0/1
+fast / quick → 0/1
+happy / glad → 0/1</div>
+                    </div>
+
+                    <h4>Алгоритм вершинного кодування (Chang & Clark)</h4>
+                    <ol>
+                        <li>Побудувати граф, де слова — вершини</li>
+                        <li>З'єднати синоніми ребрами</li>
+                        <li>Призначити бінарні коди через розфарбування графа</li>
+                        <li>Замінити слова відповідно до секретних бітів</li>
+                    </ol>
+
+                    <p><strong>Ємність вбудовування:</strong> приблизно 0.67 біт на речення.</p>
+
+                    <div class="warning-box">
+                        <h4>Складнощі синонімічних методів</h4>
+                        <ul>
+                            <li>Контекстно-залежні значення слів</li>
+                            <li>Не всі синоніми взаємозамінні</li>
+                            <li>Зміни статистичного розподілу виявляються</li>
+                            <li>Потребують NLP інструментів</li>
+                        </ul>
+                    </div>
+
+                    <h3>Синтаксичні трансформації</h3>
+
+                    <p>Маніпуляція структурою речення зі збереженням значення:</p>
+
+                    <div class="method-card">
+                        <h4>Типи трансформацій</h4>
+                        <div class="code-block">
+Актив → Пасив:
+"Кіт зловив мишу" → "Миша була зловлена котом"
+(0 → 1)
+
+Cleft речення:
+"Іван з'їв торт" → "Це Іван з'їв торт"
+(0 → 1)
+
+Порядок прикметників:
+"гарний великий будинок" → "великий гарний будинок"
+(0 → 1)</div>
+                    </div>
+
+                    <p><strong>Ємність:</strong> 0.5-1.0 біт на речення.</p>
+
+                    <h3>Семантичні методи</h3>
+
+                    <p>Найскладніший підхід — маніпуляція значенням на концептуальному рівні:</p>
+
+                    <ul>
+                        <li>Генерація парафраз</li>
+                        <li>Переупорядкування інформації</li>
+                        <li>Модифікація структури дискурсу</li>
+                        <li>Вставка пресупозицій</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <h4>Поточні обмеження</h4>
+                        <p>Семантичні методи непрактичні з поточними NLP технологіями для надійної автоматичної реалізації.</p>
+                    </div>
+                </section>
+
+                <!-- Нейронні мережі -->
+                <section id="neural" class="konspekt-section">
+                    <h2>Нейронні мережі в текстовій стеганографії</h2>
+
+                    <h3>RNN-Stega</h3>
+
+                    <p><strong>Архітектура:</strong> Рекурентна нейронна мережа, навчена на великих текстових корпусах.</p>
+
+                    <div class="method-card">
+                        <h4>Процес</h4>
+                        <ol>
+                            <li>Навчити RNN мовну модель на текстовому корпусі</li>
+                            <li>На кожному кроці генерації модель передбачає розподіл ймовірностей по словнику</li>
+                            <li>Секретні біти вибирають з кандидатів на основі ймовірностей</li>
+                        </ol>
+                    </div>
+
+                    <div class="formula-box">
+                        P(w<sub>t</sub> | w<sub>1</sub>, ..., w<sub>t-1</sub>) = RNN(context)<br>
+                        bits_embedded = log<sub>2</sub>(|candidates|)
+                    </div>
+
+                    <h3>Adaptive Dynamic Grouping (ADG)</h3>
+
+                    <div class="method-card">
+                        <h4>Алгоритм</h4>
+                        <ol>
+                            <li>На кожному часовому кроці отримати розподіл ймовірностей по словнику</li>
+                            <li>Динамічно розділити словник на 2<sup>r</sup> груп з рівною загальною ймовірністю</li>
+                            <li>Кожна група представляє r-бітовий сегмент повідомлення</li>
+                            <li>Вибрати з нормалізованого розподілу вибраної групи</li>
+                        </ol>
+                    </div>
+
+                    <p><strong>Ємність:</strong> r бітів на згенерований токен.</p>
+                    <p><strong>Безпека:</strong> Доказово безпечний за метрикою KL-дивергенції.</p>
+
+                    <h3>LLM-based стеганографія (2024)</h3>
+
+                    <p><strong>LLM-Stega</strong> для black-box API доступу:</p>
+
+                    <div class="method-card">
+                        <h4>Компоненти</h4>
+                        <ol>
+                            <li><strong>Побудова ключових слів:</strong> створення keywords з секретного повідомлення</li>
+                            <li><strong>Зашифроване стеганографічне відображення:</strong> mapping повідомлення на елементи промпту</li>
+                            <li><strong>Генерація стего-тексту:</strong> використання LLM для генерації cover-тексту</li>
+                            <li><strong>Витягування повідомлення:</strong> зворотне відображення зі згенерованого тексту</li>
+                        </ol>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>Ключова інновація</h4>
+                        <p>Працює з користувацькими інтерфейсами LLM (GPT, Claude, LLaMA) без потреби в доступі до ваг моделі.</p>
+                    </div>
+                </section>
+
+                <!-- Стегоаналіз -->
+                <section id="steganalysis" class="konspekt-section">
+                    <h2>Стегоаналіз тексту</h2>
+
+                    <h3>Виявлення whitespace стеганографії</h3>
+
+                    <div class="code-block">
+def detect_whitespace_stego(text):
+    # Підрахунок trailing whitespace на рядок
+    trailing_ws = [len(line) - len(line.rstrip())
+                   for line in text.split('\n')]
+
+    # Статистичний аналіз
+    avg_trailing = sum(trailing_ws) / len(trailing_ws)
+    variance = sum((x - avg_trailing)**2 for x in trailing_ws) / len(trailing_ws)
+
+    # Флаг якщо виявлено незвичні патерни
+    if avg_trailing > 3 or variance > 10:
+        return "Підозріло: можлива whitespace стеганографія"
+    return "Чисто"</div>
+
+                    <h3>Виявлення zero-width символів</h3>
+
+                    <div class="code-block">
+import re
+
+def detect_zwc(text):
+    zwc_pattern = r'[\u200B\u200C\u200D\u2060\uFEFF]'
+    matches = re.findall(zwc_pattern, text)
+    if matches:
+        return f"Виявлено {len(matches)} zero-width символів"
+    return "Zero-width символи не знайдено"</div>
+
+                    <h3>Статистичний аналіз</h3>
+
+                    <h4>Детекція на основі перплексії</h4>
+
+                    <div class="formula-box">
+                        Perplexity = exp(-1/N × Σ log P(w<sub>i</sub> | context))
+                    </div>
+
+                    <p>Вища перплексія в стего-тексті вказує на неприродний вибір слів.</p>
+
+                    <h4>Feature вектори для ML детекції</h4>
+                    <ol>
+                        <li>Розподіл частот слів</li>
+                        <li>N-gram статистики</li>
+                        <li>Варіація довжини речень</li>
+                        <li>Розподіл POS-тегів</li>
+                        <li>Патерни пунктуації</li>
+                    </ol>
+
+                    <h3>Машинне навчання детекторів</h3>
+
+                    <div class="method-card">
+                        <h4>Deep Learning архітектури</h4>
+                        <p><strong>CNN-based:</strong></p>
+                        <div class="code-block">
+Input → Word Embedding → Conv1D (varying kernels) → MaxPool → Dense → Output</div>
+
+                        <p><strong>LSTM-based:</strong></p>
+                        <div class="code-block">
+Input → Embedding → BiLSTM → Attention → Dense → Output</div>
+
+                        <p><strong>BERT-based detection:</strong></p>
+                        <ul>
+                            <li>Fine-tune BERT на класифікації cover/stego тексту</li>
+                            <li>Використовує попередньо навчене розуміння мови</li>
+                            <li>State-of-the-art продуктивність</li>
+                        </ul>
+                    </div>
+
+                    <h3>Метрики детекції</h3>
+
+                    <div class="formula-box">
+                        Accuracy = (TP + TN) / (TP + TN + FP + FN)<br><br>
+                        Precision = TP / (TP + FP)<br><br>
+                        Recall = TP / (TP + FN)<br><br>
+                        F1 = 2 × (Precision × Recall) / (Precision + Recall)
+                    </div>
+                </section>
+
+                <!-- Інструменти -->
+                <section id="tools" class="konspekt-section">
+                    <h2>Інструменти та застосування</h2>
+
+                    <h3>Популярні інструменти</h3>
+
+                    <div class="comparison-table-container">
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Інструмент</th>
+                                <th>Тип</th>
+                                <th>Метод</th>
+                                <th>Платформа</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Snow/Stegsnow</strong></td>
+                                <td>Whitespace</td>
+                                <td>Tabs/spaces в кінці рядків</td>
+                                <td>Linux/Windows</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Spam Mimic</strong></td>
+                                <td>Генерація тексту</td>
+                                <td>Null cipher в spam</td>
+                                <td>Web</td>
+                            </tr>
+                            <tr>
+                                <td><strong>StegZero</strong></td>
+                                <td>Unicode</td>
+                                <td>Zero-width символи</td>
+                                <td>Web</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OpenStego</strong></td>
+                                <td>Мульти-формат</td>
+                                <td>Різні</td>
+                                <td>Cross-platform</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h4>Приклади команд Snow</h4>
+
+                    <div class="code-block">
+# Кодування
+stegsnow -C -m "Secret message" -p "password" input.txt output.txt
+
+# Декодування
+stegsnow -C -p "password" output.txt</div>
+
+                    <h3>Практичні застосування</h3>
+
+                    <div class="info-box">
+                        <h4>Легітимні використання</h4>
+                        <ul>
+                            <li><strong>Захист авторських прав:</strong> вбудовування інформації про власність</li>
+                            <li><strong>Відстеження документів:</strong> ідентифікація джерела витоків</li>
+                            <li><strong>Автентифікація контенту:</strong> перевірка цілісності документа</li>
+                            <li><strong>Водяні знаки:</strong> невидимі підписи в тексті</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Підсумок -->
+                <section id="summary" class="konspekt-section">
+                    <h2>Підсумок</h2>
+
+                    <h3>Порівняння методів</h3>
+
+                    <div class="comparison-table-container">
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Метод</th>
+                                <th>Ємність</th>
+                                <th>Непомітність</th>
+                                <th>Безпека</th>
+                                <th>Робастність</th>
+                            </tr>
+                            <tr>
+                                <td>Whitespace</td>
+                                <td>Низька</td>
+                                <td>Висока</td>
+                                <td>Низька</td>
+                                <td>Дуже низька</td>
+                            </tr>
+                            <tr>
+                                <td>Unicode ZWC</td>
+                                <td>Середня</td>
+                                <td>Дуже висока</td>
+                                <td>Середня</td>
+                                <td>Низька</td>
+                            </tr>
+                            <tr>
+                                <td>HTML/CSS</td>
+                                <td>Середня</td>
+                                <td>Висока</td>
+                                <td>Середня</td>
+                                <td>Середня</td>
+                            </tr>
+                            <tr>
+                                <td>Синоніми</td>
+                                <td>Низька</td>
+                                <td>Середня</td>
+                                <td>Середня</td>
+                                <td>Висока</td>
+                            </tr>
+                            <tr>
+                                <td>Синтаксис</td>
+                                <td>Дуже низька</td>
+                                <td>Середня</td>
+                                <td>Висока</td>
+                                <td>Висока</td>
+                            </tr>
+                            <tr>
+                                <td>Neural/LLM</td>
+                                <td>Висока</td>
+                                <td>Дуже висока</td>
+                                <td>Висока</td>
+                                <td>Низька</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>Чотири стовпи текстової стеганографії</h3>
+
+                    <div class="highlight-box">
+                        <ol>
+                            <li><strong>Ємність (C):</strong> Максимальна кількість вбудовуваних бітів</li>
+                            <li><strong>Непомітність (I):</strong> Невиявлюваність людиною</li>
+                            <li><strong>Безпека (S):</strong> Невиявлюваність алгоритмами</li>
+                            <li><strong>Робастність (R):</strong> Виживання після модифікацій</li>
+                        </ol>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>Ключові висновки</h4>
+                        <ul>
+                            <li>Текстова стеганографія — найскладніший вид через низьку надлишковість</li>
+                            <li>Форматні методи прості, але вразливі до переформатування</li>
+                            <li>Лінгвістичні методи робастніші, але потребують NLP</li>
+                            <li>Нейронні методи — найперспективніший напрям</li>
+                            <li>Стегоаналіз активно розвивається разом з методами приховування</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <div class="konspekt-nav">
+                    <a href="index.html" class="btn btn-outline">← До огляду лекції</a>
+                    <a href="tema1_basics.html" class="btn btn-primary">Почати презентацію →</a>
+                </div>
+
+            </article>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2025 Курс "Основи стеганографії"</p>
+    </div>
+</footer>
+
+<script>
+    // Reading progress
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('readingProgress').style.width = scrolled + '%';
+    });
+
+    // Active section highlighting
+    const sections = document.querySelectorAll('.konspekt-section');
+    const navLinks = document.querySelectorAll('.section-nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

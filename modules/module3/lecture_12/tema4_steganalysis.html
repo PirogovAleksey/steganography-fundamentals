@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стегоаналіз тексту | Лекція 12.4</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .code-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            text-align: left;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Стегоаналіз тексту</h1>
+        <div class="subtitle">
+            Тема 4: Методи виявлення прихованих даних у текстових документах
+        </div>
+    </div>
+
+    <!-- Слайд 2: Вступ -->
+    <div class="slide">
+        <h2>Стегоаналіз текстових документів</h2>
+
+        <div class="info-box">
+            <h4>Визначення</h4>
+            <p style="text-align: center;">
+                Виявлення наявності прихованих даних у текстових носіях
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;">
+            <div style="background: #dbeafe; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #1e40af;">Форматний</h4>
+                <p style="font-size: 0.85rem;">Виявлення whitespace, Unicode ZWC</p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #166534;">Статистичний</h4>
+                <p style="font-size: 0.85rem;">Аналіз розподілів, n-gram</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #854d0e;">ML-based</h4>
+                <p style="font-size: 0.85rem;">Класифікатори, нейронні мережі</p>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                Стегоаналіз тексту складніший через <strong>семантичну природу</strong> носія
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Виявлення whitespace -->
+    <div class="slide">
+        <h2>Виявлення Whitespace стеганографії</h2>
+
+        <div class="code-example">
+def detect_whitespace_stego(text):
+    # Підрахунок trailing whitespace на рядок
+    lines = text.split('\n')
+    trailing_ws = [len(line) - len(line.rstrip())
+                   for line in lines]
+
+    # Статистичний аналіз
+    avg = sum(trailing_ws) / len(trailing_ws)
+    variance = sum((x - avg)**2 for x in trailing_ws) / len(trailing_ws)
+
+    # Флаг якщо виявлено аномалії
+    if avg > 3 or variance > 10:
+        return "SUSPICIOUS: possible whitespace steganography"
+    return "CLEAN"
+        </div>
+
+        <h4 style="margin-top: 1rem;">Ознаки підозрілого тексту:</h4>
+        <ul style="font-size: 0.9rem;">
+            <li>Незвичайна кількість trailing spaces</li>
+            <li>Патерни табуляцій у кінці рядків</li>
+            <li>Змішані line endings (CR/LF)</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 4: Виявлення Unicode ZWC -->
+    <div class="slide">
+        <h2>Виявлення Zero-Width символів</h2>
+
+        <div class="code-example">
+import re
+
+def detect_zwc(text):
+    # Шукаємо zero-width символи
+    zwc_pattern = r'[\u200B\u200C\u200D\u2060\uFEFF]'
+    matches = re.findall(zwc_pattern, text)
+
+    if matches:
+        # Аналіз розподілу
+        zwc_count = {
+            'ZWSP': text.count('\u200B'),
+            'ZWNJ': text.count('\u200C'),
+            'ZWJ':  text.count('\u200D'),
+            'WJ':   text.count('\u2060'),
+            'BOM':  text.count('\uFEFF')
+        }
+        return f"DETECTED: {len(matches)} zero-width characters", zwc_count
+
+    return "NO zero-width characters found", {}
+        </div>
+
+        <div class="success-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                Zero-width символи <strong>легко виявити</strong> простим пошуком!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Перплексія -->
+    <div class="slide">
+        <h2>Аналіз на основі перплексії</h2>
+
+        <div class="info-box">
+            <h4>Перплексія (Perplexity)</h4>
+            <p style="text-align: center;">
+                Міра того, наскільки "здивована" мовна модель текстом
+            </p>
+        </div>
+
+        <div class="formula-box">
+            PPL = exp(-1/N × Σ log P(w<sub>i</sub> | context))
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div style="background: #dcfce7; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Низька PPL</h4>
+                <p style="font-size: 0.9rem;">Текст природний, очікуваний моделлю</p>
+            </div>
+            <div style="background: #fee2e2; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #991b1b;">Висока PPL</h4>
+                <p style="font-size: 0.9rem;">Неприродний вибір слів — можливе стего</p>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                Сучасні генеративні методи (ADG) спеціально оптимізують низьку перплексію!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Статистичні ознаки -->
+    <div class="slide">
+        <h2>Статистичні ознаки для детекції</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div style="background: #f8fafc; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #334155;">Лексичні</h4>
+                <ul style="font-size: 0.85rem;">
+                    <li>Частота слів</li>
+                    <li>Розмір словника</li>
+                    <li>Type-token ratio</li>
+                    <li>Hapax legomena</li>
+                </ul>
+            </div>
+            <div style="background: #f8fafc; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #334155;">N-gram</h4>
+                <ul style="font-size: 0.85rem;">
+                    <li>Unigram/Bigram частоти</li>
+                    <li>Trigram ймовірності</li>
+                    <li>Character n-grams</li>
+                </ul>
+            </div>
+            <div style="background: #f8fafc; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #334155;">Синтаксичні</h4>
+                <ul style="font-size: 0.85rem;">
+                    <li>POS-tag розподіл</li>
+                    <li>Довжина речень</li>
+                    <li>Глибина дерева</li>
+                </ul>
+            </div>
+            <div style="background: #f8fafc; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #334155;">Стилістичні</h4>
+                <ul style="font-size: 0.85rem;">
+                    <li>Пунктуація</li>
+                    <li>Використання passive</li>
+                    <li>Readability scores</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                Feature вектор → класифікатор (SVM, Random Forest, Neural Network)
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 7: ML класифікатори -->
+    <div class="slide">
+        <h2>Machine Learning детектори</h2>
+
+        <h4>Традиційні ML:</h4>
+        <ul style="font-size: 0.9rem;">
+            <li><strong>SVM</strong> — на feature vectors з текстової статистики</li>
+            <li><strong>Random Forest</strong> — ensemble методи</li>
+            <li><strong>Naive Bayes</strong> — для n-gram features</li>
+        </ul>
+
+        <h4 style="margin-top: 1.5rem;">Deep Learning архітектури:</h4>
+
+        <div class="code-example">
+CNN-based:
+Input → Embedding → Conv1D(filters, kernels) → MaxPool → Dense → Output
+
+LSTM-based:
+Input → Embedding → BiLSTM → Attention → Dense → Output
+
+BERT-based:
+Input → BERT Encoder → [CLS] token → Dense → Output
+        </div>
+
+        <div class="success-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                BERT-based детектори досягають <strong>state-of-the-art</strong> результатів
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Метрики оцінки -->
+    <div class="slide">
+        <h2>Метрики оцінки детекторів</h2>
+
+        <div class="formula-box">
+            Accuracy = (TP + TN) / (TP + TN + FP + FN)
+        </div>
+
+        <div class="formula-box">
+            Precision = TP / (TP + FP)
+        </div>
+
+        <div class="formula-box">
+            Recall = TP / (TP + FN)
+        </div>
+
+        <div class="formula-box">
+            F1 = 2 × (Precision × Recall) / (Precision + Recall)
+        </div>
+
+        <div class="two-column" style="margin-top: 1rem;">
+            <div>
+                <p style="font-size: 0.9rem;"><strong>TP</strong> — правильно виявлене стего</p>
+                <p style="font-size: 0.9rem;"><strong>TN</strong> — правильно визначений чистий текст</p>
+            </div>
+            <div>
+                <p style="font-size: 0.9rem;"><strong>FP</strong> — хибне спрацювання</p>
+                <p style="font-size: 0.9rem;"><strong>FN</strong> — пропущене стего</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Інструменти -->
+    <div class="slide">
+        <h2>Інструменти стегоаналізу</h2>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <tr style="background: #f1f5f9;">
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Інструмент</th>
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Тип аналізу</th>
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Метод</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;"><strong>stegdetect</strong></td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Загальний</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Статистичний</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;"><strong>StegExpose</strong></td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Fusion</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">ML ensemble</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;"><strong>Python NLTK</strong></td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Лінгвістичний</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Feature extraction</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;"><strong>Transformers</strong></td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Deep Learning</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">BERT classifiers</td>
+            </tr>
+        </table>
+
+        <div class="code-example" style="margin-top: 1rem;">
+# Простий детектор whitespace
+import sys
+
+with open(sys.argv[1], 'r') as f:
+    for i, line in enumerate(f, 1):
+        trailing = len(line.rstrip('\n')) - len(line.rstrip())
+        if trailing > 0:
+            print(f"Line {i}: {trailing} trailing whitespace chars")
+        </div>
+    </div>
+
+    <!-- Слайд 10: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок лекції</h2>
+
+        <div class="success-box">
+            <h4>Текстова стеганографія:</h4>
+            <ul style="font-size: 0.9rem;">
+                <li><strong>Форматні методи</strong> — прості, але вразливі (whitespace, Unicode)</li>
+                <li><strong>Лінгвістичні методи</strong> — робастніші, потребують NLP</li>
+                <li><strong>Нейронні методи</strong> — найперспективніші, найвища безпека</li>
+            </ul>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <h4>Стегоаналіз:</h4>
+            <ul style="font-size: 0.9rem;">
+                <li><strong>Форматний</strong> — легко виявити ZWC, whitespace</li>
+                <li><strong>Статистичний</strong> — n-gram, перплексія</li>
+                <li><strong>ML-based</strong> — BERT детектори найефективніші</li>
+            </ul>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <h4 style="text-align: center;">Гонка озброєнь</h4>
+            <p style="text-align: center; font-size: 0.9rem;">
+                Стеганографія та стегоаналіз постійно еволюціонують:<br>
+                кращі методи приховування → кращі методи виявлення → ...
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

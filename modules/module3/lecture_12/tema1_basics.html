@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основи текстової стеганографії | Лекція 12.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .code-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Основи текстової стеганографії</h1>
+        <div class="subtitle">
+            Тема 1: Вступ, історичні методи та класифікація
+        </div>
+    </div>
+
+    <!-- Слайд 2: Що таке текстова стеганографія -->
+    <div class="slide">
+        <h2>Що таке текстова стеганографія?</h2>
+
+        <div class="info-box">
+            <h4>Визначення</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                Форма прихованої комунікації, що приховує секретну інформацію в тексті природної мови
+            </p>
+        </div>
+
+        <div class="two-column" style="margin-top: 2rem;">
+            <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #1e40af;">Мета</h4>
+                <p>Зробити існування прихованого повідомлення невиявленим для сторонніх спостерігачів</p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Носій</h4>
+                <p>Текстові документи, повідомлення, статті, веб-сторінки, код</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Виклики -->
+    <div class="slide">
+        <h2>Унікальні виклики</h2>
+
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 1.5rem;">
+            Текстова стеганографія є <strong>найскладнішим</strong> видом стеганографії
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div style="background: #fee2e2; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #991b1b;">Низька надлишковість</h4>
+                <p style="font-size: 0.9rem;">Текст містить мінімум зайвих даних для приховування</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #854d0e;">Легка детекція</h4>
+                <p style="font-size: 0.9rem;">Модифікації легше помічає людина</p>
+            </div>
+            <div style="background: #e0e7ff; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #3730a3;">Семантична коректність</h4>
+                <p style="font-size: 0.9rem;">Зміни повинні зберігати сенс тексту</p>
+            </div>
+            <div style="background: #fce7f3; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #9d174d;">Мала ємність</h4>
+                <p style="font-size: 0.9rem;">~0.5-2 біти на речення</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Порівняння -->
+    <div class="slide">
+        <h2>Порівняння з іншими типами</h2>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <tr style="background: #f1f5f9;">
+                <th style="padding: 0.8rem; border: 1px solid #e2e8f0;">Аспект</th>
+                <th style="padding: 0.8rem; border: 1px solid #e2e8f0;">Зображення</th>
+                <th style="padding: 0.8rem; border: 1px solid #e2e8f0;">Аудіо</th>
+                <th style="padding: 0.8rem; border: 1px solid #e2e8f0;">Текст</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;"><strong>Надлишковість</strong></td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0; background: #dcfce7;">Висока</td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0; background: #fef9c3;">Середня</td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0; background: #fee2e2;">Дуже низька</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;"><strong>Ємність</strong></td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;">~1 біт/піксель</td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;">Варіює</td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;">~0.5-2 біт/речення</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;"><strong>Детекція</strong></td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;">Статистична</td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;">Спектральна</td>
+                <td style="padding: 0.8rem; border: 1px solid #e2e8f0;">Лінгвістична</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 5: Null Cipher -->
+    <div class="slide">
+        <h2>Null Cipher (Нуль-шифр)</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Стародавня форма стеганографії: відкритий текст змішаний з нешифрованим матеріалом
+            </p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Приклад з Першої світової війни:</h4>
+
+        <div class="code-example">
+"PRESIDENT'S EMBARGO RULING SHOULD HAVE IMMEDIATE NOTICE."
+
+Перші літери: P-E-R-S-H-I-N-G (Генерал Pershing)
+        </div>
+
+        <h4 style="margin-top: 1rem;">Типи правил:</h4>
+        <ul>
+            <li>Перша/остання літера кожного слова</li>
+            <li>Кожна n-та літера</li>
+            <li>Перша літера кожного другого слова</li>
+        </ul>
+    </div>
+
+    <!-- Слайд 6: Акростих -->
+    <div class="slide">
+        <h2>Акростих</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Розширена форма null cipher: повідомлення приховано в перших літерах рядків
+            </p>
+        </div>
+
+        <div class="code-example" style="margin: 1.5rem 0;">
+<strong>С</strong>вітанок ніжно небо фарбував,
+<strong>Е</strong>нергія нового дня зростала,
+<strong>К</strong>рай лісу тихо просинався,
+<strong>Р</strong>оса блищала, мов кришталь,
+<strong>Е</strong>хо співало пісню ранню,
+<strong>Т</strong>иша ховала таємницю.
+
+→ Приховане слово: СЕКРЕТ
+        </div>
+
+        <h4>Історичне використання:</h4>
+        <div class="two-column">
+            <div>
+                <ul>
+                    <li>Таємні образи могутніх осіб</li>
+                    <li>Кодування в опублікованих творах</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>Релігійні тексти</li>
+                    <li>Дипломатичне листування</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Шифр Бекона -->
+    <div class="slide">
+        <h2>Шифр Бекона (1605)</h2>
+
+        <div class="info-box">
+            <h4>Френсіс Бекон</h4>
+            <p style="text-align: center;">
+                Один з найраніших систематичних стеганографічних методів
+            </p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Білітеральний шифр:</h4>
+
+        <div class="code-example">
+A = AAAAA    H = AABBB    O = ABBBA
+B = AAAAB    I = ABAAA    P = ABBBB
+C = AAABA    J = ABAAB    ...
+D = AAABB    K = ABABA
+E = AABAA    L = ABABB
+F = AABAB    M = ABBAA
+G = AABBA    N = ABBAB
+        </div>
+
+        <div class="two-column" style="margin-top: 1rem;">
+            <div>
+                <p><strong>Реалізація:</strong></p>
+                <p>Звичайний шрифт = A<br>Курсив = B</p>
+            </div>
+            <div>
+                <p><strong>Ємність:</strong></p>
+                <p>5 символів cover-тексту на 1 літеру</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Класифікація методів -->
+    <div class="slide">
+        <h2>Класифікація методів</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem;">
+            <div style="background: #dbeafe; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #1e40af;">Форматні методи</h4>
+                <ul style="font-size: 0.9rem; margin-top: 0.5rem;">
+                    <li>Whitespace (пробіли, табуляції)</li>
+                    <li>Unicode zero-width символи</li>
+                    <li>HTML/CSS маніпуляції</li>
+                </ul>
+            </div>
+            <div style="background: #dcfce7; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Лінгвістичні методи</h4>
+                <ul style="font-size: 0.9rem; margin-top: 0.5rem;">
+                    <li>Заміна синонімів</li>
+                    <li>Синтаксичні трансформації</li>
+                    <li>Семантичні методи</li>
+                </ul>
+            </div>
+            <div style="background: #fef9c3; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #854d0e;">Feature-based</h4>
+                <ul style="font-size: 0.9rem; margin-top: 0.5rem;">
+                    <li>Line shifting</li>
+                    <li>Word shifting</li>
+                    <li>Feature coding</li>
+                </ul>
+            </div>
+            <div style="background: #fce7f3; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #9d174d;">Генеративні методи</h4>
+                <ul style="font-size: 0.9rem; margin-top: 0.5rem;">
+                    <li>NLG (Natural Language Generation)</li>
+                    <li>RNN/LSTM стеганографія</li>
+                    <li>LLM-based методи</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Критерії оцінки -->
+    <div class="slide">
+        <h2>Критерії оцінки методів</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1rem;">
+            <div style="background: linear-gradient(135deg, #667eea20, #764ba220); padding: 1.5rem; border-radius: 15px; text-align: center;">
+                <h3 style="color: #667eea; font-size: 2rem;">C</h3>
+                <h4>Capacity (Ємність)</h4>
+                <p style="font-size: 0.9rem;">Максимум бітів для вбудовування</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #10b98120, #059669 20); padding: 1.5rem; border-radius: 15px; text-align: center;">
+                <h3 style="color: #10b981; font-size: 2rem;">I</h3>
+                <h4>Imperceptibility</h4>
+                <p style="font-size: 0.9rem;">Невиявлюваність людиною</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #f59e0b20, #d97706 20); padding: 1.5rem; border-radius: 15px; text-align: center;">
+                <h3 style="color: #f59e0b; font-size: 2rem;">S</h3>
+                <h4>Security (Безпека)</h4>
+                <p style="font-size: 0.9rem;">Невиявлюваність алгоритмами</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #ef444420, #dc2626 20); padding: 1.5rem; border-radius: 15px; text-align: center;">
+                <h3 style="color: #ef4444; font-size: 2rem;">R</h3>
+                <h4>Robustness</h4>
+                <p style="font-size: 0.9rem;">Виживання після модифікацій</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <div class="success-box">
+            <h4>Ключові поняття:</h4>
+            <ul>
+                <li><strong>Текстова стеганографія</strong> — приховування даних у тексті природної мови</li>
+                <li><strong>Null cipher</strong> — найдавніший метод (перші літери слів)</li>
+                <li><strong>Акростих</strong> — приховання в перших літерах рядків</li>
+                <li><strong>Шифр Бекона</strong> — перший систематичний метод (1605)</li>
+            </ul>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1.5rem;">
+            <h4>Головна проблема</h4>
+            <p style="text-align: center;">
+                Текст має найменшу надлишковість серед усіх типів носіїв,<br>
+                що робить текстову стеганографію найскладнішою
+            </p>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                <strong>Наступна тема:</strong> Форматні методи (Whitespace, Unicode)
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

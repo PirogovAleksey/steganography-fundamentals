@@ -203,9 +203,18 @@
         {
           "id": "3.4",
           "title": "Текстова стеганографія",
-          "description": "Лінгвістичні методи приховування",
+          "description": "Лінгвістичні методи приховування інформації в текстових документах",
           "duration": 80,
-          "status": "available"
+          "topics": [
+            "Історичні методи (null cipher, акростих)",
+            "Форматні методи (whitespace, Unicode)",
+            "Лінгвістичні методи (синоніми, синтаксис)",
+            "Стегоаналіз тексту"
+          ],
+          "status": "completed",
+          "slides": 42,
+          "hasPresentation": true,
+          "path": "lecture_12/index.html"
         }
       ]
     },

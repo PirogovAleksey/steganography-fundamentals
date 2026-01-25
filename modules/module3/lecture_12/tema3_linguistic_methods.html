@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лінгвістичні методи | Лекція 12.3</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .code-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .synonym-pair {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f1f5f9;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            margin: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .bit-0 { color: #dc2626; font-weight: bold; }
+        .bit-1 { color: #16a34a; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Лінгвістичні методи</h1>
+        <div class="subtitle">
+            Тема 3: Синоніми, синтаксичні трансформації, нейронні мережі
+        </div>
+    </div>
+
+    <!-- Слайд 2: Огляд -->
+    <div class="slide">
+        <h2>Лінгвістичні методи стеганографії</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Використання особливостей <strong>природної мови</strong> для приховування даних
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem;">
+            <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #1e40af;">Лексичні методи</h4>
+                <ul style="font-size: 0.9rem;">
+                    <li>Заміна синонімів</li>
+                    <li>Вибір слів зі словника</li>
+                </ul>
+            </div>
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Синтаксичні методи</h4>
+                <ul style="font-size: 0.9rem;">
+                    <li>Трансформація структури речень</li>
+                    <li>Зміна порядку слів</li>
+                </ul>
+            </div>
+            <div style="background: #fef9c3; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #854d0e;">Семантичні методи</h4>
+                <ul style="font-size: 0.9rem;">
+                    <li>Парафразування</li>
+                    <li>Модифікація значення</li>
+                </ul>
+            </div>
+            <div style="background: #fce7f3; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #9d174d;">Генеративні методи</h4>
+                <ul style="font-size: 0.9rem;">
+                    <li>NLG (генерація тексту)</li>
+                    <li>Neural/LLM підходи</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Заміна синонімів -->
+    <div class="slide">
+        <h2>Заміна синонімів</h2>
+
+        <div class="info-box">
+            <h4>Принцип</h4>
+            <p style="text-align: center;">
+                Заміна слів семантично еквівалентними синонімами для кодування бітів
+            </p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Приклади пар (англійська):</h4>
+
+        <div style="text-align: center; margin: 1rem 0;">
+            <span class="synonym-pair"><span class="bit-0">big</span> / <span class="bit-1">large</span></span>
+            <span class="synonym-pair"><span class="bit-0">small</span> / <span class="bit-1">tiny</span></span>
+            <span class="synonym-pair"><span class="bit-0">fast</span> / <span class="bit-1">quick</span></span>
+            <span class="synonym-pair"><span class="bit-0">happy</span> / <span class="bit-1">glad</span></span>
+        </div>
+
+        <h4 style="margin-top: 1rem;">Приклади пар (українська):</h4>
+
+        <div style="text-align: center; margin: 1rem 0;">
+            <span class="synonym-pair"><span class="bit-0">великий</span> / <span class="bit-1">чималий</span></span>
+            <span class="synonym-pair"><span class="bit-0">швидкий</span> / <span class="bit-1">прудкий</span></span>
+            <span class="synonym-pair"><span class="bit-0">гарний</span> / <span class="bit-1">вродливий</span></span>
+        </div>
+
+        <div class="formula-box">
+            Ємність: ~0.67 біт на речення
+        </div>
+    </div>
+
+    <!-- Слайд 4: Алгоритм вершинного кодування -->
+    <div class="slide">
+        <h2>Алгоритм вершинного кодування</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                <strong>Chang & Clark</strong> — систематичний підхід до синонімічної стеганографії
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div>
+                <h4>Алгоритм:</h4>
+                <ol style="font-size: 0.9rem;">
+                    <li>Побудувати граф синонімів</li>
+                    <li>Слова — вершини</li>
+                    <li>Синоніми — ребра</li>
+                    <li>Розфарбування графа → бінарні коди</li>
+                    <li>Заміна за секретними бітами</li>
+                </ol>
+            </div>
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 10px;">
+                <h4>Приклад графа:</h4>
+                <div class="code-example" style="font-size: 0.85rem;">
+    big ──── large
+     │         │
+     └── huge ─┘
+
+big=0, large=1, huge=?
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                Не всі синоніми взаємозамінні у всіх контекстах!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Проблеми синонімічного методу -->
+    <div class="slide">
+        <h2>Проблеми синонімічного методу</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div style="background: #fee2e2; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #991b1b;">Контекстна залежність</h4>
+                <p style="font-size: 0.85rem;">
+                    "швидкий поїзд" ✓<br>
+                    "прудкий поїзд" ?
+                </p>
+            </div>
+            <div style="background: #fef9c3; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #854d0e;">Колокації</h4>
+                <p style="font-size: 0.85rem;">
+                    "strong tea" ✓<br>
+                    "powerful tea" ✗
+                </p>
+            </div>
+            <div style="background: #e0e7ff; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #3730a3;">Статистичні зміни</h4>
+                <p style="font-size: 0.85rem;">
+                    Незвичний розподіл слів може бути виявлений
+                </p>
+            </div>
+            <div style="background: #fce7f3; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #9d174d;">Обмежена ємність</h4>
+                <p style="font-size: 0.85rem;">
+                    Не кожне слово має придатний синонім
+                </p>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                Потребує NLP інструментів: WordNet, тезауруси, мовні моделі
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Синтаксичні трансформації -->
+    <div class="slide">
+        <h2>Синтаксичні трансформації</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Маніпуляція <strong>структурою речення</strong> зі збереженням значення
+            </p>
+        </div>
+
+        <div class="code-example" style="margin-top: 1.5rem;">
+<strong>Актив → Пасив:</strong>
+"Кіт зловив мишу" → "Миша була зловлена котом"
+(біт 0)              (біт 1)
+
+<strong>Cleft-речення:</strong>
+"Іван з'їв торт" → "Це Іван з'їв торт"
+(біт 0)            (біт 1)
+
+<strong>Порядок прикметників:</strong>
+"гарний великий будинок" → "великий гарний будинок"
+(біт 0)                    (біт 1)
+        </div>
+
+        <div class="formula-box">
+            Ємність: 0.5-1.0 біт на речення
+        </div>
+    </div>
+
+    <!-- Слайд 7: Семантичні методи -->
+    <div class="slide">
+        <h2>Семантичні методи</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Найскладніший підхід — маніпуляція значенням на <strong>концептуальному рівні</strong>
+            </p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Техніки:</h4>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div style="background: #dbeafe; padding: 1rem; border-radius: 10px;">
+                <h4 style="font-size: 1rem; color: #1e40af;">Парафразування</h4>
+                <p style="font-size: 0.85rem;">"Він прийшов о 15:00"<br>→ "Його прибуття було о 15:00"</p>
+            </div>
+            <div style="background: #dcfce7; padding: 1rem; border-radius: 10px;">
+                <h4 style="font-size: 1rem; color: #166534;">Переупорядкування</h4>
+                <p style="font-size: 0.85rem;">"Спочатку A, потім B"<br>→ "B після A"</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1rem; border-radius: 10px;">
+                <h4 style="font-size: 1rem; color: #854d0e;">Пресупозиції</h4>
+                <p style="font-size: 0.85rem;">"Він знову запізнився"<br>(implies: запізнювався раніше)</p>
+            </div>
+            <div style="background: #fce7f3; padding: 1rem; border-radius: 10px;">
+                <h4 style="font-size: 1rem; color: #9d174d;">Імплікатури</h4>
+                <p style="font-size: 0.85rem;">Непряме вираження думки</p>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                Непрактичні з поточними NLP технологіями для надійної автоматизації
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: RNN-Stega -->
+    <div class="slide">
+        <h2>RNN-Stega: Нейронні мережі</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                <strong>RNN</strong> навчена на текстовому корпусі генерує cover-текст
+            </p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Процес:</h4>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 1rem 0;">
+            <div style="background: #667eea; color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>1</strong><br>
+                <span style="font-size: 0.8rem;">Навчити RNN</span>
+            </div>
+            <div style="background: #764ba2; color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>2</strong><br>
+                <span style="font-size: 0.8rem;">Передбачити P(слово)</span>
+            </div>
+            <div style="background: #667eea; color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>3</strong><br>
+                <span style="font-size: 0.8rem;">Біти → вибір</span>
+            </div>
+            <div style="background: #764ba2; color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>4</strong><br>
+                <span style="font-size: 0.8rem;">Згенерувати</span>
+            </div>
+        </div>
+
+        <div class="formula-box">
+            P(w<sub>t</sub> | w<sub>1</sub>, ..., w<sub>t-1</sub>) = RNN(context)<br><br>
+            bits_embedded = log<sub>2</sub>(|candidates|)
+        </div>
+
+        <p style="text-align: center; font-size: 0.9rem;">
+            Секретні біти керують вибором з кандидатів на основі ймовірностей
+        </p>
+    </div>
+
+    <!-- Слайд 9: Adaptive Dynamic Grouping -->
+    <div class="slide">
+        <h2>Adaptive Dynamic Grouping (ADG)</h2>
+
+        <h4>Алгоритм:</h4>
+
+        <ol style="font-size: 0.95rem; margin: 1rem 0;">
+            <li>Отримати розподіл ймовірностей P по словнику</li>
+            <li>Динамічно розділити словник на <strong>2<sup>r</sup></strong> груп з рівною ймовірністю</li>
+            <li>Кожна група представляє <strong>r-бітовий</strong> сегмент повідомлення</li>
+            <li>Вибрати слово з вибраної групи</li>
+        </ol>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+            <div style="background: #dcfce7; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Ємність</h4>
+                <p>r бітів на токен</p>
+            </div>
+            <div style="background: #dbeafe; padding: 1.2rem; border-radius: 10px;">
+                <h4 style="color: #1e40af;">Безпека</h4>
+                <p>Доказово безпечний за KL-дивергенцією</p>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                Згенерований текст статистично невідрізнимий від природного!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 10: LLM-based стеганографія -->
+    <div class="slide">
+        <h2>LLM-based стеганографія (2024)</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                <strong>LLM-Stega</strong> — робота з black-box API (GPT, Claude, LLaMA)
+            </p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Компоненти:</h4>
+
+        <div class="code-example">
+1. Побудова keywords: secret → ключові слова
+2. Стеганографічне відображення: keywords → промпт
+3. Генерація: LLM(промпт) → cover-текст
+4. Витягування: cover-текст → secret
+
+Приклад:
+"Зустріч о 15:00" → ["meeting", "afternoon", "time"]
+→ Prompt: "Write about scheduling a business meeting..."
+→ LLM генерує природний текст з keywords
+        </div>
+
+        <div class="success-box" style="margin-top: 1rem;">
+            <h4>Ключова інновація</h4>
+            <p style="text-align: center; font-size: 0.9rem;">
+                Не потрібен доступ до ваг моделі — працює через API!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+            <tr style="background: #f1f5f9;">
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Метод</th>
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Ємність</th>
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Складність</th>
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Робастність</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Синоніми</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">~0.67 біт/реч.</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Середня</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0; background: #dcfce7;">Висока</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Синтаксис</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">0.5-1 біт/реч.</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Висока</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0; background: #dcfce7;">Висока</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">RNN/ADG</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">r біт/токен</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Дуже висока</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0; background: #fee2e2;">Низька</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">LLM-based</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Висока</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Середня</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0; background: #fee2e2;">Низька</td>
+            </tr>
+        </table>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                Лінгвістичні методи <strong>робастніші</strong>, але потребують NLP/ML
+            </p>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                <strong>Наступна тема:</strong> Стегоаналіз тексту
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 11</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

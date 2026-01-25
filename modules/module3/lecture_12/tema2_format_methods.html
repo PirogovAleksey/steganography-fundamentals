@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форматні методи | Лекція 12.2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .code-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            text-align: left;
+            overflow-x: auto;
+        }
+        .unicode-char {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Форматні методи</h1>
+        <div class="subtitle">
+            Тема 2: Whitespace, Unicode zero-width, HTML/CSS стеганографія
+        </div>
+    </div>
+
+    <!-- Слайд 2: Огляд форматних методів -->
+    <div class="slide">
+        <h2>Форматні методи стеганографії</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Використання особливостей <strong>форматування</strong> тексту для приховування даних
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
+            <div style="background: #dbeafe; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #1e40af;">Whitespace</h4>
+                <p style="font-size: 0.9rem;">Пробіли, табуляції, закінчення рядків</p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #166534;">Unicode</h4>
+                <p style="font-size: 0.9rem;">Zero-width символи</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #854d0e;">HTML/CSS</h4>
+                <p style="font-size: 0.9rem;">Теги, атрибути, стилі</p>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                <strong>Перевага:</strong> Текст виглядає абсолютно нормально для читача
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Whitespace стеганографія -->
+    <div class="slide">
+        <h2>Whitespace стеганографія</h2>
+
+        <div class="info-box">
+            <h4>Принцип</h4>
+            <p style="text-align: center;">
+                Використання комбінацій пробілів та табуляцій для кодування бінарних даних
+            </p>
+        </div>
+
+        <div class="code-example">
+Базове кодування:
+───────────────────
+Пробіл (space) = 0
+Табуляція (tab) = 1
+
+Приклад: приховати "A" (ASCII 65 = 01000001)
+"Hello[SP][TAB][SP][SP][SP][SP][SP][TAB]World"
+        </div>
+
+        <div class="two-column" style="margin-top: 1rem;">
+            <div>
+                <h4>Місця вбудовування:</h4>
+                <ul style="font-size: 0.9rem;">
+                    <li>Кінець рядків</li>
+                    <li>Між словами</li>
+                    <li>Між абзацами</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Типова ємність:</h4>
+                <ul style="font-size: 0.9rem;">
+                    <li>~3 біти на 8 колонок</li>
+                    <li>~1 біт на рядок</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Інструмент SNOW -->
+    <div class="slide">
+        <h2>Інструмент SNOW</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                <strong>SNOW</strong> — популярний інструмент whitespace стеганографії
+            </p>
+        </div>
+
+        <div class="code-example">
+# Кодування повідомлення
+stegsnow -C -m "Secret message" -p "password" input.txt output.txt
+
+# Декодування
+stegsnow -C -p "password" output.txt
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Особливості SNOW:</h4>
+        <ul>
+            <li>Додає послідовності до 7 пробілів з табуляціями в кінці рядків</li>
+            <li>Підтримує ICE шифрування для додаткової безпеки</li>
+            <li>Доступний для Linux/Windows</li>
+        </ul>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                Trailing whitespace часто видаляється текстовими редакторами!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Line endings -->
+    <div class="slide">
+        <h2>Маніпуляція закінченнями рядків</h2>
+
+        <p style="text-align: center; margin-bottom: 1.5rem;">
+            Різні ОС використовують різні символи закінчення рядків
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <div style="background: #dbeafe; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4>Windows</h4>
+                <code style="font-size: 1.2rem;">\r\n</code>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">CR + LF</p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4>Unix/Linux</h4>
+                <code style="font-size: 1.2rem;">\n</code>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">LF</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1.2rem; border-radius: 10px; text-align: center;">
+                <h4>Classic Mac</h4>
+                <code style="font-size: 1.2rem;">\r</code>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">CR</p>
+            </div>
+        </div>
+
+        <div class="formula-box" style="margin-top: 1.5rem;">
+            Ємність: 2 біти на рядок (4 можливі комбінації)
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                Git та багато редакторів автоматично нормалізують line endings!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Unicode Zero-Width символи -->
+    <div class="slide">
+        <h2>Unicode Zero-Width символи</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Unicode містить <strong>невидимі</strong> символи нульової ширини
+            </p>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem;">
+            <tr style="background: #f1f5f9;">
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Символ</th>
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Unicode</th>
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Назва</th>
+                <th style="padding: 0.6rem; border: 1px solid #e2e8f0;">Біт</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;"><span class="unicode-char">ZWSP</span></td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">U+200B</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Zero Width Space</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">0</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;"><span class="unicode-char">ZWNJ</span></td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">U+200C</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Zero Width Non-Joiner</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">1</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;"><span class="unicode-char">ZWJ</span></td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">U+200D</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Zero Width Joiner</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">-</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;"><span class="unicode-char">WJ</span></td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">U+2060</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">Word Joiner</td>
+                <td style="padding: 0.6rem; border: 1px solid #e2e8f0;">-</td>
+            </tr>
+        </table>
+
+        <div class="success-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                Текст виглядає <strong>ідентично</strong> — символи повністю невидимі!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Unicode кодування -->
+    <div class="slide">
+        <h2>Алгоритм Unicode кодування</h2>
+
+        <div class="code-example">
+def encode_message(secret, cover_text):
+    # Конвертуємо в бінарний
+    binary = ''.join(format(ord(c), '08b') for c in secret)
+
+    # Кодуємо zero-width символами
+    encoded = ""
+    for bit in binary:
+        if bit == '0':
+            encoded += '\u200B'  # ZWSP
+        else:
+            encoded += '\u200C'  # ZWNJ
+
+    # Вставляємо в середину cover-тексту
+    mid = len(cover_text) // 2
+    return cover_text[:mid] + encoded + cover_text[mid:]
+        </div>
+
+        <div class="formula-box">
+            Ємність = len(cover_text) × біти_на_позицію
+        </div>
+
+        <p style="text-align: center; margin-top: 1rem;">
+            При 3-бітовому кодуванні (8 різних ZW-символів) — вища ємність
+        </p>
+    </div>
+
+    <!-- Слайд 8: HTML/CSS методи -->
+    <div class="slide">
+        <h2>HTML/CSS стеганографія</h2>
+
+        <h4>Маніпуляція регістром тегів:</h4>
+        <div class="code-example">
+&lt;!-- Оригінал --&gt;
+&lt;HTML&gt;&lt;BODY&gt;&lt;P&gt;Text&lt;/P&gt;&lt;/BODY&gt;&lt;/HTML&gt;
+
+&lt;!-- З прихованим "10" --&gt;
+&lt;html&gt;&lt;BODY&gt;&lt;P&gt;Text&lt;/P&gt;&lt;/BODY&gt;&lt;/html&gt;
+
+lowercase = 0, uppercase = 1
+        </div>
+
+        <h4 style="margin-top: 1rem;">Перестановка атрибутів:</h4>
+        <div class="code-example">
+&lt;!-- Біт 0 --&gt;
+&lt;img src="img.jpg" alt="photo" width="100"&gt;
+
+&lt;!-- Біт 1 (атрибути переставлені) --&gt;
+&lt;img alt="photo" src="img.jpg" width="100"&gt;
+        </div>
+
+        <p style="text-align: center; margin-top: 1rem;">
+            <strong>Ємність:</strong> 1 біт на тег з 2+ атрибутами
+        </p>
+    </div>
+
+    <!-- Слайд 9: CSS приховування -->
+    <div class="slide">
+        <h2>CSS-based приховування</h2>
+
+        <div class="code-example">
+/* Приховані дані в значеннях кольорів */
+.class {
+    color: #000001;     /* LSB кодує 1 біт */
+    background: #FFFFFE; /* LSB кодує 0 */
+}
+
+/* Надлишкові значення */
+.element {
+    margin: 10px 10px;  /* Може бути margin: 10px */
+    padding: 5px 5px 5px 5px; /* Може бути padding: 5px */
+}
+
+/* Порядок властивостей */
+.item {
+    color: red;    /* Порядок A = біт 0 */
+    font-size: 12px;
+}
+/* vs */
+.item {
+    font-size: 12px; /* Порядок B = біт 1 */
+    color: red;
+}
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center; font-size: 0.9rem;">
+                CSS нормалізація браузерами може зруйнувати приховані дані
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Вразливості -->
+    <div class="slide">
+        <h2>Вразливості форматних методів</h2>
+
+        <div class="warning-box">
+            <h4>Whitespace</h4>
+            <ul style="font-size: 0.9rem;">
+                <li>Текстові редактори видаляють trailing spaces</li>
+                <li>Copy-paste часто нормалізує пробіли</li>
+                <li>Email системи переформатовують текст</li>
+            </ul>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <h4>Unicode Zero-Width</h4>
+            <ul style="font-size: 0.9rem;">
+                <li>Деякі платформи видаляють ZW-символи</li>
+                <li>Легко виявити аналізом символів</li>
+                <li>Соціальні мережі часто фільтрують</li>
+            </ul>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <h4>HTML/CSS</h4>
+            <ul style="font-size: 0.9rem;">
+                <li>HTML minifiers руйнують дані</li>
+                <li>Браузери нормалізують атрибути</li>
+                <li>CMS можуть переформатувати код</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <tr style="background: #f1f5f9;">
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Метод</th>
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Ємність</th>
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Непомітність</th>
+                <th style="padding: 0.7rem; border: 1px solid #e2e8f0;">Робастність</th>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Whitespace</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Низька</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0; background: #dcfce7;">Висока</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0; background: #fee2e2;">Дуже низька</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Unicode ZWC</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Середня</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0; background: #dcfce7;">Дуже висока</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0; background: #fee2e2;">Низька</td>
+            </tr>
+            <tr>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">HTML/CSS</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0;">Середня</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0; background: #dcfce7;">Висока</td>
+                <td style="padding: 0.7rem; border: 1px solid #e2e8f0; background: #fef9c3;">Середня</td>
+            </tr>
+        </table>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                Форматні методи прості в реалізації, але <strong>вразливі</strong> до переформатування
+            </p>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                <strong>Наступна тема:</strong> Лінгвістичні методи (синоніми, синтаксис)
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 11</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>
