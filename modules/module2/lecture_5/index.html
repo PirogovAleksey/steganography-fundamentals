@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лекція 5: LSB стеганографія - метод найменшого значущого біта">
+    <title>Лекція 5: LSB стеганографія | Основи стеганографії</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/modules.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../index.html">Модуль 2</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Лекція 5</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Lecture Hero -->
+<section class="lecture-hero">
+    <div class="container">
+        <div class="lecture-number-badge">Лекція 5</div>
+        <h1>LSB стеганографія</h1>
+        <p class="landing-subtitle">
+            Метод найменшого значущого біта: основи, алгоритми вбудовування, оцінка якості та методи виявлення
+        </p>
+
+        <div class="lecture-meta">
+            <span class="lecture-meta-item">
+                ⏱️ 80 хвилин
+            </span>
+            <span class="lecture-meta-item">
+                📊 4 Теми
+            </span>
+            <span class="lecture-meta-item">
+                🔢 Просторові методи
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+
+        <!-- Reading Material -->
+        <section style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="color: #0369a1; margin-bottom: 1rem;">📖 Матеріали для читання</h3>
+            <p style="margin-bottom: 1rem;">Детальний теоретичний конспект лекції з поясненнями, формулами та прикладами</p>
+            <a href="konspekt_5.html" class="btn btn-primary">Читати конспект лекції</a>
+        </section>
+
+        <!-- Learning Objectives -->
+        <section class="lecture-objectives">
+            <h3>🎯 Цілі лекції</h3>
+            <ul>
+                <li>Зрозуміти принцип роботи LSB методу та структуру бітових площин зображення</li>
+                <li>Вивчити різні алгоритми вбудовування: послідовний, псевдовипадковий, багатобітовий</li>
+                <li>Освоїти метрики оцінки якості стего-зображень: PSNR, SSIM, MSE</li>
+                <li>Ознайомитися з методами стегоаналізу LSB: хі-квадрат атака, RS-аналіз</li>
+                <li>Розуміти практичні аспекти: ємність, вибір формату зображення</li>
+            </ul>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section">
+            <h2 class="section-title">📚 Теми лекції</h2>
+
+            <div class="topics-grid">
+
+                <!-- Тема 1 -->
+                <a href="tema1_basics.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 1</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🔢 Основи LSB методу</h3>
+                    <p class="topic-description">
+                        Принцип найменшого значущого біта, бітові площини зображень, RGB канали та їх особливості
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Бітові площини</span>
+                        <span class="subtopic-badge">RGB канали</span>
+                        <span class="subtopic-badge">Принцип вбудовування</span>
+                        <span class="subtopic-badge">Візуальна непомітність</span>
+                    </div>
+                </a>
+
+                <!-- Тема 2 -->
+                <a href="tema2_algorithms.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 2</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">⚙️ Алгоритми вбудовування</h3>
+                    <p class="topic-description">
+                        Послідовний LSB, псевдовипадковий з ключем, багатобітовий LSB та техніка 3-3-2
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Послідовний LSB</span>
+                        <span class="subtopic-badge">Випадковий LSB</span>
+                        <span class="subtopic-badge">k-бітовий LSB</span>
+                        <span class="subtopic-badge">LSB 3-3-2</span>
+                    </div>
+                </a>
+
+                <!-- Тема 3 -->
+                <a href="tema3_quality.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 3</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">📊 Метрики якості</h3>
+                    <p class="topic-description">
+                        Оцінка якості стего-зображень: MSE, PSNR, SSIM - формули, інтерпретація та порівняння
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">MSE</span>
+                        <span class="subtopic-badge">PSNR</span>
+                        <span class="subtopic-badge">SSIM</span>
+                        <span class="subtopic-badge">Ємність (BPP)</span>
+                    </div>
+                </a>
+
+                <!-- Тема 4 -->
+                <a href="tema4_steganalysis.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 4</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🔍 Стегоаналіз LSB</h3>
+                    <p class="topic-description">
+                        Методи виявлення LSB стеганографії: хі-квадрат атака, RS-аналіз, візуальний та гістограмний аналіз
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Хі-квадрат атака</span>
+                        <span class="subtopic-badge">RS-аналіз</span>
+                        <span class="subtopic-badge">Візуальна атака</span>
+                        <span class="subtopic-badge">Формати зображень</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="lecture-resources">
+            <h3>📚 Додаткові матеріали</h3>
+            <div class="resource-links">
+                <a href="https://en.wikipedia.org/wiki/Steganography#Digital_steganography" target="_blank" class="resource-link">
+                    📖 Wikipedia: Digital Steganography
+                </a>
+                <a href="https://www.ws.binghamton.edu/fridrich/Research/steganalysis-RS.pdf" target="_blank" class="resource-link">
+                    📄 Fridrich J. "Reliable Detection of LSB Steganography in Grayscale and Color Images"
+                </a>
+                <a href="https://link.springer.com/chapter/10.1007/3-540-45496-9_17" target="_blank" class="resource-link">
+                    📄 Westfeld A. "Detecting Low Embedding Rates" (Chi-Square Attack)
+                </a>
+                <a href="https://github.com/DominicBreuker/stego-toolkit" target="_blank" class="resource-link">
+                    🔗 Stego Toolkit - інструменти для стеганографії та стегоаналізу
+                </a>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="lecture-navigation">
+            <div class="lecture-nav-buttons">
+                <a href="../../module1/lecture_4/index.html" class="btn btn-outline">
+                    ← Лекція 4
+                </a>
+                <a href="../index.html" class="btn btn-outline">
+                    Назад до модуля 2
+                </a>
+                <a href="tema1_basics.html" class="btn btn-primary">
+                    Почати лекцію →
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content text-center">
+            <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

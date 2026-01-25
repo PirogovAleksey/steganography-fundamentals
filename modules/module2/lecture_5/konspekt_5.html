@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSB стеганографія - Детальний конспект | Лекція 5</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .konspekt-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .konspekt-page {
+            flex: 1;
+            max-width: 900px;
+            background: white;
+            line-height: 1.9;
+        }
+
+        /* Right Sidebar Navigation */
+        .sidebar-nav {
+            position: sticky;
+            top: 100px;
+            width: 280px;
+            height: fit-content;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            align-self: flex-start;
+        }
+
+        .sidebar-nav h3 {
+            font-size: 1.1rem;
+            color: #475569;
+            margin: 0 0 1rem 0;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: #e0e7ff;
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+
+        .sidebar-nav a.active {
+            background: #e0e7ff;
+            color: #667eea;
+            font-weight: 600;
+            border-left-color: #667eea;
+        }
+
+        /* Reading Progress Bar */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 9999;
+        }
+
+        .reading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            font-size: 1.5rem;
+        }
+
+        .back-to-top:hover {
+            background: #5568d3;
+            transform: translateY(-5px);
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .konspekt-container {
+                flex-direction: column;
+            }
+
+            .sidebar-nav {
+                position: relative;
+                top: 0;
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .konspekt-page {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .konspekt-container {
+                padding: 1rem;
+            }
+
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Konspekt Content Styles */
+        .konspekt-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .konspekt-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .konspekt-meta {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .toc {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: #475569;
+        }
+
+        .toc ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .konspekt-content h2 {
+            color: #1e293b;
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .konspekt-content h3 {
+            color: #334155;
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .konspekt-content h4 {
+            color: #475569;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .konspekt-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+
+        .konspekt-content ul, .konspekt-content ol {
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .konspekt-content li {
+            margin-bottom: 0.7rem;
+            line-height: 1.7;
+        }
+
+        .info-box {
+            background: #f0f9ff;
+            border-left: 5px solid #0284c7;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box h4 {
+            color: #0369a1;
+            margin-top: 0;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border-left: 5px solid #10b981;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #065f46;
+            margin-top: 0;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box h4 {
+            color: #92400e;
+            margin-top: 0;
+        }
+
+        .important-box {
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .important-box h4 {
+            color: #991b1b;
+            margin-top: 0;
+        }
+
+        .formula-box {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table td {
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .comparison-table tr:hover {
+            background: #f0f9ff;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            color: #e2e8f0;
+            padding: 0;
+        }
+
+        .bit-visual {
+            font-family: 'Courier New', monospace;
+            font-size: 1.3rem;
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .bit-visual .highlight-bit {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        @media print {
+            .btn, .header, .sidebar-nav, .back-to-top {
+                display: none;
+            }
+
+            .konspekt-container {
+                display: block;
+            }
+
+            .konspekt-page {
+                max-width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Reading Progress Bar -->
+<div class="reading-progress">
+    <div class="reading-progress-bar"></div>
+</div>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../../module2/index.html">Модуль 2</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="index.html">Лекція 5</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Конспект</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Container -->
+<div class="konspekt-container">
+
+    <!-- Right Sidebar Navigation -->
+    <aside class="sidebar-nav">
+        <h3>Навігація</h3>
+        <ul>
+            <li><a href="#intro">Вступ</a></li>
+            <li><a href="#basics">1. Основи LSB</a></li>
+            <li><a href="#bitplanes">2. Бітові площини</a></li>
+            <li><a href="#algorithms">3. Алгоритми</a></li>
+            <li><a href="#quality">4. Метрики якості</a></li>
+            <li><a href="#steganalysis">5. Стегоаналіз</a></li>
+            <li><a href="#formats">6. Формати файлів</a></li>
+            <li><a href="#practice">7. Практика</a></li>
+            <li><a href="#conclusion">Висновки</a></li>
+        </ul>
+    </aside>
+
+    <main class="konspekt-page">
+
+        <!-- Header -->
+        <header class="konspekt-header">
+            <h1 class="konspekt-title">LSB стеганографія</h1>
+            <div class="konspekt-meta">
+                Навчальний конспект | Лекція 5 | Модуль 2: Стеганографія цифрових зображень
+            </div>
+        </header>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3>Зміст конспекту</h3>
+            <ul>
+                <li><a href="#intro">Вступ до LSB стеганографії</a></li>
+                <li><a href="#basics">1. Принцип найменшого значущого біта</a></li>
+                <li><a href="#bitplanes">2. Бітові площини та RGB канали</a></li>
+                <li><a href="#algorithms">3. Алгоритми вбудовування</a></li>
+                <li><a href="#quality">4. Метрики оцінки якості</a></li>
+                <li><a href="#steganalysis">5. Методи стегоаналізу LSB</a></li>
+                <li><a href="#formats">6. Формати зображень та їх особливості</a></li>
+                <li><a href="#practice">7. Практичні розрахунки та приклади</a></li>
+                <li><a href="#conclusion">Висновки та рекомендації</a></li>
+            </ul>
+        </div>
+
+        <!-- Content -->
+        <div class="konspekt-content">
+
+            <!-- Introduction -->
+            <section id="intro">
+                <h2>Вступ до LSB стеганографії</h2>
+
+                <p>
+                    LSB (Least Significant Bit) стеганографія — це один з найпоширеніших та найпростіших методів приховування інформації в цифрових зображеннях. Метод належить до просторової області (spatial domain), оскільки працює безпосередньо з піксельними значеннями зображення, не використовуючи частотні перетворення.
+                </p>
+
+                <div class="info-box">
+                    <h4>Ключове визначення</h4>
+                    <p>
+                        <strong>LSB стеганографія</strong> — метод приховування інформації шляхом заміни найменш значущих бітів піксельних значень зображення-контейнера на біти секретного повідомлення. Оскільки зміни найменш значущого біта призводять до мінімальних візуальних спотворень (максимум ±1 до значення пікселя), приховані дані залишаються непомітними для людського ока.
+                    </p>
+                </div>
+
+                <h3>Історичний контекст</h3>
+
+                <p>
+                    Ідея використання найменш значущих бітів для приховування інформації виникла практично одночасно з появою цифрових зображень у 1990-х роках. Простота реалізації та висока ємність зробили LSB одним з перших широко використовуваних методів цифрової стеганографії.
+                </p>
+
+                <p>
+                    Перші інструменти LSB стеганографії з'явилися у середині 1990-х:
+                </p>
+
+                <ul>
+                    <li><strong>S-Tools (1994)</strong> — один з перших графічних інструментів для Windows</li>
+                    <li><strong>Hide and Seek (1994)</strong> — приховування в GIF зображеннях</li>
+                    <li><strong>Steganos (1996)</strong> — комерційний інструмент з шифруванням</li>
+                    <li><strong>OpenStego (2007)</strong> — відкритий інструмент з підтримкою водяних знаків</li>
+                </ul>
+
+                <h3>Чому LSB такий популярний?</h3>
+
+                <div class="two-columns">
+                    <div>
+                        <h4>Переваги</h4>
+                        <ul>
+                            <li>Простота реалізації</li>
+                            <li>Висока ємність (до 3 біт на піксель)</li>
+                            <li>Мінімальні візуальні спотворення</li>
+                            <li>Швидкість обробки</li>
+                            <li>Сумісність з будь-якими зображеннями</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Недоліки</h4>
+                        <ul>
+                            <li>Вразливість до стегоаналізу</li>
+                            <li>Нестійкість до обробки (стиснення, фільтри)</li>
+                            <li>Детектується статистичними методами</li>
+                            <li>Не підходить для JPEG формату</li>
+                            <li>Передбачуваність паттернів вбудовування</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Basics -->
+            <section id="basics">
+                <h2>1. Принцип найменшого значущого біта</h2>
+
+                <p>
+                    Кожен піксель у цифровому зображенні представляється числовим значенням. У 8-бітному форматі це значення знаходиться в діапазоні від 0 до 255, що можна записати у двійковому вигляді 8 бітами.
+                </p>
+
+                <h3>Двійкове представлення пікселя</h3>
+
+                <p>
+                    Розглянемо піксель із значенням 214:
+                </p>
+
+                <div class="bit-visual">
+                    1 1 0 1 0 1 1 <span class="highlight-bit">0</span>
+                    <br>
+                    <small>↑ MSB &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSB ↑</small>
+                </div>
+
+                <p>
+                    Тут MSB (Most Significant Bit) — найбільш значущий біт, який несе найбільше візуальної інформації, а LSB (Least Significant Bit) — найменш значущий біт, зміна якого майже непомітна.
+                </p>
+
+                <h3>Процес вбудовування</h3>
+
+                <div class="example-box">
+                    <h4>Приклад вбудовування одного біта</h4>
+                    <p><strong>Початковий піксель:</strong></p>
+                    <div class="bit-visual">
+                        11010110 (214)
+                    </div>
+                    <p><strong>Біт для вбудовування:</strong> 1</p>
+                    <p><strong>Результат:</strong></p>
+                    <div class="bit-visual">
+                        1101011<span class="highlight-bit">1</span> (215)
+                    </div>
+                    <p>Зміна значення пікселя: 214 → 215 (різниця лише 1)</p>
+                </div>
+
+                <h3>Вплив на значення пікселя</h3>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Оригінальний LSB</th>
+                        <th>Біт повідомлення</th>
+                        <th>Результат</th>
+                        <th>Зміна значення</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Без змін</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0 → 1</td>
+                        <td>+1</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>1 → 0</td>
+                        <td>-1</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>Без змін</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+
+                <p>
+                    Як видно з таблиці, при вбудовуванні випадкових даних приблизно 50% пікселів змінюються на ±1, що є статистично непомітним для людського ока, але може бути виявлено математичними методами.
+                </p>
+
+                <div class="warning-box">
+                    <h4>Важливо</h4>
+                    <p>
+                        Хоча зміна LSB непомітна візуально, вона створює характерні статистичні аномалії, які можуть бути виявлені методами стегоаналізу (Chi-Square атака, RS-аналіз тощо).
+                    </p>
+                </div>
+            </section>
+
+            <!-- Bit Planes -->
+            <section id="bitplanes">
+                <h2>2. Бітові площини та RGB канали</h2>
+
+                <h3>Декомпозиція на бітові площини</h3>
+
+                <p>
+                    8-бітне зображення можна розкласти на 8 бітових площин (bit planes), де кожна площина містить відповідний біт усіх пікселів:
+                </p>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Бітова площина</th>
+                        <th>Позиція біта</th>
+                        <th>Вага</th>
+                        <th>Візуальний внесок</th>
+                    </tr>
+                    <tr>
+                        <td>Площина 7 (MSB)</td>
+                        <td>Біт 7</td>
+                        <td>128</td>
+                        <td>Максимальний (контури, форми)</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 6</td>
+                        <td>Біт 6</td>
+                        <td>64</td>
+                        <td>Високий</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 5</td>
+                        <td>Біт 5</td>
+                        <td>32</td>
+                        <td>Середній</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 4</td>
+                        <td>Біт 4</td>
+                        <td>16</td>
+                        <td>Середній</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 3</td>
+                        <td>Біт 3</td>
+                        <td>8</td>
+                        <td>Низький</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 2</td>
+                        <td>Біт 2</td>
+                        <td>4</td>
+                        <td>Низький</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 1</td>
+                        <td>Біт 1</td>
+                        <td>2</td>
+                        <td>Мінімальний</td>
+                    </tr>
+                    <tr>
+                        <td>Площина 0 (LSB)</td>
+                        <td>Біт 0</td>
+                        <td>1</td>
+                        <td>Практично нульовий</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <h4>Характеристики бітових площин</h4>
+                    <p>
+                        <strong>Старші площини (7-4):</strong> Містять структуровану інформацію — контури, текстури, основні форми об'єктів. Візуально схожі на оригінальне зображення.
+                    </p>
+                    <p>
+                        <strong>Молодші площини (3-0):</strong> Виглядають як випадковий шум. У природних зображеннях LSB площина має слабку кореляцію зі старшими площинами.
+                    </p>
+                </div>
+
+                <h3>RGB канали</h3>
+
+                <p>
+                    У 24-бітному кольоровому зображенні кожен піксель складається з трьох каналів:
+                </p>
+
+                <ul>
+                    <li><strong>Red (R)</strong> — червоний канал, 8 біт (0-255)</li>
+                    <li><strong>Green (G)</strong> — зелений канал, 8 біт (0-255)</li>
+                    <li><strong>Blue (B)</strong> — синій канал, 8 біт (0-255)</li>
+                </ul>
+
+                <p>
+                    Це дає 24 біти на піксель, з яких 3 біти (по одному LSB з кожного каналу) можна використати для приховування даних.
+                </p>
+
+                <h3>Чутливість людського ока до каналів</h3>
+
+                <p>
+                    Людське око має різну чутливість до різних кольорових каналів:
+                </p>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Канал</th>
+                        <th>Чутливість ока</th>
+                        <th>Рекомендація для стеганографії</th>
+                    </tr>
+                    <tr>
+                        <td>Green (G)</td>
+                        <td>Найвища (59%)</td>
+                        <td>Менше бітів або обережно</td>
+                    </tr>
+                    <tr>
+                        <td>Red (R)</td>
+                        <td>Середня (30%)</td>
+                        <td>Помірне використання</td>
+                    </tr>
+                    <tr>
+                        <td>Blue (B)</td>
+                        <td>Найнижча (11%)</td>
+                        <td>Більше бітів безпечно</td>
+                    </tr>
+                </table>
+
+                <div class="example-box">
+                    <h4>Практичний висновок</h4>
+                    <p>
+                        Деякі алгоритми (наприклад, LSB 3-3-2) використовують цю особливість, вбудовуючи менше бітів у синій канал для мінімізації візуальних спотворень.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Algorithms -->
+            <section id="algorithms">
+                <h2>3. Алгоритми вбудовування</h2>
+
+                <h3>3.1. Послідовний LSB (Sequential LSB)</h3>
+
+                <p>
+                    Найпростіший метод, де біти повідомлення вбудовуються послідовно в пікселі зображення.
+                </p>
+
+                <h4>Алгоритм вбудовування:</h4>
+                <ol>
+                    <li>Конвертувати секретне повідомлення в бінарний формат</li>
+                    <li>Послідовно обходити пікселі (рядок за рядком, стовпець за стовпцем)</li>
+                    <li>Замінити LSB кожного кольорового каналу на біт повідомлення</li>
+                    <li>Продовжувати до вичерпання повідомлення</li>
+                </ol>
+
+                <pre><code>def sequential_lsb_embed(image, message):
+    binary_msg = text_to_binary(message)
+    msg_index = 0
+
+    for y in range(height):
+        for x in range(width):
+            for channel in [R, G, B]:
+                if msg_index < len(binary_msg):
+                    # Замінюємо LSB
+                    pixel[channel] = (pixel[channel] & 0xFE) | int(binary_msg[msg_index])
+                    msg_index += 1
+
+    return stego_image</code></pre>
+
+                <div class="warning-box">
+                    <h4>Недоліки послідовного LSB</h4>
+                    <ul>
+                        <li>Передбачуваний паттерн — легко виявити</li>
+                        <li>Вразливий до Chi-Square атаки</li>
+                        <li>Всі зміни зконцентровані в одній області зображення</li>
+                        <li>Різка межа між зміненою та незміненою частинами</li>
+                    </ul>
+                </div>
+
+                <h3>3.2. Псевдовипадковий LSB (Randomized LSB)</h3>
+
+                <p>
+                    Використовує генератор псевдовипадкових чисел (PRNG) з секретним ключем для визначення позицій вбудовування.
+                </p>
+
+                <h4>Алгоритм:</h4>
+                <ol>
+                    <li>Ініціалізувати PRNG секретним ключем (seed)</li>
+                    <li>Для кожного біта повідомлення:
+                        <ul>
+                            <li>Згенерувати випадкові координати пікселя</li>
+                            <li>Опціонально: випадково обрати канал (R/G/B)</li>
+                            <li>Вбудувати біт у вибрану позицію</li>
+                        </ul>
+                    </li>
+                    <li>Повторювати до завершення повідомлення</li>
+                </ol>
+
+                <pre><code>def random_lsb_embed(image, message, key):
+    binary_msg = text_to_binary(message)
+    random.seed(key)  # Ініціалізація PRNG ключем
+
+    used_positions = set()
+
+    for bit in binary_msg:
+        while True:
+            x = random.randint(0, width - 1)
+            y = random.randint(0, height - 1)
+            c = random.randint(0, 2)  # RGB канал
+
+            if (x, y, c) not in used_positions:
+                used_positions.add((x, y, c))
+                break
+
+        # Вбудовуємо біт
+        pixel[y, x, c] = (pixel[y, x, c] & 0xFE) | int(bit)
+
+    return stego_image</code></pre>
+
+                <div class="info-box">
+                    <h4>Переваги випадкового LSB</h4>
+                    <ul>
+                        <li>Біти повідомлення розподілені по всьому зображенню</li>
+                        <li>Порушує статистичні паттерни послідовного методу</li>
+                        <li>Потребує ключ для вилучення — додатковий рівень безпеки</li>
+                        <li>Ускладнює Chi-Square атаку</li>
+                    </ul>
+                </div>
+
+                <h3>3.3. Багатобітовий LSB (k-bit LSB)</h3>
+
+                <p>
+                    Замість одного біта, модифікуються кілька молодших бітів кожного каналу.
+                </p>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Метод</th>
+                        <th>Біти, що змінюються</th>
+                        <th>Ємність (RGB)</th>
+                        <th>Макс. зміна пікселя</th>
+                        <th>PSNR (типовий)</th>
+                    </tr>
+                    <tr>
+                        <td>1-bit LSB</td>
+                        <td>Біт 0</td>
+                        <td>3 bpp</td>
+                        <td>±1</td>
+                        <td>~51 dB</td>
+                    </tr>
+                    <tr>
+                        <td>2-bit LSB</td>
+                        <td>Біти 0-1</td>
+                        <td>6 bpp</td>
+                        <td>±3</td>
+                        <td>~44 dB</td>
+                    </tr>
+                    <tr>
+                        <td>3-bit LSB</td>
+                        <td>Біти 0-2</td>
+                        <td>9 bpp</td>
+                        <td>±7</td>
+                        <td>~37 dB</td>
+                    </tr>
+                    <tr>
+                        <td>4-bit LSB</td>
+                        <td>Біти 0-3</td>
+                        <td>12 bpp</td>
+                        <td>±15</td>
+                        <td>~31 dB</td>
+                    </tr>
+                </table>
+
+                <div class="important-box">
+                    <h4>Компроміс ємність-якість</h4>
+                    <p>
+                        Збільшення кількості бітів підвищує ємність, але погіршує якість та полегшує виявлення. Для практичного використання рекомендується не більше 2 бітів на канал.
+                    </p>
+                </div>
+
+                <h3>3.4. Техніка LSB 3-3-2</h3>
+
+                <p>
+                    Спеціалізований метод, що враховує чутливість ока до різних каналів:
+                </p>
+
+                <ul>
+                    <li><strong>3 біти</strong> в Red каналі (біти 0-2)</li>
+                    <li><strong>3 біти</strong> в Green каналі (біти 0-2)</li>
+                    <li><strong>2 біти</strong> в Blue каналі (біти 0-1)</li>
+                </ul>
+
+                <p>
+                    Це дозволяє вбудувати 8 біт (1 байт) в один піксель!
+                </p>
+
+                <div class="example-box">
+                    <h4>Порівняння ємності</h4>
+                    <p>Для зображення 1024×768 пікселів:</p>
+                    <ul>
+                        <li><strong>1-bit LSB:</strong> 1024 × 768 × 3 = 2,359,296 біт ≈ 288 КБ</li>
+                        <li><strong>LSB 3-3-2:</strong> 1024 × 768 × 8 = 6,291,456 біт ≈ 768 КБ</li>
+                    </ul>
+                    <p>LSB 3-3-2 має ємність приблизно в 2.67 рази більшу!</p>
+                </div>
+            </section>
+
+            <!-- Quality Metrics -->
+            <section id="quality">
+                <h2>4. Метрики оцінки якості</h2>
+
+                <h3>4.1. MSE (Mean Square Error)</h3>
+
+                <p>
+                    Середньоквадратична помилка вимірює середню різницю між пікселями оригінального та стего-зображення.
+                </p>
+
+                <div class="formula-box">
+                    MSE = (1 / (m × n)) × ΣΣ [I(i,j) - K(i,j)]²
+                </div>
+
+                <p>де:</p>
+                <ul>
+                    <li><strong>m, n</strong> — розміри зображення (висота, ширина)</li>
+                    <li><strong>I(i,j)</strong> — значення пікселя оригіналу в позиції (i,j)</li>
+                    <li><strong>K(i,j)</strong> — значення пікселя стего-зображення</li>
+                </ul>
+
+                <div class="info-box">
+                    <h4>Інтерпретація MSE</h4>
+                    <ul>
+                        <li><strong>MSE = 0</strong> — ідентичні зображення</li>
+                        <li><strong>MSE &lt; 1</strong> — відмінна якість стеганографії</li>
+                        <li><strong>Менше MSE = краща якість</strong></li>
+                    </ul>
+                </div>
+
+                <h3>4.2. PSNR (Peak Signal-to-Noise Ratio)</h3>
+
+                <p>
+                    Пікове відношення сигнал/шум — найпоширеніша метрика якості в стеганографії.
+                </p>
+
+                <div class="formula-box">
+                    PSNR = 10 × log₁₀(MAX² / MSE) = 20 × log₁₀(MAX / √MSE)
+                </div>
+
+                <p>де:</p>
+                <ul>
+                    <li><strong>MAX</strong> — максимальне значення пікселя (255 для 8-бітних зображень)</li>
+                    <li><strong>MSE</strong> — середньоквадратична помилка</li>
+                </ul>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>PSNR (dB)</th>
+                        <th>Якість</th>
+                        <th>Сприйняття</th>
+                    </tr>
+                    <tr>
+                        <td>&gt; 50 dB</td>
+                        <td>Відмінна</td>
+                        <td>Різниця абсолютно непомітна</td>
+                    </tr>
+                    <tr>
+                        <td>40-50 dB</td>
+                        <td>Дуже добра</td>
+                        <td>Різниця непомітна без спеціальних інструментів</td>
+                    </tr>
+                    <tr>
+                        <td>30-40 dB</td>
+                        <td>Добра</td>
+                        <td>Мінімальні візуальні артефакти</td>
+                    </tr>
+                    <tr>
+                        <td>20-30 dB</td>
+                        <td>Задовільна</td>
+                        <td>Помітна деградація</td>
+                    </tr>
+                    <tr>
+                        <td>&lt; 20 dB</td>
+                        <td>Погана</td>
+                        <td>Значні спотворення</td>
+                    </tr>
+                </table>
+
+                <div class="example-box">
+                    <h4>Типові значення PSNR для LSB</h4>
+                    <ul>
+                        <li><strong>1-bit LSB:</strong> ~51 dB (відмінно)</li>
+                        <li><strong>2-bit LSB:</strong> ~44 dB (дуже добре)</li>
+                        <li><strong>3-bit LSB:</strong> ~37 dB (добре)</li>
+                        <li><strong>4-bit LSB:</strong> ~31 dB (помітні артефакти)</li>
+                    </ul>
+                </div>
+
+                <h3>4.3. SSIM (Structural Similarity Index)</h3>
+
+                <p>
+                    SSIM враховує структурну схожість зображень і краще корелює з людським сприйняттям, ніж PSNR.
+                </p>
+
+                <div class="formula-box">
+                    SSIM(x,y) = [(2μₓμᵧ + c₁)(2σₓᵧ + c₂)] / [(μₓ² + μᵧ² + c₁)(σₓ² + σᵧ² + c₂)]
+                </div>
+
+                <p>де:</p>
+                <ul>
+                    <li><strong>μₓ, μᵧ</strong> — середні значення інтенсивності</li>
+                    <li><strong>σₓ², σᵧ²</strong> — дисперсії</li>
+                    <li><strong>σₓᵧ</strong> — коваріація</li>
+                    <li><strong>c₁, c₂</strong> — стабілізуючі константи</li>
+                </ul>
+
+                <div class="info-box">
+                    <h4>Інтерпретація SSIM</h4>
+                    <ul>
+                        <li><strong>SSIM = 1</strong> — ідентичні зображення</li>
+                        <li><strong>SSIM &gt; 0.99</strong> — відмінна перцептивна якість</li>
+                        <li><strong>SSIM &gt; 0.95</strong> — добра якість</li>
+                        <li>SSIM враховує <strong>яскравість, контраст та структуру</strong></li>
+                    </ul>
+                </div>
+
+                <h3>4.4. BPP (Bits Per Pixel) — Метрика ємності</h3>
+
+                <div class="formula-box">
+                    BPP = Кількість вбудованих бітів / Загальна кількість пікселів
+                </div>
+
+                <p>
+                    BPP показує щільність вбудовування. Для безпечної стеганографії рекомендується BPP ≤ 0.4.
+                </p>
+            </section>
+
+            <!-- Steganalysis -->
+            <section id="steganalysis">
+                <h2>5. Методи стегоаналізу LSB</h2>
+
+                <h3>5.1. Chi-Square (χ²) атака</h3>
+
+                <p>
+                    Запропонована Андреасом Вестфельдом у 2000 році. Базується на аналізі пар значень (Pairs of Values, PoVs).
+                </p>
+
+                <h4>Пари значень (PoVs)</h4>
+                <p>
+                    Значення, що відрізняються лише в LSB, утворюють пари:
+                </p>
+                <ul>
+                    <li>(0, 1), (2, 3), (4, 5), ..., (254, 255)</li>
+                </ul>
+
+                <p>
+                    <strong>У природних зображеннях:</strong> частоти парних значень різняться.
+                </p>
+                <p>
+                    <strong>Після LSB вбудовування:</strong> частоти прагнуть вирівнятися!
+                </p>
+
+                <div class="formula-box">
+                    χ² = Σᵢ (nᵢ - nᵢ*)² / nᵢ*
+                </div>
+
+                <p>де:</p>
+                <ul>
+                    <li><strong>nᵢ</strong> — спостережувана частота значення 2i</li>
+                    <li><strong>nᵢ*</strong> — очікувана частота = (n₂ᵢ + n₂ᵢ₊₁) / 2</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>Ефективність Chi-Square атаки</h4>
+                    <ul>
+                        <li><strong>Дуже ефективна</strong> проти послідовного LSB</li>
+                        <li><strong>Менш ефективна</strong> проти випадкового LSB</li>
+                        <li>Може виявити вбудовування при BPP &gt; 0.1</li>
+                        <li>Визначає приблизну довжину повідомлення</li>
+                    </ul>
+                </div>
+
+                <h3>5.2. RS-аналіз (Regular-Singular Analysis)</h3>
+
+                <p>
+                    Розроблений Фрідріхом та співавторами у 2001 році. Один з найефективніших методів виявлення LSB.
+                </p>
+
+                <h4>Ключові концепції:</h4>
+
+                <p><strong>Функція дискримінації f(G):</strong></p>
+                <div class="formula-box">
+                    f(G) = Σ|xᵢ₊₁ - xᵢ|
+                </div>
+                <p>Вимірює "шумність" групи пікселів через суму абсолютних різниць.</p>
+
+                <p><strong>Функції перевертання:</strong></p>
+                <ul>
+                    <li><strong>F₁:</strong> 0↔1, 2↔3, ..., 254↔255 (стандартне LSB перевертання)</li>
+                    <li><strong>F₋₁:</strong> -1↔0, 1↔2, ..., 255↔256 (зміщене перевертання)</li>
+                    <li><strong>F₀:</strong> тотожне відображення (без змін)</li>
+                </ul>
+
+                <p><strong>Класифікація груп:</strong></p>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Тип групи</th>
+                        <th>Умова</th>
+                        <th>Інтерпретація</th>
+                    </tr>
+                    <tr>
+                        <td>Regular (R)</td>
+                        <td>f(F(G)) &gt; f(G)</td>
+                        <td>Шум збільшився</td>
+                    </tr>
+                    <tr>
+                        <td>Singular (S)</td>
+                        <td>f(F(G)) &lt; f(G)</td>
+                        <td>Шум зменшився</td>
+                    </tr>
+                    <tr>
+                        <td>Unusable (U)</td>
+                        <td>f(F(G)) = f(G)</td>
+                        <td>Без змін</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <h4>Принцип детекції</h4>
+                    <p>У чистих зображеннях: R<sub>F₁</sub> ≈ R<sub>F₋₁</sub> та S<sub>F₁</sub> ≈ S<sub>F₋₁</sub></p>
+                    <p>Після LSB вбудовування: ці співвідношення порушуються!</p>
+                    <p><strong>Чутливість:</strong> може виявити повідомлення довжиною від 0.03 bpp.</p>
+                </div>
+
+                <h3>5.3. Візуальна атака (Bit Plane Analysis)</h3>
+
+                <p>
+                    Найпростіший метод — візуальний аналіз бітових площин зображення.
+                </p>
+
+                <h4>Методика:</h4>
+                <ol>
+                    <li>Розкласти зображення на 8 бітових площин</li>
+                    <li>Візуально проаналізувати LSB площину (площина 0)</li>
+                    <li>Шукати неприродні паттерни або локалізований шум</li>
+                </ol>
+
+                <h4>Ознаки стеганографії:</h4>
+                <ul>
+                    <li>Випадковий шум у LSB площині (природні зображення мають структуровані LSB)</li>
+                    <li>Різкі межі в шумі (вказують, де закінчується повідомлення)</li>
+                    <li>Паттерни, що не корелюють зі старшими площинами</li>
+                </ul>
+
+                <div class="example-box">
+                    <h4>Інструменти для візуального аналізу</h4>
+                    <ul>
+                        <li><strong>Stegsolve</strong> — візуалізація окремих бітових площин</li>
+                        <li><strong>zsteg</strong> — аналіз LSB у PNG/BMP</li>
+                        <li><strong>StegExpose</strong> — комбінований детектор</li>
+                    </ul>
+                </div>
+
+                <h3>5.4. Гістограмний аналіз</h3>
+
+                <p>
+                    LSB вбудовування змінює гістограму зображення передбачуваним чином.
+                </p>
+
+                <h4>Методика:</h4>
+                <ol>
+                    <li>Побудувати гістограму оригінального зображення</li>
+                    <li>Після вбудовування: парні/непарні пари (PoVs) прагнуть до рівних частот</li>
+                    <li>Порівняти гістограми на предмет підозрілих паттернів</li>
+                </ol>
+
+                <p>
+                    Слабка кореляція між LSB площиною та іншими площинами також є ознакою вбудовування.
+                </p>
+            </section>
+
+            <!-- File Formats -->
+            <section id="formats">
+                <h2>6. Формати зображень та їх особливості</h2>
+
+                <h3>Порівняння форматів для LSB стеганографії</h3>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Характеристика</th>
+                        <th>BMP</th>
+                        <th>PNG</th>
+                        <th>JPEG</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Стиснення</strong></td>
+                        <td>Без стиснення</td>
+                        <td>Без втрат (DEFLATE)</td>
+                        <td>З втратами (DCT)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LSB сумісність</strong></td>
+                        <td>Відмінна</td>
+                        <td>Відмінна</td>
+                        <td>Погана</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ємність</strong></td>
+                        <td>Висока</td>
+                        <td>Висока</td>
+                        <td>Низька</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Стійкість до детекції</strong></td>
+                        <td>Низька</td>
+                        <td>Середня</td>
+                        <td>Вища</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Розмір файлу</strong></td>
+                        <td>Великий</td>
+                        <td>Середній</td>
+                        <td>Малий</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Поширеність</strong></td>
+                        <td>Низька</td>
+                        <td>Висока</td>
+                        <td>Дуже висока</td>
+                    </tr>
+                </table>
+
+                <h3>BMP (Bitmap)</h3>
+                <ul>
+                    <li>Зберігає піксельні дані без змін</li>
+                    <li>Ідеальний для прямого LSB вбудовування</li>
+                    <li><strong>Недолік:</strong> великий розмір файлу, підозрілий для передачі</li>
+                </ul>
+
+                <h3>PNG (Portable Network Graphics)</h3>
+                <ul>
+                    <li>Стиснення без втрат — зберігає точні значення пікселів</li>
+                    <li>Широко використовується в Інтернеті</li>
+                    <li>Підтримує альфа-канал (прозорість) — додаткова ємність</li>
+                    <li><strong>Рекомендований формат</strong> для LSB стеганографії</li>
+                </ul>
+
+                <h3>JPEG (Joint Photographic Experts Group)</h3>
+
+                <div class="important-box">
+                    <h4>JPEG несумісний з просторовим LSB!</h4>
+                    <p>
+                        JPEG використовує стиснення з втратами на основі DCT (дискретне косинусне перетворення). При збереженні у JPEG:
+                    </p>
+                    <ul>
+                        <li>LSB піксельних значень повністю знищуються</li>
+                        <li>Приховане повідомлення буде втрачено</li>
+                    </ul>
+                    <p>
+                        Для JPEG потрібні спеціальні методи, що працюють з DCT коефіцієнтами (JSteg, F5, OutGuess).
+                    </p>
+                </div>
+            </section>
+
+            <!-- Practice -->
+            <section id="practice">
+                <h2>7. Практичні розрахунки та приклади</h2>
+
+                <h3>Розрахунок ємності</h3>
+
+                <div class="formula-box">
+                    Максимальна ємність (біт) = Ширина × Висота × Канали × Біти_на_канал
+                </div>
+
+                <div class="example-box">
+                    <h4>Приклад: зображення 1920×1080 (Full HD)</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Метод</th>
+                            <th>Розрахунок</th>
+                            <th>Ємність</th>
+                        </tr>
+                        <tr>
+                            <td>Grayscale, 1-bit LSB</td>
+                            <td>1920 × 1080 × 1 × 1</td>
+                            <td>2,073,600 біт ≈ 253 КБ</td>
+                        </tr>
+                        <tr>
+                            <td>RGB, 1-bit LSB</td>
+                            <td>1920 × 1080 × 3 × 1</td>
+                            <td>6,220,800 біт ≈ 760 КБ</td>
+                        </tr>
+                        <tr>
+                            <td>RGBA, 1-bit LSB</td>
+                            <td>1920 × 1080 × 4 × 1</td>
+                            <td>8,294,400 біт ≈ 1 МБ</td>
+                        </tr>
+                        <tr>
+                            <td>RGB, 2-bit LSB</td>
+                            <td>1920 × 1080 × 3 × 2</td>
+                            <td>12,441,600 біт ≈ 1.5 МБ</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>Безпечна швидкість вбудовування</h3>
+
+                <p>
+                    Для уникнення виявлення методами стегоаналізу рекомендується обмежувати щільність вбудовування:
+                </p>
+
+                <ul>
+                    <li><strong>Безпечний рівень:</strong> BPP ≤ 0.4 (40% від максимальної ємності)</li>
+                    <li><strong>Помірний рівень:</strong> BPP ≤ 0.2</li>
+                    <li><strong>Високий рівень безпеки:</strong> BPP ≤ 0.1</li>
+                </ul>
+
+                <div class="example-box">
+                    <h4>Приклад безпечного вбудовування</h4>
+                    <p>Зображення 1920×1080 RGB з 1-bit LSB:</p>
+                    <ul>
+                        <li>Максимальна ємність: 760 КБ</li>
+                        <li>Безпечний рівень (0.4 bpp): ~304 КБ</li>
+                        <li>Високий рівень безпеки (0.1 bpp): ~76 КБ</li>
+                    </ul>
+                </div>
+
+                <h3>Рекомендації щодо практичного використання</h3>
+
+                <ol>
+                    <li><strong>Вибір контейнера:</strong> Використовуйте зображення з високою текстурованістю (природа, пейзажі). Уникайте однорідних зображень.</li>
+                    <li><strong>Формат файлу:</strong> Віддавайте перевагу PNG для LSB стеганографії.</li>
+                    <li><strong>Шифрування:</strong> Завжди шифруйте повідомлення перед вбудовуванням.</li>
+                    <li><strong>Ключі:</strong> Використовуйте криптографічні ключі для псевдовипадкового вбудовування.</li>
+                    <li><strong>Ємність:</strong> Не перевищуйте 40% від максимальної ємності.</li>
+                    <li><strong>Тестування:</strong> Перевіряйте стего-зображення базовими методами стегоаналізу.</li>
+                </ol>
+            </section>
+
+            <!-- Conclusion -->
+            <section id="conclusion">
+                <h2>Висновки та рекомендації</h2>
+
+                <h3>Ключові моменти лекції</h3>
+
+                <ul>
+                    <li><strong>LSB стеганографія</strong> — простий та ефективний метод просторової області</li>
+                    <li>Працює шляхом заміни <strong>найменш значущих бітів</strong> піксельних значень</li>
+                    <li>Забезпечує <strong>високу ємність</strong> (до 3 біт на піксель для RGB)</li>
+                    <li><strong>PSNR &gt; 40 dB</strong> забезпечує візуальну непомітність</li>
+                    <li><strong>Вразливий до стегоаналізу</strong>: Chi-Square, RS-аналіз, візуальні атаки</li>
+                    <li>Підходить лише для форматів <strong>без втрат</strong> (PNG, BMP)</li>
+                </ul>
+
+                <h3>Таблиця порівняння методів LSB</h3>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Метод</th>
+                        <th>Ємність</th>
+                        <th>PSNR</th>
+                        <th>Стійкість до детекції</th>
+                        <th>Складність</th>
+                    </tr>
+                    <tr>
+                        <td>Послідовний 1-bit LSB</td>
+                        <td>3 bpp</td>
+                        <td>~51 dB</td>
+                        <td>Низька</td>
+                        <td>Низька</td>
+                    </tr>
+                    <tr>
+                        <td>Випадковий 1-bit LSB</td>
+                        <td>3 bpp</td>
+                        <td>~51 dB</td>
+                        <td>Середня</td>
+                        <td>Середня</td>
+                    </tr>
+                    <tr>
+                        <td>2-bit LSB</td>
+                        <td>6 bpp</td>
+                        <td>~44 dB</td>
+                        <td>Низька</td>
+                        <td>Низька</td>
+                    </tr>
+                    <tr>
+                        <td>LSB 3-3-2</td>
+                        <td>8 bpp</td>
+                        <td>~37 dB</td>
+                        <td>Низька-Середня</td>
+                        <td>Середня</td>
+                    </tr>
+                    <tr>
+                        <td>LSB Matching</td>
+                        <td>3 bpp</td>
+                        <td>~51 dB</td>
+                        <td>Висока</td>
+                        <td>Середня</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <h4>Що далі?</h4>
+                    <p>
+                        У наступних лекціях ми розглянемо більш стійкі методи стеганографії:
+                    </p>
+                    <ul>
+                        <li><strong>Частотні методи</strong> (DCT, DWT) — для роботи з JPEG</li>
+                        <li><strong>Адаптивні методи</strong> (HUGO, WOW, S-UNIWARD) — підвищена стійкість до стегоаналізу</li>
+                        <li><strong>Стегоаналіз зображень</strong> — детальне вивчення методів виявлення</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+<script>
+    // Reading Progress Bar
+    window.addEventListener('scroll', () => {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = (window.scrollY / docHeight) * 100;
+        document.querySelector('.reading-progress-bar').style.width = scrolled + '%';
+
+        // Back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) {
+            backToTop.classList.add('show');
+        } else {
+            backToTop.classList.remove('show');
+        }
+    });
+
+    // Active sidebar link
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

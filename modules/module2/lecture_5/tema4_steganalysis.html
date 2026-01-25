@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стегоаналіз LSB | Лекція 5.4</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .attack-card {
+            background: linear-gradient(145deg, #fef2f2, #fee2e2);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #fca5a5;
+        }
+        .format-card {
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .histogram-bar {
+            display: inline-block;
+            width: 30px;
+            background: #667eea;
+            margin: 0 2px;
+            border-radius: 3px 3px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Стегоаналіз LSB</h1>
+        <div class="subtitle">
+            Тема 4: Методи виявлення прихованих даних
+        </div>
+    </div>
+
+    <!-- Слайд 2: Що таке стегоаналіз -->
+    <div class="slide">
+        <h2>Що таке стегоаналіз?</h2>
+
+        <div class="info-box">
+            <h4>Стегоаналіз</h4>
+            <p style="font-size: 1.2rem; text-align: center;">
+                Наука про виявлення прихованої інформації в цифрових носіях
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h4>Задачі стегоаналізу</h4>
+                <ul>
+                    <li>Виявити факт приховування</li>
+                    <li>Оцінити довжину повідомлення</li>
+                    <li>Визначити алгоритм вбудовування</li>
+                    <li>Вилучити приховані дані</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Методи для LSB</h4>
+                <ul>
+                    <li><strong>Chi-Square</strong> атака</li>
+                    <li><strong>RS-аналіз</strong></li>
+                    <li><strong>Візуальна</strong> атака</li>
+                    <li><strong>Гістограмний</strong> аналіз</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Пари значень -->
+    <div class="slide">
+        <h2>Концепція пар значень (PoVs)</h2>
+
+        <div class="info-box">
+            <h4>Pairs of Values (PoVs)</h4>
+            <p>Значення, що відрізняються лише в LSB, утворюють пари</p>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;">
+            <div style="background: #dbeafe; padding: 0.8rem 1.2rem; border-radius: 8px; font-family: monospace;">
+                (0, 1)
+            </div>
+            <div style="background: #dbeafe; padding: 0.8rem 1.2rem; border-radius: 8px; font-family: monospace;">
+                (2, 3)
+            </div>
+            <div style="background: #dbeafe; padding: 0.8rem 1.2rem; border-radius: 8px; font-family: monospace;">
+                (4, 5)
+            </div>
+            <div style="background: #e0e7ff; padding: 0.8rem 1.2rem; border-radius: 8px;">
+                ...
+            </div>
+            <div style="background: #dbeafe; padding: 0.8rem 1.2rem; border-radius: 8px; font-family: monospace;">
+                (254, 255)
+            </div>
+        </div>
+
+        <div class="two-column">
+            <div class="success-box">
+                <h4>Природне зображення</h4>
+                <p>Частоти парних значень <strong>різняться</strong></p>
+            </div>
+            <div class="warning-box">
+                <h4>Після LSB вбудовування</h4>
+                <p>Частоти <strong>вирівнюються</strong>!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Chi-Square атака -->
+    <div class="slide">
+        <h2>Chi-Square (χ²) атака</h2>
+
+        <div class="info-box">
+            <h4>Автор: Andreas Westfeld, 2000</h4>
+            <p>Статистичний тест на рівність частот у парах значень</p>
+        </div>
+
+        <div class="formula-box">
+            χ² = Σᵢ (nᵢ - nᵢ*)² / nᵢ*
+        </div>
+
+        <div class="two-column" style="margin-top: 1rem;">
+            <div class="metric-card" style="background: #f8fafc; padding: 1rem; border-radius: 10px;">
+                <h4>Змінні</h4>
+                <ul style="text-align: left;">
+                    <li><strong>nᵢ</strong> — частота значення 2i</li>
+                    <li><strong>nᵢ*</strong> — очікувана частота</li>
+                    <li>nᵢ* = (n₂ᵢ + n₂ᵢ₊₁) / 2</li>
+                </ul>
+            </div>
+            <div class="metric-card" style="background: #f8fafc; padding: 1rem; border-radius: 10px;">
+                <h4>Інтерпретація</h4>
+                <ul style="text-align: left;">
+                    <li>Високий χ² → природне</li>
+                    <li>Низький χ² → стеганографія</li>
+                    <li>p-value ≈ 1 → вбудовування</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Візуалізація Chi-Square -->
+    <div class="slide">
+        <h2>Візуалізація Chi-Square</h2>
+
+        <div class="two-column">
+            <div style="text-align: center;">
+                <h4>Природне зображення</h4>
+                <div style="display: flex; align-items: flex-end; justify-content: center; height: 150px; margin: 1rem 0;">
+                    <div class="histogram-bar" style="height: 80px;"></div>
+                    <div class="histogram-bar" style="height: 120px;"></div>
+                    <div class="histogram-bar" style="height: 60px;"></div>
+                    <div class="histogram-bar" style="height: 100px;"></div>
+                    <div class="histogram-bar" style="height: 90px;"></div>
+                    <div class="histogram-bar" style="height: 70px;"></div>
+                </div>
+                <p style="color: #10b981; font-weight: bold;">Різні висоти пар</p>
+            </div>
+            <div style="text-align: center;">
+                <h4>Після LSB вбудовування</h4>
+                <div style="display: flex; align-items: flex-end; justify-content: center; height: 150px; margin: 1rem 0;">
+                    <div class="histogram-bar" style="height: 100px; background: #ef4444;"></div>
+                    <div class="histogram-bar" style="height: 100px; background: #ef4444;"></div>
+                    <div class="histogram-bar" style="height: 80px; background: #ef4444;"></div>
+                    <div class="histogram-bar" style="height: 80px; background: #ef4444;"></div>
+                    <div class="histogram-bar" style="height: 85px; background: #ef4444;"></div>
+                    <div class="histogram-bar" style="height: 85px; background: #ef4444;"></div>
+                </div>
+                <p style="color: #ef4444; font-weight: bold;">Пари вирівнялися!</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p style="text-align: center;">
+                <strong>Chi-Square дуже ефективний</strong> проти послідовного LSB!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 6: RS-аналіз -->
+    <div class="slide">
+        <h2>RS-аналіз (Regular-Singular)</h2>
+
+        <div class="info-box">
+            <h4>Автори: Fridrich, Goljan, Du (2001)</h4>
+            <p>Один з найефективніших методів виявлення LSB</p>
+        </div>
+
+        <h4>Функція дискримінації</h4>
+        <div class="formula-box">
+            f(G) = Σ|xᵢ₊₁ - xᵢ|
+        </div>
+        <p style="text-align: center;">Вимірює "шумність" групи пікселів</p>
+
+        <div class="two-column" style="margin-top: 1rem;">
+            <div style="background: #dcfce7; padding: 1rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Regular (R)</h4>
+                <p>f(F(G)) > f(G)</p>
+                <p>Шум збільшився</p>
+            </div>
+            <div style="background: #fee2e2; padding: 1rem; border-radius: 10px;">
+                <h4 style="color: #991b1b;">Singular (S)</h4>
+                <p>f(F(G)) < f(G)</p>
+                <p>Шум зменшився</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Принцип RS -->
+    <div class="slide">
+        <h2>Принцип детекції RS</h2>
+
+        <div class="two-column">
+            <div class="success-box">
+                <h4>Чисте зображення</h4>
+                <div class="formula-box" style="font-size: 1rem;">
+                    R<sub>F₁</sub> ≈ R<sub>F₋₁</sub><br>
+                    S<sub>F₁</sub> ≈ S<sub>F₋₁</sub>
+                </div>
+                <p style="text-align: center;">Симетрія зберігається</p>
+            </div>
+            <div class="warning-box">
+                <h4>Після LSB вбудовування</h4>
+                <div class="formula-box" style="font-size: 1rem; border-color: #ef4444;">
+                    R<sub>F₁</sub> ≠ R<sub>F₋₁</sub><br>
+                    S<sub>F₁</sub> ≠ S<sub>F₋₁</sub>
+                </div>
+                <p style="text-align: center;">Симетрія порушена!</p>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Чутливість RS:</strong> виявляє повідомлення від <strong>0.03 bpp</strong>!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Візуальна атака -->
+    <div class="slide">
+        <h2>Візуальна атака (Bit Plane Analysis)</h2>
+
+        <div class="info-box">
+            <h4>Найпростіший метод</h4>
+            <p>Візуальний аналіз бітових площин зображення</p>
+        </div>
+
+        <h4 style="text-align: center;">Методика</h4>
+        <ol style="max-width: 600px; margin: 1rem auto;">
+            <li>Розкласти зображення на 8 бітових площин</li>
+            <li>Візуально проаналізувати LSB площину</li>
+            <li>Шукати неприродні паттерни або шум</li>
+        </ol>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div class="success-box">
+                <h4>Природна LSB площина</h4>
+                <ul>
+                    <li>Структуровані патерни</li>
+                    <li>Кореляція зі старшими площинами</li>
+                </ul>
+            </div>
+            <div class="warning-box">
+                <h4>LSB з прихованими даними</h4>
+                <ul>
+                    <li>Випадковий шум</li>
+                    <li>Різкі межі (кінець повідомлення)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Інструменти -->
+    <div class="slide">
+        <h2>Інструменти стегоаналізу</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0;">
+            <div class="format-card" style="background: #dbeafe; border: 2px solid #3b82f6;">
+                <h3 style="color: #1e40af;">Stegsolve</h3>
+                <p>Візуалізація бітових площин</p>
+                <p style="font-size: 0.9rem; color: #64748b;">Java, GUI інтерфейс</p>
+            </div>
+            <div class="format-card" style="background: #dcfce7; border: 2px solid #22c55e;">
+                <h3 style="color: #166534;">zsteg</h3>
+                <p>Аналіз LSB у PNG/BMP</p>
+                <p style="font-size: 0.9rem; color: #64748b;">Ruby, командний рядок</p>
+            </div>
+            <div class="format-card" style="background: #fef3c7; border: 2px solid #f59e0b;">
+                <h3 style="color: #92400e;">StegExpose</h3>
+                <p>Комбінований детектор</p>
+                <p style="font-size: 0.9rem; color: #64748b;">Chi-Square + RS + SPA</p>
+            </div>
+            <div class="format-card" style="background: #fce7f3; border: 2px solid #ec4899;">
+                <h3 style="color: #9d174d;">Aletheia</h3>
+                <p>ML-based стегоаналіз</p>
+                <p style="font-size: 0.9rem; color: #64748b;">Python, нейронні мережі</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Формати зображень -->
+    <div class="slide">
+        <h2>Формати зображень для LSB</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.95rem;">
+            <tr>
+                <th>Формат</th>
+                <th>Стиснення</th>
+                <th>LSB сумісність</th>
+                <th>Рекомендація</th>
+            </tr>
+            <tr>
+                <td><strong>BMP</strong></td>
+                <td>Без стиснення</td>
+                <td style="background: #dcfce7;">Відмінна</td>
+                <td>Підходить, але підозрілий</td>
+            </tr>
+            <tr>
+                <td><strong>PNG</strong></td>
+                <td>Без втрат</td>
+                <td style="background: #dcfce7;">Відмінна</td>
+                <td style="background: #dcfce7;"><strong>Рекомендовано!</strong></td>
+            </tr>
+            <tr>
+                <td><strong>JPEG</strong></td>
+                <td>З втратами</td>
+                <td style="background: #fee2e2;">Погана</td>
+                <td style="background: #fee2e2;">НЕ підходить</td>
+            </tr>
+            <tr>
+                <td><strong>GIF</strong></td>
+                <td>Палітра</td>
+                <td style="background: #fef9c3;">Обмежена</td>
+                <td>Можливо (палітра)</td>
+            </tr>
+        </table>
+
+        <div class="warning-box" style="margin-top: 1.5rem;">
+            <h4>JPEG несумісний з просторовим LSB!</h4>
+            <p>JPEG стиснення повністю знищує LSB піксельних значень</p>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Порівняння методів -->
+    <div class="slide">
+        <h2>Порівняння методів стегоаналізу</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.9rem;">
+            <tr>
+                <th>Метод</th>
+                <th>Ефективність</th>
+                <th>Складність</th>
+                <th>Проти чого</th>
+            </tr>
+            <tr>
+                <td><strong>Chi-Square</strong></td>
+                <td style="background: #dcfce7;">Висока</td>
+                <td style="background: #dcfce7;">Низька</td>
+                <td>Послідовний LSB</td>
+            </tr>
+            <tr>
+                <td><strong>RS-аналіз</strong></td>
+                <td style="background: #dcfce7;">Дуже висока</td>
+                <td style="background: #fef9c3;">Середня</td>
+                <td>Всі LSB методи</td>
+            </tr>
+            <tr>
+                <td><strong>Візуальний</strong></td>
+                <td style="background: #fef9c3;">Середня</td>
+                <td style="background: #dcfce7;">Низька</td>
+                <td>Послідовний LSB</td>
+            </tr>
+            <tr>
+                <td><strong>SPA</strong></td>
+                <td style="background: #dcfce7;">Висока</td>
+                <td style="background: #fef9c3;">Середня</td>
+                <td>Випадковий LSB</td>
+            </tr>
+            <tr>
+                <td><strong>ML-based</strong></td>
+                <td style="background: #dcfce7;">Найвища</td>
+                <td style="background: #fee2e2;">Висока</td>
+                <td>Всі методи</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 12: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок лекції</h2>
+
+        <div class="info-box">
+            <h3>Ключові моменти LSB стеганографії</h3>
+            <ul style="font-size: 1.05rem; line-height: 2;">
+                <li><strong>LSB</strong> — простий метод заміни молодших бітів</li>
+                <li><strong>Ємність</strong> — до 3 біт на піксель (RGB)</li>
+                <li><strong>PSNR > 40 dB</strong> — візуально непомітно</li>
+                <li><strong>Chi-Square та RS</strong> — ефективно виявляють LSB</li>
+                <li><strong>PNG</strong> — рекомендований формат</li>
+                <li><strong>BPP ≤ 0.4</strong> — безпечна ємність</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Наступна лекція:</strong> Частотні методи стеганографії (DCT, DWT)
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 12</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

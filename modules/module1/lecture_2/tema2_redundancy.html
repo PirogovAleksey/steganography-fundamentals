@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ентропія та надлишковість | Лекція 2.2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .redundancy-card {
+            background: linear-gradient(145deg, #f0fdf4, #dcfce7);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #22c55e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Ентропія та надлишковість</h1>
+        <div class="subtitle">
+            Тема 2: Надлишковість цифрових носіїв та її експлуатація
+        </div>
+    </div>
+
+    <!-- Слайд 2: Визначення надлишковості -->
+    <div class="slide">
+        <h2>Що таке надлишковість?</h2>
+
+        <div class="info-box">
+            <h4 style="text-align: center;">Визначення</h4>
+            <p style="font-size: 1.1rem; text-align: center;">
+                <strong>Надлишковість</strong> — різниця між максимально можливою<br>
+                та фактичною ентропією джерела
+            </p>
+        </div>
+
+        <div class="formula-box">
+            R = H<sub>max</sub> - H<sub>actual</sub>
+        </div>
+
+        <div class="success-box">
+            <h4 style="text-align: center;">Значення для стеганографії</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                Надлишковість створює <strong>"простір"</strong> для приховування даних<br>
+                без помітної зміни носія
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Типи надлишковості -->
+    <div class="slide">
+        <h2>Типи надлишковості</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: #dbeafe; padding: 1.5rem; border-radius: 15px; border: 2px solid #3b82f6;">
+                <h4 style="color: #1e40af;">Просторова</h4>
+                <p>Кореляція між сусідніми елементами</p>
+                <p style="font-size: 0.9rem; color: #64748b;">
+                    <em>Сусідні пікселі зображення схожі</em>
+                </p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 15px; border: 2px solid #22c55e;">
+                <h4 style="color: #166534;">Часова</h4>
+                <p>Кореляція між послідовними відліками</p>
+                <p style="font-size: 0.9rem; color: #64748b;">
+                    <em>Сусідні семпли аудіо корельовані</em>
+                </p>
+            </div>
+            <div style="background: #fef3c7; padding: 1.5rem; border-radius: 15px; border: 2px solid #f59e0b;">
+                <h4 style="color: #92400e;">Спектральна</h4>
+                <p>Кореляція частотних компонент</p>
+                <p style="font-size: 0.9rem; color: #64748b;">
+                    <em>Низькі частоти домінують</em>
+                </p>
+            </div>
+            <div style="background: #fce7f3; padding: 1.5rem; border-radius: 15px; border: 2px solid #ec4899;">
+                <h4 style="color: #9d174d;">Перцептивна</h4>
+                <p>Непомітна для органів чуття</p>
+                <p style="font-size: 0.9rem; color: #64748b;">
+                    <em>LSB пікселів, ультразвук</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Надлишковість зображень -->
+    <div class="slide">
+        <h2>Надлишковість зображень</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Природні зображення мають характерні <strong>статистичні властивості</strong>
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h4>Джерела надлишковості:</h4>
+                <ul>
+                    <li><strong>Кореляція пікселів</strong> — сусіди схожі</li>
+                    <li><strong>Гладкі області</strong> — низька дисперсія</li>
+                    <li><strong>Краї</strong> — передбачувані патерни</li>
+                    <li><strong>DCT коефіцієнти</strong> — розподіл Лапласа</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Кількісна оцінка:</h4>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 10px;">
+                    <p><strong>Теоретично:</strong> 8 біт/піксель</p>
+                    <p><strong>Фактично:</strong> 4-6 біт/піксель</p>
+                    <p style="color: #10b981; font-weight: bold;">
+                        Надлишковість: 2-4 біт/піксель
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Візуалізація кореляції -->
+    <div class="slide">
+        <h2>Кореляція пікселів</h2>
+
+        <div class="two-column">
+            <div style="text-align: center;">
+                <h4>Випадковий шум</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 40px); gap: 3px; justify-content: center; margin: 1rem 0;">
+                    <div style="width: 40px; height: 40px; background: #1e293b;"></div>
+                    <div style="width: 40px; height: 40px; background: #94a3b8;"></div>
+                    <div style="width: 40px; height: 40px; background: #f1f5f9;"></div>
+                    <div style="width: 40px; height: 40px; background: #475569;"></div>
+                    <div style="width: 40px; height: 40px; background: #e2e8f0;"></div>
+                    <div style="width: 40px; height: 40px; background: #334155;"></div>
+                    <div style="width: 40px; height: 40px; background: #cbd5e1;"></div>
+                    <div style="width: 40px; height: 40px; background: #0f172a;"></div>
+                    <div style="width: 40px; height: 40px; background: #64748b;"></div>
+                    <div style="width: 40px; height: 40px; background: #f8fafc;"></div>
+                    <div style="width: 40px; height: 40px; background: #1e293b;"></div>
+                    <div style="width: 40px; height: 40px; background: #94a3b8;"></div>
+                </div>
+                <p style="color: #ef4444;">Без кореляції<br>H ≈ 8 біт/піксель</p>
+            </div>
+            <div style="text-align: center;">
+                <h4>Природне зображення</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 40px); gap: 3px; justify-content: center; margin: 1rem 0;">
+                    <div style="width: 40px; height: 40px; background: #3b82f6;"></div>
+                    <div style="width: 40px; height: 40px; background: #60a5fa;"></div>
+                    <div style="width: 40px; height: 40px; background: #93c5fd;"></div>
+                    <div style="width: 40px; height: 40px; background: #bfdbfe;"></div>
+                    <div style="width: 40px; height: 40px; background: #2563eb;"></div>
+                    <div style="width: 40px; height: 40px; background: #3b82f6;"></div>
+                    <div style="width: 40px; height: 40px; background: #60a5fa;"></div>
+                    <div style="width: 40px; height: 40px; background: #93c5fd;"></div>
+                    <div style="width: 40px; height: 40px; background: #1d4ed8;"></div>
+                    <div style="width: 40px; height: 40px; background: #2563eb;"></div>
+                    <div style="width: 40px; height: 40px; background: #3b82f6;"></div>
+                    <div style="width: 40px; height: 40px; background: #60a5fa;"></div>
+                </div>
+                <p style="color: #10b981;">Сильна кореляція<br>H ≈ 4-6 біт/піксель</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Надлишковість аудіо -->
+    <div class="slide">
+        <h2>Надлишковість аудіо</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Аудіо сигнали також мають значну надлишковість
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #0369a1;">Часова кореляція</h4>
+                <p>Сусідні семпли передбачувані</p>
+            </div>
+            <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Частотне маскування</h4>
+                <p>Гучні звуки маскують тихі</p>
+            </div>
+            <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #92400e;">Обмеження слуху</h4>
+                <p>Людина не чує все</p>
+            </div>
+            <div style="background: #fce7f3; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #9d174d;">Великий розмір</h4>
+                <p>Багато "зайвих" даних</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Експлуатація LSB -->
+    <div class="slide">
+        <h2>Експлуатація: LSB методи</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Використовують <strong>перцептивну надлишковість</strong>
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h4>Принцип:</h4>
+                <ul>
+                    <li>Зміна LSB непомітна для ока</li>
+                    <li>Значення змінюється на ±1</li>
+                    <li>Візуально ідентичне</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Ємність:</h4>
+                <ul>
+                    <li><strong>Grayscale:</strong> 1 біт/піксель</li>
+                    <li><strong>RGB:</strong> 3 біт/піксель</li>
+                    <li><strong>RGBA:</strong> 4 біт/піксель</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Зображення 1024×768 RGB → до <strong>288 КБ</strong> прихованих даних
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Експлуатація частотна -->
+    <div class="slide">
+        <h2>Експлуатація: Частотні методи</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Використовують <strong>спектральну надлишковість</strong>
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #0369a1;">DCT методи</h4>
+                <ul>
+                    <li>Вбудовування в DCT коефіцієнти</li>
+                    <li>Стійкість до JPEG стиснення</li>
+                    <li>Використовується в JSteg, F5</li>
+                </ul>
+            </div>
+            <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">DWT методи</h4>
+                <ul>
+                    <li>Вейвлет-перетворення</li>
+                    <li>Багаторівнева декомпозиція</li>
+                    <li>Вища стійкість до обробки</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                <strong>Компроміс:</strong> менша ємність, але вища стійкість
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Порівняння -->
+    <div class="slide">
+        <h2>Порівняння методів</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.95rem;">
+            <tr>
+                <th>Метод</th>
+                <th>Надлишковість</th>
+                <th>Ємність</th>
+                <th>Стійкість</th>
+            </tr>
+            <tr>
+                <td><strong>LSB</strong></td>
+                <td>Перцептивна</td>
+                <td style="background: #dcfce7;">Висока</td>
+                <td style="background: #fee2e2;">Низька</td>
+            </tr>
+            <tr>
+                <td><strong>DCT</strong></td>
+                <td>Спектральна</td>
+                <td style="background: #fef9c3;">Середня</td>
+                <td style="background: #fef9c3;">Середня</td>
+            </tr>
+            <tr>
+                <td><strong>DWT</strong></td>
+                <td>Спектральна</td>
+                <td style="background: #fef9c3;">Середня</td>
+                <td style="background: #dcfce7;">Висока</td>
+            </tr>
+            <tr>
+                <td><strong>Адаптивні</strong></td>
+                <td>Просторова</td>
+                <td style="background: #fef9c3;">Середня</td>
+                <td style="background: #dcfce7;">Висока</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 10: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <div class="info-box">
+            <h3>Ключові поняття</h3>
+            <ul style="font-size: 1.05rem; line-height: 2;">
+                <li><strong>Надлишковість</strong> = H<sub>max</sub> - H<sub>actual</sub></li>
+                <li><strong>4 типи:</strong> просторова, часова, спектральна, перцептивна</li>
+                <li><strong>Зображення:</strong> 2-4 біт/піксель надлишковості</li>
+                <li><strong>LSB</strong> експлуатує перцептивну надлишковість</li>
+                <li><strong>DCT/DWT</strong> експлуатують спектральну надлишковість</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Далі:</strong> Статистичні характеристики контейнерів
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

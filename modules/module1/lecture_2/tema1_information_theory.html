@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теорія інформації | Лекція 2.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .scientist-card {
+            background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #0284c7;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Теорія інформації</h1>
+        <div class="subtitle">
+            Тема 1: Основи теорії Шеннона та ентропія
+        </div>
+    </div>
+
+    <!-- Слайд 2: Клод Шеннон -->
+    <div class="slide">
+        <h2>Клод Шеннон — батько теорії інформації</h2>
+
+        <div class="two-column">
+            <div class="scientist-card">
+                <h3 style="color: #0369a1;">Claude Shannon</h3>
+                <p style="font-size: 1.1rem;">(1916-2001)</p>
+                <p style="margin-top: 1rem;">
+                    "A Mathematical Theory of Communication"<br>
+                    <strong>1948</strong>
+                </p>
+            </div>
+            <div>
+                <h4>Ключові внески:</h4>
+                <ul>
+                    <li>Формалізація поняття <strong>інформації</strong></li>
+                    <li>Введення <strong>ентропії</strong> як міри невизначеності</li>
+                    <li>Теорема про <strong>пропускну здатність каналу</strong></li>
+                    <li>Основи <strong>теорії кодування</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Ця робота заклала фундамент для всієї сучасної теорії комунікацій, включаючи стеганографію
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Модель комунікації -->
+    <div class="slide">
+        <h2>Модель комунікації Шеннона</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 2rem 0;">
+            <div style="background: #dcfce7; padding: 1.5rem 2rem; border-radius: 10px; text-align: center;">
+                <strong>Джерело</strong><br>
+                <small>Генерує повідомлення</small>
+            </div>
+            <div style="font-size: 2rem;">→</div>
+            <div style="background: #fef3c7; padding: 1.5rem 2rem; border-radius: 10px; text-align: center;">
+                <strong>Канал</strong><br>
+                <small>Передає (+ шум)</small>
+            </div>
+            <div style="font-size: 2rem;">→</div>
+            <div style="background: #dbeafe; padding: 1.5rem 2rem; border-radius: 10px; text-align: center;">
+                <strong>Приймач</strong><br>
+                <small>Декодує</small>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Фундаментальна задача</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                Забезпечити <strong>надійне відтворення</strong> повідомлення приймачем<br>
+                на основі сигналу, отриманого через (зашумлений) канал
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Концепція інформації -->
+    <div class="slide">
+        <h2>Що таке інформація?</h2>
+
+        <div class="info-box">
+            <h4 style="text-align: center;">Визначення Шеннона</h4>
+            <p style="font-size: 1.2rem; text-align: center;">
+                <strong>Інформація</strong> — міра зменшення невизначеності
+            </p>
+        </div>
+
+        <p style="text-align: center; font-size: 1.1rem; margin: 1.5rem 0;">
+            Чим <strong>менш передбачувана</strong> подія — тим <strong>більше інформації</strong> несе її спостереження
+        </p>
+
+        <div class="formula-box">
+            I(x) = -log₂ p(x) біт
+        </div>
+
+        <div class="two-column">
+            <div class="success-box">
+                <h4>Приклад 1: Монета</h4>
+                <p>p = 0.5</p>
+                <p>I = -log₂(0.5) = <strong>1 біт</strong></p>
+            </div>
+            <div class="warning-box">
+                <h4>Приклад 2: Кубик</h4>
+                <p>p = 1/6</p>
+                <p>I = -log₂(1/6) ≈ <strong>2.58 біт</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Ентропія Шеннона -->
+    <div class="slide">
+        <h2>Ентропія Шеннона</h2>
+
+        <div class="info-box">
+            <h4 style="text-align: center;">Визначення</h4>
+            <p style="font-size: 1.1rem; text-align: center;">
+                <strong>Ентропія</strong> — середня кількість інформації (невизначеності) у випадковій величині
+            </p>
+        </div>
+
+        <div class="formula-box">
+            H(X) = -Σ p(x) log₂ p(x) біт
+        </div>
+
+        <h4 style="text-align: center; margin-top: 1.5rem;">Властивості ентропії:</h4>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div style="background: #dcfce7; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>H(X) ≥ 0</strong>
+                <p style="font-size: 0.9rem;">Завжди невід'ємна</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>Максимум</strong>
+                <p style="font-size: 0.9rem;">При рівноймовірних подіях</p>
+            </div>
+            <div style="background: #fee2e2; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>H(X) = 0</strong>
+                <p style="font-size: 0.9rem;">При детермінованій події</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Приклад ентропії -->
+    <div class="slide">
+        <h2>Приклад: ентропія мови</h2>
+
+        <div class="info-box">
+            <h4>Ентропія англійської мови</h4>
+            <p style="font-size: 1.2rem; text-align: center;">
+                H ≈ <strong>2.62 біт/букву</strong>
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+                <h4>Теоретичний максимум</h4>
+                <p>26 рівноймовірних букв:</p>
+                <p style="text-align: center; font-size: 1.3rem;">
+                    log₂(26) ≈ <strong>4.7 біт</strong>
+                </p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+                <h4>Надлишковість</h4>
+                <p>Різниця:</p>
+                <p style="text-align: center; font-size: 1.3rem;">
+                    4.7 - 2.62 = <strong>2.08 біт</strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Ця <strong>надлишковість</strong> — простір для стеганографії!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Спільна ентропія -->
+    <div class="slide">
+        <h2>Спільна ентропія</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Невизначеність <strong>пари</strong> випадкових величин
+            </p>
+        </div>
+
+        <div class="formula-box">
+            H(X,Y) = -ΣΣ p(x,y) log₂ p(x,y)
+        </div>
+
+        <h4 style="text-align: center; margin-top: 1.5rem;">Властивості:</h4>
+
+        <div class="two-column">
+            <div style="background: #f0f9ff; padding: 1rem; border-radius: 10px;">
+                <p style="text-align: center; font-size: 1.2rem;">
+                    <strong>H(X,Y) ≤ H(X) + H(Y)</strong>
+                </p>
+                <p style="text-align: center; font-size: 0.9rem;">
+                    Рівність тільки при незалежності
+                </p>
+            </div>
+            <div style="background: #fef9c3; padding: 1rem; border-radius: 10px;">
+                <p style="text-align: center; font-size: 1.2rem;">
+                    <strong>H(X,Y) ≥ max(H(X), H(Y))</strong>
+                </p>
+                <p style="text-align: center; font-size: 0.9rem;">
+                    Не менша за окремі
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Умовна ентропія -->
+    <div class="slide">
+        <h2>Умовна ентропія</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Кількість інформації для опису <strong>Y при відомому X</strong>
+            </p>
+        </div>
+
+        <div class="formula-box">
+            H(Y|X) = -Σ p(x,y) log₂ p(y|x) = H(X,Y) - H(X)
+        </div>
+
+        <div class="success-box" style="margin-top: 2rem;">
+            <h4 style="text-align: center;">Ключова властивість</h4>
+            <p style="text-align: center; font-size: 1.3rem;">
+                <strong>H(Y|X) ≤ H(Y)</strong>
+            </p>
+            <p style="text-align: center;">
+                Знання X <strong>не може збільшити</strong> невизначеність щодо Y
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Взаємна інформація -->
+    <div class="slide">
+        <h2>Взаємна інформація</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Кількість інформації, яку одна величина несе <strong>про іншу</strong>
+            </p>
+        </div>
+
+        <div class="formula-box">
+            I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)
+        </div>
+
+        <p style="text-align: center; font-size: 1.1rem; margin: 1rem 0;">
+            або еквівалентно:
+        </p>
+
+        <div class="formula-box">
+            I(X;Y) = H(X) + H(Y) - H(X,Y)
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
+            <div style="background: #dcfce7; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>I(X;Y) ≥ 0</strong>
+            </div>
+            <div style="background: #dbeafe; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>I(X;Y) = I(Y;X)</strong>
+            </div>
+            <div style="background: #fef9c3; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>I = 0 ⟺ незалежні</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Пропускна здатність -->
+    <div class="slide">
+        <h2>Пропускна здатність каналу</h2>
+
+        <div class="info-box">
+            <h4>Визначення</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                Максимальна швидкість <strong>надійної</strong> передачі інформації через канал
+            </p>
+        </div>
+
+        <div class="formula-box">
+            C = max<sub>p(X)</sub> I(X;Y)
+        </div>
+
+        <p style="text-align: center; margin: 1rem 0;">
+            Максимум береться по всіх можливих розподілах входу
+        </p>
+
+        <div class="success-box">
+            <h4>Теорема Шеннона про канал</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                При швидкості передачі <strong>нижче C</strong> можлива надійна комунікація<br>
+                з довільно малою ймовірністю помилки
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.95rem;">
+            <tr>
+                <th>Поняття</th>
+                <th>Формула</th>
+                <th>Значення</th>
+            </tr>
+            <tr>
+                <td><strong>Інформація</strong></td>
+                <td>I(x) = -log₂ p(x)</td>
+                <td>Біти від події</td>
+            </tr>
+            <tr>
+                <td><strong>Ентропія</strong></td>
+                <td>H(X) = -Σ p(x) log₂ p(x)</td>
+                <td>Середня невизначеність</td>
+            </tr>
+            <tr>
+                <td><strong>Умовна ентропія</strong></td>
+                <td>H(Y|X) = H(X,Y) - H(X)</td>
+                <td>При відомому X</td>
+            </tr>
+            <tr>
+                <td><strong>Взаємна інф.</strong></td>
+                <td>I(X;Y) = H(X) + H(Y) - H(X,Y)</td>
+                <td>Спільна інформація</td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Далі:</strong> Ентропія та надлишковість цифрових носіїв
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 11</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

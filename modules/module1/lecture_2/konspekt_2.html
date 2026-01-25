@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математичні основи стеганографії - Детальний конспект | Лекція 2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .konspekt-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .konspekt-page {
+            flex: 1;
+            max-width: 900px;
+            background: white;
+            line-height: 1.9;
+        }
+
+        .sidebar-nav {
+            position: sticky;
+            top: 100px;
+            width: 280px;
+            height: fit-content;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            align-self: flex-start;
+        }
+
+        .sidebar-nav h3 {
+            font-size: 1.1rem;
+            color: #475569;
+            margin: 0 0 1rem 0;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: #e0e7ff;
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+
+        .sidebar-nav a.active {
+            background: #e0e7ff;
+            color: #667eea;
+            font-weight: 600;
+            border-left-color: #667eea;
+        }
+
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 9999;
+        }
+
+        .reading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            font-size: 1.5rem;
+        }
+
+        .back-to-top:hover {
+            background: #5568d3;
+            transform: translateY(-5px);
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        @media (max-width: 1200px) {
+            .konspekt-container {
+                flex-direction: column;
+            }
+
+            .sidebar-nav {
+                position: relative;
+                top: 0;
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .konspekt-page {
+                max-width: 100%;
+            }
+        }
+
+        .konspekt-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .konspekt-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .konspekt-meta {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .toc {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: #475569;
+        }
+
+        .toc ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .konspekt-content h2 {
+            color: #1e293b;
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .konspekt-content h3 {
+            color: #334155;
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .konspekt-content h4 {
+            color: #475569;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .konspekt-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+
+        .konspekt-content ul, .konspekt-content ol {
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .konspekt-content li {
+            margin-bottom: 0.7rem;
+            line-height: 1.7;
+        }
+
+        .info-box {
+            background: #f0f9ff;
+            border-left: 5px solid #0284c7;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box h4 {
+            color: #0369a1;
+            margin-top: 0;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border-left: 5px solid #10b981;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #065f46;
+            margin-top: 0;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box h4 {
+            color: #92400e;
+            margin-top: 0;
+        }
+
+        .important-box {
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .important-box h4 {
+            color: #991b1b;
+            margin-top: 0;
+        }
+
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 1.3rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table td {
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .comparison-table tr:hover {
+            background: #f0f9ff;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+        }
+
+        @media print {
+            .btn, .header, .sidebar-nav, .back-to-top {
+                display: none;
+            }
+
+            .konspekt-container {
+                display: block;
+            }
+
+            .konspekt-page {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Reading Progress Bar -->
+<div class="reading-progress">
+    <div class="reading-progress-bar"></div>
+</div>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../../module1/index.html">Модуль 1</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="index.html">Лекція 2</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Конспект</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Container -->
+<div class="konspekt-container">
+
+    <!-- Right Sidebar Navigation -->
+    <aside class="sidebar-nav">
+        <h3>Навігація</h3>
+        <ul>
+            <li><a href="#intro">Вступ</a></li>
+            <li><a href="#shannon">1. Теорія Шеннона</a></li>
+            <li><a href="#entropy">2. Ентропія</a></li>
+            <li><a href="#redundancy">3. Надлишковість</a></li>
+            <li><a href="#statistics">4. Статистичні моделі</a></li>
+            <li><a href="#capacity">5. Ємність</a></li>
+            <li><a href="#security">6. Моделі безпеки</a></li>
+            <li><a href="#divergence">7. Міри відстані</a></li>
+            <li><a href="#conclusion">Висновки</a></li>
+        </ul>
+    </aside>
+
+    <main class="konspekt-page">
+
+        <!-- Header -->
+        <header class="konspekt-header">
+            <h1 class="konspekt-title">Математичні основи стеганографії</h1>
+            <div class="konspekt-meta">
+                Навчальний конспект | Лекція 2 | Модуль 1: Теоретичні основи стеганографії
+            </div>
+        </header>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3>Зміст конспекту</h3>
+            <ul>
+                <li><a href="#intro">Вступ до математичних основ</a></li>
+                <li><a href="#shannon">1. Теорія інформації Шеннона</a></li>
+                <li><a href="#entropy">2. Ентропія та її властивості</a></li>
+                <li><a href="#redundancy">3. Надлишковість цифрових носіїв</a></li>
+                <li><a href="#statistics">4. Статистичні характеристики контейнерів</a></li>
+                <li><a href="#capacity">5. Стеганографічна ємність</a></li>
+                <li><a href="#security">6. Моделі безпеки стеганографії</a></li>
+                <li><a href="#divergence">7. Міри статистичної відстані</a></li>
+                <li><a href="#conclusion">Висновки та ключові формули</a></li>
+            </ul>
+        </div>
+
+        <!-- Content -->
+        <div class="konspekt-content">
+
+            <!-- Introduction -->
+            <section id="intro">
+                <h2>Вступ до математичних основ</h2>
+
+                <p>
+                    Математичний апарат стеганографії базується на теорії інформації, розробленій Клодом Шенноном у 1948 році. Ця теорія дозволяє формалізувати поняття інформації, невизначеності та надлишковості — ключові концепції для розуміння того, як і чому можливе приховування даних у цифрових носіях.
+                </p>
+
+                <div class="info-box">
+                    <h4>Чому математика важлива для стеганографії?</h4>
+                    <ul>
+                        <li><strong>Формалізація безпеки</strong> — можливість доведення невиявлюваності</li>
+                        <li><strong>Оцінка ємності</strong> — розрахунок максимальної кількості прихованих даних</li>
+                        <li><strong>Аналіз компромісів</strong> — баланс між ємністю, непомітністю та стійкістю</li>
+                        <li><strong>Розробка алгоритмів</strong> — теоретично обґрунтовані методи вбудовування</li>
+                    </ul>
+                </div>
+
+                <h3>Історичний контекст</h3>
+
+                <p>
+                    Стаття Клода Шеннона "A Mathematical Theory of Communication" (1948) заклала фундамент для всієї сучасної теорії комунікацій. У 1998 році Крістіан Кашин (Christian Cachin) застосував ідеї теорії інформації для формалізації безпеки стеганографії, що стало основою сучасного теоретичного підходу.
+                </p>
+            </section>
+
+            <!-- Shannon Theory -->
+            <section id="shannon">
+                <h2>1. Теорія інформації Шеннона</h2>
+
+                <h3>1.1 Базова модель комунікації</h3>
+
+                <p>
+                    За Шенноном, система комунікації складається з трьох основних елементів:
+                </p>
+
+                <ul>
+                    <li><strong>Джерело даних</strong> — генерує повідомлення</li>
+                    <li><strong>Канал зв'язку</strong> — передає повідомлення (можливо, з шумом)</li>
+                    <li><strong>Приймач</strong> — отримує та декодує повідомлення</li>
+                </ul>
+
+                <p>
+                    Фундаментальна задача — забезпечити надійне відтворення повідомлення приймачем на основі сигналу, отриманого через канал.
+                </p>
+
+                <h3>1.2 Концепція інформації</h3>
+
+                <p>
+                    Шеннон визначив <strong>інформацію</strong> як міру зменшення невизначеності. Чим менш передбачувана подія, тим більше інформації несе її спостереження.
+                </p>
+
+                <div class="formula-box">
+                    I(x) = -log₂ p(x) біт
+                </div>
+
+                <p>
+                    де <code>p(x)</code> — ймовірність події <code>x</code>.
+                </p>
+
+                <div class="example-box">
+                    <h4>Приклад</h4>
+                    <p>Результат підкидання чесної монети (p = 0.5):</p>
+                    <p style="text-align: center;"><code>I = -log₂(0.5) = 1 біт</code></p>
+                    <p>Результат кидання кубика (p = 1/6):</p>
+                    <p style="text-align: center;"><code>I = -log₂(1/6) ≈ 2.58 біт</code></p>
+                </div>
+            </section>
+
+            <!-- Entropy -->
+            <section id="entropy">
+                <h2>2. Ентропія та її властивості</h2>
+
+                <h3>2.1 Ентропія Шеннона</h3>
+
+                <p>
+                    <strong>Ентропія</strong> — середня кількість інформації (невизначеності) у випадковій величині.
+                </p>
+
+                <div class="formula-box">
+                    H(X) = -Σ p(x) log₂ p(x) біт
+                </div>
+
+                <p>де сума береться по всіх можливих значеннях x із множини X.</p>
+
+                <h4>Властивості ентропії:</h4>
+                <ul>
+                    <li><strong>Невід'ємність:</strong> H(X) ≥ 0</li>
+                    <li><strong>Максимум</strong> досягається при рівноймовірних подіях</li>
+                    <li><strong>H(X) = 0</strong> тільки коли подія детермінована (p = 1)</li>
+                </ul>
+
+                <div class="example-box">
+                    <h4>Приклад: ентропія англійської мови</h4>
+                    <p>
+                        Шеннон обчислив, що ентропія англійської мови становить приблизно <strong>2.62 біт на букву</strong>,
+                        що значно менше за теоретичних 4.7 біт (якби всі 26 букв були рівноймовірні).
+                    </p>
+                    <p>
+                        Ця різниця (4.7 - 2.62 = 2.08 біт) — <strong>надлишковість</strong>, яку можна експлуатувати для стеганографії.
+                    </p>
+                </div>
+
+                <h3>2.2 Спільна ентропія</h3>
+
+                <p>
+                    Вимірює невизначеність пари випадкових величин:
+                </p>
+
+                <div class="formula-box">
+                    H(X,Y) = -ΣΣ p(x,y) log₂ p(x,y)
+                </div>
+
+                <h4>Властивості:</h4>
+                <ul>
+                    <li>H(X,Y) ≤ H(X) + H(Y) — рівність тільки при незалежності X та Y</li>
+                    <li>H(X,Y) ≥ max(H(X), H(Y))</li>
+                </ul>
+
+                <h3>2.3 Умовна ентропія</h3>
+
+                <p>
+                    Кількість інформації, потрібної для опису Y при відомому X:
+                </p>
+
+                <div class="formula-box">
+                    H(Y|X) = -Σ p(x,y) log₂ p(y|x) = H(X,Y) - H(X)
+                </div>
+
+                <div class="info-box">
+                    <h4>Ключова властивість</h4>
+                    <p style="text-align: center; font-size: 1.2rem;">
+                        <strong>H(Y|X) ≤ H(Y)</strong>
+                    </p>
+                    <p>Знання X не може збільшити невизначеність щодо Y.</p>
+                </div>
+
+                <h3>2.4 Взаємна інформація</h3>
+
+                <p>
+                    Кількість інформації, яку одна випадкова величина несе про іншу:
+                </p>
+
+                <div class="formula-box">
+                    I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X) = H(X) + H(Y) - H(X,Y)
+                </div>
+
+                <h4>Властивості:</h4>
+                <ul>
+                    <li><strong>I(X;Y) ≥ 0</strong> — завжди невід'ємна</li>
+                    <li><strong>I(X;Y) = I(Y;X)</strong> — симетрична</li>
+                    <li><strong>I(X;Y) = 0</strong> тільки якщо X та Y незалежні</li>
+                </ul>
+
+                <div class="info-box">
+                    <h4>Інтерпретація для стеганографії</h4>
+                    <p>
+                        Взаємна інформація I(C;S) між контейнером C та стего-об'єктом S показує,
+                        скільки інформації про прихований зміст можна отримати зі спостереження стего-об'єкта.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Redundancy -->
+            <section id="redundancy">
+                <h2>3. Надлишковість цифрових носіїв</h2>
+
+                <h3>3.1 Визначення надлишковості</h3>
+
+                <p>
+                    <strong>Надлишковість</strong> — різниця між максимально можливою ентропією та фактичною ентропією джерела:
+                </p>
+
+                <div class="formula-box">
+                    R = H<sub>max</sub> - H<sub>actual</sub>
+                </div>
+
+                <p>
+                    Надлишковість створює "простір" для приховування даних без помітної зміни носія.
+                </p>
+
+                <h3>3.2 Типи надлишковості</h3>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Тип</th>
+                        <th>Опис</th>
+                        <th>Приклад</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Просторова</strong></td>
+                        <td>Кореляція між сусідніми елементами</td>
+                        <td>Сусідні пікселі зображення схожі</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Часова</strong></td>
+                        <td>Кореляція між послідовними відліками</td>
+                        <td>Сусідні семпли аудіо корельовані</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Спектральна</strong></td>
+                        <td>Кореляція між частотними компонентами</td>
+                        <td>Низькі частоти домінують у природних зображеннях</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Перцептивна</strong></td>
+                        <td>Інформація, непомітна для органів чуття</td>
+                        <td>LSB пікселів, ультразвукові частоти</td>
+                    </tr>
+                </table>
+
+                <h3>3.3 Надлишковість зображень</h3>
+
+                <p>
+                    Природні зображення мають характерні статистичні властивості:
+                </p>
+
+                <ul>
+                    <li><strong>Кореляція пікселів:</strong> сусідні пікселі майже завжди схожі</li>
+                    <li><strong>Гладкі області:</strong> мають низьку локальну дисперсію</li>
+                    <li><strong>Краї та текстури:</strong> мають передбачувані патерни</li>
+                    <li><strong>DCT коефіцієнти:</strong> розподілені за законом Лапласа</li>
+                </ul>
+
+                <div class="example-box">
+                    <h4>Кількісна оцінка</h4>
+                    <p>
+                        8-бітне зображення теоретично може нести до 8 біт/піксель.
+                        Але через кореляцію фактична ентропія природних зображень становить лише 4-6 біт/піксель.
+                    </p>
+                    <p>
+                        <strong>Надлишковість ≈ 2-4 біт/піксель</strong> — потенційний простір для стеганографії.
+                    </p>
+                </div>
+
+                <h3>3.4 Експлуатація надлишковості</h3>
+
+                <div class="two-columns">
+                    <div>
+                        <h4>LSB методи</h4>
+                        <ul>
+                            <li>Використовують перцептивну надлишковість</li>
+                            <li>Зміни LSB непомітні для ока</li>
+                            <li>Ємність: 1-3 біт/піксель</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Частотні методи</h4>
+                        <ul>
+                            <li>Використовують спектральну надлишковість</li>
+                            <li>Вбудовування в DCT/DWT коефіцієнти</li>
+                            <li>Більша стійкість до обробки</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics -->
+            <section id="statistics">
+                <h2>4. Статистичні характеристики контейнерів</h2>
+
+                <h3>4.1 Статистики першого порядку</h3>
+
+                <p>
+                    Залежать лише від окремих значень пікселів, без урахування просторових зв'язків:
+                </p>
+
+                <ul>
+                    <li><strong>Гістограма</strong> — розподіл значень пікселів</li>
+                    <li><strong>Середнє:</strong> μ = (1/N) Σ x<sub>i</sub></li>
+                    <li><strong>Дисперсія:</strong> σ² = (1/N) Σ (x<sub>i</sub> - μ)²</li>
+                    <li><strong>Моменти вищих порядків:</strong> асиметрія, ексцес</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>Вплив LSB стеганографії</h4>
+                    <p>
+                        Просте LSB вбудовування змінює гістограму, створюючи ефект "пар значень" (PoVs),
+                        що детектується Chi-Square атакою.
+                    </p>
+                </div>
+
+                <h3>4.2 Статистики вищих порядків</h3>
+
+                <p>
+                    Враховують залежності між сусідніми елементами:
+                </p>
+
+                <ul>
+                    <li><strong>Матриці суміжності</strong> (co-occurrence matrices)</li>
+                    <li><strong>Автокореляційні функції</strong></li>
+                    <li><strong>Парні залежності</strong> між сусідніми пікселями</li>
+                </ul>
+
+                <p>
+                    Сучасні методи стегоаналізу (SRM, SPAM) активно використовують статистики вищих порядків для виявлення прихованих даних.
+                </p>
+
+                <h3>4.3 Марківські моделі</h3>
+
+                <p>
+                    Пікселі зображення не є незалежними однаково розподіленими (i.i.d.) — вони мають сильні кореляції.
+                    <strong>Марківська модель</strong> враховує це:
+                </p>
+
+                <div class="formula-box">
+                    P(X<sub>n</sub> | X<sub>n-1</sub>, X<sub>n-2</sub>, ..., X<sub>1</sub>) = P(X<sub>n</sub> | X<sub>n-1</sub>)
+                </div>
+
+                <p>
+                    Ймовірність поточного значення залежить лише від попереднього.
+                </p>
+
+                <div class="info-box">
+                    <h4>Застосування марківських моделей</h4>
+                    <ul>
+                        <li><strong>Стегоаналіз:</strong> виявлення порушень марківських залежностей</li>
+                        <li><strong>Стеганографія:</strong> збереження марківської статистики при вбудовуванні</li>
+                        <li><strong>Теоретичний аналіз:</strong> доведення закону квадратного кореня</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Capacity -->
+            <section id="capacity">
+                <h2>5. Стеганографічна ємність</h2>
+
+                <h3>5.1 Пропускна здатність каналу</h3>
+
+                <p>
+                    За Шенноном, <strong>пропускна здатність каналу</strong> — максимальна швидкість надійної передачі інформації:
+                </p>
+
+                <div class="formula-box">
+                    C = max<sub>p(X)</sub> I(X;Y)
+                </div>
+
+                <p>
+                    де максимум береться по всіх можливих розподілах входу.
+                </p>
+
+                <h3>5.2 Закон квадратного кореня</h3>
+
+                <p>
+                    Один з найважливіших результатів теоретичної стеганографії:
+                </p>
+
+                <div class="important-box">
+                    <h4>Закон квадратного кореня (Square Root Law)</h4>
+                    <p style="font-size: 1.2rem; text-align: center;">
+                        Безпечна ємність недосконалої стегосистеми пропорційна квадратному кореню з розміру контейнера:
+                    </p>
+                    <div class="formula-box" style="border-color: #ef4444;">
+                        m ∝ √n
+                    </div>
+                    <p>де m — безпечний розмір payload, n — розмір контейнера.</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Практичне значення</h4>
+                    <p>
+                        Подвоєння розміру контейнера збільшує безпечну ємність лише в √2 ≈ 1.41 рази, а не вдвічі!
+                    </p>
+                    <p>
+                        Для зображення 1000×1000 пікселів (n = 10⁶) безпечна ємність ∝ √10⁶ = 1000 біт ≈ 125 байт.
+                    </p>
+                </div>
+
+                <h3>5.3 Ефективність вбудовування</h3>
+
+                <p>
+                    Відношення вбудованих бітів до кількості змін контейнера:
+                </p>
+
+                <div class="formula-box">
+                    e = (Вбудовані біти) / (Зміни контейнера)
+                </div>
+
+                <ul>
+                    <li><strong>Просте LSB:</strong> e = 1 (1 біт на 1 зміну)</li>
+                    <li><strong>Матричне кодування:</strong> e > 1 (кілька бітів на зміну)</li>
+                    <li><strong>STC коди:</strong> близькі до теоретичного оптимуму</li>
+                </ul>
+            </section>
+
+            <!-- Security Models -->
+            <section id="security">
+                <h2>6. Моделі безпеки стеганографії</h2>
+
+                <h3>6.1 Модель Кашина (1998)</h3>
+
+                <p>
+                    Крістіан Кашин формалізував безпеку стеганографії як задачу перевірки статистичних гіпотез:
+                </p>
+
+                <ul>
+                    <li><strong>C</strong> — розподіл "чистих" контейнерів</li>
+                    <li><strong>S</strong> — розподіл стего-об'єктів</li>
+                    <li><strong>Противник</strong> розрізняє гіпотези: H₀: X ~ C vs H₁: X ~ S</li>
+                </ul>
+
+                <div class="info-box">
+                    <h4>Міра безпеки</h4>
+                    <p>
+                        Безпека вимірюється <strong>KL-дивергенцією</strong> між розподілами контейнера та стего-об'єкта:
+                    </p>
+                    <div class="formula-box">
+                        D<sub>KL</sub>(P<sub>C</sub> || P<sub>S</sub>) = Σ P<sub>C</sub>(x) log [P<sub>C</sub>(x) / P<sub>S</sub>(x)]
+                    </div>
+                </div>
+
+                <h3>6.2 ε-безпека</h3>
+
+                <p>
+                    Стегосистема є <strong>ε-безпечною</strong>, якщо:
+                </p>
+
+                <div class="formula-box">
+                    D<sub>KL</sub>(P<sub>C</sub> || P<sub>S</sub>) ≤ ε
+                </div>
+
+                <ul>
+                    <li>Менше ε — вища безпека</li>
+                    <li>Обмежує здатність будь-якого статистичного детектора</li>
+                    <li>Забезпечує кількісну гарантію безпеки</li>
+                </ul>
+
+                <h3>6.3 Досконала безпека</h3>
+
+                <p>
+                    Стегосистема є <strong>досконало безпечною</strong>, якщо:
+                </p>
+
+                <div class="formula-box">
+                    D<sub>KL</sub>(P<sub>C</sub> || P<sub>S</sub>) = 0
+                </div>
+
+                <div class="important-box">
+                    <h4>Теорема Кашина</h4>
+                    <p>
+                        При нульовій KL-дивергенції оптимальний статистичний детектор не може зробити краще,
+                        ніж випадкове вгадування — приховані дані <strong>повністю невиявлювані</strong>.
+                    </p>
+                </div>
+
+                <h3>6.4 Порівняння моделей безпеки</h3>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Аспект</th>
+                        <th>Інформаційно-теоретична</th>
+                        <th>Обчислювальна</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Припущення</strong></td>
+                        <td>Необмежений противник</td>
+                        <td>Обмежені обчислення</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Гарантія</strong></td>
+                        <td>Безумовна</td>
+                        <td>Умовна (складність)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Квантова стійкість</strong></td>
+                        <td>Так</td>
+                        <td>Потенційно ні</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Практичність</strong></td>
+                        <td>Складна</td>
+                        <td>Більш практична</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Divergence -->
+            <section id="divergence">
+                <h2>7. Міри статистичної відстані</h2>
+
+                <h3>7.1 KL-дивергенція (відносна ентропія)</h3>
+
+                <div class="formula-box">
+                    D<sub>KL</sub>(P || Q) = Σ P(x) log [P(x) / Q(x)]
+                </div>
+
+                <h4>Властивості:</h4>
+                <ul>
+                    <li><strong>Невід'ємність:</strong> D<sub>KL</sub> ≥ 0</li>
+                    <li><strong>Рівність нулю:</strong> тільки якщо P = Q</li>
+                    <li><strong>Несиметричність:</strong> D<sub>KL</sub>(P||Q) ≠ D<sub>KL</sub>(Q||P)</li>
+                </ul>
+
+                <h3>7.2 Повна варіаційна відстань</h3>
+
+                <div class="formula-box">
+                    d<sub>TV</sub>(P, Q) = (1/2) Σ |P(x) - Q(x)|
+                </div>
+
+                <h4>Властивості:</h4>
+                <ul>
+                    <li>Діапазон: [0, 1]</li>
+                    <li>Симетрична: d<sub>TV</sub>(P,Q) = d<sub>TV</sub>(Q,P)</li>
+                    <li>Є метрикою (задовольняє нерівність трикутника)</li>
+                </ul>
+
+                <h3>7.3 Нерівність Пінскера</h3>
+
+                <p>
+                    Зв'язує KL-дивергенцію з повною варіаційною відстанню:
+                </p>
+
+                <div class="formula-box">
+                    d<sub>TV</sub>(P, Q) ≤ √[(1/2) D<sub>KL</sub>(P || Q)]
+                </div>
+
+                <div class="info-box">
+                    <h4>Практичне значення</h4>
+                    <p>
+                        Обмежуючи KL-дивергенцію (ε-безпека), ми автоматично обмежуємо повну варіаційну відстань,
+                        що безпосередньо пов'язана з ймовірністю виявлення.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section id="conclusion">
+                <h2>Висновки та ключові формули</h2>
+
+                <h3>Таблиця ключових формул</h3>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Поняття</th>
+                        <th>Формула</th>
+                        <th>Значення</th>
+                    </tr>
+                    <tr>
+                        <td>Ентропія Шеннона</td>
+                        <td>H(X) = -Σ p(x) log₂ p(x)</td>
+                        <td>Середня невизначеність</td>
+                    </tr>
+                    <tr>
+                        <td>Спільна ентропія</td>
+                        <td>H(X,Y) = -Σ p(x,y) log₂ p(x,y)</td>
+                        <td>Невизначеність пари</td>
+                    </tr>
+                    <tr>
+                        <td>Умовна ентропія</td>
+                        <td>H(Y|X) = H(X,Y) - H(X)</td>
+                        <td>Невизначеність при відомому X</td>
+                    </tr>
+                    <tr>
+                        <td>Взаємна інформація</td>
+                        <td>I(X;Y) = H(X) + H(Y) - H(X,Y)</td>
+                        <td>Спільна інформація</td>
+                    </tr>
+                    <tr>
+                        <td>KL-дивергенція</td>
+                        <td>D<sub>KL</sub>(P||Q) = Σ P(x) log[P(x)/Q(x)]</td>
+                        <td>Статистична відстань</td>
+                    </tr>
+                    <tr>
+                        <td>ε-безпека</td>
+                        <td>D<sub>KL</sub>(P<sub>C</sub>||P<sub>S</sub>) ≤ ε</td>
+                        <td>Гарантія безпеки</td>
+                    </tr>
+                    <tr>
+                        <td>Закон √n</td>
+                        <td>m ∝ √n</td>
+                        <td>Безпечна ємність</td>
+                    </tr>
+                </table>
+
+                <h3>Ключові висновки</h3>
+
+                <div class="info-box">
+                    <ul style="font-size: 1.05rem; line-height: 2;">
+                        <li><strong>Теорія інформації</strong> — математичний фундамент стеганографії</li>
+                        <li><strong>Ентропія</strong> вимірює невизначеність та визначає границі стиснення</li>
+                        <li><strong>Надлишковість</strong> цифрових носіїв створює простір для приховування</li>
+                        <li><strong>Закон квадратного кореня</strong> обмежує безпечну ємність: m ∝ √n</li>
+                        <li><strong>Модель Кашина</strong> формалізує безпеку через KL-дивергенцію</li>
+                        <li><strong>Досконала безпека</strong> досягається при D<sub>KL</sub> = 0</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4>Що далі?</h4>
+                    <p>
+                        У наступній лекції розглянемо <strong>принципи побудови стегосистем</strong> —
+                        архітектуру, вимоги та методологію проектування практичних стеганографічних систем.
+                    </p>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+<script>
+    // Reading Progress Bar
+    window.addEventListener('scroll', () => {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = (window.scrollY / docHeight) * 100;
+        document.querySelector('.reading-progress-bar').style.width = scrolled + '%';
+
+        // Back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) {
+            backToTop.classList.add('show');
+        } else {
+            backToTop.classList.remove('show');
+        }
+    });
+
+    // Active sidebar link
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

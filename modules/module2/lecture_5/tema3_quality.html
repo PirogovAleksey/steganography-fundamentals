@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Метрики якості | Лекція 5.3</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+        .metric-card {
+            background: linear-gradient(145deg, #ffffff, #f3f4f6);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #e5e7eb;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .psnr-scale {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background: linear-gradient(to right, #ef4444, #f59e0b, #10b981);
+            border-radius: 10px;
+        }
+        .psnr-scale span {
+            background: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Метрики якості</h1>
+        <div class="subtitle">
+            Тема 3: MSE, PSNR, SSIM — оцінка якості стего-зображень
+        </div>
+    </div>
+
+    <!-- Слайд 2: Навіщо метрики? -->
+    <div class="slide">
+        <h2>Навіщо потрібні метрики якості?</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                Як виміряти, наскільки стего-зображення відрізняється від оригіналу?
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h4>Задачі метрик</h4>
+                <ul>
+                    <li>Оцінка візуальної якості</li>
+                    <li>Порівняння алгоритмів</li>
+                    <li>Визначення безпечної ємності</li>
+                    <li>Контроль спотворень</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Основні метрики</h4>
+                <ul>
+                    <li><strong>MSE</strong> — середня помилка</li>
+                    <li><strong>PSNR</strong> — сигнал/шум</li>
+                    <li><strong>SSIM</strong> — структурна схожість</li>
+                    <li><strong>BPP</strong> — ємність</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: MSE -->
+    <div class="slide">
+        <h2>MSE (Mean Square Error)</h2>
+
+        <div class="info-box">
+            <h4>Середньоквадратична помилка</h4>
+            <p>Вимірює середню різницю між пікселями оригіналу та стего-зображення</p>
+        </div>
+
+        <div class="formula-box">
+            MSE = (1 / m×n) × ΣΣ [I(i,j) - K(i,j)]²
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div class="metric-card">
+                <h4>Змінні</h4>
+                <ul style="text-align: left;">
+                    <li><strong>m, n</strong> — розміри зображення</li>
+                    <li><strong>I(i,j)</strong> — піксель оригіналу</li>
+                    <li><strong>K(i,j)</strong> — піксель стего</li>
+                </ul>
+            </div>
+            <div class="metric-card">
+                <h4>Інтерпретація</h4>
+                <ul style="text-align: left;">
+                    <li><strong>MSE = 0</strong> — ідентичні</li>
+                    <li><strong>MSE &lt; 1</strong> — відмінно</li>
+                    <li>Менше = краще</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4: PSNR -->
+    <div class="slide">
+        <h2>PSNR (Peak Signal-to-Noise Ratio)</h2>
+
+        <div class="info-box">
+            <h4>Пікове відношення сигнал/шум</h4>
+            <p>Найпоширеніша метрика якості в стеганографії</p>
+        </div>
+
+        <div class="formula-box">
+            PSNR = 10 × log₁₀(MAX² / MSE)
+        </div>
+
+        <p style="text-align: center; margin-top: 1rem;">
+            або еквівалентно:
+        </p>
+
+        <div class="formula-box">
+            PSNR = 20 × log₁₀(MAX / √MSE)
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                <strong>MAX = 255</strong> для 8-бітних зображень<br>
+                Результат вимірюється в <strong>децибелах (dB)</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Шкала PSNR -->
+    <div class="slide">
+        <h2>Шкала PSNR</h2>
+
+        <div class="psnr-scale">
+            <span>&lt;20 dB</span>
+            <span>20-30 dB</span>
+            <span>30-40 dB</span>
+            <span>40-50 dB</span>
+            <span>&gt;50 dB</span>
+        </div>
+
+        <table class="comparison-table" style="margin: 1rem auto;">
+            <tr>
+                <th>PSNR (dB)</th>
+                <th>Якість</th>
+                <th>Сприйняття</th>
+            </tr>
+            <tr>
+                <td style="background: #dcfce7; font-weight: bold;">&gt; 50 dB</td>
+                <td>Відмінна</td>
+                <td>Абсолютно непомітно</td>
+            </tr>
+            <tr>
+                <td style="background: #d1fae5;">40-50 dB</td>
+                <td>Дуже добра</td>
+                <td>Непомітно без інструментів</td>
+            </tr>
+            <tr>
+                <td style="background: #fef9c3;">30-40 dB</td>
+                <td>Добра</td>
+                <td>Мінімальні артефакти</td>
+            </tr>
+            <tr>
+                <td style="background: #fed7aa;">20-30 dB</td>
+                <td>Задовільна</td>
+                <td>Помітна деградація</td>
+            </tr>
+            <tr>
+                <td style="background: #fecaca;">&lt; 20 dB</td>
+                <td>Погана</td>
+                <td>Значні спотворення</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 6: PSNR для LSB -->
+    <div class="slide">
+        <h2>Типові значення PSNR для LSB</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0;">
+            <div class="metric-card" style="border-color: #10b981;">
+                <h4>1-bit LSB</h4>
+                <div class="metric-value">~51</div>
+                <p>dB</p>
+                <p style="color: #10b981; font-weight: bold;">Відмінно</p>
+            </div>
+            <div class="metric-card" style="border-color: #10b981;">
+                <h4>2-bit LSB</h4>
+                <div class="metric-value">~44</div>
+                <p>dB</p>
+                <p style="color: #10b981; font-weight: bold;">Дуже добре</p>
+            </div>
+            <div class="metric-card" style="border-color: #f59e0b;">
+                <h4>3-bit LSB</h4>
+                <div class="metric-value">~37</div>
+                <p>dB</p>
+                <p style="color: #f59e0b; font-weight: bold;">Добре</p>
+            </div>
+            <div class="metric-card" style="border-color: #ef4444;">
+                <h4>4-bit LSB</h4>
+                <div class="metric-value">~31</div>
+                <p>dB</p>
+                <p style="color: #ef4444; font-weight: bold;">Помітно</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                <strong>Рекомендація:</strong> для якісної стеганографії PSNR > 40 dB
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 7: SSIM -->
+    <div class="slide">
+        <h2>SSIM (Structural Similarity Index)</h2>
+
+        <div class="info-box">
+            <h4>Індекс структурної схожості</h4>
+            <p>Краще корелює з людським сприйняттям, ніж PSNR</p>
+        </div>
+
+        <div class="formula-box" style="font-size: 1.1rem;">
+            SSIM(x,y) = [(2μₓμᵧ + c₁)(2σₓᵧ + c₂)] / [(μₓ² + μᵧ² + c₁)(σₓ² + σᵧ² + c₂)]
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div class="metric-card">
+                <h4>Компоненти SSIM</h4>
+                <ul style="text-align: left;">
+                    <li><strong>μ</strong> — яскравість (luminance)</li>
+                    <li><strong>σ²</strong> — контраст (contrast)</li>
+                    <li><strong>σₓᵧ</strong> — структура (structure)</li>
+                </ul>
+            </div>
+            <div class="metric-card">
+                <h4>Інтерпретація</h4>
+                <ul style="text-align: left;">
+                    <li><strong>SSIM = 1</strong> — ідентичні</li>
+                    <li><strong>SSIM > 0.99</strong> — відмінно</li>
+                    <li><strong>SSIM > 0.95</strong> — добре</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 8: SSIM vs PSNR -->
+    <div class="slide">
+        <h2>SSIM vs PSNR</h2>
+
+        <table class="comparison-table" style="margin: 1.5rem auto;">
+            <tr>
+                <th>Характеристика</th>
+                <th>PSNR</th>
+                <th>SSIM</th>
+            </tr>
+            <tr>
+                <td>Що вимірює</td>
+                <td>Піксельна різниця</td>
+                <td>Структурна схожість</td>
+            </tr>
+            <tr>
+                <td>Кореляція з оком</td>
+                <td style="background: #fef9c3;">Помірна</td>
+                <td style="background: #dcfce7;">Висока</td>
+            </tr>
+            <tr>
+                <td>Діапазон</td>
+                <td>0 - ∞ dB</td>
+                <td>-1 до 1</td>
+            </tr>
+            <tr>
+                <td>Інтерпретація</td>
+                <td>Більше = краще</td>
+                <td>Ближче до 1 = краще</td>
+            </tr>
+            <tr>
+                <td>Обчислення</td>
+                <td style="background: #dcfce7;">Просте</td>
+                <td style="background: #fef9c3;">Складніше</td>
+            </tr>
+            <tr>
+                <td>Популярність</td>
+                <td style="background: #dcfce7;">Найвища</td>
+                <td>Зростає</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                <strong>Рекомендація:</strong> використовуйте обидві метрики для повної оцінки
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 9: BPP -->
+    <div class="slide">
+        <h2>BPP (Bits Per Pixel)</h2>
+
+        <div class="info-box">
+            <h4>Метрика ємності</h4>
+            <p>Показує щільність вбудовування даних</p>
+        </div>
+
+        <div class="formula-box">
+            BPP = Вбудовані біти / Кількість пікселів
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+            <div class="metric-card" style="border-color: #10b981;">
+                <h4>Високий рівень безпеки</h4>
+                <div class="metric-value" style="font-size: 2rem;">≤ 0.1</div>
+                <p>bpp</p>
+            </div>
+            <div class="metric-card" style="border-color: #f59e0b;">
+                <h4>Помірний рівень</h4>
+                <div class="metric-value" style="font-size: 2rem;">≤ 0.2</div>
+                <p>bpp</p>
+            </div>
+            <div class="metric-card" style="border-color: #ef4444;">
+                <h4>Безпечний рівень</h4>
+                <div class="metric-value" style="font-size: 2rem;">≤ 0.4</div>
+                <p>bpp</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p style="text-align: center;">
+                BPP > 0.4 — високий ризик виявлення стегоаналізом!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Приклад розрахунку -->
+    <div class="slide">
+        <h2>Приклад розрахунку</h2>
+
+        <div class="info-box">
+            <h4>Вхідні дані</h4>
+            <p>Зображення: 1920 × 1080 (Full HD), RGB, 1-bit LSB</p>
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div class="metric-card">
+                <h4>Максимальна ємність</h4>
+                <p style="font-family: monospace; font-size: 1.1rem;">
+                    1920 × 1080 × 3 × 1 = <br>
+                    <strong style="color: #667eea;">6,220,800 біт</strong>
+                </p>
+                <p>≈ <strong>760 КБ</strong></p>
+            </div>
+            <div class="metric-card">
+                <h4>Безпечна ємність (0.4 bpp)</h4>
+                <p style="font-family: monospace; font-size: 1.1rem;">
+                    6,220,800 × 0.4 / 3 = <br>
+                    <strong style="color: #10b981;">829,440 біт</strong>
+                </p>
+                <p>≈ <strong>101 КБ</strong></p>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                <strong>Висновок:</strong> у Full HD зображенні безпечно сховати ~100 КБ даних
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto;">
+            <tr>
+                <th>Метрика</th>
+                <th>Формула</th>
+                <th>Ідеал</th>
+                <th>Призначення</th>
+            </tr>
+            <tr>
+                <td><strong>MSE</strong></td>
+                <td>Σ(I-K)² / n</td>
+                <td>0</td>
+                <td>Базова помилка</td>
+            </tr>
+            <tr>
+                <td><strong>PSNR</strong></td>
+                <td>10×log(MAX²/MSE)</td>
+                <td>∞ dB</td>
+                <td>Якість (dB)</td>
+            </tr>
+            <tr>
+                <td><strong>SSIM</strong></td>
+                <td>Структурна формула</td>
+                <td>1</td>
+                <td>Перцептивна якість</td>
+            </tr>
+            <tr>
+                <td><strong>BPP</strong></td>
+                <td>bits / pixels</td>
+                <td>≤ 0.4</td>
+                <td>Безпечна ємність</td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Далі:</strong> Методи стегоаналізу LSB
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 11</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

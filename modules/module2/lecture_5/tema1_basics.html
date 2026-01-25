@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основи LSB методу | Лекція 5.1</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .bit-visual {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            background: #1e293b;
+            color: #10b981;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 1rem 0;
+            letter-spacing: 0.3rem;
+        }
+        .bit-visual .highlight {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .pixel-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 5px;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .pixel-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Основи LSB методу</h1>
+        <div class="subtitle">
+            Тема 1: Принцип найменшого значущого біта
+        </div>
+    </div>
+
+    <!-- Слайд 2: Що таке LSB -->
+    <div class="slide">
+        <h2>Що таке LSB стеганографія?</h2>
+
+        <div class="info-box">
+            <h3 style="color: #667eea; text-align: center;">LSB = Least Significant Bit</h3>
+            <p style="font-size: 1.2rem; text-align: center;">
+                Найменш значущий біт — біт з найменшою вагою у двійковому представленні числа
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h4>Принцип методу</h4>
+                <ul>
+                    <li>Заміна LSB пікселів на біти повідомлення</li>
+                    <li>Зміна значення пікселя максимум на ±1</li>
+                    <li>Візуально непомітні зміни</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Характеристики</h4>
+                <ul>
+                    <li>Простота реалізації</li>
+                    <li>Висока ємність</li>
+                    <li>Просторова область (spatial domain)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Двійкове представлення -->
+    <div class="slide">
+        <h2>Двійкове представлення пікселя</h2>
+
+        <p style="text-align: center; font-size: 1.2rem;">
+            Кожен піксель у 8-бітному зображенні: значення від 0 до 255
+        </p>
+
+        <div class="info-box">
+            <h4>Приклад: піксель зі значенням 214</h4>
+            <div class="bit-visual">
+                1 1 0 1 0 1 1 <span class="highlight">0</span>
+            </div>
+            <p style="text-align: center; margin-top: 1rem;">
+                <strong>MSB</strong> (128) ←────────────────→ <strong>LSB</strong> (1)
+            </p>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                <strong>MSB</strong> — несе найбільше візуальної інформації<br>
+                <strong>LSB</strong> — зміна практично непомітна
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Процес вбудовування -->
+    <div class="slide">
+        <h2>Процес вбудовування</h2>
+
+        <div class="two-column">
+            <div class="info-box">
+                <h4>Крок 1: Оригінальний піксель</h4>
+                <div class="bit-visual" style="font-size: 1.5rem;">
+                    11010110
+                </div>
+                <p style="text-align: center;">Значення: <strong>214</strong></p>
+            </div>
+
+            <div class="success-box">
+                <h4>Крок 2: Після вбудовування біта "1"</h4>
+                <div class="bit-visual" style="font-size: 1.5rem;">
+                    1101011<span class="highlight">1</span>
+                </div>
+                <p style="text-align: center;">Значення: <strong>215</strong></p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                Різниця: 214 → 215 = <strong>лише 1!</strong><br>
+                Для людського ока — абсолютно непомітно
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Можливі зміни -->
+    <div class="slide">
+        <h2>Таблиця можливих змін</h2>
+
+        <table class="comparison-table" style="margin: 2rem auto; max-width: 700px;">
+            <tr>
+                <th>LSB пікселя</th>
+                <th>Біт повідомлення</th>
+                <th>Результат</th>
+                <th>Зміна</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>Без змін</td>
+                <td style="color: #10b981; font-weight: bold;">0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>0 → 1</td>
+                <td style="color: #ef4444; font-weight: bold;">+1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>1 → 0</td>
+                <td style="color: #ef4444; font-weight: bold;">-1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>Без змін</td>
+                <td style="color: #10b981; font-weight: bold;">0</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                При випадкових даних ~50% пікселів змінюються на ±1
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Бітові площини -->
+    <div class="slide">
+        <h2>Бітові площини зображення</h2>
+
+        <p style="text-align: center;">8-бітне зображення = 8 бітових площин</p>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.95rem;">
+            <tr>
+                <th>Площина</th>
+                <th>Біт</th>
+                <th>Вага</th>
+                <th>Візуальний внесок</th>
+            </tr>
+            <tr>
+                <td>Площина 7 (MSB)</td>
+                <td>Біт 7</td>
+                <td>128</td>
+                <td style="background: #dcfce7;">Максимальний</td>
+            </tr>
+            <tr>
+                <td>Площина 6</td>
+                <td>Біт 6</td>
+                <td>64</td>
+                <td style="background: #d1fae5;">Високий</td>
+            </tr>
+            <tr>
+                <td>Площина 5</td>
+                <td>Біт 5</td>
+                <td>32</td>
+                <td style="background: #fef9c3;">Середній</td>
+            </tr>
+            <tr>
+                <td>Площина 4</td>
+                <td>Біт 4</td>
+                <td>16</td>
+                <td style="background: #fef9c3;">Середній</td>
+            </tr>
+            <tr>
+                <td>Площина 3</td>
+                <td>Біт 3</td>
+                <td>8</td>
+                <td style="background: #fee2e2;">Низький</td>
+            </tr>
+            <tr>
+                <td>Площина 2</td>
+                <td>Біт 2</td>
+                <td>4</td>
+                <td style="background: #fee2e2;">Низький</td>
+            </tr>
+            <tr>
+                <td>Площина 1</td>
+                <td>Біт 1</td>
+                <td>2</td>
+                <td style="background: #fecaca;">Мінімальний</td>
+            </tr>
+            <tr>
+                <td>Площина 0 (LSB)</td>
+                <td>Біт 0</td>
+                <td>1</td>
+                <td style="background: #fca5a5;">Практично нульовий</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 7: Характеристики площин -->
+    <div class="slide">
+        <h2>Характеристики бітових площин</h2>
+
+        <div class="two-column">
+            <div class="info-box">
+                <h3>Старші площини (7-4)</h3>
+                <ul>
+                    <li>Структурована інформація</li>
+                    <li>Контури та форми об'єктів</li>
+                    <li>Основні текстури</li>
+                    <li>Візуально схожі на оригінал</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>Молодші площини (3-0)</h3>
+                <ul>
+                    <li>Виглядають як шум</li>
+                    <li>Слабка кореляція зі старшими</li>
+                    <li>Ідеальні для приховування</li>
+                    <li>Зміни непомітні</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                <strong>Висновок:</strong> LSB площина — найкраще місце для приховування даних
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: RGB канали -->
+    <div class="slide">
+        <h2>RGB канали</h2>
+
+        <p style="text-align: center; font-size: 1.2rem;">
+            24-бітне кольорове зображення = 3 канали по 8 біт
+        </p>
+
+        <div class="three-col-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+            <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="color: #dc2626;">Red (R)</h3>
+                <p style="font-size: 3rem;">🔴</p>
+                <p>8 біт (0-255)</p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="color: #16a34a;">Green (G)</h3>
+                <p style="font-size: 3rem;">🟢</p>
+                <p>8 біт (0-255)</p>
+            </div>
+            <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="color: #2563eb;">Blue (B)</h3>
+                <p style="font-size: 3rem;">🔵</p>
+                <p>8 біт (0-255)</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Ємність:</strong> 3 біти на піксель (по 1 LSB з кожного каналу)
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Чутливість ока -->
+    <div class="slide">
+        <h2>Чутливість людського ока</h2>
+
+        <p style="text-align: center; font-size: 1.1rem;">
+            Око має різну чутливість до різних кольорів
+        </p>
+
+        <table class="comparison-table" style="margin: 2rem auto; max-width: 600px;">
+            <tr>
+                <th>Канал</th>
+                <th>Чутливість</th>
+                <th>Рекомендація</th>
+            </tr>
+            <tr>
+                <td style="background: #dcfce7;"><strong>Green</strong></td>
+                <td>Найвища (59%)</td>
+                <td>Обережно</td>
+            </tr>
+            <tr>
+                <td style="background: #fee2e2;"><strong>Red</strong></td>
+                <td>Середня (30%)</td>
+                <td>Помірно</td>
+            </tr>
+            <tr>
+                <td style="background: #dbeafe;"><strong>Blue</strong></td>
+                <td>Найнижча (11%)</td>
+                <td>Більше бітів</td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <p style="text-align: center;">
+                <strong>Практичний висновок:</strong> Синій канал найбезпечніший для вбудовування
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Переваги та недоліки -->
+    <div class="slide">
+        <h2>Переваги та недоліки LSB</h2>
+
+        <div class="two-column">
+            <div class="success-box">
+                <h3>Переваги</h3>
+                <ul>
+                    <li>Простота реалізації</li>
+                    <li>Висока ємність (3 bpp)</li>
+                    <li>Мінімальні спотворення</li>
+                    <li>Швидкість обробки</li>
+                    <li>Універсальність</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>Недоліки</h3>
+                <ul>
+                    <li>Вразливість до стегоаналізу</li>
+                    <li>Нестійкість до обробки</li>
+                    <li>Не підходить для JPEG</li>
+                    <li>Передбачувані паттерни</li>
+                    <li>Статистичні аномалії</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <div class="info-box">
+            <h3>Ключові поняття</h3>
+            <ul style="font-size: 1.1rem; line-height: 2;">
+                <li><strong>LSB</strong> — найменш значущий біт, зміна якого непомітна</li>
+                <li><strong>Бітові площини</strong> — 8 рівнів, молодші — найкращі для стеганографії</li>
+                <li><strong>RGB канали</strong> — 3 канали = 3 біти на піксель</li>
+                <li><strong>Чутливість ока</strong> — синій канал найбезпечніший</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Далі:</strong> Алгоритми вбудовування LSB
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 11</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

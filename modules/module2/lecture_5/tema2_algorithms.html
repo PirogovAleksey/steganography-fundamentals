@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Алгоритми вбудовування | Лекція 5.2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .code-keyword { color: #c084fc; }
+        .code-function { color: #60a5fa; }
+        .code-string { color: #34d399; }
+        .code-comment { color: #6b7280; }
+        .algorithm-step {
+            background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Алгоритми вбудовування</h1>
+        <div class="subtitle">
+            Тема 2: Послідовний, псевдовипадковий та багатобітовий LSB
+        </div>
+    </div>
+
+    <!-- Слайд 2: Огляд алгоритмів -->
+    <div class="slide">
+        <h2>Типи алгоритмів LSB</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                Різні стратегії вибору пікселів для вбудовування
+            </p>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <div class="algorithm-step">
+                    <h4>1. Послідовний LSB</h4>
+                    <p>Пікселі обходяться по черзі</p>
+                </div>
+                <div class="algorithm-step">
+                    <h4>2. Псевдовипадковий LSB</h4>
+                    <p>Позиції визначає PRNG з ключем</p>
+                </div>
+            </div>
+            <div>
+                <div class="algorithm-step">
+                    <h4>3. k-бітовий LSB</h4>
+                    <p>Змінюємо кілька молодших бітів</p>
+                </div>
+                <div class="algorithm-step">
+                    <h4>4. LSB 3-3-2</h4>
+                    <p>Різна кількість бітів по каналах</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Послідовний LSB -->
+    <div class="slide">
+        <h2>Послідовний LSB (Sequential)</h2>
+
+        <div class="info-box">
+            <h4>Принцип роботи</h4>
+            <p>Обхід пікселів зліва направо, зверху вниз</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; max-width: 500px; margin: 1rem auto;">
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">1</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">2</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">3</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">4</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">5</div>
+            <div style="background: #818cf8; color: white; padding: 1rem; text-align: center; border-radius: 5px;">6</div>
+            <div style="background: #a5b4fc; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">...</div>
+            <div style="background: #c7d2fe; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">...</div>
+            <div style="background: #e0e7ff; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">...</div>
+        </div>
+
+        <div class="warning-box">
+            <h4>Недоліки</h4>
+            <ul>
+                <li>Передбачуваний паттерн — легко виявити</li>
+                <li>Вразливий до Chi-Square атаки</li>
+                <li>Різка межа між зміненою та незміненою частинами</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Код послідовного LSB -->
+    <div class="slide">
+        <h2>Код: Послідовний LSB</h2>
+
+        <div class="code-block">
+<span class="code-keyword">def</span> <span class="code-function">sequential_lsb_embed</span>(image, message):
+    binary_msg = text_to_binary(message)
+    msg_index = <span class="code-string">0</span>
+
+    <span class="code-keyword">for</span> y <span class="code-keyword">in</span> range(height):
+        <span class="code-keyword">for</span> x <span class="code-keyword">in</span> range(width):
+            <span class="code-keyword">for</span> channel <span class="code-keyword">in</span> [R, G, B]:
+                <span class="code-keyword">if</span> msg_index < len(binary_msg):
+                    <span class="code-comment"># Замінюємо LSB</span>
+                    pixel[channel] = (pixel[channel] & <span class="code-string">0xFE</span>) | int(binary_msg[msg_index])
+                    msg_index += <span class="code-string">1</span>
+
+    <span class="code-keyword">return</span> stego_image
+        </div>
+
+        <div class="info-box">
+            <p><code>0xFE = 11111110</code> — маска для обнулення LSB</p>
+            <p><code>| bit</code> — встановлення нового значення LSB</p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Псевдовипадковий LSB -->
+    <div class="slide">
+        <h2>Псевдовипадковий LSB (Randomized)</h2>
+
+        <div class="info-box">
+            <h4>Принцип роботи</h4>
+            <p>PRNG з секретним ключем визначає позиції вбудовування</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; max-width: 500px; margin: 1rem auto;">
+            <div style="background: #e0e7ff; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">-</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">3</div>
+            <div style="background: #e0e7ff; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">-</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">1</div>
+            <div style="background: #e0e7ff; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">-</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">5</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">2</div>
+            <div style="background: #e0e7ff; color: #1e293b; padding: 1rem; text-align: center; border-radius: 5px;">-</div>
+            <div style="background: #667eea; color: white; padding: 1rem; text-align: center; border-radius: 5px;">4</div>
+        </div>
+
+        <div class="success-box">
+            <h4>Переваги</h4>
+            <ul>
+                <li>Біти розподілені по всьому зображенню</li>
+                <li>Потребує ключ для вилучення</li>
+                <li>Ускладнює статистичний аналіз</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Код псевдовипадкового LSB -->
+    <div class="slide">
+        <h2>Код: Псевдовипадковий LSB</h2>
+
+        <div class="code-block">
+<span class="code-keyword">def</span> <span class="code-function">random_lsb_embed</span>(image, message, key):
+    binary_msg = text_to_binary(message)
+    random.seed(key)  <span class="code-comment"># Ініціалізація ключем</span>
+    used_positions = set()
+
+    <span class="code-keyword">for</span> bit <span class="code-keyword">in</span> binary_msg:
+        <span class="code-keyword">while</span> True:
+            x = random.randint(<span class="code-string">0</span>, width - <span class="code-string">1</span>)
+            y = random.randint(<span class="code-string">0</span>, height - <span class="code-string">1</span>)
+            c = random.randint(<span class="code-string">0</span>, <span class="code-string">2</span>)  <span class="code-comment"># RGB канал</span>
+
+            <span class="code-keyword">if</span> (x, y, c) <span class="code-keyword">not in</span> used_positions:
+                used_positions.add((x, y, c))
+                <span class="code-keyword">break</span>
+
+        pixel[y, x, c] = (pixel[y, x, c] & <span class="code-string">0xFE</span>) | int(bit)
+
+    <span class="code-keyword">return</span> stego_image
+        </div>
+    </div>
+
+    <!-- Слайд 7: Порівняння методів -->
+    <div class="slide">
+        <h2>Послідовний vs Випадковий</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto;">
+            <tr>
+                <th>Характеристика</th>
+                <th>Послідовний</th>
+                <th>Випадковий</th>
+            </tr>
+            <tr>
+                <td>Складність</td>
+                <td style="background: #dcfce7;">Низька</td>
+                <td style="background: #fef9c3;">Середня</td>
+            </tr>
+            <tr>
+                <td>Потреба в ключі</td>
+                <td>Ні</td>
+                <td style="background: #dcfce7;">Так</td>
+            </tr>
+            <tr>
+                <td>Стійкість до детекції</td>
+                <td style="background: #fee2e2;">Низька</td>
+                <td style="background: #fef9c3;">Середня</td>
+            </tr>
+            <tr>
+                <td>Chi-Square атака</td>
+                <td style="background: #fee2e2;">Вразливий</td>
+                <td style="background: #dcfce7;">Стійкий</td>
+            </tr>
+            <tr>
+                <td>Швидкість</td>
+                <td style="background: #dcfce7;">Висока</td>
+                <td style="background: #fef9c3;">Середня</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 8: Багатобітовий LSB -->
+    <div class="slide">
+        <h2>Багатобітовий LSB (k-bit)</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Замість одного біта модифікуємо кілька молодших бітів
+            </p>
+        </div>
+
+        <table class="comparison-table" style="margin: 1rem auto;">
+            <tr>
+                <th>Метод</th>
+                <th>Біти</th>
+                <th>Ємність (RGB)</th>
+                <th>Макс. зміна</th>
+                <th>PSNR</th>
+            </tr>
+            <tr>
+                <td>1-bit LSB</td>
+                <td>Біт 0</td>
+                <td>3 bpp</td>
+                <td>±1</td>
+                <td>~51 dB</td>
+            </tr>
+            <tr>
+                <td>2-bit LSB</td>
+                <td>Біти 0-1</td>
+                <td>6 bpp</td>
+                <td>±3</td>
+                <td>~44 dB</td>
+            </tr>
+            <tr>
+                <td>3-bit LSB</td>
+                <td>Біти 0-2</td>
+                <td>9 bpp</td>
+                <td>±7</td>
+                <td>~37 dB</td>
+            </tr>
+            <tr>
+                <td>4-bit LSB</td>
+                <td>Біти 0-3</td>
+                <td>12 bpp</td>
+                <td>±15</td>
+                <td>~31 dB</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 9: Візуалізація k-bit -->
+    <div class="slide">
+        <h2>Візуалізація: 1-bit vs 4-bit</h2>
+
+        <div class="two-column">
+            <div class="info-box">
+                <h4>1-bit LSB</h4>
+                <p style="font-family: monospace; font-size: 1.3rem; text-align: center; margin: 1rem 0;">
+                    1101011<span style="color: #ef4444; font-weight: bold;">0</span>
+                </p>
+                <ul>
+                    <li>Зміна: ±1</li>
+                    <li>PSNR: ~51 dB</li>
+                    <li>Якість: відмінна</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>4-bit LSB</h4>
+                <p style="font-family: monospace; font-size: 1.3rem; text-align: center; margin: 1rem 0;">
+                    1101<span style="color: #ef4444; font-weight: bold;">0110</span>
+                </p>
+                <ul>
+                    <li>Зміна: ±15</li>
+                    <li>PSNR: ~31 dB</li>
+                    <li>Якість: помітні артефакти</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p style="text-align: center;">
+                <strong>Рекомендація:</strong> не більше 2 бітів на канал для практичного використання
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Техніка 3-3-2 -->
+    <div class="slide">
+        <h2>Техніка LSB 3-3-2</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Враховує чутливість ока до різних каналів
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
+            <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="color: #dc2626;">Red</h3>
+                <p style="font-size: 2rem; font-weight: bold;">3 біти</p>
+                <p style="font-family: monospace;">xxxxx<span style="color: #dc2626; font-weight: bold;">210</span></p>
+            </div>
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="color: #16a34a;">Green</h3>
+                <p style="font-size: 2rem; font-weight: bold;">3 біти</p>
+                <p style="font-family: monospace;">xxxxx<span style="color: #16a34a; font-weight: bold;">543</span></p>
+            </div>
+            <div style="background: #dbeafe; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="color: #2563eb;">Blue</h3>
+                <p style="font-size: 2rem; font-weight: bold;">2 біти</p>
+                <p style="font-family: monospace;">xxxxxx<span style="color: #2563eb; font-weight: bold;">76</span></p>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Результат:</strong> 8 біт (1 байт) на піксель!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 11: Ємність 3-3-2 -->
+    <div class="slide">
+        <h2>Порівняння ємності</h2>
+
+        <div class="info-box">
+            <h4>Зображення 1024 × 768 пікселів</h4>
+        </div>
+
+        <table class="comparison-table" style="margin: 1.5rem auto;">
+            <tr>
+                <th>Метод</th>
+                <th>Біт/піксель</th>
+                <th>Ємність</th>
+            </tr>
+            <tr>
+                <td>1-bit LSB (RGB)</td>
+                <td>3 bpp</td>
+                <td>~288 КБ</td>
+            </tr>
+            <tr>
+                <td>2-bit LSB (RGB)</td>
+                <td>6 bpp</td>
+                <td>~576 КБ</td>
+            </tr>
+            <tr>
+                <td style="background: #dcfce7;"><strong>LSB 3-3-2</strong></td>
+                <td style="background: #dcfce7;"><strong>8 bpp</strong></td>
+                <td style="background: #dcfce7;"><strong>~768 КБ</strong></td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <p style="text-align: center;">
+                LSB 3-3-2 має ємність у <strong>2.67× більшу</strong> ніж стандартний 1-bit LSB!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 12: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <div class="info-box">
+            <h3>Алгоритми вбудовування LSB</h3>
+            <ul style="font-size: 1.05rem; line-height: 2;">
+                <li><strong>Послідовний</strong> — простий, але вразливий до детекції</li>
+                <li><strong>Псевдовипадковий</strong> — потребує ключ, стійкіший до Chi-Square</li>
+                <li><strong>k-бітовий</strong> — більше ємність, але гірша якість</li>
+                <li><strong>LSB 3-3-2</strong> — максимальна ємність (1 байт/піксель)</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Далі:</strong> Метрики оцінки якості (PSNR, SSIM, MSE)
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 12</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

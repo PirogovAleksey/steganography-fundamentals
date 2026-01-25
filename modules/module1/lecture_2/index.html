@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Лекція 2: Математичні основи стеганографії - теорія інформації, ентропія, статистичні моделі">
+    <title>Лекція 2: Математичні основи стеганографії | Основи стеганографії</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/base.css">
+    <link rel="stylesheet" href="../../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../../assets/css/components.css">
+    <link rel="stylesheet" href="../../../assets/css/modules.css">
+    <link rel="stylesheet" href="../../../assets/css/lectures.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="header">
+    <div class="container">
+        <div class="header-nav">
+            <div class="breadcrumb">
+                <a href="../../../index.html">🏠 Головна</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="../index.html">Модуль 1</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Лекція 2</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Lecture Hero -->
+<section class="lecture-hero">
+    <div class="container">
+        <div class="lecture-number-badge">Лекція 2</div>
+        <h1>Математичні основи стеганографії</h1>
+        <p class="landing-subtitle">
+            Теорія інформації Шеннона, ентропія та надлишковість, статистичні моделі та моделі безпеки
+        </p>
+
+        <div class="lecture-meta">
+            <span class="lecture-meta-item">
+                ⏱️ 80 хвилин
+            </span>
+            <span class="lecture-meta-item">
+                📊 4 Теми
+            </span>
+            <span class="lecture-meta-item">
+                📐 Теоретичні основи
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+
+        <!-- Reading Material -->
+        <section style="background: #f0f9ff; border-left: 5px solid #0284c7; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="color: #0369a1; margin-bottom: 1rem;">📖 Матеріали для читання</h3>
+            <p style="margin-bottom: 1rem;">Детальний теоретичний конспект лекції з поясненнями, формулами та прикладами</p>
+            <a href="konspekt_2.html" class="btn btn-primary">Читати конспект лекції</a>
+        </section>
+
+        <!-- Learning Objectives -->
+        <section class="lecture-objectives">
+            <h3>🎯 Цілі лекції</h3>
+            <ul>
+                <li>Зрозуміти основи теорії інформації Шеннона та її застосування в стеганографії</li>
+                <li>Вивчити поняття ентропії, умовної ентропії та взаємної інформації</li>
+                <li>Освоїти концепцію надлишковості цифрових носіїв та її експлуатацію</li>
+                <li>Ознайомитися зі статистичними моделями контейнерів</li>
+                <li>Розуміти моделі безпеки стеганографії (модель Кашина, ε-безпека)</li>
+            </ul>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section">
+            <h2 class="section-title">📚 Теми лекції</h2>
+
+            <div class="topics-grid">
+
+                <!-- Тема 1 -->
+                <a href="tema1_information_theory.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 1</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">📡 Теорія інформації</h3>
+                    <p class="topic-description">
+                        Теорія Шеннона, ентропія, спільна та умовна ентропія, взаємна інформація
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Ентропія Шеннона</span>
+                        <span class="subtopic-badge">Умовна ентропія</span>
+                        <span class="subtopic-badge">Взаємна інформація</span>
+                        <span class="subtopic-badge">Пропускна здатність</span>
+                    </div>
+                </a>
+
+                <!-- Тема 2 -->
+                <a href="tema2_redundancy.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 2</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">📊 Ентропія та надлишковість</h3>
+                    <p class="topic-description">
+                        Надлишковість у цифрових носіях, типи надлишковості, експлуатація для стеганографії
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Просторова надлишковість</span>
+                        <span class="subtopic-badge">Перцептивна надлишковість</span>
+                        <span class="subtopic-badge">Кореляція пікселів</span>
+                        <span class="subtopic-badge">Ємність вбудовування</span>
+                    </div>
+                </a>
+
+                <!-- Тема 3 -->
+                <a href="tema3_statistics.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 3</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">📈 Статистичні характеристики</h3>
+                    <p class="topic-description">
+                        Статистичні моделі контейнерів, марківські моделі, закон квадратного кореня
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Статистики першого порядку</span>
+                        <span class="subtopic-badge">Марківські моделі</span>
+                        <span class="subtopic-badge">Закон √n</span>
+                        <span class="subtopic-badge">Ефективність вбудовування</span>
+                    </div>
+                </a>
+
+                <!-- Тема 4 -->
+                <a href="tema4_security.html" class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-number">Тема 4</span>
+                        <span class="topic-duration">⏱️ 20 хв</span>
+                    </div>
+                    <h3 class="topic-title">🔐 Моделі безпеки</h3>
+                    <p class="topic-description">
+                        Інформаційно-теоретична безпека, модель Кашина, KL-дивергенція, ε-безпека
+                    </p>
+                    <div class="topic-subtopics">
+                        <span class="subtopic-badge">Модель Кашина</span>
+                        <span class="subtopic-badge">KL-дивергенція</span>
+                        <span class="subtopic-badge">ε-безпека</span>
+                        <span class="subtopic-badge">Досконала безпека</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="lecture-resources">
+            <h3>📚 Додаткові матеріали</h3>
+            <div class="resource-links">
+                <a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf" target="_blank" class="resource-link">
+                    📖 Shannon C.E. "A Mathematical Theory of Communication" (1948)
+                </a>
+                <a href="https://www.researchgate.net/publication/280964412_An_information-theoretic_model_for_steganography" target="_blank" class="resource-link">
+                    📄 Cachin C. "An Information-Theoretic Model for Steganography" (1998)
+                </a>
+                <a href="https://www.cs.ox.ac.uk/andrew.ker/docs/ADK71B.pdf" target="_blank" class="resource-link">
+                    📄 Ker A.D. "The Square Root Law of Steganographic Capacity"
+                </a>
+                <a href="https://en.wikipedia.org/wiki/Information_theory" target="_blank" class="resource-link">
+                    🔗 Wikipedia: Information Theory
+                </a>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="lecture-navigation">
+            <div class="lecture-nav-buttons">
+                <a href="../lecture_1/index.html" class="btn btn-outline">
+                    ← Лекція 1
+                </a>
+                <a href="../index.html" class="btn btn-outline">
+                    Назад до модуля 1
+                </a>
+                <a href="tema1_information_theory.html" class="btn btn-primary">
+                    Почати лекцію →
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content text-center">
+            <p>&copy; 2025 Курс "Основи стеганографії" | Кафедра кібербезпеки</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

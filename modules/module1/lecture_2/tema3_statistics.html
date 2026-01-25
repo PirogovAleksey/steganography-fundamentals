@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистичні характеристики | Лекція 2.3</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Статистичні характеристики</h1>
+        <div class="subtitle">
+            Тема 3: Статистичні моделі контейнерів та закон квадратного кореня
+        </div>
+    </div>
+
+    <!-- Слайд 2: Статистики першого порядку -->
+    <div class="slide">
+        <h2>Статистики першого порядку</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Залежать лише від <strong>окремих значень</strong>, без урахування просторових зв'язків
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #0369a1;">Гістограма</h4>
+                <p>Розподіл значень пікселів</p>
+            </div>
+            <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Середнє</h4>
+                <p>μ = (1/N) Σ x<sub>i</sub></p>
+            </div>
+            <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #92400e;">Дисперсія</h4>
+                <p>σ² = (1/N) Σ (x<sub>i</sub> - μ)²</p>
+            </div>
+            <div style="background: #fce7f3; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #9d174d;">Моменти</h4>
+                <p>Асиметрія, ексцес</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Вплив LSB -->
+    <div class="slide">
+        <h2>Вплив LSB на статистики</h2>
+
+        <div class="warning-box">
+            <h4>Проблема простого LSB</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                LSB вбудовування <strong>змінює гістограму</strong>,<br>
+                створюючи ефект "пар значень" (PoVs)
+            </p>
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div style="text-align: center;">
+                <h4>До вбудовування</h4>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 10px;">
+                    <p>Пара (100, 101):</p>
+                    <p><strong>n₁₀₀ = 50</strong></p>
+                    <p><strong>n₁₀₁ = 80</strong></p>
+                    <p style="color: #10b981;">Різні!</p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <h4>Після вбудовування</h4>
+                <div style="background: #fee2e2; padding: 1rem; border-radius: 10px;">
+                    <p>Пара (100, 101):</p>
+                    <p><strong>n₁₀₀ ≈ 65</strong></p>
+                    <p><strong>n₁₀₁ ≈ 65</strong></p>
+                    <p style="color: #ef4444;">Вирівнялися!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                Це детектується <strong>Chi-Square атакою</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 4: Статистики вищих порядків -->
+    <div class="slide">
+        <h2>Статистики вищих порядків</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Враховують <strong>залежності між сусідніми елементами</strong>
+            </p>
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div>
+                <h4>Включають:</h4>
+                <ul>
+                    <li><strong>Матриці суміжності</strong> (co-occurrence)</li>
+                    <li><strong>Автокореляційні функції</strong></li>
+                    <li><strong>Парні залежності</strong> пікселів</li>
+                    <li><strong>SPAM ознаки</strong></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Застосування:</h4>
+                <ul>
+                    <li>Сучасний стегоаналіз</li>
+                    <li>SRM (Spatial Rich Model)</li>
+                    <li>Виявлення порушень кореляцій</li>
+                    <li>ML-класифікатори</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                Більш чутливі до стеганографічних модифікацій!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Марківські моделі -->
+    <div class="slide">
+        <h2>Марківські моделі</h2>
+
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                Пікселі зображення <strong>не є незалежними</strong> — вони мають сильні кореляції
+            </p>
+        </div>
+
+        <h4 style="text-align: center;">Марківська властивість:</h4>
+
+        <div class="formula-box">
+            P(X<sub>n</sub> | X<sub>n-1</sub>, ..., X<sub>1</sub>) = P(X<sub>n</sub> | X<sub>n-1</sub>)
+        </div>
+
+        <p style="text-align: center; font-size: 1.1rem;">
+            Ймовірність поточного значення залежить <strong>лише від попереднього</strong>
+        </p>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div style="background: #f0f9ff; padding: 1rem; border-radius: 10px;">
+                <h4 style="color: #0369a1;">Для стегоаналізу</h4>
+                <p>Виявлення порушень марківських залежностей</p>
+            </div>
+            <div style="background: #f0fdf4; padding: 1rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Для стеганографії</h4>
+                <p>Збереження марківської статистики</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 6: Ємність та закон √n -->
+    <div class="slide">
+        <h2>Стеганографічна ємність</h2>
+
+        <div class="info-box">
+            <h4>Питання</h4>
+            <p style="text-align: center; font-size: 1.2rem;">
+                Скільки даних можна <strong>безпечно</strong> приховати?
+            </p>
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Досконала система</h4>
+                <p>D<sub>KL</sub> = 0</p>
+                <p style="text-align: center; font-size: 1.2rem;">
+                    m ∝ <strong>n</strong>
+                </p>
+                <p style="font-size: 0.9rem;">Лінійно з розміром</p>
+            </div>
+            <div style="background: #fef3c7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #92400e;">Недосконала система</h4>
+                <p>D<sub>KL</sub> > 0</p>
+                <p style="text-align: center; font-size: 1.2rem;">
+                    m ∝ <strong>√n</strong>
+                </p>
+                <p style="font-size: 0.9rem;">Квадратний корінь!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Закон квадратного кореня -->
+    <div class="slide">
+        <h2>Закон квадратного кореня</h2>
+
+        <div class="important-box">
+            <h4 style="text-align: center;">Square Root Law</h4>
+            <p style="font-size: 1.1rem; text-align: center;">
+                Безпечна ємність недосконалої стегосистеми пропорційна<br>
+                <strong>квадратному кореню</strong> з розміру контейнера
+            </p>
+        </div>
+
+        <div class="formula-box" style="border-color: #ef4444;">
+            m ∝ √n
+        </div>
+
+        <div class="warning-box">
+            <h4>Практичне значення</h4>
+            <p style="text-align: center; font-size: 1.1rem;">
+                Подвоєння контейнера збільшує безпечну ємність лише в <strong>√2 ≈ 1.41</strong> рази!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Приклад закону √n -->
+    <div class="slide">
+        <h2>Приклад: закон √n</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">Зображення 1000 × 1000 пікселів (n = 10⁶)</p>
+        </div>
+
+        <table class="comparison-table" style="margin: 1.5rem auto;">
+            <tr>
+                <th>Тип системи</th>
+                <th>Формула</th>
+                <th>Ємність</th>
+            </tr>
+            <tr>
+                <td>Теоретична (лінійна)</td>
+                <td>m = n</td>
+                <td>1,000,000 біт ≈ 122 КБ</td>
+            </tr>
+            <tr>
+                <td style="background: #fef3c7;">Практична (√n)</td>
+                <td style="background: #fef3c7;">m = √n</td>
+                <td style="background: #fef3c7;">1,000 біт ≈ 125 байт</td>
+            </tr>
+        </table>
+
+        <div class="warning-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                <strong>В 1000 разів менше!</strong><br>
+                Це ціна безпеки при недосконалому алгоритмі
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 9: Ефективність вбудовування -->
+    <div class="slide">
+        <h2>Ефективність вбудовування</h2>
+
+        <div class="info-box">
+            <p style="text-align: center;">
+                Відношення вбудованих бітів до кількості змін контейнера
+            </p>
+        </div>
+
+        <div class="formula-box">
+            e = (Вбудовані біти) / (Зміни контейнера)
+        </div>
+
+        <table class="comparison-table" style="margin: 1.5rem auto;">
+            <tr>
+                <th>Метод</th>
+                <th>Ефективність</th>
+                <th>Опис</th>
+            </tr>
+            <tr>
+                <td>Простий LSB</td>
+                <td>e = 1</td>
+                <td>1 біт = 1 зміна</td>
+            </tr>
+            <tr>
+                <td>Матричне кодування</td>
+                <td style="background: #dcfce7;">e > 1</td>
+                <td>Кілька бітів на зміну</td>
+            </tr>
+            <tr>
+                <td>STC коди</td>
+                <td style="background: #dcfce7;">e → оптимум</td>
+                <td>Близько до теорії</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 10: Підсумок -->
+    <div class="slide">
+        <h2>Підсумок теми</h2>
+
+        <div class="info-box">
+            <h3>Ключові поняття</h3>
+            <ul style="font-size: 1.05rem; line-height: 2;">
+                <li><strong>Статистики 1-го порядку:</strong> гістограма, середнє, дисперсія</li>
+                <li><strong>Статистики вищих порядків:</strong> кореляції, марківські моделі</li>
+                <li><strong>Закон √n:</strong> безпечна ємність m ∝ √n</li>
+                <li><strong>Ефективність:</strong> e = біти / зміни</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.2rem;">
+                <strong>Далі:</strong> Моделі безпеки стеганографії
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>

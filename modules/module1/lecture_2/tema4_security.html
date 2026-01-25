@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моделі безпеки | Лекція 2.4</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../new_assets/presentation/css/styles.css">
+
+    <style>
+        .formula-box {
+            background: #f8fafc;
+            border: 3px solid #667eea;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+
+    <!-- Слайд 1: Титульний -->
+    <div class="slide active title-slide">
+        <h1>Моделі безпеки</h1>
+        <div class="subtitle">
+            Тема 4: Інформаційно-теоретична безпека та модель Кашина
+        </div>
+    </div>
+
+    <!-- Слайд 2: Постановка задачі -->
+    <div class="slide">
+        <h2>Що таке безпека стеганографії?</h2>
+
+        <div class="info-box">
+            <h4 style="text-align: center;">Ключове питання</h4>
+            <p style="font-size: 1.2rem; text-align: center;">
+                Як <strong>формально визначити</strong> та <strong>виміряти</strong> невиявлюваність прихованих даних?
+            </p>
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #0369a1;">Задача противника</h4>
+                <p>Розрізнити:</p>
+                <ul>
+                    <li>H₀: X ~ C (чистий контейнер)</li>
+                    <li>H₁: X ~ S (стего-об'єкт)</li>
+                </ul>
+            </div>
+            <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Задача стеганографа</h4>
+                <p>Зробити розрізнення <strong>неможливим</strong> або максимально важким</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3: Модель Кашина -->
+    <div class="slide">
+        <h2>Модель Кашина (1998)</h2>
+
+        <div class="info-box">
+            <h4>Christian Cachin</h4>
+            <p style="text-align: center;">
+                "An Information-Theoretic Model for Steganography"
+            </p>
+        </div>
+
+        <p style="text-align: center; font-size: 1.1rem; margin: 1.5rem 0;">
+            Формалізував безпеку як задачу <strong>перевірки статистичних гіпотез</strong>
+        </p>
+
+        <div class="two-column">
+            <div style="background: #dbeafe; padding: 1rem; border-radius: 10px; text-align: center;">
+                <h4>C</h4>
+                <p>Розподіл "чистих" контейнерів</p>
+            </div>
+            <div style="background: #fce7f3; padding: 1rem; border-radius: 10px; text-align: center;">
+                <h4>S</h4>
+                <p>Розподіл стего-об'єктів</p>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center; font-size: 1.1rem;">
+                <strong>Міра безпеки:</strong> наскільки C та S статистично відрізняються?
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 4: KL-дивергенція -->
+    <div class="slide">
+        <h2>KL-дивергенція</h2>
+
+        <div class="info-box">
+            <h4>Kullback-Leibler дивергенція (відносна ентропія)</h4>
+            <p style="text-align: center;">
+                Вимірює "відстань" між двома розподілами ймовірностей
+            </p>
+        </div>
+
+        <div class="formula-box">
+            D<sub>KL</sub>(P || Q) = Σ P(x) log [P(x) / Q(x)]
+        </div>
+
+        <h4 style="text-align: center; margin-top: 1.5rem;">Властивості:</h4>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div style="background: #dcfce7; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>D<sub>KL</sub> ≥ 0</strong>
+                <p style="font-size: 0.9rem;">Завжди невід'ємна</p>
+            </div>
+            <div style="background: #fef9c3; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>D<sub>KL</sub> = 0 ⟺ P = Q</strong>
+                <p style="font-size: 0.9rem;">Нуль при ідентичності</p>
+            </div>
+            <div style="background: #fee2e2; padding: 1rem; border-radius: 10px; text-align: center;">
+                <strong>Несиметрична</strong>
+                <p style="font-size: 0.9rem;">D(P||Q) ≠ D(Q||P)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: KL у стеганографії -->
+    <div class="slide">
+        <h2>KL-дивергенція у стеганографії</h2>
+
+        <div class="formula-box">
+            D<sub>KL</sub>(P<sub>C</sub> || P<sub>S</sub>) = Σ P<sub>C</sub>(x) log [P<sub>C</sub>(x) / P<sub>S</sub>(x)]
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div style="background: #dcfce7; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #166534;">Мала D<sub>KL</sub></h4>
+                <p>Розподіли схожі</p>
+                <p style="font-size: 1.2rem; text-align: center;">→ <strong>Вища безпека</strong></p>
+            </div>
+            <div style="background: #fee2e2; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #991b1b;">Велика D<sub>KL</sub></h4>
+                <p>Розподіли відрізняються</p>
+                <p style="font-size: 1.2rem; text-align: center;">→ <strong>Легко виявити</strong></p>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.5rem;">
+            <p style="text-align: center;">
+                D<sub>KL</sub> обмежує здатність <strong>будь-якого</strong> статистичного детектора
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 6: ε-безпека -->
+    <div class="slide">
+        <h2>ε-безпека</h2>
+
+        <div class="info-box">
+            <h4 style="text-align: center;">Визначення</h4>
+            <p style="font-size: 1.1rem; text-align: center;">
+                Стегосистема є <strong>ε-безпечною</strong>, якщо:
+            </p>
+        </div>
+
+        <div class="formula-box">
+            D<sub>KL</sub>(P<sub>C</sub> || P<sub>S</sub>) ≤ ε
+        </div>
+
+        <div class="two-column" style="margin-top: 1.5rem;">
+            <div>
+                <h4>Властивості:</h4>
+                <ul>
+                    <li>Менше ε — вища безпека</li>
+                    <li>Кількісна гарантія</li>
+                    <li>Обмежує всіх детекторів</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Практичні рівні:</h4>
+                <ul>
+                    <li><strong>ε < 0.01</strong> — висока безпека</li>
+                    <li><strong>ε < 0.1</strong> — помірна</li>
+                    <li><strong>ε > 1</strong> — небезпечно</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 7: Досконала безпека -->
+    <div class="slide">
+        <h2>Досконала безпека</h2>
+
+        <div class="info-box">
+            <h4 style="text-align: center;">Найвищий рівень безпеки</h4>
+            <p style="font-size: 1.1rem; text-align: center;">
+                Стегосистема є <strong>досконало безпечною</strong>, якщо:
+            </p>
+        </div>
+
+        <div class="formula-box" style="border-color: #10b981;">
+            D<sub>KL</sub>(P<sub>C</sub> || P<sub>S</sub>) = 0
+        </div>
+
+        <div class="success-box">
+            <h4 style="text-align: center;">Теорема Кашина</h4>
+            <p style="font-size: 1.1rem; text-align: center;">
+                При D<sub>KL</sub> = 0 оптимальний статистичний детектор<br>
+                <strong>не може зробити краще, ніж випадкове вгадування</strong>
+            </p>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+            <p style="text-align: center;">
+                Приховані дані <strong>повністю невиявлювані</strong>!
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 8: Порівняння моделей -->
+    <div class="slide">
+        <h2>Порівняння моделей безпеки</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.9rem;">
+            <tr>
+                <th>Аспект</th>
+                <th>Інформаційно-теоретична</th>
+                <th>Обчислювальна</th>
+            </tr>
+            <tr>
+                <td><strong>Противник</strong></td>
+                <td>Необмежений</td>
+                <td>Поліноміальний час</td>
+            </tr>
+            <tr>
+                <td><strong>Гарантія</strong></td>
+                <td style="background: #dcfce7;">Безумовна</td>
+                <td style="background: #fef9c3;">Умовна</td>
+            </tr>
+            <tr>
+                <td><strong>Квантова стійкість</strong></td>
+                <td style="background: #dcfce7;">Так</td>
+                <td style="background: #fee2e2;">Можливо ні</td>
+            </tr>
+            <tr>
+                <td><strong>Практичність</strong></td>
+                <td style="background: #fef9c3;">Складна</td>
+                <td style="background: #dcfce7;">Практична</td>
+            </tr>
+            <tr>
+                <td><strong>Приклад</strong></td>
+                <td>D<sub>KL</sub> = 0</td>
+                <td>Псевдовипадкове вбудовування</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Слайд 9: Повна варіаційна відстань -->
+    <div class="slide">
+        <h2>Інші міри відстані</h2>
+
+        <h4>Повна варіаційна відстань:</h4>
+
+        <div class="formula-box">
+            d<sub>TV</sub>(P, Q) = (1/2) Σ |P(x) - Q(x)|
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Нерівність Пінскера:</h4>
+
+        <div class="formula-box">
+            d<sub>TV</sub>(P, Q) ≤ √[(1/2) D<sub>KL</sub>(P || Q)]
+        </div>
+
+        <div class="info-box" style="margin-top: 1.5rem;">
+            <h4>Практичне значення</h4>
+            <p style="text-align: center;">
+                Обмежуючи D<sub>KL</sub> (ε-безпека), ми автоматично обмежуємо d<sub>TV</sub>,<br>
+                що пов'язана з <strong>ймовірністю виявлення</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Слайд 10: Підсумок лекції -->
+    <div class="slide">
+        <h2>Підсумок лекції</h2>
+
+        <table class="comparison-table" style="margin: 1rem auto; font-size: 0.9rem;">
+            <tr>
+                <th>Поняття</th>
+                <th>Формула/Визначення</th>
+            </tr>
+            <tr>
+                <td>Ентропія Шеннона</td>
+                <td>H(X) = -Σ p(x) log₂ p(x)</td>
+            </tr>
+            <tr>
+                <td>Надлишковість</td>
+                <td>R = H<sub>max</sub> - H<sub>actual</sub></td>
+            </tr>
+            <tr>
+                <td>Закон √n</td>
+                <td>Безпечна ємність m ∝ √n</td>
+            </tr>
+            <tr>
+                <td>KL-дивергенція</td>
+                <td>D<sub>KL</sub>(P||Q) = Σ P(x) log[P(x)/Q(x)]</td>
+            </tr>
+            <tr>
+                <td>ε-безпека</td>
+                <td>D<sub>KL</sub>(P<sub>C</sub>||P<sub>S</sub>) ≤ ε</td>
+            </tr>
+            <tr>
+                <td>Досконала безпека</td>
+                <td>D<sub>KL</sub>(P<sub>C</sub>||P<sub>S</sub>) = 0</td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <p style="text-align: center; font-size: 1.1rem;">
+                <strong>Наступна лекція:</strong> Принципи побудови стегосистем
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button id="prev-slide" class="nav-btn" onclick="previousSlide()">← Назад</button>
+    <button id="home-btn" class="nav-btn" onclick="window.location.href='index.html'">🏠 Меню</button>
+    <button id="next-slide" class="nav-btn" onclick="nextSlide()">Далі →</button>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">1 / 10</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        if (n >= totalSlides) currentSlide = 0;
+        if (n < 0) currentSlide = totalSlides - 1;
+
+        slides[currentSlide].classList.add('active');
+
+        document.querySelector('.slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        document.getElementById('prev-slide').disabled = currentSlide === 0;
+        document.getElementById('next-slide').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'Escape') window.location.href = 'index.html';
+    });
+
+    showSlide(0);
+</script>
+
+</body>
+</html>
